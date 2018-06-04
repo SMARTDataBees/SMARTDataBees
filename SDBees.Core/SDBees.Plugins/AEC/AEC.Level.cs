@@ -118,7 +118,7 @@ namespace SDBees.Core.Plugins.AEC.Level
 
         public override Icon GetIcon(Size size)
         {
-            return SDBees.Core.Properties.Resources.SDBees_AEC_Storey_AECStorey;
+            return SDBees.Plugins.Properties.Resources.SDBees_AEC_Storey_AECStorey;
         }
 
         public override Table MyTable()

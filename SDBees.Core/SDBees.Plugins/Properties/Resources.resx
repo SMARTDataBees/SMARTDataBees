@@ -118,40 +118,49 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="About" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\About.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SDBees_AEC_Building_AECBuilding" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SDBees.AEC.Building.AECBuilding.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Exit" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Exit.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SDBees_AEC_Curtainwall_AECCurtainwall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SDBees.AEC.Curtainwall.AECCurtainwall.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Explorer" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Explorer.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SDBees_AEC_Curtainwall_AECCurtainwallArea" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SDBees.AEC.Curtainwall.AECCurtainwallArea.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="IconFailed" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\IconFailed.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SDBees_AEC_Door_AECDoor" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SDBees.AEC.Door.AECDoor.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="SDBees" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SDBees.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SDBees_AEC_Room_AECRoom" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SDBees.AEC.Room.AECRoom.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="SDBeesIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SDBees.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SDBees_AEC_Storey_AECStorey" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SDBees.AEC.Storey.AECStorey.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="SDBees_Demoplugins_Dummys_Dummy1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SDBees.Demoplugins.Dummys.Dummy1.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SDBees_AEC_Storey_AECSubLevel" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SDBees.AEC.Storey.AECStorey1.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="SDBees_Demoplugins_Dummys_Dummy2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SDBees.Demoplugins.Dummys.Dummy2.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SDBees_AEC_Wall_AECWall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SDBees.AEC.Wall.AECWall.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="SecurityAllow" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SecurityAllow.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SDBees_AEC_Window_AECWindow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SDBees.AEC.Window.AECWindow.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="SecurityDeny" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SecurityDeny.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SDBees_AEC_Zone_AECZone" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SDBees.AEC.Zone.AECZone.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="StandardIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SDBees1.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SDBees_MEP_BuildingStatistics_MEPBuildingsStats" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SDBees.MEP.BuildingStatistics.MEPBuildingsStats.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="User" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\User.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SDBees_MEP_ContractData_MEPContractData" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SDBees.MEP.ContractData.MEPContractData.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SDBees_MEP_Element_MEPElement" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SDBees.MEP.Element.MEPElement.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SDBees_MEP_System_MEPCutOut" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SDBees.MEP.System.MEPCutOut.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SDBees_MEP_System_MEPSystem" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SDBees.MEP.System.MEPSystem.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

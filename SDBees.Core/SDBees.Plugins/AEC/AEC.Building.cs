@@ -147,7 +147,7 @@ namespace SDBees.Core.Plugins.AEC.Building
 		public override Icon GetIcon(Size size)
 		{
 			Icon result = null;
-			result = SDBees.Core.Properties.Resources.SDBees_AEC_Building_AECBuilding;
+			result = SDBees.Plugins.Properties.Resources.SDBees_AEC_Building_AECBuilding;
 			return result;
 		}
 

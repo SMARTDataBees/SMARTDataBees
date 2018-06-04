@@ -354,8 +354,6 @@ namespace SDBees.Plugs.TemplateTreeNode
 			{
 				imageKey = PluginType;
 
-				if (!imageList.Images.ContainsKey(imageKey))
-				{
 					Icon treenodeIcon = templTreenode.GetIcon(new Size(16, 16));
 
 					if (treenodeIcon == null)
@@ -363,8 +361,8 @@ namespace SDBees.Plugs.TemplateTreeNode
 						treenodeIcon = templTreenode.GetFailedIcon(new Size(16, 16));
 					}
 
-					imageList.Images.Add(imageKey, treenodeIcon);
-				}
+                    if(imageList != null)
+					    imageList.Images.Add(imageKey, treenodeIcon);
 			}
 
 			return imageKey;

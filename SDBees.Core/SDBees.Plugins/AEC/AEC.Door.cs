@@ -43,31 +43,32 @@ using SDBees.DB;
 using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Core.Model;
 
-namespace SDBees.Core.Plugins.MEP.Element
+namespace SDBees.Core.Plugins.AEC.Door
 {
     /// <summary>
     /// Provides a generic treenode plugin that other plugins can modify as their main treenode
     /// </summary>
     /// 
 
-    [PluginName("HVAC Element Plugin")]
+    [PluginName("AEC Door Plugin")]
     [PluginAuthors("Tim Hoffeller")]
-    [PluginDescription("Plugin for the hvac Elements")]
-    [PluginId("BE47808F-B49D-487E-90E5-C3DA48A75F2C")]
+    [PluginDescription("Plugin for the basic door")]
+    [PluginId("8CA76B44-2E2E-4A0C-85B8-CEEB0AACD069")]
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
     [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
     [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
     [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
 
-    public class MEPElement : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
+
+    public class AECDoor : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
     {
-        private static MEPElement _theInstance;
+        private static AECDoor _theInstance;
 
         /// <summary>
         /// Returns the one and only instance.
         /// </summary>
-        public static MEPElement Current
+        public static AECDoor Current
         {
             get
             {
@@ -78,13 +79,13 @@ namespace SDBees.Core.Plugins.MEP.Element
         /// <summary>
         /// Konstruktor des AECRoomNode
         /// </summary>
-        public MEPElement()
+        public AECDoor()
             : base()
         {
             _theInstance = this;
-            CreateMenuItem = "Create HVAC Element";
-            DeleteMenuItem = "Delete HVAC Element";
-            EditSchemaMenuItem = "Edit HVAC Element Schema";
+            CreateMenuItem = "Create Door";
+            DeleteMenuItem = "Delete Door";
+            EditSchemaMenuItem = "Edit Door Schema";
         }
 
         /// <summary>
@@ -96,7 +97,7 @@ namespace SDBees.Core.Plugins.MEP.Element
         {
             try
             {
-                Console.WriteLine("HVAC Element Plugin starts\n");
+                Console.WriteLine("DoorPlugin starts\n");
 
                 this.StartMe(context, e);
 
@@ -116,12 +117,12 @@ namespace SDBees.Core.Plugins.MEP.Element
         /// <param name="e"></param>
         protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
         {
-            Console.WriteLine("HVAC Element Plugin stops\n");
+            Console.WriteLine("DoorPlugin stops\n");
         }
 
         public override Icon GetIcon(Size size)
         {
-            return SDBees.Core.Properties.Resources.SDBees_MEP_Element_MEPElement;
+            return SDBees.Plugins.Properties.Resources.SDBees_AEC_Door_AECDoor;
         }
 
         //public override void SetName(string sName)
@@ -131,12 +132,12 @@ namespace SDBees.Core.Plugins.MEP.Element
 
         public override Table MyTable()
         {
-            return MEPElementBaseData.gTable;
+            return AECDoorBaseData.gTable;
         }
 
         public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
         {
-            return new MEPElementBaseData();
+            return new AECDoorBaseData();
         }
 
         public override Plugs.TemplateBase.TemplatePlugin GetPlugin()
@@ -161,12 +162,12 @@ namespace SDBees.Core.Plugins.MEP.Element
             {
                 // Verify that the required Tables are created/updated in the database
                 Database database = MyDBManager.Database;
-                this.CreateDataObject().InitTableSchema(ref MEPElementBaseData.gTable, database);
+                this.CreateDataObject().InitTableSchema(ref AECDoorBaseData.gTable, database);
             }
         }
     }
 
-    public class MEPElementBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
+    public class AECDoorBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
     {
         #region Private Data Members
 
@@ -177,14 +178,15 @@ namespace SDBees.Core.Plugins.MEP.Element
         #region Public Properties
         public override string GetTableName
         {
-            get { return "usrMEPElement"; }
+            get { return "usrAECDoors"; }
         }
+
         #endregion
 
         #region Constructor/Destructor
 
-        public MEPElementBaseData() :
-            base("Elementname", "MEP element", "General")
+        public AECDoorBaseData() :
+            base("Doorname", "Door", "General")
         {
             base.Table = gTable;
         }
@@ -196,11 +198,10 @@ namespace SDBees.Core.Plugins.MEP.Element
         #endregion
 
         #region Protected Methods
-
         /*
         protected override string TableName()
         {
-            return "usrHVACElement";
+            return "usrAECDoors";
         }
          * */
 

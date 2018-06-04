@@ -43,31 +43,33 @@ using SDBees.DB;
 using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Core.Model;
 
-namespace SDBees.Core.Plugins.AEC.Wall
+namespace SDBees.Core.Plugins.MEP.BuildingStatistics
 {
     /// <summary>
     /// Provides a generic treenode plugin that other plugins can modify as their main treenode
     /// </summary>
     /// 
 
-    [PluginName("AEC Wall Plugin")]
+    [PluginName("HVAC Buildingstatistics Plugin")]
     [PluginAuthors("Tim Hoffeller")]
-    [PluginDescription("Plugin for the basic wall")]
-    [PluginId("620EEF54-E91A-48C2-B446-3E51762C6CE5")]
+    [PluginDescription("Plugin for the hvac buildings statistics")]
+    [PluginId("2C6604DF-36FC-4CC8-8FA2-0B0D198FB31A")]
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
     [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
     [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
     [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
 
-    public class AECWall : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
+    //[PluginTypeDef("Treenode")] //The SDBees PluginType
+
+    public class MEPBuildingsStats : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
     {
-        private static AECWall _theInstance;
+        private static MEPBuildingsStats _theInstance;
 
         /// <summary>
         /// Returns the one and only instance.
         /// </summary>
-        public static AECWall Current
+        public static MEPBuildingsStats Current
         {
             get
             {
@@ -78,13 +80,13 @@ namespace SDBees.Core.Plugins.AEC.Wall
         /// <summary>
         /// Konstruktor des AECRoomNode
         /// </summary>
-        public AECWall()
+        public MEPBuildingsStats()
             : base()
         {
             _theInstance = this;
-            CreateMenuItem = "Create Wall";
-            DeleteMenuItem = "Delete Wall";
-            EditSchemaMenuItem = "Edit Wall Schema";
+            CreateMenuItem = "Create HVAC Buildingsstats";
+            DeleteMenuItem = "Delete HVAC Buildingsstats";
+            EditSchemaMenuItem = "Edit HVAC Buildingsstats Schema";
         }
 
         /// <summary>
@@ -96,7 +98,7 @@ namespace SDBees.Core.Plugins.AEC.Wall
         {
             try
             {
-                Console.WriteLine("WallPlugin starts\n");
+                Console.WriteLine("HVAC Buildingsstats Plugin starts\n");
 
                 this.StartMe(context, e);
 
@@ -116,12 +118,12 @@ namespace SDBees.Core.Plugins.AEC.Wall
         /// <param name="e"></param>
         protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
         {
-            Console.WriteLine("Wall Plugin stops\n");
+            Console.WriteLine("HVAC Buildingsstats Plugin stops\n");
         }
 
         public override Icon GetIcon(Size size)
         {
-            return SDBees.Core.Properties.Resources.SDBees_AEC_Wall_AECWall;
+            return SDBees.Plugins.Properties.Resources.SDBees_MEP_BuildingStatistics_MEPBuildingsStats;
         }
 
         //public override void SetName(string sName)
@@ -131,12 +133,12 @@ namespace SDBees.Core.Plugins.AEC.Wall
 
         public override Table MyTable()
         {
-            return AECWallBaseData.gTable;
+            return MEPBuildingStatsBaseData.gTable;
         }
 
         public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
         {
-            return new AECWallBaseData();
+            return new MEPBuildingStatsBaseData();
         }
 
         public override Plugs.TemplateBase.TemplatePlugin GetPlugin()
@@ -161,12 +163,12 @@ namespace SDBees.Core.Plugins.AEC.Wall
             {
                 // Verify that the required Tables are created/updated in the database
                 Database database = MyDBManager.Database;
-                this.CreateDataObject().InitTableSchema(ref AECWallBaseData.gTable, database);
+                this.CreateDataObject().InitTableSchema(ref MEPBuildingStatsBaseData.gTable, database);
             }
         }
     }
 
-    public class AECWallBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
+    public class MEPBuildingStatsBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
     {
         #region Private Data Members
 
@@ -177,15 +179,15 @@ namespace SDBees.Core.Plugins.AEC.Wall
         #region Public Properties
         public override string GetTableName
         {
-            get { return "usrAECWalls"; }
+            get { return "usrMEPBuildingstatistics"; }
         }
 
         #endregion
 
         #region Constructor/Destructor
 
-        public AECWallBaseData() :
-            base("Wallname", "Wall", "General")
+        public MEPBuildingStatsBaseData() :
+            base("Key data name", "MEP key data", "General")
         {
             base.Table = gTable;
         }
@@ -201,7 +203,7 @@ namespace SDBees.Core.Plugins.AEC.Wall
         /*
         protected override string TableName()
         {
-            return "usrAECWalls";
+            return "usrHVACBuildingstatistics";
         }
          * */
 

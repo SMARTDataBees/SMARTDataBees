@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDBees.Main", "SDBees.Main\SDBees.Main.csproj", "{FB8A4009-EB90-462C-BD8A-776BA57D14CE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDBees.Core", "SDBees.Core\SDBees.Core.csproj", "{B0B1D84F-B27C-4284-AE47-6E8FFF402C35}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carbon.Framework", "Carbon.Framework\Carbon.Framework.csproj", "{77D0EAF9-EEAE-4457-879E-896FDF33C053}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDBees.Plugins", "SDBees.Plugins\SDBees.Plugins.csproj", "{7F6DC800-2D96-49A0-A8C8-8502314C49AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,8 +53,23 @@ Global
 		{77D0EAF9-EEAE-4457-879E-896FDF33C053}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{77D0EAF9-EEAE-4457-879E-896FDF33C053}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{77D0EAF9-EEAE-4457-879E-896FDF33C053}.Release|x86.ActiveCfg = Release|Any CPU
+		{7F6DC800-2D96-49A0-A8C8-8502314C49AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F6DC800-2D96-49A0-A8C8-8502314C49AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F6DC800-2D96-49A0-A8C8-8502314C49AF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7F6DC800-2D96-49A0-A8C8-8502314C49AF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7F6DC800-2D96-49A0-A8C8-8502314C49AF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7F6DC800-2D96-49A0-A8C8-8502314C49AF}.Debug|x86.Build.0 = Debug|Any CPU
+		{7F6DC800-2D96-49A0-A8C8-8502314C49AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F6DC800-2D96-49A0-A8C8-8502314C49AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F6DC800-2D96-49A0-A8C8-8502314C49AF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7F6DC800-2D96-49A0-A8C8-8502314C49AF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7F6DC800-2D96-49A0-A8C8-8502314C49AF}.Release|x86.ActiveCfg = Release|Any CPU
+		{7F6DC800-2D96-49A0-A8C8-8502314C49AF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A686F8A8-C454-4BE8-B8E7-71B8F0CB3900}
 	EndGlobalSection
 EndGlobal

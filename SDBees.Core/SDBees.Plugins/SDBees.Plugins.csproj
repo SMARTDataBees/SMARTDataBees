@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7F6DC800-2D96-49A0-A8C8-8502314C49AF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SDBees.Plugins</RootNamespace>
+    <AssemblyName>SDBees.Plugins</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\run\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\run\SDBees.Plugins.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\run\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AEC\AEC.Building.cs" />
+    <Compile Include="AEC\AEC.Curtainwall.Area.cs" />
+    <Compile Include="AEC\AEC.Curtainwall.cs" />
+    <Compile Include="AEC\AEC.Door.cs" />
+    <Compile Include="AEC\AEC.Level.cs" />
+    <Compile Include="AEC\AEC.Room.cs" />
+    <Compile Include="AEC\AEC.SubLevel.cs" />
+    <Compile Include="AEC\AEC.Wall.cs" />
+    <Compile Include="AEC\AEC.Window.cs" />
+    <Compile Include="AEC\AEC.Zone.cs" />
+    <Compile Include="MEP\MEP.BuildingStatistics.cs" />
+    <Compile Include="MEP\MEP.ContractDoc.cs" />
+    <Compile Include="MEP\MEP.CutOut.cs" />
+    <Compile Include="MEP\MEP.Element.cs" />
+    <Compile Include="MEP\MEP.System.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="TreeviewHelper\ListViewHelper.cs" />
+    <Compile Include="TreeviewHelper\ListViewHelperUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TreeviewHelper\ListViewHelperUserControl.designer.cs">
+      <DependentUpon>ListViewHelperUserControl.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Carbon.Framework\Carbon.Framework.csproj">
+      <Project>{77d0eaf9-eeae-4457-879e-896fdf33c053}</Project>
+      <Name>Carbon.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SDBees.Core\SDBees.Core.csproj">
+      <Project>{b0b1d84f-b27c-4284-ae47-6e8fff402c35}</Project>
+      <Name>SDBees.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TreeviewHelper\ListViewHelperUserControl.resx">
+      <DependentUpon>ListViewHelperUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SDBees.AEC.Building.AECBuilding.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SDBees.AEC.Curtainwall.AECCurtainwall.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SDBees.AEC.Curtainwall.AECCurtainwallArea.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SDBees.AEC.Door.AECDoor.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SDBees.AEC.Room.AECRoom.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SDBees.AEC.Storey.AECStorey.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SDBees.AEC.Storey.AECStorey1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SDBees.AEC.Wall.AECWall.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SDBees.AEC.Window.AECWindow.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SDBees.AEC.Zone.AECZone.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SDBees.MEP.BuildingStatistics.MEPBuildingsStats.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SDBees.MEP.ContractData.MEPContractData.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SDBees.MEP.Element.MEPElement.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SDBees.MEP.System.MEPCutOut.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SDBees.MEP.System.MEPSystem.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

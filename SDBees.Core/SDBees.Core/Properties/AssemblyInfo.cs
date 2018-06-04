@@ -49,30 +49,10 @@ using Carbon.Plugins.Attributes;
 
 [assembly: PluginDefinition(typeof(SDBees.Main.Window.MainWindowApplication))]
 
-#if DEBUG
-//[assembly: PluginDefinition(typeof(SDBees.UserAdmin.UserAdmin))]
-//[assembly: PluginDefinition(typeof(SDBees.EDM.EDMManager))]
-//[assembly: PluginDefinition(typeof(SDBees.Reporting.ReportingManager))]
-#endif
-//[assembly: PluginDefinition(typeof(SDBees.Plugins.TreeviewHelper.ListViewHelper))]
-//[assembly: PluginDefinition(typeof(SDBees.Demoplugins.Dummys.Dummy1))]
-//[assembly: PluginDefinition(typeof(SDBees.Demoplugins.Dummys.Dummy2))]
+[assembly: PluginDefinition(typeof(SDBees.UserAdmin.UserAdmin))]
+[assembly: PluginDefinition(typeof(SDBees.EDM.EDMManager))]
+[assembly: PluginDefinition(typeof(SDBees.Reporting.ReportingManager))]
 
-//Plugins AEC
-[assembly: PluginDefinition(typeof(SDBees.Core.Plugins.AEC.Building.AECBuilding))]
-[assembly: PluginDefinition(typeof(SDBees.Core.Plugins.AEC.Curtainwall.AECCurtainwall))]
-[assembly: PluginDefinition(typeof(SDBees.Core.Plugins.AEC.Curtainwall.AECCurtainwallArea))]
-[assembly: PluginDefinition(typeof(SDBees.Core.Plugins.AEC.Door.AECDoor))]
-[assembly: PluginDefinition(typeof(SDBees.Core.Plugins.AEC.Room.AECRoom))]
-[assembly: PluginDefinition(typeof(SDBees.Core.Plugins.AEC.Level.AECLevel))]
-[assembly: PluginDefinition(typeof(SDBees.Core.Plugins.AEC.Level.AECSubLevel))]
-[assembly: PluginDefinition(typeof(SDBees.Core.Plugins.AEC.Wall.AECWall))]
-[assembly: PluginDefinition(typeof(SDBees.Core.Plugins.AEC.Window.AECWindow))]
-[assembly: PluginDefinition(typeof(SDBees.Core.Plugins.AEC.Zone.AECZone))]
+[assembly: PluginDefinition(typeof(SDBees.Demoplugins.Dummys.Dummy1))]
+[assembly: PluginDefinition(typeof(SDBees.Demoplugins.Dummys.Dummy2))]
 
-//MEP
-[assembly: PluginDefinition(typeof(SDBees.Core.Plugins.MEP.BuildingStatistics.MEPBuildingsStats))]
-[assembly: PluginDefinition(typeof(SDBees.Core.Plugins.MEP.ContractData.MEPContractData))]
-[assembly: PluginDefinition(typeof(SDBees.Core.Plugins.MEP.Element.MEPElement))]
-[assembly: PluginDefinition(typeof(SDBees.Core.Plugins.MEP.System.MEPSystem))]
-[assembly: PluginDefinition(typeof(SDBees.Core.Plugins.MEP.CutOut.MEPCutOut))]

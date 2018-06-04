@@ -37,39 +37,35 @@ using Carbon;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
 
-using SDBees.Plugs.Attributes;
-using SDBees.Main.Window;
-using SDBees.DB;
 using SDBees.Plugs.TemplateTreeNode;
+using SDBees.DB;
 using SDBees.Core.Model;
 
-namespace SDBees.Core.Plugins.MEP.BuildingStatistics
+namespace SDBees.Core.Plugins.AEC.Zone
 {
     /// <summary>
     /// Provides a generic treenode plugin that other plugins can modify as their main treenode
     /// </summary>
     /// 
 
-    [PluginName("HVAC Buildingstatistics Plugin")]
+    [PluginName("AEC Zone Plugin")]
     [PluginAuthors("Tim Hoffeller")]
-    [PluginDescription("Plugin for the hvac buildings statistics")]
-    [PluginId("2C6604DF-36FC-4CC8-8FA2-0B0D198FB31A")]
+    [PluginDescription("Plugin for the basic zone")]
+    [PluginId("74A1D25C-0459-4366-91C6-01C8F32E4C3A")]
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
     [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
     [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
     [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
 
-    //[PluginTypeDef("Treenode")] //The SDBees PluginType
-
-    public class MEPBuildingsStats : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
+    public class AECZone : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
     {
-        private static MEPBuildingsStats _theInstance;
+        private static AECZone _theInstance;
 
         /// <summary>
         /// Returns the one and only instance.
         /// </summary>
-        public static MEPBuildingsStats Current
+        public static AECZone Current
         {
             get
             {
@@ -80,13 +76,13 @@ namespace SDBees.Core.Plugins.MEP.BuildingStatistics
         /// <summary>
         /// Konstruktor des AECRoomNode
         /// </summary>
-        public MEPBuildingsStats()
+        public AECZone()
             : base()
         {
             _theInstance = this;
-            CreateMenuItem = "Create HVAC Buildingsstats";
-            DeleteMenuItem = "Delete HVAC Buildingsstats";
-            EditSchemaMenuItem = "Edit HVAC Buildingsstats Schema";
+            CreateMenuItem = "Create Zone";
+            DeleteMenuItem = "Delete Zone";
+            EditSchemaMenuItem = "Edit Zone Schema";
         }
 
         /// <summary>
@@ -98,7 +94,7 @@ namespace SDBees.Core.Plugins.MEP.BuildingStatistics
         {
             try
             {
-                Console.WriteLine("HVAC Buildingsstats Plugin starts\n");
+                Console.WriteLine("Zone Plugin starts\n");
 
                 this.StartMe(context, e);
 
@@ -107,7 +103,6 @@ namespace SDBees.Core.Plugins.MEP.BuildingStatistics
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                //throw;
             }
         }
 
@@ -118,12 +113,12 @@ namespace SDBees.Core.Plugins.MEP.BuildingStatistics
         /// <param name="e"></param>
         protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
         {
-            Console.WriteLine("HVAC Buildingsstats Plugin stops\n");
+            Console.WriteLine("Zone Plugin stops\n");
         }
 
         public override Icon GetIcon(Size size)
         {
-            return SDBees.Core.Properties.Resources.SDBees_MEP_BuildingStatistics_MEPBuildingsStats;
+            return SDBees.Plugins.Properties.Resources.SDBees_AEC_Zone_AECZone;
         }
 
         //public override void SetName(string sName)
@@ -133,12 +128,12 @@ namespace SDBees.Core.Plugins.MEP.BuildingStatistics
 
         public override Table MyTable()
         {
-            return MEPBuildingStatsBaseData.gTable;
+            return AECZoneBaseData.gTable;
         }
 
         public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
         {
-            return new MEPBuildingStatsBaseData();
+            return new AECZoneBaseData();
         }
 
         public override Plugs.TemplateBase.TemplatePlugin GetPlugin()
@@ -163,12 +158,12 @@ namespace SDBees.Core.Plugins.MEP.BuildingStatistics
             {
                 // Verify that the required Tables are created/updated in the database
                 Database database = MyDBManager.Database;
-                this.CreateDataObject().InitTableSchema(ref MEPBuildingStatsBaseData.gTable, database);
+                this.CreateDataObject().InitTableSchema(ref AECZoneBaseData.gTable, database);
             }
         }
     }
 
-    public class MEPBuildingStatsBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
+    public class AECZoneBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
     {
         #region Private Data Members
 
@@ -179,15 +174,16 @@ namespace SDBees.Core.Plugins.MEP.BuildingStatistics
         #region Public Properties
         public override string GetTableName
         {
-            get { return "usrMEPBuildingstatistics"; }
+            get { return "usrAECZones"; }
         }
+
 
         #endregion
 
         #region Constructor/Destructor
 
-        public MEPBuildingStatsBaseData() :
-            base("Key data name", "MEP key data", "General")
+        public AECZoneBaseData() :
+            base("Zonename", "Zone", "General")
         {
             base.Table = gTable;
         }
@@ -203,10 +199,11 @@ namespace SDBees.Core.Plugins.MEP.BuildingStatistics
         /*
         protected override string TableName()
         {
-            return "usrHVACBuildingstatistics";
+            return "usrAECZones";
         }
          * */
 
         #endregion
     }
+
 }

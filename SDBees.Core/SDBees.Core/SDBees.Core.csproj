@@ -234,14 +234,6 @@
     <Compile Include="Model\Math\Vector2d.cs" />
     <Compile Include="Model\Math\Vector2f.cs" />
     <Compile Include="Model\Values\SDBeesOpeningSize.cs" />
-    <Compile Include="Plugins\AEC\AEC.SubLevel.cs" />
-    <Compile Include="Plugins\TreeviewHelper\ListViewHelper.cs" />
-    <Compile Include="Plugins\TreeviewHelper\ListViewHelperUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Plugins\TreeviewHelper\ListViewHelperUserControl.Designer.cs">
-      <DependentUpon>ListViewHelperUserControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Plugs\Explorer\ExplorerPlugin.cs" />
     <Compile Include="Plugs\TemplateTreeNode\TemplateTreenodeBaseData.cs" />
     <Compile Include="Utils\Profiler.cs" />
@@ -256,15 +248,6 @@
     <Compile Include="DB\SQLite\SQLiteDatabase.cs" />
     <Compile Include="DB\SQLite\SQLiteServer.cs" />
     <Compile Include="DB\Tools\Inspector.cs" />
-    <Compile Include="Plugins\AEC\AEC.Building.cs" />
-    <Compile Include="Plugins\AEC\AEC.Curtainwall.Area.cs" />
-    <Compile Include="Plugins\AEC\AEC.Curtainwall.cs" />
-    <Compile Include="Plugins\AEC\AEC.Door.cs" />
-    <Compile Include="Plugins\AEC\AEC.Room.cs" />
-    <Compile Include="Plugins\AEC\AEC.Level.cs" />
-    <Compile Include="Plugins\AEC\AEC.Wall.cs" />
-    <Compile Include="Plugins\AEC\AEC.Window.cs" />
-    <Compile Include="Plugins\AEC\AEC.Zone.cs" />
     <Compile Include="Plugins\Dummys\Dummys.cs" />
     <Compile Include="EDM\EDMBaseData.cs" />
     <Compile Include="EDM\EDMManager.cs" />
@@ -306,10 +289,6 @@
     </Compile>
     <Compile Include="Main\Systemtray\ProcessIcon.cs" />
     <Compile Include="Main\Window\ProgressTool.cs" />
-    <Compile Include="Plugins\MEP\MEP.System.cs" />
-    <Compile Include="Plugins\MEP\MEP.Element.cs" />
-    <Compile Include="Plugins\MEP\MEP.ContractDoc.cs" />
-    <Compile Include="Plugins\MEP\MEP.BuildingStatistics.cs" />
     <Compile Include="Plugs\Attributes\PluginTypeAttribute.cs" />
     <Compile Include="Plugs\Events\Events.cs" />
     <Compile Include="Plugs\Objects\ObjectHelper.cs" />
@@ -355,7 +334,6 @@
     </Compile>
     <Compile Include="Reporting\ReportingBaseData.cs" />
     <Compile Include="Reporting\ReportingManager.cs" />
-    <Compile Include="Plugins\MEP\MEP.CutOut.cs" />
     <Compile Include="Security\SecurityManager.cs" />
     <Compile Include="UserAdmin\GroupTreeView.cs">
       <SubType>Component</SubType>
@@ -475,9 +453,6 @@
     <EmbeddedResource Include="Main\Window\MainWindowDLG.resx">
       <DependentUpon>MainWindowDLG.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Plugins\TreeviewHelper\ListViewHelperUserControl.resx">
-      <DependentUpon>ListViewHelperUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Plugs\TemplateTreeNode\UserControlTempTreenode.resx">
       <DependentUpon>UserControlTempTreenode.cs</DependentUpon>

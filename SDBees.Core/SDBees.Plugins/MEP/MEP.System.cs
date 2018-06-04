@@ -43,31 +43,31 @@ using SDBees.DB;
 using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Core.Model;
 
-namespace SDBees.Core.Plugins.AEC.Room
+namespace SDBees.Core.Plugins.MEP.System
 {
     /// <summary>
     /// Provides a generic treenode plugin that other plugins can modify as their main treenode
     /// </summary>
     /// 
 
-    [PluginName("AEC Room Plugin")]
+    [PluginName("MEP system Plugin")]
     [PluginAuthors("Tim Hoffeller")]
-    [PluginDescription("Plugin for the basic room")]
-    [PluginId("FDF43B0D-A146-42A2-AE99-CDD557D7844A")]
+    [PluginDescription("Plugin for the hvac groups")]
+    [PluginId("4AB23465-FA6B-4C39-98B8-A15CCF6C883B")]
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
     [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
     [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
     [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
 
-    public class AECRoom : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
+    public class MEPSystem : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
     {
-        private static AECRoom _theInstance;
+        private static MEPSystem _theInstance;
 
         /// <summary>
         /// Returns the one and only instance.
         /// </summary>
-        public static AECRoom Current
+        public static MEPSystem Current
         {
             get
             {
@@ -78,13 +78,13 @@ namespace SDBees.Core.Plugins.AEC.Room
         /// <summary>
         /// Konstruktor des AECRoomNode
         /// </summary>
-        public AECRoom()
+        public MEPSystem()
             : base()
         {
             _theInstance = this;
-            CreateMenuItem = "Create Room";
-            DeleteMenuItem = "Delete Room";
-            EditSchemaMenuItem = "Edit Room Schema";
+            CreateMenuItem = "Create HVAC Group";
+            DeleteMenuItem = "Delete HVAC Group";
+            EditSchemaMenuItem = "Edit HVAC Group Schema";
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace SDBees.Core.Plugins.AEC.Room
         {
             try
             {
-                Console.WriteLine("RoomPlugin starts\n");
+                Console.WriteLine("HVAC Group Plugin starts\n");
 
                 this.StartMe(context, e);
 
@@ -116,12 +116,12 @@ namespace SDBees.Core.Plugins.AEC.Room
         /// <param name="e"></param>
         protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
         {
-            Console.WriteLine("RoomPlugin stops\n");
+            Console.WriteLine("HVAC Group Plugin stops\n");
         }
 
         public override Icon GetIcon(Size size)
         {
-            return SDBees.Core.Properties.Resources.SDBees_AEC_Room_AECRoom;
+            return SDBees.Plugins.Properties.Resources.SDBees_MEP_System_MEPSystem;
         }
 
         //public override void SetName(string sName)
@@ -131,12 +131,12 @@ namespace SDBees.Core.Plugins.AEC.Room
 
         public override Table MyTable()
         {
-            return AECRoomBaseData.gTable;
+            return MEPSystemBaseData.gTable;
         }
 
         public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
         {
-            return new AECRoomBaseData();
+            return new MEPSystemBaseData();
         }
 
         public override Plugs.TemplateBase.TemplatePlugin GetPlugin()
@@ -161,12 +161,12 @@ namespace SDBees.Core.Plugins.AEC.Room
             {
                 // Verify that the required Tables are created/updated in the database
                 Database database = MyDBManager.Database;
-                this.CreateDataObject().InitTableSchema(ref AECRoomBaseData.gTable, database);
+                this.CreateDataObject().InitTableSchema(ref MEPSystemBaseData.gTable, database);
             }
         }
     }
 
-    public class AECRoomBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
+    public class MEPSystemBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
     {
         #region Private Data Members
 
@@ -177,15 +177,15 @@ namespace SDBees.Core.Plugins.AEC.Room
         #region Public Properties
         public override string GetTableName
         {
-            get { return "usrAECRooms"; }
+            get { return "usrMEPSystem"; }
         }
 
         #endregion
 
         #region Constructor/Destructor
 
-        public AECRoomBaseData() :
-            base("Roomname", "Room", "General")
+        public MEPSystemBaseData() :
+            base("Systemname", "MEP system", "General")
         {
             base.Table = gTable;
         }
@@ -197,18 +197,8 @@ namespace SDBees.Core.Plugins.AEC.Room
         #endregion
 
         #region Protected Methods
-        /*
-        protected override string TableName()
-        {
-            return "usrAECRooms";
-        }
-         * */
 
         #endregion
-
-        public override bool CheckForUniqueName()
-        {
-            return true;
-        }
     }
+
 }

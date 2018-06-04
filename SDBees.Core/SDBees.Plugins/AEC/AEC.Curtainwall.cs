@@ -37,35 +37,37 @@ using Carbon;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
 
-using SDBees.Plugs.TemplateTreeNode;
+using SDBees.Plugs.Attributes;
+using SDBees.Main.Window;
 using SDBees.DB;
+using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Core.Model;
 
-namespace SDBees.Core.Plugins.AEC.Level
+namespace SDBees.Core.Plugins.AEC.Curtainwall
 {
     /// <summary>
     /// Provides a generic treenode plugin that other plugins can modify as their main treenode
     /// </summary>
     /// 
 
-    [PluginName("AEC Sublevel Plugin")]
+    [PluginName("AEC Curtainwall Plugin")]
     [PluginAuthors("Tim Hoffeller")]
-    [PluginDescription("Plugin for the sublevels in buildings")]
-    [PluginId("84145132-E860-474B-A60E-0396672083E1")]
+    [PluginDescription("Plugin for the basic curtainwall")]
+    [PluginId("F47083C5-6A38-491E-963D-3AE3080AD0E1")]
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
     [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
     [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
     [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
 
-    public class AECSubLevel : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
+    public class AECCurtainwall : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
     {
-        private static AECSubLevel _theInstance;
+        private static AECCurtainwall _theInstance;
 
         /// <summary>
         /// Returns the one and only instance.
         /// </summary>
-        public static AECSubLevel Current
+        public static AECCurtainwall Current
         {
             get
             {
@@ -76,13 +78,13 @@ namespace SDBees.Core.Plugins.AEC.Level
         /// <summary>
         /// Konstruktor des AECRoomNode
         /// </summary>
-        public AECSubLevel()
+        public AECCurtainwall()
             : base()
         {
             _theInstance = this;
-            CreateMenuItem = "Create Sublevel";
-            DeleteMenuItem = "Remove Sublevel";
-            EditSchemaMenuItem = "Edit Sublevel Schema";
+            CreateMenuItem = "Create Curtainwall";
+            DeleteMenuItem = "Delete Curtainwall";
+            EditSchemaMenuItem = "Edit Curtainwall Schema";
         }
 
         /// <summary>
@@ -94,7 +96,7 @@ namespace SDBees.Core.Plugins.AEC.Level
         {
             try
             {
-                Console.WriteLine("Sublevel Plugin starts\n");
+                Console.WriteLine("Curtainwall Plugin starts\n");
 
                 this.StartMe(context, e);
 
@@ -103,6 +105,7 @@ namespace SDBees.Core.Plugins.AEC.Level
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                //throw;
             }
         }
 
@@ -113,28 +116,28 @@ namespace SDBees.Core.Plugins.AEC.Level
         /// <param name="e"></param>
         protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
         {
-            Console.WriteLine("Sublevel Plugin stops\n");
+            Console.WriteLine("Curtainwall Plugin stops\n");
         }
 
         public override Icon GetIcon(Size size)
         {
-            return SDBees.Core.Properties.Resources.SDBees_AEC_Storey_AECSubLevel;
-        }
-
-        public override Table MyTable()
-        {
-            return AECSubLevelBaseData.gTable;
-        }
-
-        public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
-        {
-            return new AECSubLevelBaseData();
+            return SDBees.Plugins.Properties.Resources.SDBees_AEC_Curtainwall_AECCurtainwall;
         }
 
         //public override void SetName(string sName)
         //{
-        //    //throw new NotImplementedException();
+        //    //throw new Exception("The method or operation is not implemented.");
         //}
+
+        public override Table MyTable()
+        {
+            return AECCurtainwallBaseData.gTable;
+        }
+
+        public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
+        {
+            return new AECCurtainwallBaseData();
+        }
 
         public override Plugs.TemplateBase.TemplatePlugin GetPlugin()
         {
@@ -158,12 +161,12 @@ namespace SDBees.Core.Plugins.AEC.Level
             {
                 // Verify that the required Tables are created/updated in the database
                 Database database = MyDBManager.Database;
-                this.CreateDataObject().InitTableSchema(ref AECSubLevelBaseData.gTable, database);
+                this.CreateDataObject().InitTableSchema(ref AECCurtainwallBaseData.gTable, database);
             }
         }
     }
 
-    public class AECSubLevelBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
+    public class AECCurtainwallBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
     {
         #region Private Data Members
 
@@ -174,16 +177,15 @@ namespace SDBees.Core.Plugins.AEC.Level
         #region Public Properties
         public override string GetTableName
         {
-            get { return "usrAECSubLevels"; }
+            get { return "usrAECCurtainwalls"; }
         }
-
 
         #endregion
 
         #region Constructor/Destructor
 
-        public AECSubLevelBaseData() :
-            base("Sublevelname", "Sublevel", "General")
+        public AECCurtainwallBaseData() :
+            base("Curtainwallname", "Curtainwall", "General")
         {
             base.Table = gTable;
         }
@@ -191,16 +193,16 @@ namespace SDBees.Core.Plugins.AEC.Level
         #endregion
 
         #region Public Methods
-
         #endregion
 
         #region Protected Methods
+        /*
+        protected override string TableName()
+        {
+            return "usrAECCurtainwalls";
+        }
+         * */
 
         #endregion
-
-        public override bool CheckForUniqueName()
-        {
-            return true;
-        }
     }
 }

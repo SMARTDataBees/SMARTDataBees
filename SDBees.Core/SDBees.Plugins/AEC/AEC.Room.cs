@@ -43,31 +43,31 @@ using SDBees.DB;
 using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Core.Model;
 
-namespace SDBees.Core.Plugins.AEC.Curtainwall
+namespace SDBees.Core.Plugins.AEC.Room
 {
     /// <summary>
     /// Provides a generic treenode plugin that other plugins can modify as their main treenode
     /// </summary>
     /// 
 
-    [PluginName("AEC Curtainwall Area Plugin")]
+    [PluginName("AEC Room Plugin")]
     [PluginAuthors("Tim Hoffeller")]
-    [PluginDescription("Plugin for the basic curtainwall Area")]
-    [PluginId("F1F3B198-AE3F-4909-B6D1-B1CAA8156E18")]
+    [PluginDescription("Plugin for the basic room")]
+    [PluginId("FDF43B0D-A146-42A2-AE99-CDD557D7844A")]
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
     [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
     [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
     [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
 
-    public class AECCurtainwallArea : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
+    public class AECRoom : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
     {
-        private static AECCurtainwallArea _theInstance;
+        private static AECRoom _theInstance;
 
         /// <summary>
         /// Returns the one and only instance.
         /// </summary>
-        public static AECCurtainwallArea Current
+        public static AECRoom Current
         {
             get
             {
@@ -78,13 +78,13 @@ namespace SDBees.Core.Plugins.AEC.Curtainwall
         /// <summary>
         /// Konstruktor des AECRoomNode
         /// </summary>
-        public AECCurtainwallArea()
+        public AECRoom()
             : base()
         {
             _theInstance = this;
-            CreateMenuItem = "Create Curtainwall Area";
-            DeleteMenuItem = "Delete Curtainwall Area";
-            EditSchemaMenuItem = "Edit Curtainwall Area Schema";
+            CreateMenuItem = "Create Room";
+            DeleteMenuItem = "Delete Room";
+            EditSchemaMenuItem = "Edit Room Schema";
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace SDBees.Core.Plugins.AEC.Curtainwall
         {
             try
             {
-                Console.WriteLine("Curtainwall Area Plugin starts\n");
+                Console.WriteLine("RoomPlugin starts\n");
 
                 this.StartMe(context, e);
 
@@ -116,12 +116,12 @@ namespace SDBees.Core.Plugins.AEC.Curtainwall
         /// <param name="e"></param>
         protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
         {
-            Console.WriteLine("Curtainwall Area Plugin stops\n");
+            Console.WriteLine("RoomPlugin stops\n");
         }
 
         public override Icon GetIcon(Size size)
         {
-            return SDBees.Core.Properties.Resources.SDBees_AEC_Curtainwall_AECCurtainwallArea;
+            return SDBees.Plugins.Properties.Resources.SDBees_AEC_Room_AECRoom;
         }
 
         //public override void SetName(string sName)
@@ -131,12 +131,12 @@ namespace SDBees.Core.Plugins.AEC.Curtainwall
 
         public override Table MyTable()
         {
-            return AECCurtainwallAreaBaseData.gTable;
+            return AECRoomBaseData.gTable;
         }
 
         public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
         {
-            return new AECCurtainwallAreaBaseData();
+            return new AECRoomBaseData();
         }
 
         public override Plugs.TemplateBase.TemplatePlugin GetPlugin()
@@ -161,12 +161,12 @@ namespace SDBees.Core.Plugins.AEC.Curtainwall
             {
                 // Verify that the required Tables are created/updated in the database
                 Database database = MyDBManager.Database;
-                this.CreateDataObject().InitTableSchema(ref AECCurtainwallAreaBaseData.gTable, database);
+                this.CreateDataObject().InitTableSchema(ref AECRoomBaseData.gTable, database);
             }
         }
     }
 
-    public class AECCurtainwallAreaBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
+    public class AECRoomBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
     {
         #region Private Data Members
 
@@ -175,17 +175,17 @@ namespace SDBees.Core.Plugins.AEC.Curtainwall
         #endregion
 
         #region Public Properties
-
         public override string GetTableName
         {
-            get { return "usrAECCurtainwallsArea"; }
+            get { return "usrAECRooms"; }
         }
+
         #endregion
 
         #region Constructor/Destructor
 
-        public AECCurtainwallAreaBaseData() :
-            base("Curtainwallarea", "Curtainwall", "General")
+        public AECRoomBaseData() :
+            base("Roomname", "Room", "General")
         {
             base.Table = gTable;
         }
@@ -197,15 +197,18 @@ namespace SDBees.Core.Plugins.AEC.Curtainwall
         #endregion
 
         #region Protected Methods
-
         /*
         protected override string TableName()
         {
-            return "usrAECCurtainwallsArea";
+            return "usrAECRooms";
         }
          * */
 
         #endregion
-    }
 
+        public override bool CheckForUniqueName()
+        {
+            return true;
+        }
+    }
 }

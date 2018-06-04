@@ -43,32 +43,31 @@ using SDBees.DB;
 using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Core.Model;
 
-namespace SDBees.Core.Plugins.AEC.Door
+namespace SDBees.Core.Plugins.AEC.Wall
 {
     /// <summary>
     /// Provides a generic treenode plugin that other plugins can modify as their main treenode
     /// </summary>
     /// 
 
-    [PluginName("AEC Door Plugin")]
+    [PluginName("AEC Wall Plugin")]
     [PluginAuthors("Tim Hoffeller")]
-    [PluginDescription("Plugin for the basic door")]
-    [PluginId("8CA76B44-2E2E-4A0C-85B8-CEEB0AACD069")]
+    [PluginDescription("Plugin for the basic wall")]
+    [PluginId("620EEF54-E91A-48C2-B446-3E51762C6CE5")]
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
     [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
     [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
     [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
 
-
-    public class AECDoor : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
+    public class AECWall : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
     {
-        private static AECDoor _theInstance;
+        private static AECWall _theInstance;
 
         /// <summary>
         /// Returns the one and only instance.
         /// </summary>
-        public static AECDoor Current
+        public static AECWall Current
         {
             get
             {
@@ -79,13 +78,13 @@ namespace SDBees.Core.Plugins.AEC.Door
         /// <summary>
         /// Konstruktor des AECRoomNode
         /// </summary>
-        public AECDoor()
+        public AECWall()
             : base()
         {
             _theInstance = this;
-            CreateMenuItem = "Create Door";
-            DeleteMenuItem = "Delete Door";
-            EditSchemaMenuItem = "Edit Door Schema";
+            CreateMenuItem = "Create Wall";
+            DeleteMenuItem = "Delete Wall";
+            EditSchemaMenuItem = "Edit Wall Schema";
         }
 
         /// <summary>
@@ -97,7 +96,7 @@ namespace SDBees.Core.Plugins.AEC.Door
         {
             try
             {
-                Console.WriteLine("DoorPlugin starts\n");
+                Console.WriteLine("WallPlugin starts\n");
 
                 this.StartMe(context, e);
 
@@ -117,12 +116,12 @@ namespace SDBees.Core.Plugins.AEC.Door
         /// <param name="e"></param>
         protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
         {
-            Console.WriteLine("DoorPlugin stops\n");
+            Console.WriteLine("Wall Plugin stops\n");
         }
 
         public override Icon GetIcon(Size size)
         {
-            return SDBees.Core.Properties.Resources.SDBees_AEC_Door_AECDoor;
+            return SDBees.Plugins.Properties.Resources.SDBees_AEC_Wall_AECWall;
         }
 
         //public override void SetName(string sName)
@@ -132,12 +131,12 @@ namespace SDBees.Core.Plugins.AEC.Door
 
         public override Table MyTable()
         {
-            return AECDoorBaseData.gTable;
+            return AECWallBaseData.gTable;
         }
 
         public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
         {
-            return new AECDoorBaseData();
+            return new AECWallBaseData();
         }
 
         public override Plugs.TemplateBase.TemplatePlugin GetPlugin()
@@ -162,12 +161,12 @@ namespace SDBees.Core.Plugins.AEC.Door
             {
                 // Verify that the required Tables are created/updated in the database
                 Database database = MyDBManager.Database;
-                this.CreateDataObject().InitTableSchema(ref AECDoorBaseData.gTable, database);
+                this.CreateDataObject().InitTableSchema(ref AECWallBaseData.gTable, database);
             }
         }
     }
 
-    public class AECDoorBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
+    public class AECWallBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
     {
         #region Private Data Members
 
@@ -178,15 +177,15 @@ namespace SDBees.Core.Plugins.AEC.Door
         #region Public Properties
         public override string GetTableName
         {
-            get { return "usrAECDoors"; }
+            get { return "usrAECWalls"; }
         }
 
         #endregion
 
         #region Constructor/Destructor
 
-        public AECDoorBaseData() :
-            base("Doorname", "Door", "General")
+        public AECWallBaseData() :
+            base("Wallname", "Wall", "General")
         {
             base.Table = gTable;
         }
@@ -198,14 +197,14 @@ namespace SDBees.Core.Plugins.AEC.Door
         #endregion
 
         #region Protected Methods
+
         /*
         protected override string TableName()
         {
-            return "usrAECDoors";
+            return "usrAECWalls";
         }
          * */
 
         #endregion
     }
-
 }

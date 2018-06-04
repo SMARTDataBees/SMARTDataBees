@@ -43,31 +43,31 @@ using SDBees.DB;
 using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Core.Model;
 
-namespace SDBees.Core.Plugins.MEP.System
+namespace SDBees.Core.Plugins.AEC.Curtainwall
 {
     /// <summary>
     /// Provides a generic treenode plugin that other plugins can modify as their main treenode
     /// </summary>
     /// 
 
-    [PluginName("MEP system Plugin")]
+    [PluginName("AEC Curtainwall Area Plugin")]
     [PluginAuthors("Tim Hoffeller")]
-    [PluginDescription("Plugin for the hvac groups")]
-    [PluginId("4AB23465-FA6B-4C39-98B8-A15CCF6C883B")]
+    [PluginDescription("Plugin for the basic curtainwall Area")]
+    [PluginId("F1F3B198-AE3F-4909-B6D1-B1CAA8156E18")]
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
     [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
     [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
     [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
 
-    public class MEPSystem : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
+    public class AECCurtainwallArea : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
     {
-        private static MEPSystem _theInstance;
+        private static AECCurtainwallArea _theInstance;
 
         /// <summary>
         /// Returns the one and only instance.
         /// </summary>
-        public static MEPSystem Current
+        public static AECCurtainwallArea Current
         {
             get
             {
@@ -78,13 +78,13 @@ namespace SDBees.Core.Plugins.MEP.System
         /// <summary>
         /// Konstruktor des AECRoomNode
         /// </summary>
-        public MEPSystem()
+        public AECCurtainwallArea()
             : base()
         {
             _theInstance = this;
-            CreateMenuItem = "Create HVAC Group";
-            DeleteMenuItem = "Delete HVAC Group";
-            EditSchemaMenuItem = "Edit HVAC Group Schema";
+            CreateMenuItem = "Create Curtainwall Area";
+            DeleteMenuItem = "Delete Curtainwall Area";
+            EditSchemaMenuItem = "Edit Curtainwall Area Schema";
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace SDBees.Core.Plugins.MEP.System
         {
             try
             {
-                Console.WriteLine("HVAC Group Plugin starts\n");
+                Console.WriteLine("Curtainwall Area Plugin starts\n");
 
                 this.StartMe(context, e);
 
@@ -116,12 +116,12 @@ namespace SDBees.Core.Plugins.MEP.System
         /// <param name="e"></param>
         protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
         {
-            Console.WriteLine("HVAC Group Plugin stops\n");
+            Console.WriteLine("Curtainwall Area Plugin stops\n");
         }
 
         public override Icon GetIcon(Size size)
         {
-            return SDBees.Core.Properties.Resources.SDBees_MEP_System_MEPSystem;
+            return SDBees.Plugins.Properties.Resources.SDBees_AEC_Curtainwall_AECCurtainwallArea;
         }
 
         //public override void SetName(string sName)
@@ -131,12 +131,12 @@ namespace SDBees.Core.Plugins.MEP.System
 
         public override Table MyTable()
         {
-            return MEPSystemBaseData.gTable;
+            return AECCurtainwallAreaBaseData.gTable;
         }
 
         public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
         {
-            return new MEPSystemBaseData();
+            return new AECCurtainwallAreaBaseData();
         }
 
         public override Plugs.TemplateBase.TemplatePlugin GetPlugin()
@@ -161,12 +161,12 @@ namespace SDBees.Core.Plugins.MEP.System
             {
                 // Verify that the required Tables are created/updated in the database
                 Database database = MyDBManager.Database;
-                this.CreateDataObject().InitTableSchema(ref MEPSystemBaseData.gTable, database);
+                this.CreateDataObject().InitTableSchema(ref AECCurtainwallAreaBaseData.gTable, database);
             }
         }
     }
 
-    public class MEPSystemBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
+    public class AECCurtainwallAreaBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
     {
         #region Private Data Members
 
@@ -175,17 +175,17 @@ namespace SDBees.Core.Plugins.MEP.System
         #endregion
 
         #region Public Properties
+
         public override string GetTableName
         {
-            get { return "usrMEPSystem"; }
+            get { return "usrAECCurtainwallsArea"; }
         }
-
         #endregion
 
         #region Constructor/Destructor
 
-        public MEPSystemBaseData() :
-            base("Systemname", "MEP system", "General")
+        public AECCurtainwallAreaBaseData() :
+            base("Curtainwallarea", "Curtainwall", "General")
         {
             base.Table = gTable;
         }
@@ -197,6 +197,13 @@ namespace SDBees.Core.Plugins.MEP.System
         #endregion
 
         #region Protected Methods
+
+        /*
+        protected override string TableName()
+        {
+            return "usrAECCurtainwallsArea";
+        }
+         * */
 
         #endregion
     }

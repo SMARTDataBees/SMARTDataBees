@@ -43,31 +43,31 @@ using SDBees.DB;
 using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Core.Model;
 
-namespace SDBees.Core.Plugins.AEC.Window
+namespace SDBees.Core.Plugins.MEP.ContractData
 {
     /// <summary>
     /// Provides a generic treenode plugin that other plugins can modify as their main treenode
     /// </summary>
     /// 
 
-    [PluginName("AEC Window Plugin")]
+    [PluginName("MEP ContractData Plugin")]
     [PluginAuthors("Tim Hoffeller")]
-    [PluginDescription("Plugin for the basic window")]
-    [PluginId("D185D7A6-64BB-42AF-B78F-58175F51033A")]
+    [PluginDescription("Plugin for the mep Contractdatas")]
+    [PluginId("8794DA94-5C73-4CA4-BF89-C9983C168A87")]
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
     [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
     [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
     [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
 
-    public class AECWindow : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
+    public class MEPContractData : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
     {
-        private static AECWindow _theInstance;
+        private static MEPContractData _theInstance;
 
         /// <summary>
         /// Returns the one and only instance.
         /// </summary>
-        public static AECWindow Current
+        public static MEPContractData Current
         {
             get
             {
@@ -78,13 +78,13 @@ namespace SDBees.Core.Plugins.AEC.Window
         /// <summary>
         /// Konstruktor des AECRoomNode
         /// </summary>
-        public AECWindow()
+        public MEPContractData()
             : base()
         {
             _theInstance = this;
-            CreateMenuItem = "Create Window";
-            DeleteMenuItem = "Delete Window";
-            EditSchemaMenuItem = "Edit Window Schema";
+            CreateMenuItem = "Create Contract Data";
+            DeleteMenuItem = "Delete Contract Data";
+            EditSchemaMenuItem = "Edit Contract Data Schema";
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace SDBees.Core.Plugins.AEC.Window
         {
             try
             {
-                Console.WriteLine("Window Plugin starts\n");
+                Console.WriteLine("Contract Data Plugin starts\n");
 
                 this.StartMe(context, e);
 
@@ -116,12 +116,12 @@ namespace SDBees.Core.Plugins.AEC.Window
         /// <param name="e"></param>
         protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
         {
-            Console.WriteLine("Window Plugin stops\n");
+            Console.WriteLine("Contract Data Plugin stops\n");
         }
 
         public override Icon GetIcon(Size size)
         {
-            return SDBees.Core.Properties.Resources.SDBees_AEC_Window_AECWindow;
+            return SDBees.Plugins.Properties.Resources.SDBees_MEP_ContractData_MEPContractData;
         }
 
         //public override void SetName(string sName)
@@ -131,12 +131,12 @@ namespace SDBees.Core.Plugins.AEC.Window
 
         public override Table MyTable()
         {
-            return AECWindowBaseData.gTable;
+            return MEPContractDataBaseData.gTable;
         }
 
         public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
         {
-            return new AECWindowBaseData();
+            return new MEPContractDataBaseData();
         }
 
         public override Plugs.TemplateBase.TemplatePlugin GetPlugin()
@@ -148,7 +148,7 @@ namespace SDBees.Core.Plugins.AEC.Window
         {
             return base.GetEntityDefinition(this.GetType());
         }
-
+        
         protected override void OnDatabaseChanged(object sender, EventArgs e)
         {
             InitDatabase();
@@ -161,12 +161,12 @@ namespace SDBees.Core.Plugins.AEC.Window
             {
                 // Verify that the required Tables are created/updated in the database
                 Database database = MyDBManager.Database;
-                this.CreateDataObject().InitTableSchema(ref AECWindowBaseData.gTable, database);
+                this.CreateDataObject().InitTableSchema(ref MEPContractDataBaseData.gTable, database);
             }
         }
     }
 
-    public class AECWindowBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
+    public class MEPContractDataBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
     {
         #region Private Data Members
 
@@ -177,14 +177,15 @@ namespace SDBees.Core.Plugins.AEC.Window
         #region Public Properties
         public override string GetTableName
         {
-            get { return "usrAECWindows"; }
+            get { return "usrMEPContractdata"; }
         }
+
         #endregion
 
         #region Constructor/Destructor
 
-        public AECWindowBaseData() :
-            base("Windowname", "Window", "General")
+        public MEPContractDataBaseData() :
+            base("Contract data name", "MEP contract data", "General")
         {
             base.Table = gTable;
         }
@@ -196,11 +197,10 @@ namespace SDBees.Core.Plugins.AEC.Window
         #endregion
 
         #region Protected Methods
-
         /*
         protected override string TableName()
         {
-            return "usrAECWindows";
+            return "usrHVACContractdata";
         }
          * */
 

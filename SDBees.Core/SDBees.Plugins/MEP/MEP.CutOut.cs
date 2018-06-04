@@ -1,4 +1,4 @@
-// #StartHeader# ==============================================================
+﻿// #StartHeader# ==============================================================
 //
 // This file is a part of the SMARTDataBees open source project.
 //
@@ -37,35 +37,37 @@ using Carbon;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
 
-using SDBees.Plugs.TemplateTreeNode;
+using SDBees.Plugs.Attributes;
+using SDBees.Main.Window;
 using SDBees.DB;
+using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Core.Model;
 
-namespace SDBees.Core.Plugins.AEC.Zone
+namespace SDBees.Core.Plugins.MEP.CutOut
 {
     /// <summary>
     /// Provides a generic treenode plugin that other plugins can modify as their main treenode
     /// </summary>
     /// 
 
-    [PluginName("AEC Zone Plugin")]
+    [PluginName("MEP cutout Plugin")]
     [PluginAuthors("Tim Hoffeller")]
-    [PluginDescription("Plugin for the basic zone")]
-    [PluginId("74A1D25C-0459-4366-91C6-01C8F32E4C3A")]
+    [PluginDescription("Plugin for the cutout objects")]
+    [PluginId("C2305613-1D3D-4EF0-8C84-415E3BDEF20B")]
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
     [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
     [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
     [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
 
-    public class AECZone : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
+    public class MEPCutOut : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
     {
-        private static AECZone _theInstance;
+        private static MEPCutOut _theInstance;
 
         /// <summary>
         /// Returns the one and only instance.
         /// </summary>
-        public static AECZone Current
+        public static MEPCutOut Current
         {
             get
             {
@@ -76,13 +78,13 @@ namespace SDBees.Core.Plugins.AEC.Zone
         /// <summary>
         /// Konstruktor des AECRoomNode
         /// </summary>
-        public AECZone()
+        public MEPCutOut()
             : base()
         {
             _theInstance = this;
-            CreateMenuItem = "Create Zone";
-            DeleteMenuItem = "Delete Zone";
-            EditSchemaMenuItem = "Edit Zone Schema";
+            CreateMenuItem = "Create CutOut";
+            DeleteMenuItem = "Delete CutOut";
+            EditSchemaMenuItem = "Edit CutOut Schema";
         }
 
         /// <summary>
@@ -94,7 +96,7 @@ namespace SDBees.Core.Plugins.AEC.Zone
         {
             try
             {
-                Console.WriteLine("Zone Plugin starts\n");
+                Console.WriteLine("CutOut Plugin starts\n");
 
                 this.StartMe(context, e);
 
@@ -103,6 +105,7 @@ namespace SDBees.Core.Plugins.AEC.Zone
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                //throw;
             }
         }
 
@@ -113,12 +116,12 @@ namespace SDBees.Core.Plugins.AEC.Zone
         /// <param name="e"></param>
         protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
         {
-            Console.WriteLine("Zone Plugin stops\n");
+            Console.WriteLine("CutOut Plugin stops\n");
         }
 
         public override Icon GetIcon(Size size)
         {
-            return SDBees.Core.Properties.Resources.SDBees_AEC_Zone_AECZone;
+            return SDBees.Plugins.Properties.Resources.SDBees_MEP_System_MEPCutOut;
         }
 
         //public override void SetName(string sName)
@@ -128,12 +131,12 @@ namespace SDBees.Core.Plugins.AEC.Zone
 
         public override Table MyTable()
         {
-            return AECZoneBaseData.gTable;
+            return MEPCutOutBaseData.gTable;
         }
 
         public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
         {
-            return new AECZoneBaseData();
+            return new MEPCutOutBaseData();
         }
 
         public override Plugs.TemplateBase.TemplatePlugin GetPlugin()
@@ -158,12 +161,12 @@ namespace SDBees.Core.Plugins.AEC.Zone
             {
                 // Verify that the required Tables are created/updated in the database
                 Database database = MyDBManager.Database;
-                this.CreateDataObject().InitTableSchema(ref AECZoneBaseData.gTable, database);
+                this.CreateDataObject().InitTableSchema(ref MEPCutOutBaseData.gTable, database);
             }
         }
     }
 
-    public class AECZoneBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
+    public class MEPCutOutBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
     {
         #region Private Data Members
 
@@ -174,16 +177,15 @@ namespace SDBees.Core.Plugins.AEC.Zone
         #region Public Properties
         public override string GetTableName
         {
-            get { return "usrAECZones"; }
+            get { return "usrMEPCutOut"; }
         }
-
 
         #endregion
 
         #region Constructor/Destructor
 
-        public AECZoneBaseData() :
-            base("Zonename", "Zone", "General")
+        public MEPCutOutBaseData() :
+            base("Cutoutname", "MEP Cutout", "General")
         {
             base.Table = gTable;
         }
@@ -195,13 +197,6 @@ namespace SDBees.Core.Plugins.AEC.Zone
         #endregion
 
         #region Protected Methods
-
-        /*
-        protected override string TableName()
-        {
-            return "usrAECZones";
-        }
-         * */
 
         #endregion
     }

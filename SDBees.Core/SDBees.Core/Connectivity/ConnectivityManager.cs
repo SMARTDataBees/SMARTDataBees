@@ -924,13 +924,13 @@ namespace SDBees.Core.Connectivity
 
         internal void SetupBuildingSubLevels(SDBeesExternalDocument doc, SDBeesDataSet data)
         {
-            foreach (SDBeesEntity ent in data.Entities)
-            {
-                if (ent.DefinitionId == typeof(SDBees.Core.Plugins.AEC.Level.AECSubLevel).ToString())
-                {
-                    //Setup the sub levels
-                }
-            }
+            //foreach (SDBeesEntity ent in data.Entities)
+            //{
+            //    if (ent.DefinitionId == typeof(SDBees.Core.Plugins.AEC.Level.AECSubLevel).ToString())
+            //    {
+            //        //Setup the sub levels
+            //    }
+            //}
         }
 
         protected override void OnDatabaseChanged(object sender, EventArgs e)
@@ -1015,16 +1015,17 @@ namespace SDBees.Core.Connectivity
         {
             //create building
             // Sollte dann noch schöner gemacht werden, da es sehr FS spezifisch ist und hier nichts verloren hat, da wir ja in den SDBees sind.
-            SDBees.Core.Plugins.AEC.Building.AECBuildingBaseData _basedt = SDBees.Core.Plugins.AEC.Building.AECBuilding.Current.CreateDefaultBuildingAsRoot();
-            if (_basedt != null)
-            {
-                // return values
-                idObj.SetPropertyByColumn(m_DocumentRootColumnName, _basedt.GetPropertyByColumn(SDBees.DB.Object.m_IdColumnName).ToString());
-                idObj.SetPropertyByColumn(m_DocumentRootTypeColumnName, SDBees.Core.Plugins.AEC.Building.AECBuildingBaseData.GetPluginForBaseData(_basedt).GetType().ToString());
-                return true;
-            }
-            else
-            { return false; }
+            //SDBees.Core.Plugins.AEC.Building.AECBuildingBaseData _basedt = SDBees.Core.Plugins.AEC.Building.AECBuilding.Current.CreateDefaultBuildingAsRoot();
+            //if (_basedt != null)
+            //{
+            //    // return values
+            //    idObj.SetPropertyByColumn(m_DocumentRootColumnName, _basedt.GetPropertyByColumn(SDBees.DB.Object.m_IdColumnName).ToString());
+            //    idObj.SetPropertyByColumn(m_DocumentRootTypeColumnName, SDBees.Core.Plugins.AEC.Building.AECBuildingBaseData.GetPluginForBaseData(_basedt).GetType().ToString());
+            //    return true;
+            //}
+            //else
+            //{ return false; }
+            return false;
         }
 
         private static bool GetDocumentRootAndTypeInteractive(ref Plugs.TemplateBase.TemplateDBBaseData rootDocData)
