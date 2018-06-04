@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<project name="SDBees.GIS" default="deploy">
+	<include buildfile="..\..\NAnt\CopyCore.build">
+	</include>
+	
+	<target name="GISBees" description="Default build target for the Connectiviy" depends="CopyCore">
+		<echo message="Running default build target GisBees." />
+		<msbuild  project="..\SDBees.GISBees.sln">
+			<arg value="/property:Configuration=Debug" />
+			<!--<arg value="/t:Rebuild" /> -->
+		</msbuild>
+	</target>
+
+	<target name="deploy" depends="GISBees">
+		<echo message="Copying the Contentdata"/>
+		<!-- Die Icons -->
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.GIS.Country\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.GIS.Location\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.GIS.OutdoorArea\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+		
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.GIS.OutdoorObject\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.GIS.Region\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	</target>
+</project>

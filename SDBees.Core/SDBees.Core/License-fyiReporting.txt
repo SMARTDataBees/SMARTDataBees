@@ -1,0 +1,4 @@
+﻿The fyiReporting Software RDL Project 4.1 is released under the terms of the 
+Apache License Version 2.  This license allows you to use the RDL Project 4.1 
+libraries and programs in either open source or commercial applications as long 
+as you credit fyiReporting Software, LLC.  

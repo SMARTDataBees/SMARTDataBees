@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDBees.Connectivity.Autocad", "SDBees.Connectivity.Autocad\SDBees.Connectivity.Autocad.csproj", "{2179F2BE-BDA7-4582-AD94-5EC147D6D06D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDBees.Connectivity", "..\SDBees.Core\SDBees.Connectivity\SDBees.Connectivity.csproj", "{214F7EF8-7705-4142-A6B5-9EFDDBB56E60}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDBees.Connectivity.Autocad.2008", "SDBees.Connectivity.Autocad.2008\SDBees.Connectivity.Autocad.2008.csproj", "{044E0BA4-B56C-4B4B-AC88-2053BD53E62C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2179F2BE-BDA7-4582-AD94-5EC147D6D06D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2179F2BE-BDA7-4582-AD94-5EC147D6D06D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2179F2BE-BDA7-4582-AD94-5EC147D6D06D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2179F2BE-BDA7-4582-AD94-5EC147D6D06D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{214F7EF8-7705-4142-A6B5-9EFDDBB56E60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{214F7EF8-7705-4142-A6B5-9EFDDBB56E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{214F7EF8-7705-4142-A6B5-9EFDDBB56E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{214F7EF8-7705-4142-A6B5-9EFDDBB56E60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{044E0BA4-B56C-4B4B-AC88-2053BD53E62C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{044E0BA4-B56C-4B4B-AC88-2053BD53E62C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{044E0BA4-B56C-4B4B-AC88-2053BD53E62C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{044E0BA4-B56C-4B4B-AC88-2053BD53E62C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

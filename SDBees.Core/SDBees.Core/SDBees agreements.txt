@@ -1,0 +1,2 @@
+﻿DB agreements
+- all length values are stored inside database in millimeter!

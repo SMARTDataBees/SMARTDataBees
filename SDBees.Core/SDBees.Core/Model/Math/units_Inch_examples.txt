@@ -1,0 +1,11 @@
+﻿Architectural
+	feet + inch in Bruch
+	7" 4 1/4'
+
+Engineering
+	feet mit Dezimal
+	7.93
+
+Fractional
+	Inch mit Bruch
+	34 1/4

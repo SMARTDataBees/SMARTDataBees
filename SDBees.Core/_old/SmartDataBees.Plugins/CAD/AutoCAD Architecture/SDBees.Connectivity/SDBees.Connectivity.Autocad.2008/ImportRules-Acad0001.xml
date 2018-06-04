@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ImportRules InterfaceType="Acad0001">
+    <ImportRule ExternType="AecDbArea" InternType="SDBees.AEC.Room.AECRoom">
+        <Criteria>
+            <!--
+            Add criteria here - no criteria means all will match
+            Possible generic criterias are "Include" and "Exclude"
+            Multiple values of the same kind mean "or" and of different kinds mean "and"
+            InterfaceType "Acad0001" supports the following criterias:
+                Style
+                Layer
+                Color
+                Linetype
+            Example: The follwing statements mean that all elements of the type ExternType that
+            have a style of Tür OR Fenster AND with Linetype "dash" but not on Layer 0 will be triggered
+            by this rule.
+            <Include>
+                <Style value="Tür"/>
+                <Style value="Fenster"/>
+                <Linetype value="dash"/>
+            </Include>
+            <Exclude>
+                <Layer value="0"/>
+            </Exclude>
+            -->
+        </Criteria>
+        <Defaults name="Raum"/>
+    </ImportRule>
+    <ImportRule ExternType="AecDbMassElem" InternType="SDBees.AEC.Door.AECDoor">
+        <Criteria>
+            <!-- Add criteria here - no criteria means all will match -->
+            <Include>
+                <Style value="Tür"/>
+            </Include>
+        </Criteria>
+        <Defaults name="Tür"/>
+    </ImportRule>
+    <ImportRule ExternType="AecDbMassElem" InternType="SDBees.AEC.Window.AECWindow">
+        <Criteria>
+            <!-- Add criteria here - no criteria means all will match -->
+            <Include>
+                <Style value="Fenster"/>
+            </Include>
+        </Criteria>
+        <Defaults name="Fenster"/>
+    </ImportRule>
+    <ImportRule ExternType="AecDbMassElem" InternType="SDBees.AEC.Wall.AECWall">
+        <Criteria>
+            <!-- Add criteria here - no criteria means all will match -->
+            <Include>
+                <Style value="Wand"/>
+            </Include>
+        </Criteria>
+        <Defaults name="Wand"/>
+    </ImportRule>
+
+  <ImportRule ExternType="AecDbSpace" InternType="SDBees.AEC.Room.AECRoom">
+    <Criteria>
+      <Include>
+      </Include>
+    </Criteria>
+    <Defaults name="Raum"/>
+  </ImportRule>
+</ImportRules>

@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<project name="SDBees.AEC" default="deployAEC">
+	<include buildfile="..\..\NAnt\CopyCore.build">
+	</include>
+
+	<target name="AEC" description="Default build target for the AECBees" depends="CopyCore">
+		<echo message="Running default build target SDBees.AEC." />
+		<msbuild  project="..\SDBees.AEC\AECBees.sln">
+			<arg value="/property:Configuration=Debug" />
+			<!--<arg value="/t:Rebuild" /> -->
+		</msbuild>
+	</target>
+
+	<target name="HVAC" description="Default build target for the HVACBees" depends="CopyCore">
+		<echo message="Running default build target SDBees.HVAC." />
+		<msbuild  project="..\SDBees.HVAC\HVAC.sln">
+			<arg value="/property:Configuration=Debug" />
+			<!--<arg value="/t:Rebuild" /> -->
+		</msbuild>
+	</target>
+
+	<target name="Organisation" description="Default build target for the SDBees.OrganisationBees" depends="CopyCore">
+		<echo message="Running default build target SDBees.Organisation." />
+		<msbuild  project="..\SDBees.Organisation\Orga.sln">
+			<arg value="/property:Configuration=Debug" />
+			<!--<arg value="/t:Rebuild" /> -->
+		</msbuild>
+	</target>
+
+	<target name="Process" description="Default build target for the SDBees.ProcessBees" depends="CopyCore">
+		<echo message="Running default build target SDBees.Process." />
+		<msbuild  project="..\SDBees.Process\Process.sln">
+			<arg value="/property:Configuration=Debug" />
+			<!--<arg value="/t:Rebuild" /> -->
+		</msbuild>
+	</target>
+
+	<target name="deployAEC" depends="Process,AEC,HVAC,Organisation">
+		<echo message="Copying the Contentdata AEC"/>
+		<!-- Die Icons -->
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.AEC\SDBees.AEC.Building\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.AEC\SDBees.AEC.Curtainwall\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.AEC\SDBees.AEC.Curtainwall.Area\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.AEC\SDBees.AEC.Door\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.AEC\SDBees.AEC.Room\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.AEC\SDBees.AEC.Storey\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>		
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.AEC\SDBees.AEC.Wall\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.AEC\SDBees.AEC.Window\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>		
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.AEC\SDBees.AEC.Zone\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+		
+		<echo message="Copying the Contentdata HVAC"/>
+		<!-- Die Icons -->
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.HVAC\SDBees.HVAC.BuildingStatistics\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.HVAC\SDBees.HVAC.ContractData\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.HVAC\SDBees.HVAC.Element\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.HVAC\SDBees.HVAC.Group\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	
+		<echo message="Copying the Contentdata Organisation"/>
+		<!-- Die Icons -->
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.Organisation\SDBees.Orga.CleaningManagement\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.Organisation\SDBees.Orga.Group\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.Organisation\SDBees.Orga.MovingManagement\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.Organisation\SDBees.Orga.PersonalManagement\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	
+		<echo message="Copying the Contentdata Prozess"/>
+		<!-- Die Icons -->
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.Process\SDBees.Process.Device\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.Process\SDBees.Process.Employee\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.Process\SDBees.Process.Interface\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.Process\SDBees.Process.Parcel\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\SDBees.Process\SDBees.Process.Security\Icons">
+				<include name="*.ico"/>
+			</fileset>
+		</copy>
+	</target>
+</project>

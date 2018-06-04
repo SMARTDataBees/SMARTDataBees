@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+# SharpDevelop 2.1.0.2429
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDBees.GIS.Country", "SDBees.GIS.Country\SDBees.GIS.Country.csproj", "{CD04F7F5-75D6-4DDA-9F49-F3B1D704A7BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDBees.GIS.Location", "SDBees.GIS.Location\SDBees.GIS.Location.csproj", "{300D48D3-17FC-40B4-9B49-5CAC26C0C1E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDBees.GIS.OutdoorArea", "SDBees.GIS.OutdoorArea\SDBees.GIS.OutdoorArea.csproj", "{4403F89C-B220-4C00-8093-80422F8B9076}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDBees.GIS.Region", "SDBees.GIS.Region\SDBees.GIS.Region.csproj", "{F7B2236A-D72D-4EF7-BAA8-D84C9115D6BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDBees.GIS.OutdoorObject", "SDBees.GIS.OutdoorObject\SDBees.GIS.OutdoorObject.csproj", "{ED13FA36-EA05-4C0F-9CB9-1A475DB28A2A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AA85A810-E5BF-4B64-8332-A8F8643D5402}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA85A810-E5BF-4B64-8332-A8F8643D5402}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA85A810-E5BF-4B64-8332-A8F8643D5402}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA85A810-E5BF-4B64-8332-A8F8643D5402}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD04F7F5-75D6-4DDA-9F49-F3B1D704A7BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD04F7F5-75D6-4DDA-9F49-F3B1D704A7BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD04F7F5-75D6-4DDA-9F49-F3B1D704A7BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD04F7F5-75D6-4DDA-9F49-F3B1D704A7BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{300D48D3-17FC-40B4-9B49-5CAC26C0C1E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{300D48D3-17FC-40B4-9B49-5CAC26C0C1E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{300D48D3-17FC-40B4-9B49-5CAC26C0C1E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{300D48D3-17FC-40B4-9B49-5CAC26C0C1E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4403F89C-B220-4C00-8093-80422F8B9076}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4403F89C-B220-4C00-8093-80422F8B9076}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4403F89C-B220-4C00-8093-80422F8B9076}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4403F89C-B220-4C00-8093-80422F8B9076}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7B2236A-D72D-4EF7-BAA8-D84C9115D6BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7B2236A-D72D-4EF7-BAA8-D84C9115D6BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7B2236A-D72D-4EF7-BAA8-D84C9115D6BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7B2236A-D72D-4EF7-BAA8-D84C9115D6BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED13FA36-EA05-4C0F-9CB9-1A475DB28A2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED13FA36-EA05-4C0F-9CB9-1A475DB28A2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED13FA36-EA05-4C0F-9CB9-1A475DB28A2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED13FA36-EA05-4C0F-9CB9-1A475DB28A2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+EndGlobal

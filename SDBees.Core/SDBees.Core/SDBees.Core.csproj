@@ -1,0 +1,616 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B0B1D84F-B27C-4284-AE47-6E8FFF402C35}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SDBees.Core</RootNamespace>
+    <AssemblyName>SDBees.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\run\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\run\SDBees.Core.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\run\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>3rdParty\log4net\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=1.0.7.30072, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>3rdParty\MySQL\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="RdlViewer, Version=4.1.0.0, Culture=neutral, PublicKeyToken=98d963a3ed6bf418, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>3rdParty\Reporting\rdlProject\RdlViewer.DLL</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.SQLite, Version=1.0.94.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>3rdParty\SQLight\sqlite-netFx40-binary-bundle-x64-2010-1.0.94.0\System.Data.SQLite.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Connectivity\ConnectivityHost.cs" />
+    <Compile Include="Connectivity\ConnectivityManager.cs" />
+    <Compile Include="Connectivity\SDBeesLink\Client\SDBeesCallbackCommand.cs" />
+    <Compile Include="Connectivity\SDBeesLink\Client\SDBeesCallbackCommandQueue.cs" />
+    <Compile Include="Connectivity\SDBeesLink\Client\SDBeesExternalServiceClient.cs" />
+    <Compile Include="Connectivity\SDBeesLink\SDBeesExternalDocumentAdmin.cs" />
+    <Compile Include="Connectivity\SDBeesLink\UI\SDBeesDataSetEntityController.cs" />
+    <Compile Include="Connectivity\SDBeesLink\UI\SDBeesExternalDocumentDLG.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Connectivity\SDBeesLink\UI\SDBeesExternalDocumentDLG.Designer.cs">
+      <DependentUpon>SDBeesExternalDocumentDLG.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DB\SQLite\SQLiteFilenameEditor.cs" />
+    <Compile Include="Global\GlobalManager.cs" />
+    <Compile Include="Global\SDBeesGlobalVars.cs" />
+    <Compile Include="GuiTools\Controls\SDBees_DataGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GuiTools\Forms\ProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GuiTools\Forms\ProgressForm.designer.cs">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GuiTools\Progress\iProgress.cs" />
+    <Compile Include="GuiTools\Progress\Progress.cs" />
+    <Compile Include="GuiTools\TypeConverters\BooleanTypeConverter.cs" />
+    <Compile Include="GuiTools\TypeConverters\CrossSizeTypeConverter.cs" />
+    <Compile Include="GuiTools\TypeConverters\DecimalPlacesConverter.cs" />
+    <Compile Include="GuiTools\TypeConverters\LengthTypeConverter.cs" />
+    <Compile Include="GuiTools\TypeConverters\CountryInfoTypeConverter.cs" />
+    <Compile Include="Model\Basic\SDBeesSetBase.cs" />
+    <Compile Include="Model\Instances\SDBeesCADDocument.cs" />
+    <Compile Include="Model\Instances\SDBeesDBDocument.cs" />
+    <Compile Include="Model\Instances\SDBeesDocumentCADInfo.cs" />
+    <Compile Include="Model\Instances\SDBeesTransferSet.cs" />
+    <Compile Include="Model\Math\UnitTypes.cs" />
+    <Compile Include="Model\Values\SDBeesDoubleWithUnit.cs" />
+    <Compile Include="Model\Tools\SDBeesDataSetTools.cs" />
+    <Compile Include="Model\Tools\SerializationTools.cs" />
+    <Compile Include="Connectivity\SDBeesLink\UI\SDBeesDataSetDLG.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Connectivity\SDBeesLink\UI\SDBeesDataSetDLG.Designer.cs">
+      <DependentUpon>SDBeesDataSetDLG.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Connectivity\SDBeesLink\Service\GlobalVars.cs" />
+    <Compile Include="Connectivity\SDBeesLink\Service\ISDBeesExternalPluginCallbackService.cs" />
+    <Compile Include="Model\Mappings\SDBeesExternalAvailableInfo.cs" />
+    <Compile Include="Model\Filters\SDBeesBooleanFilter.cs" />
+    <Compile Include="Model\Instances\SDBeesDataSet.cs" />
+    <Compile Include="Model\Instances\SDBeesEntity.cs" />
+    <Compile Include="Model\Definitions\SDBeesEntityDefinition.cs" />
+    <Compile Include="Model\Filters\SDBeesEntityFilter.cs" />
+    <Compile Include="Connectivity\SDBeesLink\SDBeesExternalDocument.cs" />
+    <Compile Include="Connectivity\SDBeesLink\Service\SDBeesExternalPluginService.cs" />
+    <Compile Include="Model\Filters\SDBeesFilter.cs" />
+    <Compile Include="Model\Filters\SDBeesFilterOperator.cs" />
+    <Compile Include="Model\Basic\SDBeesId.cs" />
+    <Compile Include="Model\Basic\SDBeesLabel.cs" />
+    <Compile Include="Model\Mappings\SDBeesMappedEntityDefinition.cs" />
+    <Compile Include="Model\Mappings\SDBeesMappedPropertyDefinition.cs" />
+    <Compile Include="Connectivity\SDBeesLink\Service\ISDBeesExternalPluginService.cs" />
+    <Compile Include="Model\Mappings\SDBeesExternalEntityInfo.cs" />
+    <Compile Include="Model\Mappings\SDBeesExternalMappings.cs" />
+    <Compile Include="Model\Mappings\SDBeesExternalPropertyInfo.cs" />
+    <Compile Include="Model\Definitions\SDBeesProjectDefinitions.cs" />
+    <Compile Include="Model\Instances\SDBeesProperty.cs" />
+    <Compile Include="Model\Definitions\SDBeesPropertyDefinition.cs" />
+    <Compile Include="Model\Filters\SDBeesPropertyFilter.cs" />
+    <Compile Include="Model\Filters\SDBeesPropertyFilterType.cs" />
+    <Compile Include="Model\Definitions\SDBeesPropertyType.cs" />
+    <Compile Include="Model\Instances\SDBeesPropertyValue.cs" />
+    <Compile Include="Model\Instances\SDBeesRelation.cs" />
+    <Compile Include="Model\Definitions\SDBeesRelationshipDefinition.cs" />
+    <Compile Include="Model\Definitions\SDBeesRelationshipType.cs" />
+    <Compile Include="Connectivity\SDBeesLink\SDBeesSyncMode.cs" />
+    <Compile Include="Model\Values\SDBeesCoordinate.cs" />
+    <Compile Include="DB\Controls\DbDragData.cs" />
+    <Compile Include="DB\Controls\DbTreeNodeTag.cs" />
+    <Compile Include="DB\Controls\DbTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DB\DBManager.cs" />
+    <Compile Include="DB\Forms\ColumnPropertyTable.cs" />
+    <Compile Include="DB\Forms\frmEditTable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DB\Forms\frmEditTable.Designer.cs">
+      <DependentUpon>frmEditTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DB\Forms\frmError.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DB\Forms\frmError.Designer.cs">
+      <DependentUpon>frmError.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DB\Forms\Inputbox.cs" />
+    <Compile Include="DB\Forms\frmInputBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DB\Forms\frmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DB\Forms\frmLogin.Designer.cs">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DB\Forms\ObjectPropertyTable.cs" />
+    <Compile Include="DB\Generic\Attribute.cs" />
+    <Compile Include="DB\Generic\Column.cs" />
+    <Compile Include="DB\Generic\Connection.cs" />
+    <Compile Include="DB\Generic\Database.cs" />
+    <Compile Include="DB\Generic\Error.cs" />
+    <Compile Include="DB\Generic\Object.cs" />
+    <Compile Include="DB\Generic\OleConnection.cs" />
+    <Compile Include="DB\Generic\Server.cs" />
+    <Compile Include="DB\Generic\ServerConfig.cs" />
+    <Compile Include="DB\Generic\ServerEnums.cs" />
+    <Compile Include="DB\Generic\Table.cs" />
+    <Compile Include="DB\Generic\TableSchema.cs" />
+    <Compile Include="DB\MicrosoftLocalDB\MsLocalDbConnection.cs" />
+    <Compile Include="DB\MicrosoftLocalDB\MsLocalDbDatabase.cs" />
+    <Compile Include="DB\MicrosoftLocalDB\MsLocalDbServer.cs" />
+    <Compile Include="DB\MicrosoftSQL\MsSqlConnection.cs" />
+    <Compile Include="DB\MicrosoftSQL\MsSqlDatabase.cs" />
+    <Compile Include="DB\MicrosoftSQL\MsSqlServer.cs" />
+    <Compile Include="DB\MySQL\MySqlConnection.cs" />
+    <Compile Include="DB\MySQL\MySqlDatabase.cs" />
+    <Compile Include="DB\MySQL\MySqlServer.cs" />
+    <Compile Include="Model\Math\Consts.cs" />
+    <Compile Include="Model\Math\DistanceD.cs" />
+    <Compile Include="Model\Math\DistanceF.cs" />
+    <Compile Include="Model\Math\DpiVector2d.cs" />
+    <Compile Include="Model\Math\DpiVector2f.cs" />
+    <Compile Include="Model\Math\PixelVector.cs" />
+    <Compile Include="Model\Math\Rectangle2d.cs" />
+    <Compile Include="Model\Math\Rectangle2f.cs" />
+    <Compile Include="Model\Math\Unit.cs" />
+    <Compile Include="Model\Math\UnitCentimeter.cs" />
+    <Compile Include="Model\Math\UnitDecimeter.cs" />
+    <Compile Include="Model\Math\UnitFoot.cs" />
+    <Compile Include="Model\Math\UnitInch.cs" />
+    <Compile Include="Model\Math\UnitMeter.cs" />
+    <Compile Include="Model\Math\UnitMillimeter.cs" />
+    <Compile Include="Model\Math\Vector2d.cs" />
+    <Compile Include="Model\Math\Vector2f.cs" />
+    <Compile Include="Model\Values\SDBeesOpeningSize.cs" />
+    <Compile Include="Plugins\AEC\AEC.SubLevel.cs" />
+    <Compile Include="Plugins\TreeviewHelper\ListViewHelper.cs" />
+    <Compile Include="Plugins\TreeviewHelper\ListViewHelperUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Plugins\TreeviewHelper\ListViewHelperUserControl.Designer.cs">
+      <DependentUpon>ListViewHelperUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Plugs\Explorer\ExplorerPlugin.cs" />
+    <Compile Include="Plugs\TemplateTreeNode\TemplateTreenodeBaseData.cs" />
+    <Compile Include="Utils\Profiler.cs" />
+    <Compile Include="Utils\ObjectXmlSerializer.cs" />
+    <Compile Include="DB\Security\AccessRights.cs" />
+    <Compile Include="DB\Security\Group.cs" />
+    <Compile Include="DB\Security\GroupBaseData.cs" />
+    <Compile Include="DB\Security\RightsBaseData.cs" />
+    <Compile Include="DB\Security\User.cs" />
+    <Compile Include="DB\Security\UserBaseData.cs" />
+    <Compile Include="DB\SQLite\SQLiteConnection.cs" />
+    <Compile Include="DB\SQLite\SQLiteDatabase.cs" />
+    <Compile Include="DB\SQLite\SQLiteServer.cs" />
+    <Compile Include="DB\Tools\Inspector.cs" />
+    <Compile Include="Plugins\AEC\AEC.Building.cs" />
+    <Compile Include="Plugins\AEC\AEC.Curtainwall.Area.cs" />
+    <Compile Include="Plugins\AEC\AEC.Curtainwall.cs" />
+    <Compile Include="Plugins\AEC\AEC.Door.cs" />
+    <Compile Include="Plugins\AEC\AEC.Room.cs" />
+    <Compile Include="Plugins\AEC\AEC.Level.cs" />
+    <Compile Include="Plugins\AEC\AEC.Wall.cs" />
+    <Compile Include="Plugins\AEC\AEC.Window.cs" />
+    <Compile Include="Plugins\AEC\AEC.Zone.cs" />
+    <Compile Include="Plugins\Dummys\Dummys.cs" />
+    <Compile Include="EDM\EDMBaseData.cs" />
+    <Compile Include="EDM\EDMManager.cs" />
+    <Compile Include="EDM\EDMTreeNodeHelper.cs" />
+    <Compile Include="EDM\EDMUserControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EDM\EDMUserControl1.Designer.cs">
+      <DependentUpon>EDMUserControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EDM\ShellGetFileInfo.cs" />
+    <Compile Include="GuiTools\Forms\AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GuiTools\Forms\AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GuiTools\Forms\ChangePasswordDLG.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GuiTools\Forms\ChangePasswordDLG.Designer.cs">
+      <DependentUpon>ChangePasswordDLG.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GuiTools\Logfile\LogfileCategory.cs" />
+    <Compile Include="GuiTools\Logfile\LogfileWriter.cs" />
+    <Compile Include="GuiTools\MWTreeView\EventArgs.cs" />
+    <Compile Include="GuiTools\MWTreeView\MWCommon.cs" />
+    <Compile Include="GuiTools\MWTreeView\MWEnums.cs" />
+    <Compile Include="GuiTools\MWTreeView\MWTreeNodeWrapper.cs" />
+    <Compile Include="GuiTools\MWTreeView\MWTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Main\Systemtray\ContextMenus.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Main\Window\MainWindow.cs" />
+    <Compile Include="Main\Window\MainWindowDLG.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\Systemtray\ProcessIcon.cs" />
+    <Compile Include="Main\Window\ProgressTool.cs" />
+    <Compile Include="Plugins\MEP\MEP.System.cs" />
+    <Compile Include="Plugins\MEP\MEP.Element.cs" />
+    <Compile Include="Plugins\MEP\MEP.ContractDoc.cs" />
+    <Compile Include="Plugins\MEP\MEP.BuildingStatistics.cs" />
+    <Compile Include="Plugs\Attributes\PluginTypeAttribute.cs" />
+    <Compile Include="Plugs\Events\Events.cs" />
+    <Compile Include="Plugs\Objects\ObjectHelper.cs" />
+    <Compile Include="Plugs\Objects\ObjectPlugin.cs" />
+    <Compile Include="Plugs\Objects\ObjectView.cs" />
+    <Compile Include="Plugs\Propertys\DropDownUITypeEditor.cs" />
+    <Compile Include="Plugs\Propertys\PropertyBag.cs" />
+    <Compile Include="Plugs\Propertys\PropertySpecListbox.cs" />
+    <Compile Include="Plugs\Propertys\TestBag.cs" />
+    <Compile Include="Plugs\TemplateBase\TemplateBase.cs" />
+    <Compile Include="Plugs\TemplateBase\TemplatePlugin.cs" />
+    <Compile Include="Plugs\TemplateMenue\TemplateMenue.cs" />
+    <Compile Include="Plugs\TemplateBase\TableInspector.cs" />
+    <Compile Include="Plugs\TemplateTreeNode\TemplateTreenode.cs" />
+    <Compile Include="Plugs\TemplateBase\TemplateDBBaseData.cs" />
+    <Compile Include="Plugs\TemplateTreeNode\TemplateTreenodeHelper.cs" />
+    <Compile Include="Plugs\TemplateTreeNode\TemplateTreenodeTag.cs" />
+    <Compile Include="Plugs\TemplateTreeNode\TreenodePropertyRow.cs" />
+    <Compile Include="Plugs\TemplateTreeNode\UserControlTempTreenode.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Plugs\TemplateTreeNode\UserControlTempTreenode.Designer.cs">
+      <DependentUpon>UserControlTempTreenode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Plugs\TemplateTreeNode\ViewAdminDelegatorBase.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Reporting\AddReport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reporting\AddReport.Designer.cs">
+      <DependentUpon>AddReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reporting\ReportDLG.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reporting\ReportDLG.Designer.cs">
+      <DependentUpon>ReportDLG.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reporting\ReportingBaseData.cs" />
+    <Compile Include="Reporting\ReportingManager.cs" />
+    <Compile Include="Plugins\MEP\MEP.CutOut.cs" />
+    <Compile Include="Security\SecurityManager.cs" />
+    <Compile Include="UserAdmin\GroupTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserAdmin\SecurityRightDLG.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserAdmin\SecurityRightDLG.Designer.cs">
+      <DependentUpon>SecurityRightDLG.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserAdmin\UserAdmin.cs" />
+    <Compile Include="UserAdmin\UserAdminDLG.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserAdmin\UserAdminDLG.Designer.cs">
+      <DependentUpon>UserAdminDLG.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserAdmin\UserRoles.cs" />
+    <Compile Include="Utils\DirectoryTools.cs" />
+    <Compile Include="Utils\SearchTools.cs" />
+    <Compile Include="Utils\SerializableDictionary.cs" />
+    <Compile Include="Utils\Singleton.cs" />
+    <Compile Include="Utils\User_32.cs" />
+    <Compile Include="ViewAdmin\CheckDatabaseDLG.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ViewAdmin\CheckDatabaseDLG.Designer.cs">
+      <DependentUpon>CheckDatabaseDLG.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewAdmin\ViewAdmin.cs" />
+    <Compile Include="ViewAdmin\ViewAdminAddNew.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ViewAdmin\ViewAdminAddNew.Designer.cs">
+      <DependentUpon>ViewAdminAddNew.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewAdmin\ViewAdminDelegator.cs" />
+    <Compile Include="ViewAdmin\ViewAdminDLG.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ViewAdmin\ViewAdminDLG.Designer.cs">
+      <DependentUpon>ViewAdminDLG.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewAdmin\ViewAdminLinkHelper.cs" />
+    <Compile Include="ViewAdmin\ViewAdminLinkHelperCtrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ViewAdmin\ViewAdminLinkHelperCtrl.Designer.cs">
+      <DependentUpon>ViewAdminLinkHelperCtrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewAdmin\ViewCache.cs" />
+    <Compile Include="ViewAdmin\ViewDefinition.cs" />
+    <Compile Include="ViewAdmin\ViewProperty.cs" />
+    <Compile Include="ViewAdmin\ViewRelation.cs" />
+    <Compile Include="ViewAdmin\ViewRelationsInspector.cs" />
+    <Compile Include="ViewAdmin\ViewRelationTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ViewAdmin\ViewRelationTreeDLG.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ViewAdmin\ViewRelationTreeDLG.Designer.cs">
+      <DependentUpon>ViewRelationTreeDLG.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DB\MicrosoftSQLServerExpress\" />
+    <Folder Include="DB\Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Connectivity\SDBeesLink\UI\SDBeesDataSetDLG.resx">
+      <DependentUpon>SDBeesDataSetDLG.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Connectivity\SDBeesLink\UI\SDBeesExternalDocumentDLG.resx">
+      <DependentUpon>SDBeesExternalDocumentDLG.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DB\Forms\frmEditTable.resx">
+      <DependentUpon>frmEditTable.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DB\Forms\frmError.resx">
+      <DependentUpon>frmError.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DB\Forms\frmInputBox.resx">
+      <DependentUpon>frmInputBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DB\Forms\frmLogin.resx">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EDM\EDMUserControl1.resx">
+      <DependentUpon>EDMUserControl1.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GuiTools\Forms\AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GuiTools\Forms\ChangePasswordDLG.resx">
+      <DependentUpon>ChangePasswordDLG.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GuiTools\Forms\ProgressForm.resx">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GuiTools\MWTreeView\MWTreeView.resx">
+      <DependentUpon>MWTreeView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\Window\MainWindow.resx">
+      <DependentUpon>MainWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main\Window\MainWindowDLG.resx">
+      <DependentUpon>MainWindowDLG.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Plugins\TreeviewHelper\ListViewHelperUserControl.resx">
+      <DependentUpon>ListViewHelperUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Plugs\TemplateTreeNode\UserControlTempTreenode.resx">
+      <DependentUpon>UserControlTempTreenode.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\AddReport.resx">
+      <DependentUpon>AddReport.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reporting\ReportDLG.resx">
+      <DependentUpon>ReportDLG.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserAdmin\SecurityRightDLG.resx">
+      <DependentUpon>SecurityRightDLG.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserAdmin\UserAdminDLG.resx">
+      <DependentUpon>UserAdminDLG.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ViewAdmin\CheckDatabaseDLG.resx">
+      <DependentUpon>CheckDatabaseDLG.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ViewAdmin\ViewAdminAddNew.resx">
+      <DependentUpon>ViewAdminAddNew.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ViewAdmin\ViewAdminDLG.resx">
+      <DependentUpon>ViewAdminDLG.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ViewAdmin\ViewAdminLinkHelperCtrl.resx">
+      <DependentUpon>ViewAdminLinkHelperCtrl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ViewAdmin\ViewRelationTreeDLG.resx">
+      <DependentUpon>ViewRelationTreeDLG.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Resources\SDBees.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="License-RealUnits.txt" />
+    <Content Include="SDBees agreements.txt" />
+    <None Include="Resources\SDBees.AEC.Storey.AECStorey1.ico" />
+    <Content Include="Model\Math\units_Inch_examples.txt" />
+    <Content Include="SDBees.Changes.txt" />
+    <None Include="Resources\SDBees.MEP.System.MEPCutOut.ico" />
+    <None Include="Resources\About.png" />
+    <None Include="Resources\Exit.png" />
+    <None Include="Resources\Explorer.png" />
+    <None Include="Resources\SystemTrayApp.ico" />
+    <None Include="Resources\SDBees.ico" />
+    <None Include="Resources\SDBees.AEC.Building.AECBuilding.ico" />
+    <Content Include="License-Apache-2.0.txt" />
+    <Content Include="License-fyiReporting.txt" />
+    <Content Include="License-log4net.txt" />
+    <Content Include="License-MWTreeview.txt" />
+    <Content Include="License-SharpZipLib.txt" />
+    <Content Include="Resources\SDBees.AEC.Curtainwall.AECCurtainwall.ico" />
+    <Content Include="Resources\SDBees.AEC.Curtainwall.AECCurtainwallArea.ico" />
+    <Content Include="Resources\SDBees.AEC.Door.AECDoor.ico" />
+    <Content Include="Resources\SDBees.AEC.Room.AECRoom.ico" />
+    <Content Include="Resources\SDBees.AEC.Storey.AECStorey.ico" />
+    <Content Include="Resources\SDBees.AEC.Wall.AECWall.ico" />
+    <Content Include="Resources\SDBees.AEC.Window.AECWindow.ico" />
+    <Content Include="Resources\SDBees.AEC.Zone.AECZone.ico" />
+    <Content Include="Resources\SDBees.Demoplugins.Dummys.Dummy1.ico" />
+    <Content Include="Resources\SDBees.Demoplugins.Dummys.Dummy2.ico" />
+    <None Include="Resources\SDBees1.ico" />
+    <Content Include="Resources\SDBees.MEP.System.MEPSystem.ico" />
+    <Content Include="Resources\SDBees.MEP.Element.MEPElement.ico" />
+    <Content Include="Resources\SDBees.MEP.ContractData.MEPContractData.ico" />
+    <Content Include="Resources\SDBees.MEP.BuildingStatistics.MEPBuildingsStats.ico" />
+    <Content Include="Plugs\Attributes\readme.txt" />
+    <EmbeddedResource Include="Resources\User.bmp" />
+    <EmbeddedResource Include="Resources\SecurityDeny.bmp" />
+    <EmbeddedResource Include="Resources\SecurityAllow.bmp" />
+    <EmbeddedResource Include="Resources\StandardIcon.ico" />
+    <EmbeddedResource Include="Resources\IconFailed.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Carbon.Framework\Carbon.Framework.csproj">
+      <Project>{77d0eaf9-eeae-4457-879e-896fdf33c053}</Project>
+      <Name>Carbon.Framework</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+copy /Y "$(ProjectDir)License*.txt" "$(TargetDir)"
+
+
+copy /Y "$(ProjectDir)3rdParty\SQLight\sqlite-netFx40-binary-bundle-x64-2010-1.0.94.0\SQLite.*" "$(TargetDir)"
+
+copy /Y "$(ProjectDir)3rdParty\SQLight\sqlite-netFx40-binary-bundle-x64-2010-1.0.94.0\System.Data.*" "$(TargetDir)"
+
+
+rem ressources kopieren
+rem mkdir "$(TargetDir)Resources"
+xcopy /Y/I/E "$(ProjectDir)Resources" "$(TargetDir)Resources"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

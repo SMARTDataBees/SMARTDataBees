@@ -1,0 +1,3 @@
+Definitionen der Plugintypen
+
+Treenode

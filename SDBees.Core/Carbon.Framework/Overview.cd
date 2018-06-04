@@ -1,0 +1,1099 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="Carbon.CarbonRuntime" Collapsed="true">
+    <Position X="90.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>CarbonRuntime.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.UI.AsyncWindowManager" Collapsed="true">
+    <Position X="23.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\AsyncWindowManager.cs</FileName>
+      <HashCode>lAACAAAQAgAAAEQAACABAAAABAEAhIQABBBAAgAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.UI.AsyncWindowManagerEventArgs" Collapsed="true">
+    <Position X="4.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\AsyncWindowManagerEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.UI.AsyncWindowManagerExceptionEventArgs" Collapsed="true">
+    <Position X="4.5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\AsyncWindowManagerExceptionEventArgs.cs</FileName>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.UI.InformationPanel" Collapsed="true">
+    <Position X="105.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\InformationPanel.cs</FileName>
+      <HashCode>AAAAACAAAyBgAEACAACAAAACAAAAABAAAQAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.UI.MarqueeControl" Collapsed="true">
+    <Position X="109.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\MarqueeControl.cs</FileName>
+      <HashCode>AACAIAAAgKAABAIAIAABAAACAAAAQQQAACAAAAAAAwA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.UI.ProgressViewer" Collapsed="true">
+    <Position X="43.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\ProgressViewer.cs</FileName>
+      <HashCode>CAAAAACEAAAAAAAAAAACAAFAAAAAAAAAAARBAgAAACA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Carbon.UI.ShellImageListManager" Collapsed="true">
+    <Position X="19.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\ShellImageListManagers.cs</FileName>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAFAAAAAAABAAAACIAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.UI.SmallShellImageListManager" Collapsed="true">
+    <Position X="18.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\ShellImageListManagers.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.UI.LargeShellImageListManager" Collapsed="true">
+    <Position X="21" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\ShellImageListManagers.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.UI.SplashWindow" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.5" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\SplashWindow.cs</FileName>
+      <HashCode>CAAAAAAEADBAAAAAAACCAAFCCAgAAAAAAAAAAgAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Carbon.UI.WindowFlasher" Collapsed="true">
+    <Position X="111" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\WindowFlasher.cs</FileName>
+      <HashCode>AAAAAEAAQAAAAAABAAAAAAAAAAAABAQAAEAAAEAAACA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.UI.WindowManager" Collapsed="true">
+    <Position X="84" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\WindowManager.cs</FileName>
+      <HashCode>AAAAAAgQAAAAAAAgAACBIAAASAAIAgAABAAIACAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.UI.WindowManagerCancelEventArgs" Collapsed="true">
+    <Position X="112.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\WindowManager.cs</FileName>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAACAAEAQA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.UI.Providers.Custom.AboutWindowProvider" Collapsed="true">
+    <Position X="27.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\Providers\Custom\AboutWindowProvider.cs</FileName>
+      <HashCode>AAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.UI.Providers.Custom.OptionsWindowProvider" Collapsed="true">
+    <Position X="30" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\Providers\Custom\OptionsWindowProvider.cs</FileName>
+      <HashCode>AAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.UI.Providers.Custom.SplashWindowProvider" Collapsed="true">
+    <Position X="32.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\Providers\Custom\SplashWindowProvider.cs</FileName>
+      <HashCode>AAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.UI.Providers.WindowProvider" Collapsed="true">
+    <Position X="30" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\Providers\WindowProvider.cs</FileName>
+      <HashCode>AAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.UI.Providers.WindowProviderCollection" Collapsed="true">
+    <Position X="6" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\Providers\WindowProviderCollection.cs</FileName>
+      <HashCode>AAIAAAAAAAAAAAAACAAABAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.UI.Providers.WindowProviderNotFoundException" Collapsed="true">
+    <Position X="0.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\Providers\WindowProviderNotFoundException.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Security.Providers.SecurityProvider" Collapsed="true">
+    <Position X="95.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Security\Providers\SecurityProvider.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Security.Providers.SecurityProviderCollection" Collapsed="true">
+    <Position X="54.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Security\Providers\SecurityProviderCollection.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Security.SecurityManager" Collapsed="true">
+    <Position X="93" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Security\SecurityManager.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Plugins.Attributes.PluginAuthorsAttribute" Collapsed="true">
+    <Position X="112.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Plugins\Attributes\PluginAuthorsAttribute.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAACAABAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Plugins.Attributes.PluginDefinitionAttribute" Collapsed="true">
+    <Position X="102.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Plugins\Attributes\PluginDefinitionAttribute.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Plugins.Attributes.PluginDependencyAttribute" Collapsed="true">
+    <Position X="104" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Plugins\Attributes\PluginDependencyAttribute.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Plugins.Attributes.PluginDescriptionAttribute" Collapsed="true">
+    <Position X="105.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Plugins\Attributes\PluginDescriptionAttribute.cs</FileName>
+      <HashCode>AAAAAAAAAAAgAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Plugins.Attributes.PluginIdAttribute" Collapsed="true">
+    <Position X="109.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Plugins\Attributes\PluginIdAttribute.cs</FileName>
+      <HashCode>AAACAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Plugins.Attributes.PluginImageAttribute" Collapsed="true">
+    <Position X="111" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Plugins\Attributes\PluginImageAttribute.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Plugins.Attributes.PluginManufacturerAttribute" Collapsed="true">
+    <Position X="102.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Plugins\Attributes\PluginManufacturerAttribute.cs</FileName>
+      <HashCode>AAgAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Plugins.Attributes.PluginNameAttribute" Collapsed="true">
+    <Position X="104" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Plugins\Attributes\PluginNameAttribute.cs</FileName>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Plugins.Attributes.PluginVersionAttribute" Collapsed="true">
+    <Position X="105.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Plugins\Attributes\PluginVersionAttribute.cs</FileName>
+      <HashCode>IAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Plugins.Plugin" Collapsed="true">
+    <Position X="45.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Plugins\Plugin.cs</FileName>
+      <HashCode>AAAAAAAAACAAAAAAEAAAAAAAAAAAAAAAIEAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Plugins.PluginApplicationContext" Collapsed="true">
+    <Position X="111" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Plugins\PluginApplicationContext.cs</FileName>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAABBAAAAEAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Plugins.PluginContext" Collapsed="true">
+    <Position X="48" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Plugins\PluginContext.cs</FileName>
+      <HashCode>ABAIEAAAkEAgBAiIAACAQJAADAIDIAACAAIACxAQhQI=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Plugins.PluginDescriptor" Collapsed="true">
+    <Position X="52.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Plugins\PluginDescriptor.cs</FileName>
+      <HashCode>AgIAgAAAAAAUCIQAAYIAIEEAAFBkABAgAAggEAAAQAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Plugins.PluginDescriptorCollection" Collapsed="true">
+    <Position X="1.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Plugins\PluginDescriptorCollection.cs</FileName>
+      <HashCode>AAIAAAAAAAAAAAAACAAQAAAAAAAAAIAAAAAAAAAQAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Plugins.PluginDescriptorEventArgs" Collapsed="true">
+    <Position X="107.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Plugins\PluginDescriptorEventArgs.cs</FileName>
+      <HashCode>AAACAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Plugins.PluginManager" Collapsed="true">
+    <Position X="112.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Plugins\PluginManager.cs</FileName>
+      <HashCode>AAAAQAAAAAAAAAgACAAAAEAAQBAAIIAYAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Plugins.Providers.Custom.FileSystemPluginProvider" Collapsed="true">
+    <Position X="25.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Plugins\Providers\Custom\FileSystemPluginProvider.cs</FileName>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Plugins.Providers.PluginProvider" Collapsed="true">
+    <Position X="25.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Plugins\Providers\PluginProvider.cs</FileName>
+      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Plugins.Providers.PluginProviderCollection" Collapsed="true">
+    <Position X="3.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Plugins\Providers\PluginProviderCollection.cs</FileName>
+      <HashCode>AAIAAAAAAAAAAAAACAAABAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.MultiThreading.BackgroundThread" Collapsed="true">
+    <Position X="41.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MultiThreading\BackgroundThread.cs</FileName>
+      <HashCode>AAAAAAAQACAAAAEAAAQAQCgABAEBCACAJAAAACAEAQI=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.MultiThreading.BackgroundThreadCollection" Collapsed="true">
+    <Position X="15" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MultiThreading\BackgroundThreadCollection.cs</FileName>
+      <HashCode>AAIABAAAAAAAAAAACAAABAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.MultiThreading.BackgroundThreadEventArgs" Collapsed="true">
+    <Position X="102.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MultiThreading\BackgroundThreadEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.MultiThreading.BackgroundThreadPool" Collapsed="true">
+    <Position X="50.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MultiThreading\BackgroundThreadPool.cs</FileName>
+      <HashCode>AgAAAAQAAAAAABAAAABAAAAAhAAACAAAAIAAEGAACAg=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.MultiThreading.BackgroundThreadPoolJob" Collapsed="true">
+    <Position X="59.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MultiThreading\BackgroundThreadPoolJob.cs</FileName>
+      <HashCode>gAACIAAAAAAAAAAAgARAiAQAAAAAgAIABAAABAAAAAE=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.MultiThreading.BackgroundThreadPoolJobQueue" Collapsed="true">
+    <Position X="104" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MultiThreading\BackgroundThreadPoolJobQueue.cs</FileName>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAABQAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.MultiThreading.BackgroundThreadPoolThread" Collapsed="true">
+    <Position X="41.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MultiThreading\BackgroundThreadPoolThread.cs</FileName>
+      <HashCode>CAAAAAAAAAAAAAAAAAAAAAAAAAECCAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.MultiThreading.BackgroundThreadStartEventArgs" Collapsed="true">
+    <Position X="105.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MultiThreading\BackgroundThreadStartEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAQA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.MultiThreading.BackgroundThreadStartInfo" Collapsed="true">
+    <Position X="75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MultiThreading\BackgroundThreadStartInfo.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAgAAAAAAAAAAAgAAAEEEQI=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Encryption.Providers.Custom.RijndaelEncryptionProvider" Collapsed="true">
+    <Position X="34.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Encryption\Providers\Custom\RijndaelEncryptionProvider.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Encryption.Providers.EncryptionProvider" Collapsed="true">
+    <Position X="34.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Encryption\Providers\EncryptionProvider.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Encryption.Providers.EncryptionProviderCollection" Collapsed="true">
+    <Position X="8.25" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Encryption\Providers\EncryptionProviderCollection.cs</FileName>
+      <HashCode>AAIAAAAAAAAAAAAACAAABAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.CategoryTreeNode" Collapsed="true">
+    <Position X="107.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\CategoryTreeNode.cs</FileName>
+      <HashCode>AAAAACAAAAQAAgAAAAAAAAAAAAAAEAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.CloningEngine" Collapsed="true">
+    <Position X="57" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\CloningEngine.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.EnumDescConverter" Collapsed="true">
+    <Position X="111" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\EnumDescConverter.cs</FileName>
+      <HashCode>AAAAgAAAAAAAAAQAgAAQAAAAAAAAACAAAAAAAIAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.FileEncryptionEngine" Collapsed="true">
+    <Position X="15.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\FileEncryptionEngines.cs</FileName>
+      <HashCode>AQAAAAAAAAIAAAAQAAHAAAAAAEAAABAAAAAAAAAQAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Carbon.Configuration.RijndaelEncryptionEngine" Collapsed="true">
+    <Position X="14.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\FileEncryptionEngines.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.DESEncryptionEngine" Collapsed="true">
+    <Position X="16.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\FileEncryptionEngines.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationOptionTypeUtilities" Collapsed="true">
+    <Position X="70.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\TypeLoader.cs</FileName>
+      <HashCode>EAAAAAAAAAAAAAAACAAAAEAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.ValuePropertyDescriptor" Collapsed="true">
+    <Position X="109.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\ValuePropertyDescriptor.cs</FileName>
+      <HashCode>AAAAAAAAJAAQAgAQQAAACAAAAgAAAAQAAAACAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfiguration" Collapsed="true">
+    <Position X="3" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfiguration.cs</FileName>
+      <HashCode>BAgIAAAACCAGQEIAAgAQEISAAAAQECgEgAFEAAAgwBA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationCategory" Collapsed="true">
+    <Position X="5.25" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationCategory.cs</FileName>
+      <HashCode>AAAAAAAACSAAQEAACAAAVACQAAAQEAAAgAEAAABgQBA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationCategoryCollection" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="19.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationCategoryCollection.cs</FileName>
+      <HashCode>AAIAAMCgiTQAEEAgTAAAVACwAAAUEIAggAEAAQAwQBA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationCategoryEventArgs" Collapsed="true">
+    <Position X="5.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationCategoryEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationCategoryTypeConverter" Collapsed="true">
+    <Position X="104" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationCategoryTypeConverter.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAIAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationCollection" Collapsed="true">
+    <Position X="21.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationCollection.cs</FileName>
+      <HashCode>AAIAAAAAAAAAAAAACAAABAAAAAAAAAAAAAAAAABQAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationElement" Collapsed="true">
+    <Position X="3" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationElement.cs</FileName>
+      <HashCode>AAAAEICgiTUgFEAkTACYEASiEAAUAIFsgAMIAQCmSDA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationElementCancelEventArgs" Collapsed="true">
+    <Position X="105.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationElementCancelEventArgs.cs</FileName>
+      <HashCode>AAAAAAAABAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationElementEventArgs" Collapsed="true">
+    <Position X="3" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationElementEventArgs.cs</FileName>
+      <HashCode>AAAAAAAABAAAAAAAAAoAAAAAAAAAAAAAAAAAgAAAAAQ=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationElementTypeConverter" Collapsed="true">
+    <Position X="107.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationElementTypeConverter.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAIAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationEventArgs" Collapsed="true">
+    <Position X="3" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationManager" Collapsed="true">
+    <Position X="77.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationManager.cs</FileName>
+      <HashCode>AAAAAAFAAAAAAAIAAAAAAAAAAAAAAAAAAAAIAAEAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationManagerEventArgs" Collapsed="true">
+    <Position X="109.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationManagerEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationOption" Collapsed="true">
+    <Position X="0.75" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationOption.cs</FileName>
+      <HashCode>ABAAAAAAAAAAgAAASAAQQACQAAhAAAACgAEgAAiAABA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationOptionCollection" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="24" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationOptionCollection.cs</FileName>
+      <HashCode>AAIAAICgiTQAEEAgTAAAVACwAAAUAIAggAEAAQAwQBA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationOptionCollectionTypeDescriptor" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="97.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationOptionCollectionTypeDescriptor.cs</FileName>
+      <HashCode>AAAGCAAACAAAAgAgAAAAAACAABAEIAAAAERACAAACAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationOptionEventArgs" Collapsed="true">
+    <Position X="0.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationOptionEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationOptionPropertyDescriptor" Collapsed="true">
+    <Position X="111" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationOptionPropertyDescriptor.cs</FileName>
+      <HashCode>AAAAEAAAJAAwAgAQQAAACAAAAgAAAAQAAAQCAAAACAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationOptionPropertyDescriptorMenuItem" Collapsed="true">
+    <Position X="112.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationOptionPropertyDescriptorMenuItem.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationOptionTypeConverter" Collapsed="true">
+    <Position X="102.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationOptionTypeConverter.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAIAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationPropertiesWindow" Collapsed="true">
+    <Position X="10.75" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationPropertiesWindow.cs</FileName>
+      <HashCode>AEQAUAIACCCAEAAEAACAgAADAABAAAEAAAAAQAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationReader" Collapsed="true">
+    <Position X="104" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationReader.cs</FileName>
+      <HashCode>AAAAAAAAACAAAEAAAACABIAiAAAAEAgAAAABAAAAAAQ=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationReaderEventArgs" Collapsed="true">
+    <Position X="86.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationReaderEventArgs.cs</FileName>
+      <HashCode>AAAAAAAgAABAAAAAAAAACAAAAgAAAAAAAABAAAAAQAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationTypeConverter" Collapsed="true">
+    <Position X="105.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationTypeConverter.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAIAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationView" Collapsed="true">
+    <Position X="107.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationView.cs</FileName>
+      <HashCode>oAIgAAEACDCAAAIAoQCEAAjngARAKCAhkBAAgQghiAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationWriter" Collapsed="true">
+    <Position X="109.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationWriter.cs</FileName>
+      <HashCode>AAAAAAAAAKAAAEAAAACAAAACAAAAACAAAAAAFEEAAIg=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationWriterEventArgs" Collapsed="true">
+    <Position X="61.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationWriterEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAABAAAAAAAAACAAAAgAAAAAAAABAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.XmlConfigurationXmlBehindViewer" Collapsed="true">
+    <Position X="111" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationXmlBehindViewer.cs</FileName>
+      <HashCode>AAAACAAAACAAAQAAAACAAAACAAAAYAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.EnumUtilities" Collapsed="true">
+    <Position X="112.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\EnumUtilities.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAIABAAAAAACEAAAAAAAAIAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.FlagsHelper" Collapsed="true">
+    <Position X="104" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\FlagsHelper.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAgAAAAAAAAAAAgAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.Providers.ConfigurationProvider" Collapsed="true">
+    <Position X="37.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\Providers\ConfigurationProvider.cs</FileName>
+      <HashCode>CAAEgIAAAAAAAAAAAAAAAAAAAACDAAAAgAEAAABAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.Providers.ConfigurationProviderCollection" Collapsed="true">
+    <Position X="10.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\Providers\ConfigurationProviderCollection.cs</FileName>
+      <HashCode>AAIAAAAAAAAAAAAACAAABAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.Providers.ConfigurationProvidersManager" Collapsed="true">
+    <Position X="109.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\Providers\ConfigurationProvidersManager.cs</FileName>
+      <HashCode>AIAAAABAAAAAQAIAAgAAAAAAAEAAAAAAAAQAEAMAAAQ=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.Providers.Custom.AllUsersConfigurationProvider" Collapsed="true">
+    <Position X="39" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\Providers\Custom\AllUsersConfigurationProvider.cs</FileName>
+      <HashCode>CAAEAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.Providers.Custom.LocalUsersConfigurationProvider" Collapsed="true">
+    <Position X="36.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\Providers\Custom\LocalUsersConfigurationProvider.cs</FileName>
+      <HashCode>CAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.SectionHandlers.Custom.ConfigurationProvidersSectionHandler" Collapsed="true">
+    <Position X="5.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\SectionHandlers\Custom\ConfigurationProvidersSectionHandler.cs</FileName>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.SectionHandlers.Custom.EncryptionProvidersSectionHandler" Collapsed="true">
+    <Position X="7.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\SectionHandlers\Custom\EncryptionProvidersSectionHandler.cs</FileName>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.SectionHandlers.Custom.PluginProvidersSectionHandler" Collapsed="true">
+    <Position X="9.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\SectionHandlers\Custom\PluginProvidersSectionHandler.cs</FileName>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.SectionHandlers.Custom.WindowProvidersSectionHandler" Collapsed="true">
+    <Position X="12" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\SectionHandlers\Custom\WindowProvidersSectionHandler.cs</FileName>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Configuration.SectionHandlers.ProviderConfigurationSectionHandler" Collapsed="true">
+    <Position X="8.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\SectionHandlers\ProviderConfigurationSectionHandler.cs</FileName>
+      <HashCode>AgAAAACAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Carbon.Common.Base64SerializationUtilities" Collapsed="true">
+    <Position X="79.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\Base64SerializationUtilities.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACBAAAAAAAAAAAAgAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Common.CarbonConfig" Collapsed="true">
+    <Position X="88.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\CarbonConfig.cs</FileName>
+      <HashCode>AEFAgAAAoIAAIwAgRAAAJAAAEAZAwQAEAJAQAAEIAAQ=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Common.CommandLineArgs" Collapsed="true">
+    <Position X="63.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\CommandLineArgs.cs</FileName>
+      <HashCode>AAAgAAAAABAACAAACAAAAAAABAAAAAAAAAAAAAEAAQA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Common.DisposableCollection" Collapsed="true">
+    <Position X="9.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\DisposableCollection.cs</FileName>
+      <HashCode>AAAAAAAAACAEAAAIAAAQEAAABAAAAAAAAAAAAAACAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Carbon.Common.DisposableObject" Collapsed="true">
+    <Position X="37.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\DisposableObject.cs</FileName>
+      <HashCode>AAAAAAAAACAEAAAIAAAAAAAABAAAAAAAAAAAAAACAAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Carbon.Common.ExceptionUtilities" Collapsed="true">
+    <Position X="102.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\ExceptionEngine.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Common.FormCollection" Collapsed="true">
+    <Position X="17.25" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\FormCollection.cs</FileName>
+      <HashCode>AAIAAAAAAAAAAAAACAAABAAAAAAAAAAAAAAAAAAUAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Common.IniFile" Collapsed="true">
+    <Position X="99.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\IniFile.cs</FileName>
+      <HashCode>AgAAAAAAAAAgUAQQAAEAAAAAASCgCQBAAACAAAEAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Common.KeyboardUtilities" Collapsed="true">
+    <Position X="107.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\KeyboardUtilities.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Common.Log" Collapsed="true">
+    <Position X="66" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\Log.cs</FileName>
+      <HashCode>AAAAAAAAAAAEAAAIAAAAAAAAAAAAAAAAAAEAAAACCAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Common.Provider" Collapsed="true">
+    <Position X="32.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\Provider.cs</FileName>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Common.ProviderCollection" Collapsed="true">
+    <Position X="7.25" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\ProviderCollection.cs</FileName>
+      <HashCode>AAIAAAAAAAAAAAAACAAABAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Common.ProviderNotFoundException" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\ProviderNotFoundException.cs</FileName>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Common.WindowsUIPermission" Collapsed="true">
+    <Position X="102.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\SecurityAccessRight.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Common.SecurityAccessRight" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="81.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\SecurityAccessRight.cs</FileName>
+      <HashCode>AQMAAAIAAyAGAACAAAAAAAJAYAQAEAAACAQAAgAAICA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Carbon.Common.ShellUtilities" Collapsed="true">
+    <Position X="68.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\ShellUtilities.cs</FileName>
+      <HashCode>AgEAZICBAAAAAFAhBAIABAACAITAEEAQAQAAYAgACBA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Common.TypeCollection" Collapsed="true">
+    <Position X="12.75" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\TypeCollection.cs</FileName>
+      <HashCode>AAIAAAAAAAAAAAAACAAABAAAAAAAAAAAAAAAAABUAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Common.TypeUtilities" Collapsed="true">
+    <Position X="107.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\TypeUtilities.cs</FileName>
+      <HashCode>AAAAAIAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Carbon.Common.XmlUtilities" Collapsed="true">
+    <Position X="72.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\XmlUtilities.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Collections.CollectionBase" Collapsed="true">
+    <Position X="12.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Windows.Forms.Form" Collapsed="true">
+    <Position X="9.75" Y="13.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="System.Object" Collapsed="true">
+    <Position X="52.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Struct Name="Carbon.Common.TRUSTEE" Collapsed="true">
+    <Position X="102.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\SecurityAccessRight.cs</FileName>
+      <HashCode>AAAAAAgAAAAAAAAAAIAAAAAAAACAAAAEEAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Carbon.Common.TRUSTEE2" Collapsed="true">
+    <Position X="104" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\SecurityAccessRight.cs</FileName>
+      <HashCode>AAAAAAgAAAAAAAAAAIAAAAAAAACAAAAEEAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Struct>
+  <Interface Name="Carbon.UI.IProgressViewer" Collapsed="true">
+    <Position X="104" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\IProgressViewer.cs</FileName>
+      <HashCode>CAAAAAAEAAAAAAAAAAACAAFAAAAAAAAAAAAAAgAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Carbon.Configuration.IFileEncryptionEngine" Collapsed="true">
+    <Position X="102.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\FileEncryptionEngines.cs</FileName>
+      <HashCode>AQAAAAAAAAAAAAAQAAEAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Carbon.Configuration.ISupportsEditing" Collapsed="true">
+    <Position X="105.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\ISupportsEditing.cs</FileName>
+      <HashCode>AAAAAICgiBAAAEAgQAAAEACAAAAUAIAgAAEAAAAgAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Carbon.Configuration.IXmlConfigurationElementEvents" Collapsed="true">
+    <Position X="107.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\IXmlConfigurationElementEvents.cs</FileName>
+      <HashCode>AAAAAAAAAQAAAAAABAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Carbon.MultiThreading.BackgroundThreadPoolJobStates" Collapsed="true">
+    <Position X="102.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MultiThreading\BackgroundThreadPoolJobStates.cs</FileName>
+      <HashCode>AAAAAAAAACAAAAAAAAQAAAAAAAAAAAAIAAAAQAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Carbon.Configuration.SupportedEditingActions" Collapsed="true">
+    <Position X="104" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\ISupportsEditing.cs</FileName>
+      <HashCode>AAIAAAAAAAAAAACAAAAABAAAAAAAAAAAIAAAAAEAAAA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Carbon.Configuration.XmlConfigurationElementActions" Collapsed="true">
+    <Position X="109.25" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationElementActions.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAEAABAAAAEAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Carbon.Configuration.XmlConfigurationElementTypes" Collapsed="true">
+    <Position X="111" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationElementTypes.cs</FileName>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAggAAAAIQAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Carbon.Common.SecurityAccessRights" Collapsed="true">
+    <Position X="111" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\SecurityAccessRight.cs</FileName>
+      <HashCode>IICkFEAAAAIQASCIggAFAAhSohAAggCIgAAMBAAAAAg=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Carbon.Common.SE_OBJECT_TYPE" Collapsed="true">
+    <Position X="109.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\SecurityAccessRight.cs</FileName>
+      <HashCode>AAAAAAAARAAAAAAAEAAAAAEAAAAJAAgAQAEBAABAEBA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Carbon.Common.SecurityInformation" Collapsed="true">
+    <Position X="112.75" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\SecurityAccessRight.cs</FileName>
+      <HashCode>AAEkAECAAAAAAAAACAAAAAAAAAAAAACAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Carbon.Common.SID_NAME_USE" Collapsed="true">
+    <Position X="102.25" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\SecurityAccessRight.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAACAAAAIAAQCACgAAAAEAA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Carbon.Common.MULTIPLE_TRUSTEE_OPERATION" Collapsed="true">
+    <Position X="107.5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\SecurityAccessRight.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Carbon.Common.TRUSTEE_FORM" Collapsed="true">
+    <Position X="105.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\SecurityAccessRight.cs</FileName>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAEAAAABAAAAIAAAAAAEAAA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Carbon.Common.TRUSTEE_TYPE" Collapsed="true">
+    <Position X="107.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\SecurityAccessRight.cs</FileName>
+      <HashCode>AEAAAAxAAAAAAAAAAAAAAAAAgAAAAAAAAAABAAQEAAg=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Carbon.Common.IconSizes" Collapsed="true">
+    <Position X="104" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\ShellUtilities.cs</FileName>
+      <HashCode>gAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAABAAAA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Carbon.Common.IconStyles" Collapsed="true">
+    <Position X="105.75" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Common\ShellUtilities.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAACAAAAAAAAAAAEgAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="Carbon.UI.AsyncWindowManagerEventHandler" Collapsed="true">
+    <Position X="102.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\AsyncWindowManagerEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAIAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Carbon.UI.AsyncWindowManagerExceptionEventHandler" Collapsed="true">
+    <Position X="104" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>UI\AsyncWindowManagerExceptionEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAIAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Carbon.Plugins.PluginDescriptorEventHandler" Collapsed="true">
+    <Position X="109.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Plugins\PluginDescriptorEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Carbon.MultiThreading.BackgroundThreadEventHandler" Collapsed="true">
+    <Position X="105.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MultiThreading\BackgroundThreadEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAACAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Carbon.MultiThreading.BackgroundThreadStartEventHandler" Collapsed="true">
+    <Position X="107.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MultiThreading\BackgroundThreadStartEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAAQAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Carbon.Configuration.XmlConfigurationCategoryEventHandler" Collapsed="true">
+    <Position X="111" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationCategoryEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAAAAACAAAAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Carbon.Configuration.XmlConfigurationElementCancelEventHandler" Collapsed="true">
+    <Position X="112.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationElementCancelEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAIQAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Carbon.Configuration.XmlConfigurationElementEventHandler" Collapsed="true">
+    <Position X="102.25" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationElementEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAgAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Carbon.Configuration.XmlConfigurationEventHandler" Collapsed="true">
+    <Position X="104" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Carbon.Configuration.XmlConfigurationManagerEventHandler" Collapsed="true">
+    <Position X="105.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationManagerEventArgs.cs</FileName>
+      <HashCode>IAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Carbon.Configuration.XmlConfigurationOptionEventHandler" Collapsed="true">
+    <Position X="107.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationOptionEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAQAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Carbon.Configuration.XmlConfigurationReaderEventHandler" Collapsed="true">
+    <Position X="109.25" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationReaderEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="Carbon.Configuration.XmlConfigurationWriterEventHandler" Collapsed="true">
+    <Position X="111" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Configuration\XmlConfigurationWriterEventArgs.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAEAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Delegate>
+</ClassDiagram>

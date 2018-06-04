@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<project name="SDBees.AEC" default="deploy">
+	<include buildfile="..\..\..\NAnt\CopyCore.build">
+	</include>
+
+	<target name="General" description="Default build target for the General" depends="CopyCore">
+		<echo message="Running default build target Connectivity." />
+		<msbuild  project="..\SDBees.General.sln">
+			<arg value="/property:Configuration=Debug" />
+			<!--<arg value="/t:Rebuild" /> -->
+		</msbuild>
+	</target>
+
+	<target name="deploy" depends="General">
+	</target>
+</project>

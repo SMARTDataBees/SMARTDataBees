@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<project name="SDBees.Core" default="copyContent">
+	
+	<target name="buildCore" description="Default build target for the Core">
+		<echo message="Running default build target." />
+		<!--
+		<solution solutionfile="..\SDBees.Core.sln" configuration="Debug" />
+		</solution> Geht leider nur mit einer .Net 1.1 sln		
+		-->
+		<msbuild  project="..\SDBees.Core.sln">
+			<arg value="/property:Configuration=Debug" />
+			<!--<arg value="/t:Rebuild" /> -->
+		</msbuild>
+	</target>
+	
+
+	<target name="copyContent" depends="buildCore">
+		<echo message="Copying plugin dlls and Content"/>
+		
+		<!-- Die AEC dlls und Icons -->
+		<echo message="Copying AECBees"/>
+		<copy todir="..\run" >
+	    	<fileset basedir="..\..\SDBees.AECBees\run">
+		  		<include name="*AEC*dll" />
+			</fileset>
+	 	</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\..\SDBees.AECBees\run\Icons">
+				<include name="*.ico"/>
+			</fileset>		
+		</copy>
+
+		<!-- Die GIS dlls und Icons -->
+		<echo message="Copying GISBees"/>
+		<copy todir="..\run" >
+	    	<fileset basedir="..\..\SDBees.GISBees\run">
+		  		<include name="*GIS*dll" />
+			</fileset>
+	 	</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\..\SDBees.GISBees\run\Icons">
+				<include name="*.ico"/>
+			</fileset>		
+		</copy>
+
+		<!-- Die General dlls und Icons -->
+		<echo message="Copying General"/>
+		<copy todir="..\run" >
+	    	<fileset basedir="..\..\SDBees.General\run">
+		  		<include name="*General*dll" />
+			</fileset>
+	 	</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\..\SDBees.General\run\Icons">
+				<include name="*.ico"/>
+			</fileset>		
+		</copy>
+
+		<!-- Die Connectivity dlls und Icons -->
+		<echo message="Copying Connectivity"/>
+		<copy todir="..\run" >
+	    	<fileset basedir="..\..\SDBees.Connectivity\run">
+		  		<include name=".Connectivity.*.dll" />
+			</fileset>
+	 	</copy>
+	    <copy todir="..\run\Icons">
+			<fileset basedir="..\..\SDBees.Connectivity\run\Icons">
+				<include name="*.ico"/>
+			</fileset>		
+		</copy>
+
+	
+	</target>
+
+</project>

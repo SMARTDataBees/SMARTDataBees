@@ -1,0 +1,6 @@
+﻿Microsoft Visual Studio Solution File, Format Version 9.00
+# SharpDevelop 2.0.0.1413
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "osFM.UserAdmin", "osFM.UserAdmin.csproj", "{6E5864C9-2940-4DAE-8692-59A1D126F4EA}"
+EndProject
+Global
+EndGlobal

@@ -1,0 +1,3 @@
+﻿log4net is part of the Apache Logging Services project at the Apache Software Foundation. 
+The Logging Services project is intended to provide cross-language logging services for purposes of application debugging and auditing.
+It is licensed under Apache License, Version 2.0

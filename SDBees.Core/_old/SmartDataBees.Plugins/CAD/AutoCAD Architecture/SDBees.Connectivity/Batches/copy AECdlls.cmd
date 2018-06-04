@@ -1,0 +1,1 @@
+xcopy /Y ..\..\SDBees.AECBees\run\*.AEC.*.dll ..\SDBees.AEC.Build

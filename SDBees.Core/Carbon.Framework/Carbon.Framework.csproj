@@ -1,0 +1,578 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{77D0EAF9-EEAE-4457-879E-896FDF33C053}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <AssemblyName>Carbon.Framework</AssemblyName>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Carbon</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>..\run\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>..\run\Carbon.Framework.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>..\run\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <DefineConstants>TRACE</DefineConstants>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>ICSharp\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AutoUpdate\AutoUpdateManager.cs" />
+    <Compile Include="AutoUpdate\AutoUpdateManagerCancelEventArgs.cs" />
+    <Compile Include="AutoUpdate\AutoUpdateManagerEventArgs.cs" />
+    <Compile Include="AutoUpdate\AutoUpdateManagerWithDownloadDescriptorCancelEventArgs.cs" />
+    <Compile Include="AutoUpdate\AutoUpdateManagerWithDownloadDescriptorEventArgs.cs" />
+    <Compile Include="AutoUpdate\Behaviors\BehaviorModifier.cs" />
+    <Compile Include="AutoUpdate\Common\AutoUpdateChangeSummary.cs" />
+    <Compile Include="AutoUpdate\Common\AutoUpdateChangeSummaryAlreadyExistsException.cs" />
+    <Compile Include="AutoUpdate\Common\AutoUpdateChangeSummaryList.cs" />
+    <Compile Include="AutoUpdate\Common\AutoUpdateChangeTypes.cs" />
+    <Compile Include="AutoUpdate\Common\AutoUpdateDownloadDescriptor.cs" />
+    <Compile Include="AutoUpdate\Common\AutoUpdateDownloadDescriptorCancelEventArgs.cs" />
+    <Compile Include="AutoUpdate\Common\AutoUpdateDownloadDescriptorEventArgs.cs" />
+    <Compile Include="AutoUpdate\Common\AutoUpdateDownloader.cs" />
+    <Compile Include="AutoUpdate\Common\AutoUpdateDownloaderAlreadyExistsException.cs" />
+    <Compile Include="AutoUpdate\Common\AutoUpdateDownloaderList.cs" />
+    <Compile Include="AutoUpdate\Common\AutoUpdateExceptionEventArgs.cs" />
+    <Compile Include="AutoUpdate\Common\AutoUpdateHref.cs" />
+    <Compile Include="AutoUpdate\Common\AutoUpdateManifest.cs" />
+    <Compile Include="AutoUpdate\Common\AutoUpdateOptionNames.cs" />
+    <Compile Include="AutoUpdate\Common\AutoUpdateOptions.cs" />
+    <Compile Include="AutoUpdate\Common\AutoUpdateOptionsEventArgs.cs" />
+    <Compile Include="AutoUpdate\Common\AutoUpdateProductDescriptor.cs" />
+    <Compile Include="AutoUpdate\Common\AutoUpdateProductDescriptorEventArgs.cs" />
+    <Compile Include="AutoUpdate\Common\AutoUpdateWebServiceProxy.cs" />
+    <Compile Include="AutoUpdate\Common\DefaultAutoUpdateOptions.cs" />
+    <Compile Include="AutoUpdate\Common\ManifestQueryEngine.cs" />
+    <Compile Include="AutoUpdate\Common\Xml\XmlAutoUpdateManifestReader.cs" />
+    <Compile Include="AutoUpdate\Common\Xml\XmlAutoUpdateManifestWriter.cs" />
+    <Compile Include="AutoUpdate\Common\Xml\XmlStringPair.cs" />
+    <Compile Include="AutoUpdate\Common\Xml\XmlWriterUtils.cs" />
+    <Compile Include="AutoUpdate\Downloaders\HttpAutoUpdateDownloader.cs" />
+    <Compile Include="AutoUpdate\Downloaders\UncPathAutoUpdateDownloader.cs" />
+    <Compile Include="Common\ApplicationExceptionEventArgs.cs" />
+    <Compile Include="Common\Attributes\ProductIdentifierAttribute.cs" />
+    <Compile Include="Common\Attributes\ProductRequiresRegistrationAttribute.cs" />
+    <Compile Include="Common\CommandLineParser.cs" />
+    <Compile Include="Common\EventManager.cs" />
+    <Compile Include="Common\ExceptionEventArgs.cs" />
+    <Compile Include="Common\InstanceManager.cs" />
+    <Compile Include="Common\InstanceManagerEventArgs.cs" />
+    <Compile Include="Common\KeyboardUtilities.cs" />
+    <Compile Include="Common\KeyedObject.cs" />
+    <Compile Include="Common\KeyedObjectCancelEventArgs.cs" />
+    <Compile Include="Common\KeyedObjectEventArgs.cs" />
+    <Compile Include="Common\LogFileManager.cs" />
+    <Compile Include="Common\ObjectActions.cs" />
+    <Compile Include="Common\ObjectBase.cs" />
+    <Compile Include="Common\ObjectBaseCancelEventArgs.cs" />
+    <Compile Include="Common\ObjectBaseEventArgs.cs" />
+    <Compile Include="Common\ObjectCancelEventArgs.cs" />
+    <Compile Include="Common\ObjectEventArgs.cs" />
+    <Compile Include="Common\TypeCollectionEventArgs.cs" />
+    <Compile Include="Common\VersionedDirectory.cs" />
+    <Compile Include="Common\VersionedFile.cs" />
+    <Compile Include="Common\WindowUtilities.cs" />
+    <Compile Include="Configuration\CategoryTreeNode.cs" />
+    <Compile Include="Configuration\CloningEngine.cs" />
+    <Compile Include="Common\Base64SerializationUtilities.cs" />
+    <Compile Include="Configuration\EnumDescriptionConverter.cs" />
+    <Compile Include="Common\EnumUtilities.cs" />
+    <Compile Include="Common\ExceptionUtilities.cs" />
+    <Compile Include="Configuration\FileEncryptionEngines.cs" />
+    <Compile Include="Common\FlagsHelper.cs" />
+    <Compile Include="Common\IniFile.cs" />
+    <Compile Include="Configuration\FolderBrowserUITypeEditor.cs" />
+    <Compile Include="Configuration\ISupportsEditing.cs" />
+    <Compile Include="Configuration\IXmlConfigurationElementEvents.cs" />
+    <Compile Include="Configuration\NumericUpDownUITypeEditor.cs" />
+    <Compile Include="Configuration\Providers\ConfigurationProvidersManager.cs" />
+    <Compile Include="Configuration\TypeLoader.cs" />
+    <Compile Include="Configuration\ValuePropertyDescriptor.cs" />
+    <Compile Include="Common\SecurityAccessRight.cs" />
+    <Compile Include="Configuration\XmlConfiguration.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Configuration\XmlConfigurationCategory.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Configuration\XmlConfigurationCategoryCollection.cs" />
+    <Compile Include="Configuration\XmlConfigurationCategoryEventArgs.cs" />
+    <Compile Include="Configuration\XmlConfigurationCategoryTypeConverter.cs" />
+    <Compile Include="Configuration\XmlConfigurationCollection.cs" />
+    <Compile Include="Configuration\XmlConfigurationElement.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Configuration\XmlConfigurationElementActions.cs" />
+    <Compile Include="Configuration\XmlConfigurationElementCancelEventArgs.cs" />
+    <Compile Include="Configuration\XmlConfigurationElementEventArgs.cs" />
+    <Compile Include="Configuration\XmlConfigurationElementTypeConverter.cs" />
+    <Compile Include="Configuration\XmlConfigurationElementTypes.cs" />
+    <Compile Include="Configuration\XmlConfigurationEventArgs.cs" />
+    <Compile Include="Configuration\XmlConfigurationManager.cs" />
+    <Compile Include="Configuration\XmlConfigurationManagerEventArgs.cs" />
+    <Compile Include="Configuration\XmlConfigurationOption.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Configuration\XmlConfigurationOptionCollection.cs" />
+    <Compile Include="Configuration\XmlConfigurationOptionCollectionTypeDescriptor.cs" />
+    <Compile Include="Configuration\XmlConfigurationOptionEventArgs.cs" />
+    <Compile Include="Configuration\XmlConfigurationOptionPropertyDescriptor.cs" />
+    <Compile Include="Configuration\XmlConfigurationOptionPropertyDescriptorMenuItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Configuration\XmlConfigurationOptionTypeConverter.cs" />
+    <Compile Include="Configuration\XmlConfigurationPropertiesWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Configuration\XmlConfigurationReader.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Configuration\XmlConfigurationReaderEventArgs.cs" />
+    <Compile Include="Configuration\XmlConfigurationTypeConverter.cs" />
+    <Compile Include="Configuration\XmlConfigurationView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Configuration\XmlConfigurationWriter.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Configuration\XmlConfigurationWriterEventArgs.cs" />
+    <Compile Include="Configuration\XmlConfigurationXmlBehindViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Plugins\PluginContextEventArgs.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CarbonRuntime.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\CarbonConfig.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\DisposableCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\DisposableObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\FormCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\Log.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\Provider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\ProviderCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\ProviderNotFoundException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\ShellUtilities.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\TypeCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\TypeUtilities.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Common\XmlUtilities.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Providers\ConfigurationProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Providers\ConfigurationProviderCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Providers\Custom\AllUsersConfigurationProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\Providers\Custom\LocalUsersConfigurationProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\SectionHandlers\Custom\ConfigurationProvidersSectionHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\SectionHandlers\Custom\PluginProvidersSectionHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\SectionHandlers\Custom\WindowProvidersSectionHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration\SectionHandlers\ProviderConfigurationSectionHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MultiThreading\BackgroundThread.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MultiThreading\BackgroundThreadCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MultiThreading\BackgroundThreadEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MultiThreading\BackgroundThreadPool.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MultiThreading\BackgroundThreadPoolJob.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MultiThreading\BackgroundThreadPoolJobQueue.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MultiThreading\BackgroundThreadPoolJobStates.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MultiThreading\BackgroundThreadPoolThread.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MultiThreading\BackgroundThreadStartEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MultiThreading\BackgroundThreadStartInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plugins\Attributes\PluginAuthorsAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plugins\Attributes\PluginDefinitionAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plugins\Attributes\PluginDependencyAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plugins\Attributes\PluginDescriptionAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plugins\Attributes\PluginIdAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plugins\Attributes\PluginImageAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plugins\Attributes\PluginManufacturerAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plugins\Attributes\PluginNameAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plugins\Attributes\PluginVersionAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plugins\Plugin.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plugins\PluginApplicationContext.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plugins\PluginContext.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plugins\PluginDescriptor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plugins\PluginDescriptorCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plugins\PluginDescriptorEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plugins\PluginManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plugins\Providers\Custom\FileSystemPluginProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plugins\Providers\PluginProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Plugins\Providers\PluginProviderCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Security\Providers\SecurityProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Security\Providers\SecurityProviderCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Security\SecurityManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\AsyncWindowManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\AsyncWindowManagerEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\AsyncWindowManagerExceptionEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\CancellableProgressWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\CancelMultipleProgressWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\CancelOneProgressWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\InformationPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\IProgressViewer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\MarqueeControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\MenuLoopListener.cs" />
+    <Compile Include="UI\ProgressViewer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\ProgressWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Providers\Custom\AboutWindowProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\Providers\Custom\CancellableProgressWindowProvider.cs" />
+    <Compile Include="UI\Providers\Custom\CancelMultipleProgressWindowProvider.cs" />
+    <Compile Include="UI\Providers\Custom\CancelOneProgressWindowProvider.cs" />
+    <Compile Include="UI\Providers\Custom\OptionsWindowProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\Providers\Custom\ProgressWindowProvider.cs" />
+    <Compile Include="UI\Providers\Custom\SplashWindowProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\Providers\WindowProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\Providers\WindowProviderCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\Providers\WindowProviderNotFoundException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\ShellImageListManagers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\SplashWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\WindowFlasher.cs" />
+    <Compile Include="UI\WindowManager.cs" />
+    <Compile Include="UI\WindowMessageEventArgs.cs" />
+    <None Include="CarbonConfig.config" />
+    <None Include="Overview.cd" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <EmbeddedResource Include="Configuration\Images.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\XmlConfiguration.resx">
+      <DependentUpon>XmlConfiguration.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\XmlConfigurationCategory.resx">
+      <DependentUpon>XmlConfigurationCategory.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\XmlConfigurationElement.resx">
+      <DependentUpon>XmlConfigurationElement.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\XmlConfigurationOption.resx">
+      <DependentUpon>XmlConfigurationOption.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\XmlConfigurationPropertiesWindow.resx">
+      <DependentUpon>XmlConfigurationPropertiesWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\XmlConfigurationReader.resx">
+      <DependentUpon>XmlConfigurationReader.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\XmlConfigurationView.resx">
+      <DependentUpon>XmlConfigurationView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\XmlConfigurationWriter.resx">
+      <DependentUpon>XmlConfigurationWriter.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Configuration\XmlConfigurationXmlBehindViewer.resx">
+      <DependentUpon>XmlConfigurationXmlBehindViewer.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\CancellableProgressWindow.resx">
+      <DependentUpon>CancellableProgressWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\CancelMultipleProgressWindow.resx">
+      <DependentUpon>CancelMultipleProgressWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\CancelOneProgressWindow.resx">
+      <DependentUpon>CancelOneProgressWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\InformationPanel.resx">
+      <DependentUpon>InformationPanel.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\MarqueeControl.resx">
+      <DependentUpon>MarqueeControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\ProgressWindow.resx">
+      <DependentUpon>ProgressWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\SplashWindow.resx">
+      <DependentUpon>SplashWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="License-Carbon.Framework.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y "$(ProjectDir)License*.txt" "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
+</Project>

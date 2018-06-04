@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<project name="NAnt1" default="build">	
+	<target name="CopyCore" description="Copy the Core dlls">
+	    <copy todir="..\SDBees.Core.Build">
+			<fileset basedir="..\..\SDBees.Core\run">
+				<include name="*.dll"/>
+	    		<exclude name="*AEC*dll"/>
+	    		<exclude name="*GIS*dll"/>
+	    		<exclude name="*General*dll"/>
+	    		<exclude name="*Organ*dll"/>
+	    		<exclude name="*Prozess*dll"/>
+			</fileset>
+		</copy>
+	</target>
+</project>
