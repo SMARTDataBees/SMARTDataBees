@@ -336,6 +336,9 @@ namespace SDBees.ViewAdmin
             {
                 if (_dlgNewView.DialogResult == DialogResult.OK)
                 {
+                    if(this._hashViews.ContainsKey(_dlgNewView.ViewName))
+                        SaveViewProperty((ObjectView)this._hashViews[_dlgNewView.ViewName]);
+
                     this.listViewPlugins.Items.Clear(); //Die Liste der verfügbaren Plugins löschen
                     FillViewComboBox();
                     treeViewSystemConfig.Nodes.Clear(); //Die alte Treeview löschen
@@ -392,7 +395,8 @@ namespace SDBees.ViewAdmin
 
             if (this.treeViewSystemConfig.TopNode != null)
             {
-                this.SaveViewProperty((ObjectView)this._hashViews[this._cmbViewSelector.SelectedItem.ToString()]);
+                if(this._cmbViewSelector.SelectedItem != null)
+                    this.SaveViewProperty((ObjectView)this._hashViews[this._cmbViewSelector.SelectedItem.ToString()]);
 
                 foreach (TreeNode trn in this.treeViewSystemConfig.Nodes)
                 {
