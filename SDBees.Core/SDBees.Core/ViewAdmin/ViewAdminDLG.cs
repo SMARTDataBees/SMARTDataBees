@@ -77,7 +77,7 @@ namespace SDBees.ViewAdmin
 
                 ContextMenu pluginListContextMenu = new ContextMenu();
                 pluginListContextMenu.Popup += new EventHandler(pluginListContextMenu_Popup);
-                this.listViewPlugins.ContextMenu = pluginListContextMenu;
+                this.m_listViewPlugins.ContextMenu = pluginListContextMenu;
 
                 this._cmbViewSelector.SelectedIndexChanged += new EventHandler(_cmbViewSelector_SelectedIndexChanged);
 
@@ -104,16 +104,16 @@ namespace SDBees.ViewAdmin
 
         void pluginListContextMenu_Popup(object sender, EventArgs e)
         {
-            this.listViewPlugins.ContextMenu.MenuItems.Clear();
+            this.m_listViewPlugins.ContextMenu.MenuItems.Clear();
 
-            if (this.listViewPlugins.SelectedItems.Count == 1)
+            if (this.m_listViewPlugins.SelectedItems.Count == 1)
             {
-                ListViewItem lvi = this.listViewPlugins.SelectedItems[0];
+                ListViewItem lvi = this.m_listViewPlugins.SelectedItems[0];
 
                 MenuItem menuEditSchema = new MenuItem("Edit Schema of " + lvi.Text);
                 menuEditSchema.Tag = lvi.Tag;
                 menuEditSchema.Click += new EventHandler(menuEditSchema_Click);
-                this.listViewPlugins.ContextMenu.MenuItems.Add(menuEditSchema);
+                this.m_listViewPlugins.ContextMenu.MenuItems.Add(menuEditSchema);
             }
         }
 
@@ -136,8 +136,8 @@ namespace SDBees.ViewAdmin
                     if (tag.NodeTypeOf == tntag.PluginType)
                     {
                         this._bConfigNodeSelected = true;
-                        this.treeViewSystemConfig.SelectedNode = trn;
-                        this.iLevelofInsertion = GetLevel(this.treeViewSystemConfig.SelectedNode.FullPath);
+                        this.m_treeViewSystemConfig.SelectedNode = trn;
+                        this.iLevelofInsertion = GetLevel(this.m_treeViewSystemConfig.SelectedNode.FullPath);
                         //break;
                     }
                     else if (trn.Nodes.Count > 0)
@@ -202,16 +202,16 @@ namespace SDBees.ViewAdmin
 
         private void FillPluginList()
         {
-            this.listViewPlugins.SmallImageList = new ImageList();
+            this.m_listViewPlugins.SmallImageList = new ImageList();
 
             foreach (ObjectPlugin obj in this._hashPlugins.Values)
             {
-                string imageKey = TemplateTreenode.getImageForPluginType(obj.PluginType, this.listViewPlugins.SmallImageList);
+                string imageKey = TemplateTreenode.getImageForPluginType(obj.PluginType, this.m_listViewPlugins.SmallImageList);
 
                 ListViewItem item = new ListViewItem(obj.PluginName);
                 item.ImageKey = imageKey;
                 item.Tag = obj;
-                this.listViewPlugins.Items.Add(item);
+                this.m_listViewPlugins.Items.Add(item);
             }
         }
 
@@ -221,7 +221,7 @@ namespace SDBees.ViewAdmin
             {
                 ListViewItem item = new ListViewItem(obj.PluginName);
                 item.Tag = obj;
-                this.listViewHelper.Items.Add(item);
+                this.m_listViewHelper.Items.Add(item);
             }
         }
 
@@ -339,16 +339,16 @@ namespace SDBees.ViewAdmin
                     if(this._hashViews.ContainsKey(_dlgNewView.ViewName))
                         SaveViewProperty((ObjectView)this._hashViews[_dlgNewView.ViewName]);
 
-                    this.listViewPlugins.Items.Clear(); //Die Liste der verfügbaren Plugins löschen
+                    this.m_listViewPlugins.Items.Clear(); //Die Liste der verfügbaren Plugins löschen
                     FillViewComboBox();
-                    treeViewSystemConfig.Nodes.Clear(); //Die alte Treeview löschen
+                    m_treeViewSystemConfig.Nodes.Clear(); //Die alte Treeview löschen
                     _cmbViewSelector.SelectedItem = _dlgNewView.ViewName;
                     // die ID setzen
                     ObjectView objView = (ObjectView)this._hashViews[_dlgNewView.ViewName];
                     this._sCurrentViewID = objView.ViewGUID;
                     if (this._sCurrentViewID != null)
                     {
-                        this._refViewAdmin.CurrentViewId = new Guid(this._sCurrentViewID);
+                        //this._refViewAdmin.CurrentViewId = new Guid(this._sCurrentViewID);
                     }
 
                     this.FillPluginList();
@@ -393,12 +393,12 @@ namespace SDBees.ViewAdmin
             // ViewRelations werden gelöscht
             DeleteViewRelations();
 
-            if (this.treeViewSystemConfig.TopNode != null)
+            if (this.m_treeViewSystemConfig.TopNode != null)
             {
                 if(this._cmbViewSelector.SelectedItem != null)
                     this.SaveViewProperty((ObjectView)this._hashViews[this._cmbViewSelector.SelectedItem.ToString()]);
 
-                foreach (TreeNode trn in this.treeViewSystemConfig.Nodes)
+                foreach (TreeNode trn in this.m_treeViewSystemConfig.Nodes)
                 {
                     SaveViewDefinition(trn, ViewRelation.m_StartNodeValue);
                 }
@@ -525,8 +525,8 @@ namespace SDBees.ViewAdmin
             Error error = null;
             database.Open(false, ref error);
 
-            this.treeViewSystemConfig.Nodes.Clear();
-            this.treeViewSystemConfig.ImageList = new ImageList();
+            this.m_treeViewSystemConfig.Nodes.Clear();
+            this.m_treeViewSystemConfig.ImageList = new ImageList();
             this.LoadViewStartDefinition(objView);
 
             database.Close(ref error);
@@ -558,7 +558,7 @@ namespace SDBees.ViewAdmin
                     viewDef.Load(this._refViewAdmin.MyDBManager.Database, var, ref error);
                     if (viewDef.ParentType == ViewRelation.m_StartNodeValue)
                     {
-                        string imageKey = TemplateTreenode.getImageForPluginType(viewDef.ChildType, this.treeViewSystemConfig.ImageList);
+                        string imageKey = TemplateTreenode.getImageForPluginType(viewDef.ChildType, this.m_treeViewSystemConfig.ImageList);
 
                         TreeNode trnPLG = new TreeNode(viewDef.ChildName);
                         trnPLG.ImageKey = imageKey;
@@ -569,7 +569,7 @@ namespace SDBees.ViewAdmin
                         objPLG.ViewID = viewDef.ViewId;
                         objPLG.ID = viewDef.Id.ToString();
                         trnPLG.Tag = objPLG;
-                        this.treeViewSystemConfig.Nodes.Add(trnPLG);
+                        this.m_treeViewSystemConfig.Nodes.Add(trnPLG);
 
 
                         error = LoadViewSubDefinitions(objView, error, viewDef.ChildType, trnPLG);
@@ -594,7 +594,7 @@ namespace SDBees.ViewAdmin
             {
                 viewDefSub.Load(this._refViewAdmin.MyDBManager.Database, obj, ref error);
 
-                string imageKey = TemplateTreenode.getImageForPluginType(viewDefSub.ChildType, this.treeViewSystemConfig.ImageList);
+                string imageKey = TemplateTreenode.getImageForPluginType(viewDefSub.ChildType, this.m_treeViewSystemConfig.ImageList);
 
                 TreeNode trnPLG_SUB = new TreeNode(viewDefSub.ChildName);
                 trnPLG_SUB.ImageKey = imageKey;
@@ -781,12 +781,12 @@ namespace SDBees.ViewAdmin
                 DialogResult dlgRes = MessageBox.Show("Do you really want to delete the selected node and the subnodes?", "Attention", MessageBoxButtons.YesNo);
                 if (dlgRes == DialogResult.Yes)
                 {
-                    RemoveNodeAndAddBackToList(this.treeViewSystemConfig.SelectedNode);
+                    RemoveNodeAndAddBackToList(this.m_treeViewSystemConfig.SelectedNode);
                 }
             }
             else if (e.KeyCode == Keys.F2)
             {
-                this.treeViewSystemConfig.SelectedNode.BeginEdit();
+                this.m_treeViewSystemConfig.SelectedNode.BeginEdit();
             }
         }
 
@@ -798,12 +798,12 @@ namespace SDBees.ViewAdmin
             }
 
             ObjectPlugin obj = (ObjectPlugin)trNode.Tag;
-            string imageKey = TemplateTreenode.getImageForPluginType(obj.PluginType, this.listViewPlugins.SmallImageList);
+            string imageKey = TemplateTreenode.getImageForPluginType(obj.PluginType, this.m_listViewPlugins.SmallImageList);
 
             ListViewItem lstItem = new ListViewItem(trNode.Text);
             lstItem.ImageKey = imageKey;
             lstItem.Tag = trNode.Tag;
-            this.listViewPlugins.Items.Add(lstItem);
+            this.m_listViewPlugins.Items.Add(lstItem);
             trNode.Remove();
         }
         #endregion
