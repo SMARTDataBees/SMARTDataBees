@@ -153,9 +153,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-
-xcopy /Y/I/E "$(SolutionDir)SDBees.Core\Content\DemoDataSMARTDataBees" "$(TargetDir)Content\DemoDataSMARTDataBees"
+    <PostBuildEvent>xcopy /Y/I/E "$(SolutionDir)SDBees.Core\Content\DemoDataSMARTDataBees" "$(TargetDir)Content\DemoDataSMARTDataBees"
 
 </PostBuildEvent>
   </PropertyGroup>
