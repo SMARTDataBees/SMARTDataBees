@@ -38,7 +38,7 @@ namespace Carbon.Common
 	/// <summary>
 	/// Provides methods commonly used to manipulate Xml documents.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public static class XmlUtilities
 	{
 		#region XmlAttributeMissingException
@@ -57,7 +57,7 @@ namespace Carbon.Common
 			/// <param name="node">The XmlNode missing the attribute</param>
 			/// <param name="attributeName">The name of the attribute missing</param>
 			internal XmlAttributeMissingException(XmlNode node, string attributeName) : 
-				base(string.Format("The XmlNode '{0}' does not have an attribute named '{1}'.", node.Name, attributeName))
+				base($"The XmlNode '{node.Name}' does not have an attribute named '{attributeName}'.")
 			{
 				_node = node;
 				_attributeName = attributeName;

@@ -20,34 +20,31 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SDBees.Plugs.Objects
 {
   public class ObjectView
   {
-    private string _sViewName = null;
-    private string _sViewDescription = null;
-    private string _sViewGUID = null;
+    private string _sViewName;
+    private string _sViewDescription;
+    private string _sViewGUID;
     
     public string ViewName
     {
-      get { return this._sViewName; }
-      set { this._sViewName = value; }
+      get { return _sViewName; }
+      set { _sViewName = value; }
     }
 
     public string ViewDescription
     {
-      get { return this._sViewDescription; }
-      set { this._sViewDescription = value; }
+      get { return _sViewDescription; }
+      set { _sViewDescription = value; }
     }
 
     public string ViewGUID
     {
-      get { return this._sViewGUID; }
-      set { this._sViewGUID = value; }
+      get { return _sViewGUID; }
+      set { _sViewGUID = value; }
     }
 
     public ObjectView()

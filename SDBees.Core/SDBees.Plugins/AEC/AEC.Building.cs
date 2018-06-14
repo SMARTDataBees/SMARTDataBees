@@ -168,7 +168,7 @@ namespace SDBees.Core.Plugins.AEC.Building
 					if (m_DefaultBuilding.Save(this.MyDBManager.Database, ref _error))
 					{
 						//create relation for view
-						ViewAdmin.ViewRelation rel = new ViewAdmin.ViewRelation();
+						var rel = new ViewAdmin.ViewRelation();
 						rel.SetDefaults(this.MyDBManager.Database);
 						rel.ParentId = Guid.Empty;
 						rel.ParentType = ViewAdmin.ViewRelation.m_StartNodeValue;
@@ -221,7 +221,7 @@ namespace SDBees.Core.Plugins.AEC.Building
 			if (MyDBManager != null)
 			{
 				// Verify that the required Tables are created/updated in the database
-				Database database = MyDBManager.Database;
+				var database = MyDBManager.Database;
 				this.CreateDataObject().InitTableSchema(ref AECBuildingBaseData.gTable, database);
 			}
 		}

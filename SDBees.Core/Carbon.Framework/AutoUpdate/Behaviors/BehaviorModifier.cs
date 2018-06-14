@@ -29,10 +29,6 @@
 //
 //	============================================================================
 
-using System;
-
-using Carbon.AutoUpdate;
-
 namespace Carbon.AutoUpdate.Behaviors
 {
 	/// <summary>

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using SDBees.Core.Model;
 
 namespace SDBees.Core.Utils
 {
@@ -9,11 +7,11 @@ namespace SDBees.Core.Utils
     {
         public static int Compare(string name1, string name2)
         {
-            int result = 0;
+            var result = 0;
 
-            SDBees.Core.Model.SDBeesOpeningSize value1 = new SDBees.Core.Model.SDBeesOpeningSize(name1);
+            var value1 = new SDBeesOpeningSize(name1);
 
-            SDBees.Core.Model.SDBeesOpeningSize value2 = new SDBees.Core.Model.SDBeesOpeningSize(name2);
+            var value2 = new SDBeesOpeningSize(name2);
 
             if (value1.IsValid && value2.IsValid)
             {
@@ -29,17 +27,17 @@ namespace SDBees.Core.Utils
 
         private static string GetNameForSorting(string name)
         {
-            string result = "";
+            var result = "";
 
-            string value = name;
+            var value = name;
 
-            int index = 0;
+            var index = 0;
 
             while (true)
             {
-                bool isNumber = false;
+                var isNumber = false;
 
-                string token = GetToken(value, ref index, ref isNumber);
+                var token = GetToken(value, ref index, ref isNumber);
 
                 if (token != null)
                 {
@@ -71,7 +69,7 @@ namespace SDBees.Core.Utils
 
                 for (/* empty */; start < value.Length; start++)
                 {
-                    char c = value[start];
+                    var c = value[start];
 
                     if (Char.IsDigit(c))
                     {
@@ -90,10 +88,7 @@ namespace SDBees.Core.Utils
                         {
                             break;
                         }
-                        else
-                        {
-                            result += c;
-                        }
+                        result += c;
                     }
                 }
             }

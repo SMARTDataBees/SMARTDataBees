@@ -30,15 +30,14 @@
 //	============================================================================
 
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 
 namespace Carbon.Common
 {
 	/// <summary>
 	/// Defines an EventArgs class containing an ObjectBase instance as the context.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public class ObjectEventArgs : EventArgs 
 	{
 		private object _context;

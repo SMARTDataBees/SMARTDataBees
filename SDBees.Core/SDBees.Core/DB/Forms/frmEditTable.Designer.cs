@@ -20,6 +20,10 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.ComponentModel;
+using System.Windows.Forms;
+
 namespace SDBees.DB
 {
     /// <summary>
@@ -30,7 +34,7 @@ namespace SDBees.DB
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -192,14 +196,14 @@ namespace SDBees.DB
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button bnDeleteColumn;
-        private System.Windows.Forms.Button bnAddColumn;
-        private System.Windows.Forms.ListBox lbColumns;
-        private System.Windows.Forms.PropertyGrid pgProperties;
-        private System.Windows.Forms.Button bnCancel;
-        private System.Windows.Forms.Button bnOk;
-        private System.Windows.Forms.Button bnExport;
-        private System.Windows.Forms.Button bnImport;
+        private GroupBox groupBox1;
+        private Button bnDeleteColumn;
+        private Button bnAddColumn;
+        private ListBox lbColumns;
+        private PropertyGrid pgProperties;
+        private Button bnCancel;
+        private Button bnOk;
+        private Button bnExport;
+        private Button bnImport;
     }
 }

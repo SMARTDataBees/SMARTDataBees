@@ -30,6 +30,7 @@
 //	============================================================================
 
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace Carbon.Common
@@ -38,7 +39,7 @@ namespace Carbon.Common
 	/// Provides a strongly-typed collection of Forms.
 	/// This class is thread safe.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public sealed class FormCollection : DisposableCollection
 	{
 		#region FormAlreadyExistsException 
@@ -56,7 +57,7 @@ namespace Carbon.Common
 			/// </summary>
 			/// <param name="form">The Form that already exists in the collection</param>
 			internal FormAlreadyExistsException(Form form) : 
-				base(string.Format("The Form '{0}' already exists in the collection.", form.Text))
+				base($"The Form '{form.Text}' already exists in the collection.")
 			{
 				_form = form;
 			}
@@ -75,26 +76,18 @@ namespace Carbon.Common
 
 		#endregion
 
-		/// <summary>
-		/// Initializes a new instance of the FormCollection class
-		/// </summary>
-		public FormCollection()
-		{
-			
-		}
-		
-		/// <summary>
+	    /// <summary>
 		/// Adds a Form to the collection
 		/// </summary>
 		/// <param name="form"></param>
 		public void Add(Form form)
 		{
-			if (this.Contains(form))
+			if (Contains(form))
 				throw new FormAlreadyExistsException(form);
 			
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
-				base.InnerList.Add(form);
+				InnerList.Add(form);
 			}
 		}
 
@@ -104,8 +97,8 @@ namespace Carbon.Common
 		/// <param name="forms"></param>
 		public void AddRange(Form[] forms)
 		{
-			foreach (Form form in forms)
-				this.Add(form);
+			foreach (var form in forms)
+				Add(form);
 		}
 
 		/// <summary>
@@ -114,10 +107,10 @@ namespace Carbon.Common
 		/// <param name="form"></param>
 		public void Remove(Form form)
 		{
-			if (this.Contains(form))
-				lock (base.SyncRoot)
+			if (Contains(form))
+				lock (SyncRoot)
 				{
-					base.InnerList.Remove(form);
+					InnerList.Remove(form);
 				}
 		}
 		
@@ -131,9 +124,9 @@ namespace Carbon.Common
 			if (form == null)
 				throw new ArgumentNullException("form");
 
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
-				foreach(Form f in base.InnerList)
+				foreach(Form f in InnerList)
 					if (f == form)
 						return true;
 			}
@@ -147,9 +140,9 @@ namespace Carbon.Common
 		{
 			get
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
-					return base.InnerList[index] as Form;
+					return InnerList[index] as Form;
 				}
 			}
 		}

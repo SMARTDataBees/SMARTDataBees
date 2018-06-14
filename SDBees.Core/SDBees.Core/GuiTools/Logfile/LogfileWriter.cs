@@ -20,12 +20,13 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
+using System.Text;
 using Carbon.Configuration;
+using SDBees.Core.Global;
 
 namespace SDBees.GuiTools
 {
@@ -46,8 +47,8 @@ namespace SDBees.GuiTools
         /// <summary>
         /// Flags that can be set in the categories
         /// </summary>
-        [FlagsAttribute]
-        public enum Flags : int
+        [Flags]
+        public enum Flags
         {
             /// <summary>
             /// Title of a message will be displayed bold
@@ -72,7 +73,7 @@ namespace SDBees.GuiTools
             /// <summary>
             /// Display date and time at the beginning of the log message
             /// </summary>
-            eShowDateTime  = 0x00000010,
+            eShowDateTime  = 0x00000010
         }
 
         #endregion
@@ -100,9 +101,9 @@ namespace SDBees.GuiTools
 
         private void SetUpConfiguration()
         {
-            XmlConfigurationCategory catLog = SDBeesLogLocalConfiguration();
+            var catLog = SDBeesLogLocalConfiguration();
 
-            XmlConfigurationOption opLogSuccess = new XmlConfigurationOption(m_LogSuccess, m_LogSuccessDefault);
+            var opLogSuccess = new XmlConfigurationOption(m_LogSuccess, m_LogSuccessDefault);
             opLogSuccess.Description = "Log items with successfull opterations?";
             //opAnullarSpace.EditorAssemblyQualifiedName
             if (!catLog.Options.Contains(opLogSuccess))
@@ -113,7 +114,7 @@ namespace SDBees.GuiTools
         internal static string m_ConfigurationSection = "Log";
         internal static XmlConfigurationCategory SDBeesLogLocalConfiguration()
         {
-            return SDBees.Core.Global.SDBeesGlobalVars.SDBeesLocalUsersConfiguration().Categories[m_ConfigurationSection, true];
+            return SDBeesGlobalVars.SDBeesLocalUsersConfiguration().Categories[m_ConfigurationSection, true];
         }
 
         #endregion
@@ -144,7 +145,7 @@ namespace SDBees.GuiTools
         /// <returns>true if successful, false if a category with this name already exists</returns>
         public bool AddCategory(LogfileCategory category)
         {
-            bool result = false;
+            var result = false;
 
             if (!mCategories.ContainsKey(category.Name))
             {
@@ -163,20 +164,20 @@ namespace SDBees.GuiTools
         /// <param name="categoryName"></param>
         public void Writeline (string label, string message, string categoryName)
         {
-            LogfileCategory category = GetCategory(categoryName);
+            var category = GetCategory(categoryName);
 
             if ((category == null) || (category.Enabled))
             {
-                string preGeneralSettings = "";
-                string postGeneralSettings = "";
-                string preLabelSettings = "";
-                string postLabelSettings = "";
-                string preMessageSettings = "";
-                string postMessageSettings = "";
+                var preGeneralSettings = "";
+                var postGeneralSettings = "";
+                var preLabelSettings = "";
+                var postLabelSettings = "";
+                var preMessageSettings = "";
+                var postMessageSettings = "";
 
                 if (category != null)
                 {
-                    string rgb = String.Format("{0,2:X2}{1,2:X2}{2,2:X2}", category.Red, category.Green, category.Blue);
+                    var rgb = String.Format("{0,2:X2}{1,2:X2}{2,2:X2}", category.Red, category.Green, category.Blue);
                     preGeneralSettings += "<font color = \"#" + rgb + "\">";
                     postGeneralSettings += "</font>";
 
@@ -202,13 +203,13 @@ namespace SDBees.GuiTools
                     }
                     if ((category.Flags & Flags.eShowDateTime) != 0)
                     {
-                        DateTime currentTime = DateTime.Now;
-                        string dateTime = currentTime.ToShortDateString() + ", " + currentTime.ToLongTimeString() + " - ";
+                        var currentTime = DateTime.Now;
+                        var dateTime = currentTime.ToShortDateString() + ", " + currentTime.ToLongTimeString() + " - ";
 
                         preLabelSettings += dateTime;
                     }
                 }
-                string line = preGeneralSettings + preLabelSettings + label + ": " + postLabelSettings + preMessageSettings + message + postMessageSettings + postGeneralSettings + "<BR>";
+                var line = preGeneralSettings + preLabelSettings + label + ": " + postLabelSettings + preMessageSettings + message + postMessageSettings + postGeneralSettings + "<BR>";
 
                 Write(line, true);
             }
@@ -220,9 +221,9 @@ namespace SDBees.GuiTools
 
         private void Write(string line, bool withEOL)
         {
-            UTF8Encoding utf8 = new UTF8Encoding();
+            var utf8 = new UTF8Encoding();
 
-            StreamWriter writer = new StreamWriter(mFilename, true, utf8);
+            var writer = new StreamWriter(mFilename, true, utf8);
 
             writer.Write(line);
             if (withEOL)

@@ -22,18 +22,11 @@
 // #EndHeader# ================================================================
 namespace SDBees.Core.Model
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// Die möglichen Typen eines Eigenschaften Filters
     /// </summary>
-	public enum SDBeesPropertyFilterType : int
-	{
+	public enum SDBeesPropertyFilterType
+    {
 		Smaller,
 		Equals,
 		Larger,
@@ -41,6 +34,6 @@ namespace SDBees.Core.Model
 		LargerOrEqual,
 		SmallerOrEqual,
 		All,
-		Nothing,
+		Nothing
 	}
 }

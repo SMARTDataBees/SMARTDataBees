@@ -22,11 +22,6 @@
 // #EndHeader# ================================================================
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using System.Runtime.Serialization;
 
 namespace SDBees.Core.Model
@@ -34,7 +29,7 @@ namespace SDBees.Core.Model
     [DataContract]
     public abstract class SDBeesId
     {
-        private string m_Id = null;
+        private string m_Id;
         [DataMember]
         public string Id
         {
@@ -52,14 +47,14 @@ namespace SDBees.Core.Model
             m_Id = id;
         }
 
-        public override bool Equals(System.Object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
                 return false;
             }
 
-            SDBeesId id = obj as SDBeesId;
+            var id = obj as SDBeesId;
             if (id == null)
             {
                 return false;
@@ -82,7 +77,7 @@ namespace SDBees.Core.Model
     [DataContract]
     public class SDBeesProjectId : SDBeesId
     {
-        public SDBeesProjectId() : base()
+        public SDBeesProjectId()
         {
         }
 
@@ -98,10 +93,7 @@ namespace SDBees.Core.Model
                 {
                     return id1.Id == id2.Id;
                 }
-                else
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
@@ -111,14 +103,14 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(System.Object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
                 return false;
             }
 
-            SDBeesProjectId id = obj as SDBeesProjectId;
+            var id = obj as SDBeesProjectId;
             if (id == null)
             {
                 return false;
@@ -134,7 +126,7 @@ namespace SDBees.Core.Model
 
         public static implicit operator SDBeesProjectId(string idText)
         {
-            SDBeesProjectId id = new SDBeesProjectId(idText);
+            var id = new SDBeesProjectId(idText);
             return id;
         }
 
@@ -147,7 +139,7 @@ namespace SDBees.Core.Model
         {
         }
 
-        public SDBeesDocumentId() : base()
+        public SDBeesDocumentId()
         {
         }
 
@@ -170,10 +162,7 @@ namespace SDBees.Core.Model
                 {
                     return id1.Id == id2.Id;
                 }
-                else
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
@@ -183,14 +172,14 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(System.Object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
                 return false;
             }
 
-            SDBeesDocumentId id = obj as SDBeesDocumentId;
+            var id = obj as SDBeesDocumentId;
             if (id == null)
             {
                 return false;
@@ -206,7 +195,7 @@ namespace SDBees.Core.Model
 
         public static implicit operator SDBeesDocumentId(string idText)
         {
-            SDBeesDocumentId id = new SDBeesDocumentId(idText);
+            var id = new SDBeesDocumentId(idText);
             return id;
         }
 
@@ -216,7 +205,7 @@ namespace SDBees.Core.Model
     [DataContract]
     public class SDBeesPluginId : SDBeesId
     {
-        public SDBeesPluginId() : base()
+        public SDBeesPluginId()
         {
         }
 
@@ -232,10 +221,7 @@ namespace SDBees.Core.Model
                 {
                     return id1.Id == id2.Id;
                 }
-                else
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
@@ -245,14 +231,14 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(System.Object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
                 return false;
             }
 
-            SDBeesPluginId id = obj as SDBeesPluginId;
+            var id = obj as SDBeesPluginId;
             if (id == null)
             {
                 return false;
@@ -268,7 +254,7 @@ namespace SDBees.Core.Model
 
         public static implicit operator SDBeesPluginId(string idText)
         {
-            SDBeesPluginId id = new SDBeesPluginId(idText);
+            var id = new SDBeesPluginId(idText);
             return id;
         }
 
@@ -277,7 +263,7 @@ namespace SDBees.Core.Model
     [DataContract]
     public class SDBeesPluginRoleId : SDBeesId
     {
-        public SDBeesPluginRoleId() : base()
+        public SDBeesPluginRoleId()
         {
         }
 
@@ -293,10 +279,7 @@ namespace SDBees.Core.Model
                 {
                     return id1.Id == id2.Id;
                 }
-                else
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
@@ -306,14 +289,14 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(System.Object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
                 return false;
             }
 
-            SDBeesPluginRoleId id = obj as SDBeesPluginRoleId;
+            var id = obj as SDBeesPluginRoleId;
             if (id == null)
             {
                 return false;
@@ -329,7 +312,7 @@ namespace SDBees.Core.Model
 
         public static implicit operator SDBeesPluginRoleId(string idText)
         {
-            SDBeesPluginRoleId id = new SDBeesPluginRoleId(idText);
+            var id = new SDBeesPluginRoleId(idText);
             return id;
         }
 
@@ -339,7 +322,7 @@ namespace SDBees.Core.Model
     [DataContract]
     public class SDBeesEntityId : SDBeesId
     {
-        public SDBeesEntityId() : base()
+        public SDBeesEntityId()
         {
         }
 
@@ -355,10 +338,7 @@ namespace SDBees.Core.Model
                 {
                     return id1.Id == id2.Id;
                 }
-                else
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
@@ -368,14 +348,14 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(System.Object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
                 return false;
             }
 
-            SDBeesEntityId id = obj as SDBeesEntityId;
+            var id = obj as SDBeesEntityId;
             if (id == null)
             {
                 return false;
@@ -391,7 +371,7 @@ namespace SDBees.Core.Model
 
         public static implicit operator SDBeesEntityId(string idText)
         {
-            SDBeesEntityId id = new SDBeesEntityId(idText);
+            var id = new SDBeesEntityId(idText);
             return id;
         }
 
@@ -401,7 +381,6 @@ namespace SDBees.Core.Model
     public class SDBeesEntityInstanceId : SDBeesId
     {
         public SDBeesEntityInstanceId()
-            : base()
         {
         }
 
@@ -418,10 +397,7 @@ namespace SDBees.Core.Model
                 {
                     return id1.Id == id2.Id;
                 }
-                else
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
@@ -431,14 +407,14 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(System.Object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
                 return false;
             }
 
-            SDBeesEntityInstanceId id = obj as SDBeesEntityInstanceId;
+            var id = obj as SDBeesEntityInstanceId;
             if (id == null)
             {
                 return false;
@@ -454,7 +430,7 @@ namespace SDBees.Core.Model
 
         public static implicit operator SDBeesEntityInstanceId(string idText)
         {
-            SDBeesEntityInstanceId id = new SDBeesEntityInstanceId(idText);
+            var id = new SDBeesEntityInstanceId(idText);
             return id;
         }
     }
@@ -462,7 +438,7 @@ namespace SDBees.Core.Model
     [DataContract]
     public class SDBeesEntityDefinitionId : SDBeesId
     {
-        public SDBeesEntityDefinitionId() : base()
+        public SDBeesEntityDefinitionId()
         {
         }
 
@@ -478,10 +454,7 @@ namespace SDBees.Core.Model
                 {
                     return id1.Id == id2.Id;
                 }
-                else
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
@@ -491,14 +464,14 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(System.Object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
                 return false;
             }
 
-            SDBeesEntityDefinitionId id = obj as SDBeesEntityDefinitionId;
+            var id = obj as SDBeesEntityDefinitionId;
             if (id == null)
             {
                 return false;
@@ -514,7 +487,7 @@ namespace SDBees.Core.Model
 
         public static implicit operator SDBeesEntityDefinitionId(string idText)
         {
-            SDBeesEntityDefinitionId id = new SDBeesEntityDefinitionId(idText);
+            var id = new SDBeesEntityDefinitionId(idText);
             return id;
         }
 
@@ -523,7 +496,7 @@ namespace SDBees.Core.Model
     [DataContract]
     public class SDBeesPropertyDefinitionId : SDBeesId
     {
-        public SDBeesPropertyDefinitionId() : base()
+        public SDBeesPropertyDefinitionId()
         {
         }
 
@@ -539,10 +512,7 @@ namespace SDBees.Core.Model
                 {
                     return id1.Id == id2.Id;
                 }
-                else
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
@@ -552,14 +522,14 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(System.Object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
                 return false;
             }
 
-            SDBeesPropertyDefinitionId id = obj as SDBeesPropertyDefinitionId;
+            var id = obj as SDBeesPropertyDefinitionId;
             if (id == null)
             {
                 return false;
@@ -575,7 +545,7 @@ namespace SDBees.Core.Model
 
         public static implicit operator SDBeesPropertyDefinitionId(string idText)
         {
-            SDBeesPropertyDefinitionId id = new SDBeesPropertyDefinitionId(idText);
+            var id = new SDBeesPropertyDefinitionId(idText);
             return id;
         }
 
@@ -584,7 +554,7 @@ namespace SDBees.Core.Model
     [DataContract]
     public class SDBeesRelationshipInstanceId : SDBeesId
     {
-        public SDBeesRelationshipInstanceId() : base()
+        public SDBeesRelationshipInstanceId()
         {
         }
 
@@ -600,10 +570,7 @@ namespace SDBees.Core.Model
                 {
                     return id1.Id == id2.Id;
                 }
-                else
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
@@ -613,14 +580,14 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(System.Object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
                 return false;
             }
 
-            SDBeesRelationshipInstanceId id = obj as SDBeesRelationshipInstanceId;
+            var id = obj as SDBeesRelationshipInstanceId;
             if (id == null)
             {
                 return false;
@@ -636,7 +603,7 @@ namespace SDBees.Core.Model
 
         public static implicit operator SDBeesRelationshipInstanceId(string idText)
         {
-            SDBeesRelationshipInstanceId id = new SDBeesRelationshipInstanceId(idText);
+            var id = new SDBeesRelationshipInstanceId(idText);
             return id;
         }
 
@@ -646,7 +613,6 @@ namespace SDBees.Core.Model
     public class SDBeesRelationshipDefinitionId : SDBeesId
     {
         public SDBeesRelationshipDefinitionId()
-            : base()
         {
         }
 
@@ -662,10 +628,7 @@ namespace SDBees.Core.Model
                 {
                     return id1.Id == id2.Id;
                 }
-                else
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
@@ -675,14 +638,14 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(System.Object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
                 return false;
             }
 
-            SDBeesRelationshipDefinitionId id = obj as SDBeesRelationshipDefinitionId;
+            var id = obj as SDBeesRelationshipDefinitionId;
             if (id == null)
             {
                 return false;
@@ -698,7 +661,7 @@ namespace SDBees.Core.Model
 
         public static implicit operator SDBeesRelationshipDefinitionId(string idText)
         {
-            SDBeesRelationshipDefinitionId id = new SDBeesRelationshipDefinitionId(idText);
+            var id = new SDBeesRelationshipDefinitionId(idText);
             return id;
         }
 
@@ -708,7 +671,6 @@ namespace SDBees.Core.Model
     public class SDBeesAlienInstanceId : SDBeesId
     {
         public SDBeesAlienInstanceId()
-            : base()
         {
         }
 
@@ -725,10 +687,7 @@ namespace SDBees.Core.Model
                 {
                     return id1.Id == id2.Id;
                 }
-                else
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
@@ -738,14 +697,14 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(System.Object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
                 return false;
             }
 
-            SDBeesAlienInstanceId id = obj as SDBeesAlienInstanceId;
+            var id = obj as SDBeesAlienInstanceId;
             if (id == null)
             {
                 return false;
@@ -761,7 +720,7 @@ namespace SDBees.Core.Model
 
         public static implicit operator SDBeesAlienInstanceId(string idText)
         {
-            SDBeesAlienInstanceId id = new SDBeesAlienInstanceId(idText);
+            var id = new SDBeesAlienInstanceId(idText);
             return id;
         }
     }
@@ -867,10 +826,7 @@ namespace SDBees.Core.Model
                 {
                     return (id1.m_alieninstanceId == id2.m_alieninstanceId) && (id1.m_docId == id2.m_docId);
                 }
-                else
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
             
@@ -888,7 +844,7 @@ namespace SDBees.Core.Model
                 return false;
             }
 
-            SDBeesAlienId id = obj as SDBeesAlienId;
+            var id = obj as SDBeesAlienId;
             if (id != null)
             {
                 return (m_alieninstanceId == id.m_alieninstanceId) && (m_docId == id.m_docId);
@@ -906,7 +862,7 @@ namespace SDBees.Core.Model
     [DataContract]
     public class SDBeesMappedEntityDefinitionId : SDBeesId
     {
-        public SDBeesMappedEntityDefinitionId() : base()
+        public SDBeesMappedEntityDefinitionId()
         {
         }
 
@@ -922,10 +878,7 @@ namespace SDBees.Core.Model
                 {
                     return id1.Id == id2.Id;
                 }
-                else
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
@@ -935,14 +888,14 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(System.Object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
                 return false;
             }
 
-            SDBeesMappedEntityDefinitionId id = obj as SDBeesMappedEntityDefinitionId;
+            var id = obj as SDBeesMappedEntityDefinitionId;
             if (id == null)
             {
                 return false;
@@ -958,7 +911,7 @@ namespace SDBees.Core.Model
 
         public static implicit operator SDBeesMappedEntityDefinitionId(string idText)
         {
-            SDBeesMappedEntityDefinitionId id = new SDBeesMappedEntityDefinitionId(idText);
+            var id = new SDBeesMappedEntityDefinitionId(idText);
             return id;
         }
 

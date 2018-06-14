@@ -20,15 +20,12 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
-
-using SDBees.DB;
 using SDBees.Plugs.TemplateTreeNode;
-using SDBees.Plugs.Properties;
 
 namespace SDBees.Plugs.TreenodeHelper
 {
@@ -41,13 +38,13 @@ namespace SDBees.Plugs.TreenodeHelper
 
     private static Hashtable _hashPlugins;
 
-    public TemplateTreenodeHelper() : base()
+    public TemplateTreenodeHelper()
     {
         if (_hashPlugins == null)
         {
             _hashPlugins = new Hashtable();
         }
-        string treenodeType = this.GetType().ToString();
+        var treenodeType = GetType().ToString();
         _hashPlugins.Add(treenodeType, this);
     }
 
@@ -89,7 +86,7 @@ namespace SDBees.Plugs.TreenodeHelper
     /// <returns></returns>
     public static List<TemplateTreenodeHelper> GetAllHelperPlugins()
     {
-        List<TemplateTreenodeHelper> result = new List<TemplateTreenodeHelper>();
+        var result = new List<TemplateTreenodeHelper>();
 
         if (_hashPlugins != null)
         {

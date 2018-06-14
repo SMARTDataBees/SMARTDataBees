@@ -20,13 +20,9 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using SDBees.DB;
 
@@ -57,7 +53,7 @@ namespace SDBees.UserAdmin
                 cbSystemAdministrator.Checked = false;
                 cbDatabaseAdministrator.Checked = false;
 
-                int typeIndex = (int)mAccessRights.Type;
+                var typeIndex = (int)mAccessRights.Type;
                 puSecurityType.SelectedIndex = typeIndex;
 
                 if (mAccessRights.Type == AccessType.Database)
@@ -76,8 +72,8 @@ namespace SDBees.UserAdmin
         {
             if (mAccessRights != null)
             {
-                int typeIndex = puSecurityType.SelectedIndex;
-                bool isAdministrator = false;
+                var typeIndex = puSecurityType.SelectedIndex;
+                var isAdministrator = false;
                 if (typeIndex == 0)
                 {
                     mAccessRights.Type = AccessType.Server;
@@ -139,11 +135,11 @@ namespace SDBees.UserAdmin
 
                 ArrayList databaseNames = null;
                 Error error = null;
-                int numDatabases = mServer.GetDatabases(ref databaseNames, true, ref error);
+                var numDatabases = mServer.GetDatabases(ref databaseNames, true, ref error);
 
                 Error.Display("Failed to get Databases from Server", error);
 
-                for (int index = 0; index < numDatabases; index++)
+                for (var index = 0; index < numDatabases; index++)
                 {
                     puDatabase.Items.Add((string)databaseNames[index]);
                 }
@@ -158,8 +154,8 @@ namespace SDBees.UserAdmin
             {
                 puTable.Items.Add("** Alle Tabellen **");
 
-                string databaseName = puDatabase.Items[puDatabase.SelectedIndex].ToString();
-                Database database = mServer.GetDatabase(databaseName);
+                var databaseName = puDatabase.Items[puDatabase.SelectedIndex].ToString();
+                var database = mServer.GetDatabase(databaseName);
 
                 Error error = null;
                 ArrayList tableNames = null;
@@ -181,12 +177,12 @@ namespace SDBees.UserAdmin
 
             if ((puSecurityType.SelectedIndex >= 1) && (puDatabase.SelectedIndex >= 0) && (puTable.SelectedIndex >= 0))
             {
-                string databaseName = puDatabase.Items[puDatabase.SelectedIndex].ToString();
-                string tableName = puTable.Items[puTable.SelectedIndex].ToString();
+                var databaseName = puDatabase.Items[puDatabase.SelectedIndex].ToString();
+                var tableName = puTable.Items[puTable.SelectedIndex].ToString();
 
                 puColumn.Items.Add("** Alle Spalten **");
 
-                Database database = mServer.GetDatabase(databaseName);
+                var database = mServer.GetDatabase(databaseName);
 
                 // TBD: ...
                 Error error = null;
@@ -197,10 +193,10 @@ namespace SDBees.UserAdmin
 
         private void EnableControls()
         {
-            bool isSystemRight = (puSecurityType.SelectedIndex == 0);
-            bool isDatabaseRight = (puSecurityType.SelectedIndex == 1);
-            bool isTableRight = (puSecurityType.SelectedIndex == 2);
-            bool isColumnRight = (puSecurityType.SelectedIndex == 3);
+            var isSystemRight = (puSecurityType.SelectedIndex == 0);
+            var isDatabaseRight = (puSecurityType.SelectedIndex == 1);
+            var isTableRight = (puSecurityType.SelectedIndex == 2);
+            var isColumnRight = (puSecurityType.SelectedIndex == 3);
 
             cbSystemAdministrator.Enabled = isSystemRight;
 
@@ -228,7 +224,7 @@ namespace SDBees.UserAdmin
 
             DialogResult = DialogResult.OK;
 
-            this.Close();
+            Close();
         }
 
         private void puDatabase_SelectedIndexChanged(object sender, EventArgs e)

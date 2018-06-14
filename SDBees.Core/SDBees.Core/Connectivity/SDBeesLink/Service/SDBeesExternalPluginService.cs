@@ -1,35 +1,30 @@
-﻿using Carbon.Plugins;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.ServiceModel;
-using System.Text;
-using System.Windows.Threading;
-using System.Threading;
-
-using SDBees.Core.Model;
 using System.IO;
-using SDBees.Plugs.Explorer;
+using System.ServiceModel;
+using System.Threading;
 using System.Windows.Forms;
+using System.Windows.Threading;
+using Carbon.Plugins;
+using SDBees.Core.Connectivity.SDBeesLink.UI;
+using SDBees.Core.Main.Systemtray;
+using SDBees.Core.Model;
+using SDBees.Plugs.Explorer;
+using Timer = System.Threading.Timer;
 
 namespace SDBees.Core.Connectivity.SDBeesLink.Service
 {
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class SDBeesExternalPluginService : ISDBeesExternalPluginService
     {
-        Dispatcher m_dispatcher = null;
-        SDBeesCallbackCommandQueue m_uiCommands = null;
-        SDBeesCallbackCommandQueue m_returnCommands = null;
-        string m_activeDocumentId = null;
-        private bool m_isEditDataSet = false;
+        Dispatcher m_dispatcher;
+        SDBeesCallbackCommandQueue m_uiCommands;
+        SDBeesCallbackCommandQueue m_returnCommands;
+        string m_activeDocumentId;
+        private bool m_isEditDataSet;
 
-        SDBees.Plugs.Explorer.iExplorer m_explorer = null;
+        iExplorer m_explorer;
 
-        public SDBeesExternalPluginService()
-        {
-            // empty
-        }
-		
         public bool IsEditDataSet
         {
             get
@@ -38,14 +33,14 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             }
         }
 
-        private System.Windows.Forms.Control MainControl
+        private Control MainControl
         {
             get
             {
 #if false
                 return SDBees.Main.Window.MainWindowApplication.Current.MyMainWindow.TheDialog;
 #else
-                return SDBees.Core.Main.Systemtray.ProcessIcon.Current.MyContextMenu;
+                return ProcessIcon.Current.MyContextMenu;
 #endif
             }
         }
@@ -60,17 +55,17 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
 
         private object BeginInvoke(Delegate method, object param1)
         {
-            return MainControl.BeginInvoke(method, new object[] { param1 });
+            return MainControl.BeginInvoke(method, param1);
         }
 
         private object BeginInvoke(Delegate method, object param1, object param2)
         {
-            return MainControl.BeginInvoke(method, new object[] { param1, param2 });
+            return MainControl.BeginInvoke(method, param1, param2);
         }
 
         private object BeginInvoke(Delegate method, object param1, object param2, object param3)
         {
-            return MainControl.BeginInvoke(method, new object[] { param1, param2, param3 });
+            return MainControl.BeginInvoke(method, param1, param2, param3);
         }
 
         private object Invoke(Delegate method)
@@ -80,20 +75,20 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
   
         private object Invoke(Delegate method, object param1)
         {
-            return MainControl.Invoke(method, new object[] { param1 });
+            return MainControl.Invoke(method, param1);
         }
 
         private object Invoke(Delegate method, object param1, object param2)
         {
-            return MainControl.Invoke(method, new object[] { param1, param2 });
+            return MainControl.Invoke(method, param1, param2);
         }
 
         private object Invoke(Delegate method, object param1, object param2, object param3)
         {
-            return MainControl.Invoke(method, new object[] { param1, param2, param3 });
+            return MainControl.Invoke(method, param1, param2, param3);
         }
 
-        private void ShowDialogInUIThread(SDBees.Plugs.Explorer.iExplorer explorer, IWin32Window window, bool blockApplication)
+        private void ShowDialogInUIThread(iExplorer explorer, IWin32Window window, bool blockApplication)
         {
             if (InvokeRequired)
             {
@@ -105,7 +100,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             }
         }
 
-        private void CloseDialogInUIThread(SDBees.Plugs.Explorer.iExplorer explorer)
+        private void CloseDialogInUIThread(iExplorer explorer)
         {
             if (InvokeRequired)
             {
@@ -123,10 +118,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             {
                 return (bool)Invoke(Commands.ExternalClientConnectDelegate(), name, this);
             }
-            else
-            {
-                return Commands.ExternalClientConnect(name, this);
-            }
+            return Commands.ExternalClientConnect(name, this);
         }
 
         public void Disconnect(string name)
@@ -156,10 +148,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             {
                 return (SDBeesProjectId)Invoke(Commands.ProjectSelectExistingDelegate());
             }
-            else
-            {
-                return Commands.ProjectSelectExisting();
-            }
+            return Commands.ProjectSelectExisting();
         }
 
         public bool ProjectOpenExisting(SDBeesProjectId projectid)
@@ -168,10 +157,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             {
                 return (bool)Invoke(Commands.ProjectOpenExistingDelegate(), projectid);
             }
-            else
-            {
-                return Commands.ProjectOpenExisting(projectid);
-            }
+            return Commands.ProjectOpenExisting(projectid);
         }
 
         public SDBeesProjectId ProjectCreateNew()
@@ -187,10 +173,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             {
                 return (bool)Invoke(Commands.ProjectOpenDelegate(), filenameDatabase, createIfNotFound);
             }
-            else
-            {
-                return Commands.ProjectOpen(filenameDatabase, createIfNotFound);
-            }
+            return Commands.ProjectOpen(filenameDatabase, createIfNotFound);
         }
 
         public SDBeesExternalDocument ExternalDocumentGet(string LocalDocumentId)
@@ -199,10 +182,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             {
                 return (SDBeesExternalDocument)Invoke(Commands.ExternalDocumentGetDelegate(), LocalDocumentId);
             }
-            else
-            {
-                return Commands.ExternalDocumentGet(LocalDocumentId);
-            }
+            return Commands.ExternalDocumentGet(LocalDocumentId);
         }
 
         public SDBeesExternalDocument ExternalDocumentRegister(string LocalDocumentId, string pluginId, string roleId)
@@ -211,10 +191,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             {
                 return (SDBeesExternalDocument)Invoke(Commands.ExternalDocumentRegisterDelegate(), LocalDocumentId, pluginId, roleId);
             }
-            else
-            {
-                return Commands.ExternalDocumentRegister(LocalDocumentId, pluginId, roleId);
-            }
+            return Commands.ExternalDocumentRegister(LocalDocumentId, pluginId, roleId);
         }
 
         public void ExternalDocumentUnregister(SDBeesDocumentId documentId)
@@ -288,15 +265,15 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
 
         private void CommandEditDataSet(SDBeesExternalDocument doc, SDBeesDataSet data, IWin32Window window, bool blockApplication)
         {
-            Dictionary<string, SDBeesEntityDefinition> entDefs = (data.EntityDefinitions != null) ? data.EntityDefinitions : ConnectivityManager.Current.GetEntityDefinitions();
+            var entDefs = (data.EntityDefinitions != null) ? data.EntityDefinitions : ConnectivityManager.Current.GetEntityDefinitions();
 
-            SDBees.Plugs.Explorer.iExplorer explorer = null;
+            iExplorer explorer = null;
 
-            PluginDescriptor pluginDescriptor = ConnectivityManager.Current.MyContext.PluginDescriptors[data.ExplorerPlugin];
+            var pluginDescriptor = ConnectivityManager.Current.MyContext.PluginDescriptors[data.ExplorerPlugin];
 
             if (pluginDescriptor != null)
             {
-                SDBees.Plugs.Explorer.ExplorerPlugin explorerPlugin = (SDBees.Plugs.Explorer.ExplorerPlugin)pluginDescriptor.PluginInstance;
+                var explorerPlugin = (ExplorerPlugin)pluginDescriptor.PluginInstance;
 
                 explorerPlugin.ExplorerMode = ExplorerMode.eQualification;
 
@@ -306,7 +283,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             }
             else
             {
-                explorer = new SDBees.Core.Connectivity.SDBeesLink.UI.SDBeesDataSetDLG(entDefs);
+                explorer = new SDBeesDataSetDLG(entDefs);
             }
 
             explorer.Context = ConnectivityManager.Current.MyContext;
@@ -372,7 +349,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.ToString());
             }
             finally
             {
@@ -382,25 +359,21 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
 
         private void CommandShowIssueBrowser(SDBeesExternalDocument doc, SDBeesDataSet data, IWin32Window window, bool blockApplication)
         {
-            Dictionary<string, SDBeesEntityDefinition> entDefs = (data.EntityDefinitions != null) ? data.EntityDefinitions : ConnectivityManager.Current.GetEntityDefinitions();
+            var entDefs = (data.EntityDefinitions != null) ? data.EntityDefinitions : ConnectivityManager.Current.GetEntityDefinitions();
 
-            SDBees.Plugs.Explorer.iExplorer explorer = null;
+            iExplorer explorer = null;
 
-            PluginDescriptor pluginDescriptor = ConnectivityManager.Current.MyContext.PluginDescriptors[data.ExplorerPlugin];
+            var pluginDescriptor = ConnectivityManager.Current.MyContext.PluginDescriptors[data.ExplorerPlugin];
 
             if (pluginDescriptor != null)
             {
-                SDBees.Plugs.Explorer.ExplorerPlugin explorerPlugin = (SDBees.Plugs.Explorer.ExplorerPlugin)pluginDescriptor.PluginInstance;
+                var explorerPlugin = (ExplorerPlugin)pluginDescriptor.PluginInstance;
 
                 explorerPlugin.ExplorerMode = ExplorerMode.eIssues;
 
                 explorerPlugin.EntityDefinitions = entDefs;
 
                 explorer = explorerPlugin;
-            }
-            else
-            {
-                // empty
             }
 
             if (explorer != null)
@@ -419,7 +392,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
 
         public void ReturnData(SDBeesDataSet data, int errno)
         {
-            SDBeesCallbackCommand command = new SDBeesCallbackCommand("Return", data, errno);
+            var command = new SDBeesCallbackCommand("Return", data, errno);
 
             if (m_returnCommands != null) m_returnCommands.push(command);
         }
@@ -430,7 +403,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
 
             if (InvokeRequired)
             {
-                object retval = Invoke(Commands.GetDataDelegate(), name, explorerPluginDesriptor);
+                var retval = Invoke(Commands.GetDataDelegate(), name, explorerPluginDesriptor);
 
                 result = retval as string;
             }
@@ -470,15 +443,15 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
 
         private void handleUICommands()
         {
-            bool handleCommands = true;
+            var handleCommands = true;
 
-            SendKeepAliveCommand keepAliveCommand = new SendKeepAliveCommand(this, SendKeepAliveCommand.Mode.OnRequest);
+            var keepAliveCommand = new SendKeepAliveCommand(this, SendKeepAliveCommand.Mode.OnRequest);
 
             try
             {
                 while (handleCommands)
                 {
-                    SDBeesCallbackCommand command = m_uiCommands.popFirst();
+                    var command = m_uiCommands.popFirst();
                     if (command != null)
                     {
                         switch (command.command)
@@ -520,15 +493,15 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
 
             errno = 0;
 
-            bool handleCommands = true;
+            var handleCommands = true;
 
-            SendKeepAliveCommand keepAliveCommand = new SendKeepAliveCommand(this, SendKeepAliveCommand.Mode.OnRequest);
+            var keepAliveCommand = new SendKeepAliveCommand(this, SendKeepAliveCommand.Mode.OnRequest);
 
             try
             {
                 while (handleCommands)
                 {
-                    SDBeesCallbackCommand command = m_returnCommands.popFirst();
+                    var command = m_returnCommands.popFirst();
                     if (command != null)
                     {
                         switch (command.command)
@@ -578,48 +551,48 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             catch (Exception ex)
             {
                 //Fails, if it takes to much time to push back to external application...
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
         }
 
         public void ShowEntity(string instanceId, HashSet<SDBeesAlienId> alienId)
         {
-            SDBeesDataSet dataSet = new SDBeesDataSet();
+            var dataSet = new SDBeesDataSet();
 
             AddEntity(ref dataSet, instanceId, alienId);
 
-            SDBeesCallbackCommand command = new SDBeesCallbackCommand("Highlight", dataSet);
+            var command = new SDBeesCallbackCommand("Highlight", dataSet);
 
             pushClientCommand(command);
         }
 
         public void ShowEntities(List<SDBeesEntity> entities)
         {
-            SDBeesDataSet dataSet = new SDBeesDataSet();
+            var dataSet = new SDBeesDataSet();
 
-            foreach (SDBeesEntity entity in entities)
+            foreach (var entity in entities)
             {
                 AddEntity(ref dataSet, entity.InstanceId.ToString(), entity.AlienIds);
             }
 
-            SDBeesCallbackCommand command = new SDBeesCallbackCommand("Highlight", dataSet);
+            var command = new SDBeesCallbackCommand("Highlight", dataSet);
 
             pushClientCommand(command);
         }
 
         public SDBeesDataSet ApplyMapping(SDBeesExternalMappings mappings, out int errno)
         {
-            SDBeesDataSet dataSet = new SDBeesDataSet();
+            var dataSet = new SDBeesDataSet();
 
             dataSet.Mappings = mappings;
 
             m_returnCommands = new SDBeesCallbackCommandQueue();
 
-            SDBeesCallbackCommand command = new SDBeesCallbackCommand("ApplyMapping", dataSet);
+            var command = new SDBeesCallbackCommand("ApplyMapping", dataSet);
 
             pushClientCommand(command);
 
-            SDBeesDataSet result = handleReturnCommands(out errno);
+            var result = handleReturnCommands(out errno);
 
             m_returnCommands = null;
 
@@ -628,19 +601,19 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
 
         public SDBeesDataSet RequestQualification(string explorerPluginDescriptor, string dataName, SDBeesExternalMappings mappings, out int errno)
         {
-            SDBeesDataSet dataSet = new SDBeesDataSet();
+            var dataSet = new SDBeesDataSet();
 
             dataSet.Mappings = mappings;
 
             m_returnCommands = new SDBeesCallbackCommandQueue();
 
-            string data = GetData(dataName, explorerPluginDescriptor);
+            var data = GetData(dataName, explorerPluginDescriptor);
 
-            SDBeesCallbackCommand command = new SDBeesCallbackCommand("RequestQualification", dataSet, data);
+            var command = new SDBeesCallbackCommand("RequestQualification", dataSet, data);
 
             pushClientCommand(command);
 
-            SDBeesDataSet result = handleReturnCommands(out errno);
+            var result = handleReturnCommands(out errno);
 
             m_returnCommands = null;
 
@@ -649,10 +622,10 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
 
         private void AddEntity(ref SDBeesDataSet dataSet, string instanceId, HashSet<SDBeesAlienId> alienId)
         {
-            SDBeesEntity entity = new SDBeesEntity();
+            var entity = new SDBeesEntity();
             entity.Id = new SDBeesEntityId(instanceId);
             entity.AlienIds = new HashSet<SDBeesAlienId>();
-            foreach (SDBeesAlienId id in alienId)
+            foreach (var id in alienId)
             {
                 if (id.DocumentId.Equals(new SDBeesDocumentId(m_activeDocumentId)))
                 {
@@ -672,19 +645,19 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             {
                 dataSet = new SDBeesDataSet();
             }
-            string commandName = "ReturnFromEdit";
-            SDBeesCallbackCommand command = new SDBeesCallbackCommand(commandName, dataSet);
+            var commandName = "ReturnFromEdit";
+            var command = new SDBeesCallbackCommand(commandName, dataSet);
             pushClientCommand(command);
         }
 
-        private delegate void ShowDialogFunction(SDBees.Plugs.Explorer.iExplorer explorer, IWin32Window window, bool blockApplication);
+        private delegate void ShowDialogFunction(iExplorer explorer, IWin32Window window, bool blockApplication);
 
         private Delegate ShowDialogDelegate()
         {
             return new ShowDialogFunction(ShowDialog);
         }
 
-        private void ShowDialog(SDBees.Plugs.Explorer.iExplorer explorer, IWin32Window window, bool blockApplication)
+        private void ShowDialog(iExplorer explorer, IWin32Window window, bool blockApplication)
         {
             SDBeesDataSet dataSet = null;
 
@@ -692,7 +665,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             {
                 m_explorer = explorer;
 
-                if (explorer.ShowDialog(window, blockApplication) == System.Windows.Forms.DialogResult.OK)
+                if (explorer.ShowDialog(window, blockApplication) == DialogResult.OK)
                 {
                     dataSet = explorer.MyDataSet;
 
@@ -701,7 +674,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.ToString());
             }
             finally
             {
@@ -711,14 +684,14 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             ReturnFromEdit(dataSet);
         }
 
-        private delegate void CloseDialogFunction(SDBees.Plugs.Explorer.iExplorer explorer);
+        private delegate void CloseDialogFunction(iExplorer explorer);
 
         private Delegate CloseDialogDelegate()
         {
             return new CloseDialogFunction(CloseDialog);
         }
 
-        private void CloseDialog(SDBees.Plugs.Explorer.iExplorer explorer)
+        private void CloseDialog(iExplorer explorer)
         {
             explorer.CloseDialog();
         }
@@ -837,7 +810,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
 
         public static SDBeesExternalDocument ExternalDocumentGet(string LocalDocumentId)
         {
-            SDBeesExternalDocument doc = new SDBeesExternalDocument();
+            var doc = new SDBeesExternalDocument();
             doc.DocOriginalName = Path.GetFileName(LocalDocumentId);
 
             return ConnectivityManager.Current.DocumentGet(doc);
@@ -854,7 +827,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
 
         public static SDBeesExternalDocument ExternalDocumentRegister(string LocalDocumentId, string pluginId, string roleId)
         {
-            SDBeesExternalDocument doc = new SDBeesExternalDocument();
+            var doc = new SDBeesExternalDocument();
             doc.DocOriginalName = Path.GetFileName(LocalDocumentId);
 
             return ConnectivityManager.Current.DocumentRegister(doc, pluginId, roleId);
@@ -881,7 +854,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.ToString());
             }
 
             return m_dSet;
@@ -904,7 +877,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.ToString());
             }
         }
 
@@ -925,7 +898,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.ToString());
             }
         }
 
@@ -946,7 +919,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.ToString());
             }
         }
 
@@ -965,19 +938,19 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
 
             try
             {
-                SDBees.Plugs.Explorer.iExplorer explorer = null;
+                iExplorer explorer = null;
 
-                PluginDescriptor pluginDescriptor = ConnectivityManager.Current.MyContext.PluginDescriptors[explorerPluginDesriptor];
+                var pluginDescriptor = ConnectivityManager.Current.MyContext.PluginDescriptors[explorerPluginDesriptor];
 
                 if (pluginDescriptor != null)
                 {
-                    SDBees.Plugs.Explorer.ExplorerPlugin explorerPlugin = (SDBees.Plugs.Explorer.ExplorerPlugin)pluginDescriptor.PluginInstance;
+                    var explorerPlugin = (ExplorerPlugin)pluginDescriptor.PluginInstance;
 
                     explorer = explorerPlugin;
                 }
                 else
                 {
-                    explorer = new SDBees.Core.Connectivity.SDBeesLink.UI.SDBeesDataSetDLG(null);
+                    explorer = new SDBeesDataSetDLG(null);
                 }
 
                 if (explorer != null)
@@ -987,7 +960,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.ToString());
             }
 
             return result;
@@ -1000,11 +973,11 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
 
         private Mode m_mode = Mode.None;
 
-        private SDBeesExternalPluginService m_service = null;
+        private SDBeesExternalPluginService m_service;
 
-        private System.Threading.Timer m_timer = null;
+        private Timer m_timer;
 
-        private bool m_timerTicked = false;
+        private bool m_timerTicked;
 
         private long m_dueTime = 15000; // ms  
 
@@ -1016,7 +989,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
 
             m_service = service;
 
-            m_timer = new System.Threading.Timer(TimerTick, null, m_dueTime, m_period);
+            m_timer = new Timer(TimerTick, null, m_dueTime, m_period);
 
             m_timerTicked = false;
         }
@@ -1063,7 +1036,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
         {
             if (m_service != null)
             {
-                SDBeesCallbackCommand keepAliveCommand = new SDBeesCallbackCommand("KeepAliveCommand", null);
+                var keepAliveCommand = new SDBeesCallbackCommand("KeepAliveCommand", null);
 
                 m_service.pushClientCommand(keepAliveCommand);
             }

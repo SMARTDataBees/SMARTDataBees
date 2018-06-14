@@ -45,9 +45,9 @@ namespace SDBees.Core.Model.Math
         {
             this.x = x.NativeValue;
             this.y = y.GetIn(x.NativeUnit);
-            this.w = width.GetIn(x.NativeUnit);
-            this.h = height.GetIn(x.NativeUnit);
-            this.unit = x.NativeUnit;
+            w = width.GetIn(x.NativeUnit);
+            h = height.GetIn(x.NativeUnit);
+            unit = x.NativeUnit;
         }
 
         /// <summary>
@@ -63,8 +63,8 @@ namespace SDBees.Core.Model.Math
             this.unit = unit;
             this.x = x;
             this.y = y;
-            this.w = width;
-            this.h = height;
+            w = width;
+            h = height;
         }
 
         /// <summary>
@@ -80,11 +80,11 @@ namespace SDBees.Core.Model.Math
         /// <param name="unitH">Unit type for height</param>
         public Rectangle2f(float x, float y, float width, float height, Unit unitX, Unit unitY, Unit unitW, Unit unitH)
         {
-            this.unit = unitX;
+            unit = unitX;
             this.x = x;
             this.y = unitY.Convert(y, unitX);
-            this.w = unitW.Convert(width, unitX);
-            this.h = unitH.Convert(height, unitX);
+            w = unitW.Convert(width, unitX);
+            h = unitH.Convert(height, unitX);
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace SDBees.Core.Model.Math
             }
             set
             {
-                this.x = value.GetIn(unit);
+                x = value.GetIn(unit);
             }
         }
 
@@ -201,7 +201,7 @@ namespace SDBees.Core.Model.Math
             }
             set
             {
-                this.y = value.GetIn(unit);
+                y = value.GetIn(unit);
             }
         }
 
@@ -216,7 +216,7 @@ namespace SDBees.Core.Model.Math
             }
             set
             {
-                this.w = value.GetIn(unit);
+                w = value.GetIn(unit);
             }
         }
 
@@ -231,7 +231,7 @@ namespace SDBees.Core.Model.Math
             }
             set
             {
-                this.h = value.GetIn(unit);
+                h = value.GetIn(unit);
             }
         }
 
@@ -297,7 +297,7 @@ namespace SDBees.Core.Model.Math
         /// <returns></returns>
         public Rectangle2f Converted(Unit unit)
         {
-            return new Rectangle2f(this.unit.Convert(this.x, unit), this.unit.Convert(this.y, unit), this.unit.Convert(this.w, unit), this.unit.Convert(this.h, unit), unit);
+            return new Rectangle2f(this.unit.Convert(x, unit), this.unit.Convert(y, unit), this.unit.Convert(w, unit), this.unit.Convert(h, unit), unit);
         }
 
         /// <summary>
@@ -306,14 +306,14 @@ namespace SDBees.Core.Model.Math
         /// <returns></returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(X.ToString());
+            var sb = new StringBuilder();
+            sb.Append(X);
             sb.Append(' ');
-            sb.Append(Y.ToString());
+            sb.Append(Y);
             sb.Append(' ');
-            sb.Append(Width.ToString());
+            sb.Append(Width);
             sb.Append(' ');
-            sb.Append(Height.ToString());
+            sb.Append(Height);
             return sb.ToString();
         }
 
@@ -327,8 +327,8 @@ namespace SDBees.Core.Model.Math
         /// <returns>New cropped rectangle</returns>
         public Rectangle2f Cropped(DistanceF left, DistanceF right, DistanceF top, DistanceF bottom)
         {
-            float l = left.GetIn(unit);
-            float t = top.GetIn(unit);
+            var l = left.GetIn(unit);
+            var t = top.GetIn(unit);
             return new Rectangle2f(x + l, y + t, w - l - right.GetIn(unit), h - t - bottom.GetIn(unit), unit);
         }
     }

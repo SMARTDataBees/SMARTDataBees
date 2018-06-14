@@ -36,7 +36,7 @@ namespace Carbon.Plugins.Attributes
 	/// <summary>
 	/// Defines a plugin attribute for specifying the names the authors for a plugin.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple=false)]
+	[AttributeUsage(AttributeTargets.Class)]
 	public sealed class PluginAuthorsAttribute : Attribute
 	{
 		private readonly string[] _authors;
@@ -56,7 +56,7 @@ namespace Carbon.Plugins.Attributes
 		/// <param name="author">The name of the plugin's author</param>
 		public PluginAuthorsAttribute(string author)
 		{
-			_authors = new string[] {author};
+			_authors = new[] {author};
 		}
 
 		/// <summary>

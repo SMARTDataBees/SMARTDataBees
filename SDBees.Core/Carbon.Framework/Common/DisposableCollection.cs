@@ -31,14 +31,15 @@
 
 using System;
 using System.Collections;
+using System.Diagnostics;
 
 namespace Carbon.Common
 {
 	/// <summary>
 	/// Summary description for DisposableCollection.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
-	[Serializable()]
+	[DebuggerStepThrough]
+	[Serializable]
 	public abstract class DisposableCollection : CollectionBase, IDisposable
 	{
 		private bool _disposed;
@@ -50,7 +51,7 @@ namespace Carbon.Common
 		/// </summary>
 		public void Dispose()
 		{
-			this.Dispose(true);
+			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
 
@@ -74,7 +75,7 @@ namespace Carbon.Common
 		{
 			get
 			{
-				return base.InnerList.SyncRoot;
+				return InnerList.SyncRoot;
 			}
 		}
 
@@ -83,16 +84,16 @@ namespace Carbon.Common
 		/// </summary>
 		protected virtual void DisposeOfManagedResources()
 		{
-			lock (this.SyncRoot)
+			lock (SyncRoot)
 			{
-				foreach (object obj in base.InnerList)
+				foreach (var obj in InnerList)
 				{
-					IDisposable disposable = obj as IDisposable;
+					var disposable = obj as IDisposable;
 					if (disposable != null)
 						disposable.Dispose();
 				}
 
-				base.InnerList.Clear();
+				InnerList.Clear();
 			}
 		}
 		
@@ -110,9 +111,9 @@ namespace Carbon.Common
 		/// <param name="comparer">The IComparer implementation to use when sorting. -or- null to use the IComparable implementation of the items in the collection</param>
 		public virtual void Sort(IComparer comparer)
 		{
-			lock (this.SyncRoot)
+			lock (SyncRoot)
 			{
-				base.InnerList.Sort(comparer);
+				InnerList.Sort(comparer);
 			}
 		}
 		
@@ -122,16 +123,16 @@ namespace Carbon.Common
 		/// <param name="disposing"></param>
 		private void Dispose(bool disposing)
 		{
-			lock (this.SyncRoot)
+			lock (SyncRoot)
 			{
 				if (!_disposed)
 				{
 					if (disposing)
 						// dispose of managed resources here
-						this.DisposeOfManagedResources();
+						DisposeOfManagedResources();
 
 					// dispose of unmanaged resources
-					this.DisposeOfUnManagedResources();
+					DisposeOfUnManagedResources();
 				}
 				_disposed = true;
 			}

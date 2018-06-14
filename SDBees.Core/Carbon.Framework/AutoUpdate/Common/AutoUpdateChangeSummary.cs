@@ -66,7 +66,7 @@ namespace Carbon.AutoUpdate.Common
 		{
 			_id = id;
 			_title = title;
-			this.Preview = preview;
+			Preview = preview;
 			_postedBy = postedBy;
 			_datePosted = datePosted;
 			_type = type;

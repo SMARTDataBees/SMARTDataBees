@@ -20,18 +20,14 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
+using System;
+using System.Configuration;
+using System.Reflection;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
 using SDBees.DB;
 using SDBees.Plugs.TemplateBase;
-using System.Configuration;
-using System.Reflection;
 
 namespace SDBees.Core.Global
 {
@@ -42,12 +38,12 @@ namespace SDBees.Core.Global
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
 
-    public class GlobalManager : SDBees.Plugs.TemplateBase.TemplatePlugin
+    public class GlobalManager : TemplatePlugin
     {
         private static GlobalManager m_theInstance;
-        private Configuration m_config = null;
+        private Configuration m_config;
 
-        public GlobalManager():base()
+        public GlobalManager()
         {
             m_theInstance = this;
         }
@@ -101,7 +97,7 @@ namespace SDBees.Core.Global
             //
             try
             {
-                Assembly assem = Assembly.GetEntryAssembly();
+                var assem = Assembly.GetEntryAssembly();
                 Config = ConfigurationManager.OpenExeConfiguration(assem.Location);
             }
             catch (Exception ex)

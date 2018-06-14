@@ -20,16 +20,22 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
 using System.IO;
 using System.Reflection;
-using System.Windows.Forms;
 using System.Runtime.InteropServices;
-
+using System.Windows.Forms;
+using Carbon.Plugins;
+using Carbon.Plugins.Attributes;
+using SDBees.Core.Connectivity;
+using SDBees.Core.Global;
+using SDBees.DB;
+using SDBees.GuiTools;
+using SDBees.Plugs.TemplateBase;
 /*
 using Razor;
 using Razor.Attributes;
@@ -38,12 +44,6 @@ using Razor.Features;
 using Razor.SnapIns;
 using Razor.SnapIns.WindowPositioningEngine;
  * */
-using Carbon.Common;
-using Carbon.Plugins;
-using Carbon.Plugins.Attributes;
-
-using SDBees.Plugs.Events;
-using SDBees.GuiTools;
 
 namespace SDBees.Main.Window
 {
@@ -53,15 +53,15 @@ namespace SDBees.Main.Window
     [PluginId("9054FC0C-9225-499A-8D5B-A98818EE21B1")]
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
-    [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
-    [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
+    [PluginDependency(typeof(SDBeesDBConnection))]
+    [PluginDependency(typeof(GlobalManager))]
 
-    public sealed class MainWindowApplication : SDBees.Plugs.TemplateBase.TemplateBase
+    public sealed class MainWindowApplication : TemplateBase
     {
         private static MainWindowApplication _theInstance;
-        private MainWindowApplicationDLG m_window;
+        private MainWindowApplicationDLG _window;
         private bool _windowClosed;
-        private bool m_noPromptsOnClose;
+     
 
         public PluginContext MyContext;
 
@@ -97,7 +97,6 @@ namespace SDBees.Main.Window
         /// Initializes a new instance of the MainWindow class.
         /// </summary>
         public MainWindowApplication()
-            : base()
         {
             _theInstance = this;
             _windowClosed = true;
@@ -113,19 +112,19 @@ namespace SDBees.Main.Window
         {
             try
             {
-                this.StartMe(context, e);
+                StartMe(context, e);
 
                 //Store the context for internal use
                 MyContext = context;
 
                 // create a hidden window to run the app's msg pump
-                m_window = new MainWindowApplicationDLG(this);
+                _window = new MainWindowApplicationDLG(this);
 
-                m_window.Closed += new EventHandler(OnWindowClosed);
+                _window.Closed += OnWindowClosed;
                 //context.RestartPending += new EventHandler<PluginContextEventArgs>(OnPluginContextRestartPending);
 
-                MyContext.AfterPluginsStarted += new EventHandler<PluginContextEventArgs>(OnAllPluginsStarted);
-                MyContext.BeforePluginsStopped += new EventHandler<PluginContextEventArgs>(OnAllPluginsStopp);
+                MyContext.AfterPluginsStarted += OnAllPluginsStarted;
+                MyContext.BeforePluginsStopped += OnAllPluginsStopp;
 
                 //_window.Closed += new EventHandler(OnWindowClosed);
 
@@ -182,7 +181,7 @@ namespace SDBees.Main.Window
         /// </summary>
         public MainWindowApplicationDLG TheDialog
         {
-            get { return this.m_window.MyForm; }
+            get { return _window.MyForm; }
         }
 
         #endregion
@@ -208,7 +207,7 @@ namespace SDBees.Main.Window
             _windowClosed = true;
             try
             {
-                SDBees.Core.Connectivity.ConnectivityManager.Current.OnClose();
+                ConnectivityManager.Current.OnClose();
             }
             catch (Exception ex)
             {
@@ -218,9 +217,9 @@ namespace SDBees.Main.Window
 
         private void OnAllPluginsStarted(object sender, EventArgs e)
         {
-            bool doStartMainDialog = true;
+            var doStartMainDialog = true;
 
-            foreach (string arg in MyContext.CommandLineArgs)
+            foreach (var arg in MyContext.CommandLineArgs)
             {
                 if (arg.CompareTo("-show-dialog=false") == 0)
                 {
@@ -230,11 +229,11 @@ namespace SDBees.Main.Window
                 }
             }
 
-            SDBees.Core.Connectivity.ConnectivityManager.Current.Ready = true;
+            ConnectivityManager.Current.Ready = true;
 
             if (doStartMainDialog)
             {
-                this.StartMainDialog();
+                StartMainDialog();
             }
         }
 
@@ -243,7 +242,7 @@ namespace SDBees.Main.Window
             try
             {
                 //MyContext.ApplicationContext.AddTopLevelWindow(_window);
-                m_window.ShowDialog();
+                _window.ShowDialog();
                 //MyContext.ApplicationContext.RemoveTopLevelWindow(_window);
             }
             catch (Exception ex)
@@ -269,12 +268,12 @@ namespace SDBees.Main.Window
         {
             Icon ic = null;
 
-            string _iconPath = GetApplicationIconPath();
+            var _iconPath = GetApplicationIconPath();
             if (!String.IsNullOrEmpty(_iconPath))
             {
-                string path = Path.GetDirectoryName(this.GetType().Assembly.Location);
-                string full = path + _iconPath;
-                FileInfo fi = new FileInfo(full);
+                var path = Path.GetDirectoryName(GetType().Assembly.Location);
+                var full = path + _iconPath;
+                var fi = new FileInfo(full);
                 if (fi.Exists)
                     ic = new Icon(fi.FullName);
             }
@@ -284,26 +283,26 @@ namespace SDBees.Main.Window
 
         public string GetApplicationIconPath()
         {
-            string path = System.Configuration.ConfigurationManager.AppSettings["MainWindowIcon"];
+            var path = ConfigurationManager.AppSettings["MainWindowIcon"];
             return path;
         }
 
         public string GetApplicationTitle()
         {
-            string _title = System.Configuration.ConfigurationManager.AppSettings["MainWindowTitle"];
+            var _title = ConfigurationManager.AppSettings["MainWindowTitle"];
             return _title;
         }
 
         public string GetLicenseFileLocation(string dirctory)
         {
-            string _file = "";
+            var _file = "";
             return _file;
         }
 
         public void ShowWebpage()
         {
             //Load expected window title
-            string _webpage = System.Configuration.ConfigurationManager.AppSettings["Webpage"];
+            var _webpage = ConfigurationManager.AppSettings["Webpage"];
             if (!String.IsNullOrEmpty(_webpage))
             {
                 Process.Start(_webpage);
@@ -312,10 +311,10 @@ namespace SDBees.Main.Window
 
         public void ShowInfo()
         {
-            Assembly assembly1 = Assembly.GetExecutingAssembly();
-            Assembly assembly2 = Assembly.GetEntryAssembly();
+            var assembly1 = Assembly.GetExecutingAssembly();
+            var assembly2 = Assembly.GetEntryAssembly();
 
-            AboutBox dlg = new AboutBox(assembly2);
+            var dlg = new AboutBox(assembly2);
 
             dlg.ShowDialog();
         }

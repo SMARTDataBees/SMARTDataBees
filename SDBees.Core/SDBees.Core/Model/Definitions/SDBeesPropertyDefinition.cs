@@ -20,16 +20,12 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.Runtime.Serialization;
+
 namespace SDBees.Core.Model
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-
-    using System.Runtime.Serialization;
-
-	/// <remarks>
+    /// <remarks>
 	/// Definition einer Eigenschaft
 	/// </remarks>
 	[DataContract]
@@ -115,7 +111,7 @@ namespace SDBees.Core.Model
             set { m_propertyTypeConverter = value; }
         }
 
-        bool m_Editable = false;
+        bool m_Editable;
         /// <summary>
         /// Is Property Editable?
         /// </summary>
@@ -126,7 +122,7 @@ namespace SDBees.Core.Model
             set { m_Editable = value; }
         }
 
-        bool m_Browsable = false;
+        bool m_Browsable;
         /// <summary>
         /// Is Property Browsable?
         /// </summary>

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.Serialization;
 
 namespace SDBees.Core.Model
@@ -64,14 +61,11 @@ namespace SDBees.Core.Model
             {
                 return m_diameter.ToString();
             }
-            else if (IsRectangle)
+            if (IsRectangle)
             {
                 return String.Format("{0}x{1}", m_width, m_height);
             }
-            else
-            {
-                return "";
-            }
+            return "";
         }
 
         public override string ToString()
@@ -83,15 +77,15 @@ namespace SDBees.Core.Model
         {
             if (obj == null) return base.Equals(obj);
 
-            SDBeesOpeningSize a = this as SDBeesOpeningSize;
+            var a = this;
 
-            if ((object)a == null) return base.Equals(obj);
+            if (a == null) return base.Equals(obj);
 
-            SDBeesOpeningSize b = obj as SDBeesOpeningSize;
+            var b = obj as SDBeesOpeningSize;
 
-            if ((object)b == null) return base.Equals(obj);
+            if (b == null) return base.Equals(obj);
 
-            bool result = false;
+            var result = false;
 
             if (a.IsRound && b.IsRound)
             {
@@ -105,7 +99,7 @@ namespace SDBees.Core.Model
             {
                 result = (a.Width == b.Diameter) && (a.Height == b.Diameter);
             }
-            else if (this.IsRectangle && b.IsRectangle)
+            else if (IsRectangle && b.IsRectangle)
             {
                 result = (a.Width == b.Width) && (a.Height == b.Height);
             }
@@ -120,7 +114,7 @@ namespace SDBees.Core.Model
 
         public static bool operator <=(SDBeesOpeningSize a, SDBeesOpeningSize b)
         {
-            bool result = false;
+            var result = false;
 
             if (a.IsRound && b.IsRound)
             {
@@ -144,7 +138,7 @@ namespace SDBees.Core.Model
 
         public static bool operator >=(SDBeesOpeningSize a, SDBeesOpeningSize b)
         {
-            bool result = false;
+            var result = false;
 
             if (a.IsRound && b.IsRound)
             {
@@ -168,11 +162,11 @@ namespace SDBees.Core.Model
 
         public int CompareTo(SDBeesOpeningSize other)
         {
-            int result = 0;
+            var result = 0;
 
-            SDBeesOpeningSize a = this;
+            var a = this;
 
-            SDBeesOpeningSize b = other;
+            var b = other;
 
             if (a.IsValid && b.IsValid)
             {
@@ -250,7 +244,7 @@ namespace SDBees.Core.Model
 
         private bool GetValues(string encodedString)
         {
-            bool result = false;
+            var result = false;
 
             m_isRound = false;
 
@@ -264,7 +258,7 @@ namespace SDBees.Core.Model
 
             if (!String.IsNullOrEmpty(encodedString))
             {
-                string[] dimensions = encodedString.Split(new Char[] { 'x' });
+                var dimensions = encodedString.Split('x');
 
                 if (dimensions.Length == 1)
                 {

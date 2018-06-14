@@ -29,10 +29,7 @@
 //
 //	============================================================================
 
-using System;
 using System.Windows.Forms;
-
-using Carbon.Common;
 using Carbon.Configuration;
 
 namespace Carbon.UI.Providers.Custom

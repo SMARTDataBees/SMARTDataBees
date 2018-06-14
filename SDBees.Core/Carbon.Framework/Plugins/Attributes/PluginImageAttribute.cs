@@ -37,7 +37,7 @@ namespace Carbon.Plugins.Attributes
 	/// <summary>
 	/// Defines a plugin attribute for specifying the image for a plugin.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple=false)]	
+	[AttributeUsage(AttributeTargets.Class)]	
 	public sealed class PluginImageAttribute : ToolboxBitmapAttribute 
 	{
 		/// <summary>

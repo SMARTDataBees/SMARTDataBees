@@ -19,8 +19,6 @@
  *
  */
 
-using System;
-
 namespace SDBees.Core.Model.Math
 {
     /// <summary>
@@ -35,8 +33,8 @@ namespace SDBees.Core.Model.Math
         /// <param name="dpiY">Dots per inch in Y direction</param>
         public DpiVector2f(float dpiX, float dpiY)
         {
-            this.DpiX = dpiX;
-            this.DpiY = dpiY;
+            DpiX = dpiX;
+            DpiY = dpiY;
         }
 
         /// <summary>

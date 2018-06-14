@@ -40,7 +40,7 @@ namespace SDBees.Main
         {
             // prevent second start of exe, to avoid database problems
             //using (Mutex mutex = new Mutex(false, @"Global\"+ appGuid))
-            using (Mutex mutex = new Mutex(false, appGuid))
+            using (var mutex = new Mutex(false, appGuid))
             {
                 if(!mutex.WaitOne(0, false))
                 {
@@ -58,10 +58,10 @@ namespace SDBees.Main
 
         private static void CreateServerConfig()
         {
-            SDBees.DB.Generic.ServerConfig conf = SDBees.DB.Generic.ServerConfigHandler.LoadConfig(false);
+            var conf = SDBees.DB.Generic.ServerConfigHandler.LoadConfig(false);
             if (conf != null && conf.ConfigItems.Count == 0)
             {
-                DB.Generic.ServerConfigItem item = new DB.Generic.ServerConfigItem();
+                var item = new DB.Generic.ServerConfigItem();
 
                 item.ProjectName = m_DirDemo;
                 item.ProjectDescription = "Some demofiles for SMARTDataBees tests";
@@ -97,7 +97,7 @@ namespace SDBees.Main
 
         private static DirectoryInfo GetTargetDir()
         {
-            DirectoryInfo dirTarget = new DirectoryInfo(Path.Combine(DB.Generic.ServerConfigHandler.GetConfigStorageFolder(), m_DirDemo));
+            var dirTarget = new DirectoryInfo(Path.Combine(DB.Generic.ServerConfigHandler.GetConfigStorageFolder(), m_DirDemo));
             return dirTarget;
         }
     }

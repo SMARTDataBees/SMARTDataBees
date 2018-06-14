@@ -69,7 +69,7 @@ namespace SDBees.Plugins.TreeviewHelper
 
             // Zunächst die PlugIn-Typen bestimmen, die unter dem aktuellen Knoten eingefügt werden können...
             Error error = null;
-            string m_parentType = "parent";
+            var m_parentType = "parent";
             if (m_ParentTemplateTreenodeTag != null)
             {
                 m_parentType = m_ParentTemplateTreenodeTag.NodeTypeOf;
@@ -79,13 +79,13 @@ namespace SDBees.Plugins.TreeviewHelper
                 return;
             }
 
-            string m_childType = "child";
+            var m_childType = "child";
             if (m_ChildTemplateTreenodeTag != null)
             {
                 m_childType = m_ChildTemplateTreenodeTag.NodeTypeOf;
             }
 
-            List<SDBees.Plugs.TemplateTreeNode.TreenodePropertyRow> m_dataList = new List<SDBees.Plugs.TemplateTreeNode.TreenodePropertyRow>();
+            var m_dataList = new List<SDBees.Plugs.TemplateTreeNode.TreenodePropertyRow>();
             Guid guidParent;
             Guid guidSelectedChild;
             if (!Guid.TryParse(m_ParentTemplateTreenodeTag.NodeGUID, out guidParent))
@@ -93,21 +93,21 @@ namespace SDBees.Plugins.TreeviewHelper
             if (!Guid.TryParse(m_ChildTemplateTreenodeTag.NodeGUID, out guidSelectedChild))
                 return;
 
-            ArrayList objectIds = new ArrayList();
+            var objectIds = new ArrayList();
             ViewDefinition.FindViewDefinitionsByTypes(Database, ref objectIds, m_ViewId, m_parentType, m_childType, ref error);
 
-            foreach (object objectId in objectIds)
+            foreach (var objectId in objectIds)
             {
-                ViewDefinition viewDef = new ViewDefinition();
+                var viewDef = new ViewDefinition();
                 if (viewDef.Load(Database, objectId, ref error))
                 {
                     // Jetzt aus dem PlugIn alle persistenten Objekte bestimmen...
                     // Das Plugin anlegen
-                    TemplateTreenode treenodePlugin = TemplateTreenode.GetPluginForType(viewDef.ChildType);
+                    var treenodePlugin = TemplateTreenode.GetPluginForType(viewDef.ChildType);
 
                     // Alle Objekte in der Datenbank besorgen
                     // Wir bekommen alle, nicht nur die der aktuellen View!
-                    ArrayList childIds = new ArrayList();
+                    var childIds = new ArrayList();
                     treenodePlugin.FindAllObjects(Database, ref childIds, ref error);
 
                     Guid guidChild;
@@ -116,12 +116,12 @@ namespace SDBees.Plugins.TreeviewHelper
                         if (!Guid.TryParse(item, out guidChild))
                             continue;
 
-                        ArrayList viewRelIds = new ArrayList();
+                        var viewRelIds = new ArrayList();
                         if (ViewRelation.FindViewRelationForView(Database, m_ViewId, guidParent, guidChild, ref viewRelIds, ref error) > 0)
                         {
-                            TemplateTreenodeTag tempTag = new TemplateTreenodeTag();
+                            var tempTag = new TemplateTreenodeTag();
                             tempTag.NodeGUID = guidChild.ToString(); ;
-                            SDBees.Plugs.TemplateTreeNode.TreenodePropertyRow propTable = new TreenodePropertyRow(m_parent.MyDBManager, viewDef.ChildType, item);
+                            var propTable = new TreenodePropertyRow(m_parent.MyDBManager, viewDef.ChildType, item);
                             m_dataList.Add(propTable);
                         }
                     }

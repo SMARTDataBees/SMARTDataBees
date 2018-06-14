@@ -20,13 +20,11 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using SDBees.Plugs.Properties;
-using System.Windows.Forms;
-using System.ComponentModel;
 
 namespace SDBees.DB
 {
@@ -35,10 +33,10 @@ namespace SDBees.DB
     /// </summary>
     public class ObjectPropertyTable : PropertyRow
     {
-        private SDBees.DB.Object mDbObject;
+        private Object mDbObject;
         private Hashtable mMapDisplayToDbName;
 
-        public ObjectPropertyTable(SDBees.DB.Object dataObject)
+        public ObjectPropertyTable(Object dataObject)
         {
             if ((dataObject == null) || (dataObject.Database == null))
             {
@@ -54,16 +52,16 @@ namespace SDBees.DB
         {
             // Fill the property bag from the database table...
             Error error = null;
-            Table table = mDbObject.Table;
+            var table = mDbObject.Table;
 
-            this.Properties.Clear();
+            Properties.Clear();
             mMapDisplayToDbName = new Hashtable();
 
             // Dieses ist nur zum testen und sollte aus dem "DB.Object" gefüllt werden.
-            foreach (KeyValuePair<string, Column> iterator in table.Columns)
+            foreach (var iterator in table.Columns)
             {
-                Column column = iterator.Value;
-                Type columnType = column.GetTypeForColumn();
+                var column = iterator.Value;
+                var columnType = column.GetTypeForColumn();
                 PropertySpec ps = null;
                 if ((column.SelectionList != null) && (typeof(string) == columnType))
                 {
@@ -83,7 +81,7 @@ namespace SDBees.DB
                     {
                         ps.BrowsableProperty = false;
                     }
-                    this.Properties.Add(ps);
+                    Properties.Add(ps);
                     this[column.DisplayName] = mDbObject.GetPropertyByColumn(column.Name);
 
                     mMapDisplayToDbName.Add(column.DisplayName, column.Name);
@@ -99,7 +97,7 @@ namespace SDBees.DB
             // TBD: First check if this is allowed...
 
             // Remember the old value...
-            object oldValue = this[e.Property.Name];
+            var oldValue = this[e.Property.Name];
 
             // Call base class first to update the value...
             base.OnSetValue(e);
@@ -108,7 +106,7 @@ namespace SDBees.DB
             Error error = null;
             if (mDbObject.Load(mDbObject.Database, mDbObject.Id, ref error) && (error == null))
             {
-                string columnName = (string) mMapDisplayToDbName[e.Property.Name];
+                var columnName = (string) mMapDisplayToDbName[e.Property.Name];
                 mDbObject.SetPropertyByColumn(columnName, e.Value);
                 mDbObject.Save(ref error);
             }
@@ -122,7 +120,7 @@ namespace SDBees.DB
             }
 
             // Refresh the property grid
-            this.UpdateProperties();
+            UpdateProperties();
 
             if (error == null)
             {
@@ -135,29 +133,29 @@ namespace SDBees.DB
 
         public class NotificationEventArgs
         {
-            public SDBees.DB.Object DbObject;
+            public Object DbObject;
             public string ColumnName;
 
-            public NotificationEventArgs(SDBees.DB.Object dbObject, string columnName)
+            public NotificationEventArgs(Object dbObject, string columnName)
             {
                 DbObject = dbObject;
                 ColumnName = columnName;
             }
-        };
+        }
         public delegate void NotificationHandler(object sender, NotificationEventArgs args);
 
         public event NotificationHandler PropertyValueModified;
 
-        internal void RaisePropertyValueModified(SDBees.DB.Object dbObject, string columnName)
+        internal void RaisePropertyValueModified(Object dbObject, string columnName)
         {
             if (PropertyValueModified != null)
             {
-                NotificationEventArgs args = new NotificationEventArgs(dbObject, columnName);
+                var args = new NotificationEventArgs(dbObject, columnName);
                 PropertyValueModified.Invoke(this, args);
             }
         }
 
         #endregion
-    };
+    }
 
 }

@@ -20,12 +20,8 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace SDBees.GuiTools
@@ -74,9 +70,9 @@ namespace SDBees.GuiTools
                 mOldPassword = ebOldPassword.Text;
                 mNewPassword = ebNewPassword.Text;
 
-                this.DialogResult = DialogResult.OK;
+                DialogResult = DialogResult.OK;
 
-                this.Close();
+                Close();
             }
             else
             {

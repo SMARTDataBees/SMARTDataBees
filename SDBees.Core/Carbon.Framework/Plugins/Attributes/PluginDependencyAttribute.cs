@@ -30,9 +30,6 @@
 //	============================================================================
 
 using System;
-using System.Reflection;
-
-using Carbon.Common;
 
 namespace Carbon.Plugins.Attributes
 {

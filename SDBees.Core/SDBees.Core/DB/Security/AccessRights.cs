@@ -20,10 +20,9 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.Text;
 
 namespace SDBees.DB
 {
@@ -94,7 +93,7 @@ namespace SDBees.DB
         public const int All = 0x7fffffff;
 
         #endregion
-    };
+    }
 
     /// <summary>
     /// Class specifying the access rights for a user/group
@@ -122,7 +121,7 @@ namespace SDBees.DB
         {
             get
             {
-                int accessIndex = (int)mBaseData.GetPropertyByColumn("type");
+                var accessIndex = (int)mBaseData.GetPropertyByColumn("type");
                 if (accessIndex == 0)
                     return AccessType.Server;
                 if (accessIndex == 1)
@@ -231,9 +230,9 @@ namespace SDBees.DB
         /// <returns></returns>
         public string Description()
         {
-            string result = "Unknown";
+            var result = "Unknown";
 
-            AccessType type = Type;
+            var type = Type;
             if (type == AccessType.Server)
             {
                 result = "Server Zugriff";
@@ -261,7 +260,7 @@ namespace SDBees.DB
         /// <returns></returns>
         public bool Save(ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if ((error == null) && (mBaseData.Database != null))
             {
@@ -278,7 +277,7 @@ namespace SDBees.DB
         /// <returns></returns>
         public bool Remove(ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if ((error == null) && (mBaseData.Database != null))
             {
@@ -297,7 +296,7 @@ namespace SDBees.DB
         /// <returns></returns>
         public bool UpdateAccessRightsOnServer(Server server, string loginName, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if (Type == AccessType.Server)
             {
@@ -312,7 +311,7 @@ namespace SDBees.DB
             else
             {
                 // TBD: Table and column access...
-                error = new Error("Not implemented yet", 1, this.GetType(), error);
+                error = new Error("Not implemented yet", 1, GetType(), error);
             }
 
             return success;
@@ -327,15 +326,15 @@ namespace SDBees.DB
         /// <returns>number of defined access rights</returns>
         public static int GetAccessRightsForUserId(Server server, string userId, ref ArrayList objectIds)
         {
-            int numFound = 0;
+            var numFound = 0;
 
             Error error = null;
 
-            Database database = server.SecurityDatabase;
+            var database = server.SecurityDatabase;
 
-            RightsBaseData baseData = new RightsBaseData();
-            Attribute attribute = new Attribute(baseData.Table.Columns["userid"], userId);
-            string criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
+            var baseData = new RightsBaseData();
+            var attribute = new Attribute(baseData.Table.Columns["userid"], userId);
+            var criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
 
             numFound = database.Select(baseData.Table, baseData.Table.PrimaryKey, criteria, ref objectIds, ref error);
 

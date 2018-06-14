@@ -38,7 +38,7 @@ namespace Carbon.Configuration
 	/// </summary>
 	public class XmlConfigurationReaderEventArgs
 	{
-		System.Exception _ex;
+		Exception _ex;
 		XmlConfigurationOption _option;
 		private string _buffer;
 
@@ -54,7 +54,7 @@ namespace Carbon.Configuration
 			_buffer = buffer;
 		}
 
-		public System.Exception Exception
+		public Exception Exception
 		{
 			get
 			{

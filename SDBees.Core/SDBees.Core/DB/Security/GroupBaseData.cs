@@ -20,18 +20,17 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.Text;
 
 namespace SDBees.DB
 {
-    public class GroupBaseData : SDBees.DB.Object
+    public class GroupBaseData : Object
     {
         #region Private Data Members
 
-        private static Table gTable = null;
+        private static Table gTable;
 
         #endregion
 
@@ -70,7 +69,7 @@ namespace SDBees.DB
         /// </summary>
         public GroupBaseData()
         {
-            base.Table = gTable;
+            Table = gTable;
         }
 
         #endregion
@@ -79,15 +78,15 @@ namespace SDBees.DB
 
         internal static void InitTableSchema(Database database)
         {
-            GroupBaseData baseData = new GroupBaseData();
+            var baseData = new GroupBaseData();
             baseData.InitTableSchema(ref gTable, database);
 
             // Now add the name column
-            int uniqueFlags = (int)SDBees.DB.DbFlags.eUnique;
+            var uniqueFlags = (int)DbFlags.eUnique;
 //            baseData.AddColumn(new Column("name", DbType.eString, "Name", "Name of the group", "General", 50, "Unknown Group", uniqueFlags), database);
-            baseData.AddColumn(new Column("name", DbType.eString, "Name", "Name of the group", "General", 50, "Unknown Group", 0), database);
-            baseData.AddColumn(new Column("description", DbType.eString, "Description", "Description of the group", "General", 255, "", 0), database);
-            baseData.AddColumn(new Column("parentid", DbType.eGuidString, "Parent Id", "Id of the parent of the group", "General", 0, "", 0), database);
+            baseData.AddColumn(new Column("name", DbType.String, "Name", "Name of the group", "General", 50, "Unknown Group", 0), database);
+            baseData.AddColumn(new Column("description", DbType.String, "Description", "Description of the group", "General", 255, "", 0), database);
+            baseData.AddColumn(new Column("parentid", DbType.GuidString, "Parent Id", "Id of the parent of the group", "General", 0, "", 0), database);
             baseData.Table.Columns["parentid"].Editable = false;
 
             CreateDefaultGroups(database);
@@ -115,11 +114,11 @@ namespace SDBees.DB
         {
             Error error = null;
             ArrayList objectIds = null;
-            int numFound = database.Select(gTable, gTable.PrimaryKey, ref objectIds, ref error);
+            var numFound = database.Select(gTable, gTable.PrimaryKey, ref objectIds, ref error);
 
             if (numFound == 0)
             {
-                GroupBaseData rootGroup = new GroupBaseData();
+                var rootGroup = new GroupBaseData();
                 rootGroup.SetDefaults(database);
 
                 rootGroup.Name = "Alle Benutzer";
@@ -129,7 +128,7 @@ namespace SDBees.DB
 
                 if (error == null)
                 {
-                    GroupBaseData administrators = new GroupBaseData();
+                    var administrators = new GroupBaseData();
                     administrators.SetDefaults(database);
 
                     administrators.Name = "Administratoren";
@@ -138,7 +137,7 @@ namespace SDBees.DB
 
                     administrators.Save(ref error);
 
-                    GroupBaseData users = new GroupBaseData();
+                    var users = new GroupBaseData();
                     users.SetDefaults(database);
 
                     users.Name = "Benutzer";

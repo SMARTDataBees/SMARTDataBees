@@ -23,9 +23,6 @@
 #region Using directives
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-
 using System.Runtime.InteropServices;
 
 #endregion
@@ -43,7 +40,7 @@ namespace SDBees.EDM
         public string szDisplayName;
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
         public string szTypeName;
-    };
+    }
 
     class ShellGetFileInfo
     {
@@ -58,7 +55,7 @@ namespace SDBees.EDM
 
         public static SHFILEINFO GetFileInfo(string path)
         {
-            SHFILEINFO info = new SHFILEINFO();
+            var info = new SHFILEINFO();
             IntPtr icon;
 
             icon = SHGetFileInfo(path, 0, ref info, (uint)Marshal.SizeOf(info), SHGFI_ICON | SHGFI_TYPENAME | SHGFI_SMALLICON);

@@ -160,7 +160,7 @@ namespace SDBees.Core.Plugins.MEP.Element
             if (MyDBManager != null)
             {
                 // Verify that the required Tables are created/updated in the database
-                Database database = MyDBManager.Database;
+                var database = MyDBManager.Database;
                 this.CreateDataObject().InitTableSchema(ref MEPElementBaseData.gTable, database);
             }
         }

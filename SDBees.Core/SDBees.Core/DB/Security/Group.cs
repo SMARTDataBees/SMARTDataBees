@@ -20,10 +20,8 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
+
 using System.Collections;
-using System.Text;
 
 namespace SDBees.DB
 {
@@ -78,7 +76,7 @@ namespace SDBees.DB
         /// <summary>
         /// Returns the base data for this object
         /// </summary>
-        public SDBees.DB.Object BaseData
+        public Object BaseData
         {
             get { return mBaseData; }
         }
@@ -133,14 +131,14 @@ namespace SDBees.DB
 
             Error error = null;
 
-            Database database = server.SecurityDatabase;
+            var database = server.SecurityDatabase;
 
-            GroupBaseData baseData = new GroupBaseData();
-            Attribute attribute = new Attribute(baseData.Table.Columns["name"], name);
-            string criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
+            var baseData = new GroupBaseData();
+            var attribute = new Attribute(baseData.Table.Columns["name"], name);
+            var criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
 
-            ArrayList values = new ArrayList();
-            int numFound = database.Select(baseData.Table, baseData.Table.PrimaryKey, criteria, ref values, ref error);
+            var values = new ArrayList();
+            var numFound = database.Select(baseData.Table, baseData.Table.PrimaryKey, criteria, ref values, ref error);
 
             if (numFound == 1)
             {
@@ -161,10 +159,10 @@ namespace SDBees.DB
         /// <returns></returns>
         public static int GetAllGroups(Server server, ref ArrayList names)
         {
-            int count = 0;
+            var count = 0;
 
             Error error = null;
-            GroupBaseData baseData = new GroupBaseData();
+            var baseData = new GroupBaseData();
 
             count = server.SecurityDatabase.Select(baseData.Table, "name", ref names, ref error);
 
@@ -180,7 +178,7 @@ namespace SDBees.DB
         /// <returns>true if successful</returns>
         public bool UpdateAccessRightsOnServer(ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             // TBD: get all members (and derived...) and update their rights
             //ArrayList objectIds = null;
@@ -221,7 +219,7 @@ namespace SDBees.DB
         /// <returns></returns>
         public bool Save(ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if ((error == null) && (mBaseData.Database != null))
             {
@@ -238,7 +236,7 @@ namespace SDBees.DB
         /// <returns></returns>
         public bool Remove(ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if ((error == null) && (mBaseData.Database != null))
             {

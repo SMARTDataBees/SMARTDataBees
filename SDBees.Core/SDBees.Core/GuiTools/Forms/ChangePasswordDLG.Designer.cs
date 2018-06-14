@@ -20,6 +20,10 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.ComponentModel;
+using System.Windows.Forms;
+
 namespace SDBees.GuiTools
 {
     partial class ChangePasswordDLG
@@ -27,7 +31,7 @@ namespace SDBees.GuiTools
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -50,7 +54,7 @@ namespace SDBees.GuiTools
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChangePasswordDLG));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(ChangePasswordDLG));
             this.label1 = new System.Windows.Forms.Label();
             this.ebOldPassword = new System.Windows.Forms.TextBox();
             this.ebNewPassword = new System.Windows.Forms.TextBox();
@@ -167,13 +171,13 @@ namespace SDBees.GuiTools
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox ebOldPassword;
-        private System.Windows.Forms.TextBox ebNewPassword;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox ebConfirmPassword;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button bnCancel;
-        private System.Windows.Forms.Button bnOk;
+        private Label label1;
+        private TextBox ebOldPassword;
+        private TextBox ebNewPassword;
+        private Label label2;
+        private TextBox ebConfirmPassword;
+        private Label label3;
+        private Button bnCancel;
+        private Button bnOk;
     }
 }

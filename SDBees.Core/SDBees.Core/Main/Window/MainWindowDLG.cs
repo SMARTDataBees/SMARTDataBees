@@ -20,31 +20,23 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Diagnostics;
-using System.Drawing;
-using System.Collections;
 using System.ComponentModel;
-using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-
-using Carbon;
-using Carbon.Plugins;
-using Carbon.Plugins.Attributes;
-
-using SDBees.GuiTools;
-using System.Runtime.InteropServices;
+using Carbon.Configuration;
+using Carbon.Configuration.Providers;
 
 namespace SDBees.Main.Window
 {
     public sealed class MainWindowApplicationDLG : Form
     {
-        private System.Windows.Forms.MainMenu m_mainMenu;
-        private System.Windows.Forms.MenuItem m_menuItemProject;
-        private System.Windows.Forms.MenuItem m_menuItemTools;
-        private System.Windows.Forms.MenuItem m_menuItemHelp;
-        private System.Windows.Forms.StatusStrip m_statusBar;
+        private MainMenu m_mainMenu;
+        private MenuItem m_menuItemProject;
+        private MenuItem m_menuItemTools;
+        private MenuItem m_menuItemHelp;
+        private StatusStrip m_statusBar;
         private GroupBox m_groupBoxSystemView;
         private GroupBox m_groupBox;
         private SplitContainer m_splitContainer;
@@ -94,10 +86,9 @@ namespace SDBees.Main.Window
         /// Initializes a new instance of the SystemTrayApplicationPlugin class.
         /// </summary>
         public MainWindowApplicationDLG(MainWindowApplication mainWND)
-            : base()
         {
             //_theInstance = this;
-            this.InitializeComponent();
+            InitializeComponent();
 
             m_thePlugin = mainWND;
 
@@ -114,9 +105,9 @@ namespace SDBees.Main.Window
             if(MainWindowApplication.Current.MyDBManager != null)
                 MainWindowApplication.Current.MyDBManager.AddDatabaseChangedHandler(MainWindowApplicationDLG_OnDatabaseChangedHandler);
 
-            MenuItem mnuLoginDatabase = new MenuItem("Project manager ...");
-            mnuLoginDatabase.Click += new EventHandler(mnuLoginDatabase_Click);
-            this.MenuProject().MenuItems.Add(0, mnuLoginDatabase);
+            var mnuLoginDatabase = new MenuItem("Project manager ...");
+            mnuLoginDatabase.Click += mnuLoginDatabase_Click;
+            MenuProject().MenuItems.Add(0, mnuLoginDatabase);
         }
 
         protected override void OnShown(EventArgs e)
@@ -138,7 +129,7 @@ namespace SDBees.Main.Window
 
         private void FormatElements()
         {
-            this.MyTabControl().Dock = DockStyle.Fill;
+            MyTabControl().Dock = DockStyle.Fill;
 
             try
             {
@@ -158,29 +149,29 @@ namespace SDBees.Main.Window
 
         private void SetWindowsIcon()
         {
-            this.Icon = MainWindowApplication.Current.GetApplicationIcon();
+            Icon = MainWindowApplication.Current.GetApplicationIcon();
         }
 
         private void SetWindowsTitle()
         {
-            string dbName = "";
+            var dbName = "";
             if(MainWindowApplication.Current.MyDBManager != null)
             {
                 dbName = MainWindowApplication.Current.MyDBManager.CurrentDbName;
             }
 
-            Version version = Assembly.GetEntryAssembly().GetName().Version;
+            var version = Assembly.GetEntryAssembly().GetName().Version;
 
-            string _title = MainWindowApplication.Current.GetApplicationTitle();
+            var _title = MainWindowApplication.Current.GetApplicationTitle();
             if (!String.IsNullOrEmpty(_title))
             {
                 if (version.Revision == 0)
                 {
-                    this.Text = String.Format("{0} {1}.{2}.{3} - {4}", _title, version.Major, version.Minor, version.Build, dbName);
+                    Text = String.Format("{0} {1}.{2}.{3} - {4}", _title, version.Major, version.Minor, version.Build, dbName);
                 }
                 else
                 {
-                    this.Text = String.Format("{0} {1}.{2}.{3}.{4} - {5}", _title, version.Major, version.Minor, version.Build, version.Revision, dbName);
+                    Text = String.Format("{0} {1}.{2}.{3}.{4} - {5}", _title, version.Major, version.Minor, version.Build, version.Revision, dbName);
                 }
             }
         }
@@ -192,7 +183,8 @@ namespace SDBees.Main.Window
         /// </summary>
         private void InitializeComponent()
         {
-            this.m_mainMenu = new System.Windows.Forms.MainMenu();
+            this.components = new System.ComponentModel.Container();
+            this.m_mainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.m_menuItemProject = new System.Windows.Forms.MenuItem();
             this.m_menuItemClose = new System.Windows.Forms.MenuItem();
             this.m_menuItemTools = new System.Windows.Forms.MenuItem();
@@ -210,7 +202,7 @@ namespace SDBees.Main.Window
             this.m_tabControlMain = new System.Windows.Forms.TabControl();
             this.m_splitContainer = new System.Windows.Forms.SplitContainer();
             this.m_toolStrip = new System.Windows.Forms.ToolStrip();
-            this.m_toolTip = new System.Windows.Forms.ToolTip();
+            this.m_toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.m_statusBar.SuspendLayout();
             this.m_groupBoxSystemView.SuspendLayout();
             this.m_groupBox.SuspendLayout();
@@ -282,13 +274,13 @@ namespace SDBees.Main.Window
             // 
             // m_statusBar
             // 
+            this.m_statusBar.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.m_statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.m_toolStripStatusLabel,
             this.m_toolStripProgressBar});
-            this.m_statusBar.Location = new System.Drawing.Point(0, 388);
+            this.m_statusBar.Location = new System.Drawing.Point(0, 486);
             this.m_statusBar.Name = "m_statusBar";
-            this.m_statusBar.Padding = new System.Windows.Forms.Padding(1, 0, 11, 0);
-            this.m_statusBar.Size = new System.Drawing.Size(588, 30);
+            this.m_statusBar.Size = new System.Drawing.Size(735, 36);
             this.m_statusBar.TabIndex = 0;
             this.m_statusBar.Resize += new System.EventHandler(this._statusBar_Resize);
             // 
@@ -296,7 +288,7 @@ namespace SDBees.Main.Window
             // 
             this.m_toolStripStatusLabel.AutoSize = false;
             this.m_toolStripStatusLabel.Name = "m_toolStripStatusLabel";
-            this.m_toolStripStatusLabel.Size = new System.Drawing.Size(576, 25);
+            this.m_toolStripStatusLabel.Size = new System.Drawing.Size(720, 31);
             this.m_toolStripStatusLabel.Spring = true;
             this.m_toolStripStatusLabel.Text = "Ready...";
             this.m_toolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -305,7 +297,7 @@ namespace SDBees.Main.Window
             // 
             this.m_toolStripProgressBar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.m_toolStripProgressBar.Name = "m_toolStripProgressBar";
-            this.m_toolStripProgressBar.Size = new System.Drawing.Size(115, 24);
+            this.m_toolStripProgressBar.Size = new System.Drawing.Size(144, 30);
             this.m_toolStripProgressBar.Visible = false;
             // 
             // m_groupBoxSystemView
@@ -318,7 +310,7 @@ namespace SDBees.Main.Window
             this.m_groupBoxSystemView.Margin = new System.Windows.Forms.Padding(2);
             this.m_groupBoxSystemView.Name = "m_groupBoxSystemView";
             this.m_groupBoxSystemView.Padding = new System.Windows.Forms.Padding(2);
-            this.m_groupBoxSystemView.Size = new System.Drawing.Size(98, 367);
+            this.m_groupBoxSystemView.Size = new System.Drawing.Size(122, 459);
             this.m_groupBoxSystemView.TabIndex = 1;
             this.m_groupBoxSystemView.TabStop = false;
             this.m_groupBoxSystemView.Text = "Hierarchy";
@@ -330,10 +322,10 @@ namespace SDBees.Main.Window
             | System.Windows.Forms.AnchorStyles.Right)));
             this.m_label.AutoSize = true;
             this.m_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.m_label.Location = new System.Drawing.Point(10, 148);
+            this.m_label.Location = new System.Drawing.Point(12, 185);
             this.m_label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.m_label.Name = "m_label";
-            this.m_label.Size = new System.Drawing.Size(148, 20);
+            this.m_label.Size = new System.Drawing.Size(182, 25);
             this.m_label.TabIndex = 0;
             this.m_label.Text = "No view selected!";
             this.m_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -348,19 +340,19 @@ namespace SDBees.Main.Window
             this.m_groupBox.Margin = new System.Windows.Forms.Padding(2);
             this.m_groupBox.Name = "m_groupBox";
             this.m_groupBox.Padding = new System.Windows.Forms.Padding(2);
-            this.m_groupBox.Size = new System.Drawing.Size(465, 367);
+            this.m_groupBox.Size = new System.Drawing.Size(582, 459);
             this.m_groupBox.TabIndex = 2;
             this.m_groupBox.TabStop = false;
             this.m_groupBox.Text = "Details";
             // 
             // m_tabControlMain
             // 
-            this.m_tabControlMain.Location = new System.Drawing.Point(83, 61);
+            this.m_tabControlMain.Location = new System.Drawing.Point(104, 76);
             this.m_tabControlMain.Margin = new System.Windows.Forms.Padding(2);
             this.m_tabControlMain.Name = "m_tabControlMain";
             this.m_tabControlMain.SelectedIndex = 0;
             this.m_tabControlMain.ShowToolTips = true;
-            this.m_tabControlMain.Size = new System.Drawing.Size(274, 192);
+            this.m_tabControlMain.Size = new System.Drawing.Size(342, 240);
             this.m_tabControlMain.TabIndex = 1;
             // 
             // m_splitContainer
@@ -368,7 +360,7 @@ namespace SDBees.Main.Window
             this.m_splitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.m_splitContainer.Location = new System.Drawing.Point(11, 26);
+            this.m_splitContainer.Location = new System.Drawing.Point(14, 32);
             this.m_splitContainer.Margin = new System.Windows.Forms.Padding(2);
             this.m_splitContainer.Name = "m_splitContainer";
             // 
@@ -379,25 +371,26 @@ namespace SDBees.Main.Window
             // m_splitContainer.Panel2
             // 
             this.m_splitContainer.Panel2.Controls.Add(this.m_groupBox);
-            this.m_splitContainer.Size = new System.Drawing.Size(566, 367);
-            this.m_splitContainer.SplitterDistance = 98;
-            this.m_splitContainer.SplitterWidth = 3;
+            this.m_splitContainer.Size = new System.Drawing.Size(708, 459);
+            this.m_splitContainer.SplitterDistance = 122;
             this.m_splitContainer.TabIndex = 3;
             // 
             // m_toolStrip
             // 
+            this.m_toolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.m_toolStrip.Location = new System.Drawing.Point(0, 0);
             this.m_toolStrip.Name = "m_toolStrip";
-            this.m_toolStrip.Size = new System.Drawing.Size(588, 25);
+            this.m_toolStrip.Size = new System.Drawing.Size(735, 25);
             this.m_toolStrip.TabIndex = 4;
             this.m_toolStrip.Text = "toolStrip1";
+            this.m_toolStrip.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.m_toolStrip_ItemClicked);
             // 
             // MainWindowApplicationDLG
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(588, 418);
+            this.ClientSize = new System.Drawing.Size(735, 522);
             this.Controls.Add(this.m_toolStrip);
             this.Controls.Add(this.m_splitContainer);
             this.Controls.Add(this.m_statusBar);
@@ -445,7 +438,7 @@ namespace SDBees.Main.Window
 
         public MenuItem MenuProject()
         {
-            return this.m_menuItemProject;
+            return m_menuItemProject;
         }
 
         /// <summary>
@@ -453,28 +446,28 @@ namespace SDBees.Main.Window
         /// </summary>
         public MenuItem MenueAdmin()
         {
-            return this.m_menuItemAdmin;
+            return m_menuItemAdmin;
         }
 
         private delegate void InvokeHelper();
         /// <summary>
         /// Shows the main dialog. Use this instead of ShowDialog diectly! Threadsave
         /// </summary>
-        [STAThread()]
+        [STAThread]
         public void ShowMainDialog()
         {
             if (this != null)
             {
-                if(this.InvokeRequired)
+                if(InvokeRequired)
                 {
-                    InvokeHelper d = new InvokeHelper(ShowMainDialog);
-                    this.Invoke(d);
+                    InvokeHelper d = ShowMainDialog;
+                    Invoke(d);
                 }
                 else 
                 {
-                    if (!this.Visible)
+                    if (!Visible)
                     {
-                        this.ShowDialog();
+                        ShowDialog();
                     }
                 }
             }
@@ -485,7 +478,7 @@ namespace SDBees.Main.Window
         /// </summary>
         public MenuItem MenueTools()
         {
-            return this.m_menuItemTools;
+            return m_menuItemTools;
         }
 
         /// <summary>
@@ -494,12 +487,12 @@ namespace SDBees.Main.Window
         /// <returns></returns>
         public MenuItem MenueHelp()
         {
-            return this.m_menuItemHelp;
+            return m_menuItemHelp;
         }
 
         public GroupBox SystemView()
         {
-            return this.m_groupBoxSystemView;
+            return m_groupBoxSystemView;
         }
 
         /// <summary>
@@ -507,7 +500,7 @@ namespace SDBees.Main.Window
         /// </summary>
         public ToolStrip ToolStripMainWindow()
         {
-            return this.m_toolStrip;
+            return m_toolStrip;
         }
 
         public TabControl MyTabControl()
@@ -572,11 +565,11 @@ namespace SDBees.Main.Window
 
         private void m_optionsMenueItem_Click(object sender, EventArgs e)
         {
-            Carbon.Configuration.XmlConfigurationPropertiesWindow confWindow = new Carbon.Configuration.XmlConfigurationPropertiesWindow();
+            var confWindow = new XmlConfigurationPropertiesWindow();
             confWindow.Text = "Options";
             confWindow.XmlConfigurationView.TabPageXmlHide();
 
-            if(Carbon.Configuration.Providers.ConfigurationProvidersManager.ShowConfigurationWindow(this, confWindow) == System.Windows.Forms.DialogResult.OK)
+            if(ConfigurationProvidersManager.ShowConfigurationWindow(this, confWindow) == DialogResult.OK)
             {
 
             }
@@ -663,13 +656,13 @@ namespace SDBees.Main.Window
 
         private void menuItemClose_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void _statusBar_Resize(object sender, EventArgs e)
         {
-            int statusBarWidth = m_statusBar.ClientSize.Width;
-            int progressBarWidth = m_toolStripProgressBar.Width;
+            var statusBarWidth = m_statusBar.ClientSize.Width;
+            var progressBarWidth = m_toolStripProgressBar.Width;
             if (statusBarWidth > progressBarWidth)
             {
                 m_toolStripStatusLabel.Width = statusBarWidth - progressBarWidth - 15;
@@ -678,6 +671,10 @@ namespace SDBees.Main.Window
 
         #endregion
 
+        private void m_toolStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
     }
 
     /// <summary>

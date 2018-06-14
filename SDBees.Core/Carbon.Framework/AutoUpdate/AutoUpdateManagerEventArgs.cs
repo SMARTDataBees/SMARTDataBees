@@ -30,9 +30,6 @@
 //	============================================================================
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-
 using Carbon.UI;
 
 namespace Carbon.AutoUpdate
@@ -51,7 +48,6 @@ namespace Carbon.AutoUpdate
 		/// <param name="manager">The AutoUpdateManager that is handling the update.</param>
 		/// <param name="progressViewer">The IProgressViewer that can be used to display progress about the update.</param>
 		public AutoUpdateManagerEventArgs(AutoUpdateManager manager, IProgressViewer progressViewer)
-			: base()
 		{
 			_manager = manager;
 			_progressViewer = progressViewer;

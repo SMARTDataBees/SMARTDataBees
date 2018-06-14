@@ -20,16 +20,10 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
-using System.Collections;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using SDBees.DB;
-using SDBees.Plugs.TemplateTreeNode;
 
 namespace SDBees.ViewAdmin
 {
@@ -43,15 +37,15 @@ namespace SDBees.ViewAdmin
         private void bnStart_Click(object sender, EventArgs e)
         {
             // remember the old cursor and set the wait cursor
-            Cursor oldCursor = this.Cursor;
-            this.Cursor = Cursors.WaitCursor;
+            var oldCursor = Cursor;
+            Cursor = Cursors.WaitCursor;
 
             progressBar.Visible = true;
 
-            SDBees.DB.Inspector.InspectDatabase(cbAutomaticFix.Checked, cbAutomaticDelete.Checked, progressBar, ebOutput);
+            Inspector.InspectDatabase(cbAutomaticFix.Checked, cbAutomaticDelete.Checked, progressBar, ebOutput);
 
             // reset the cursor
-            this.Cursor = oldCursor;
+            Cursor = oldCursor;
 
             // reset the window's state...
             progressBar.Visible = false;

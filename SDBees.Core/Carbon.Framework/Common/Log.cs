@@ -29,7 +29,6 @@
 //
 //	============================================================================
 
-using System;
 using System.Diagnostics;
 
 namespace Carbon.Common
@@ -37,7 +36,7 @@ namespace Carbon.Common
 	/// <summary>
 	/// Provides methods for logging and diagnostic traces.
 	/// </summary>	
-	[DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public sealed class Log
 	{
 		/// <summary>

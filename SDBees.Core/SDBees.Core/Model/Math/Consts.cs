@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace SDBees.Core.Model.Math
+﻿namespace SDBees.Core.Model.Math
 {
     public class Consts
     {

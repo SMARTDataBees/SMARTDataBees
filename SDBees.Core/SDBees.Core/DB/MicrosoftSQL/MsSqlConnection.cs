@@ -20,10 +20,8 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using System.Data;
 
 namespace SDBees.DB.MicrosoftSQL
@@ -34,20 +32,20 @@ namespace SDBees.DB.MicrosoftSQL
     public class MsSqlConnection : OleConnection
     {
         #region Public Methods
-        public override System.Data.DataSet GetReadOnlyDataSet()
+        public override DataSet GetReadOnlyDataSet()
         {
             throw new NotImplementedException();
         }
 
-        public override System.Data.DataTable GetReadOnlyDataTable(string sTablename)
+        public override DataTable GetReadOnlyDataTable(string sTablename)
         {
-            System.Data.DataTable _dtTable = new DataTable();
-            System.Data.DataSet _dtSet = new DataSet();
+            var _dtTable = new DataTable();
+            var _dtSet = new DataSet();
             Error _error = null;
 
-            string sSelect = "SELECT * FROM `" + this.Database.Name + "`.`" + sTablename + "`";
+            var sSelect = "SELECT * FROM `" + Database.Name + "`.`" + sTablename + "`";
 
-            this.FillDataSet(sSelect, ref _dtSet, ref _error, sTablename);
+            FillDataSet(sSelect, ref _dtSet, ref _error, sTablename);
 
             foreach (DataTable tbl in _dtSet.Tables)
             {
@@ -76,7 +74,7 @@ namespace SDBees.DB.MicrosoftSQL
         /// <returns></returns>
         protected override string ConnectionString(Database database, bool bReadOnly)
         {
-            string connectionString = "Provider=SQLOLEDB;Data Source=" + database.Server.Name + ";Initial Catalog=" + database.Name + ";User ID=" + database.User + ";password=" + database.Password + "";
+            var connectionString = "Provider=SQLOLEDB;Data Source=" + database.Server.Name + ";Initial Catalog=" + database.Name + ";User ID=" + database.User + ";password=" + database.Password + "";
 
             return connectionString;
         }

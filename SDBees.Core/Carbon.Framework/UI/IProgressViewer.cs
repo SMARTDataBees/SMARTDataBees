@@ -29,7 +29,6 @@
 //
 //	============================================================================
 
-using System;
 using System.Drawing;
 
 namespace Carbon.UI

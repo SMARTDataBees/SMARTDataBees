@@ -20,6 +20,7 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 
 namespace SDBees.Plugs.Attributes
@@ -32,7 +33,7 @@ namespace SDBees.Plugs.Attributes
   /// TreeNodeHelper - 
   /// MainWindow - The one and only main window ,-)
   /// </summary>
-  [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+  [AttributeUsage(AttributeTargets.Class)]
   public sealed class PluginTypeDefAttribute : Attribute
   {
     private readonly string _type;

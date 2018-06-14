@@ -36,7 +36,7 @@ namespace Carbon.Plugins.Attributes
 	/// <summary>
 	/// Defines a plugin attribute for specifying a description for a plugin.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple=false)]
+	[AttributeUsage(AttributeTargets.Class)]
 	public sealed class PluginDescriptionAttribute : Attribute
 	{
 		private readonly string _description;

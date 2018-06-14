@@ -20,11 +20,10 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
+
 using System.Collections.Generic;
-using System.Collections;
-using System.Text;
 using SDBees.DB;
+using SDBees.Plugs.TemplateTreeNode;
 
 namespace SDBees.Plugs.TemplateBase
 {
@@ -43,7 +42,7 @@ namespace SDBees.Plugs.TemplateBase
         /// <summary>
         /// Standard constructor
         /// </summary>
-        public TableInspector(SDBees.DB.SDBeesDBConnection dbManager)
+        public TableInspector(SDBeesDBConnection dbManager)
             : base(dbManager)
         {
         }
@@ -59,12 +58,12 @@ namespace SDBees.Plugs.TemplateBase
         public override void InspectDatabase()
         {
             string message;
-            List<object> invalidObjects = new List<object>();
-            List<object> unreferencedObjects = new List<object>();
+            var invalidObjects = new List<object>();
+            var unreferencedObjects = new List<object>();
 
-            List<SDBees.Plugs.TemplateTreeNode.TemplateTreenode> plugins = SDBees.Plugs.TemplateTreeNode.TemplateTreenode.GetAllTreenodePlugins();
+            var plugins = TemplateTreenode.GetAllTreenodePlugins();
 
-            int count = plugins.Count;
+            var count = plugins.Count;
 
             if (count > 0)
             {
@@ -72,12 +71,12 @@ namespace SDBees.Plugs.TemplateBase
 
                 myProgressBar.Maximum = count - 1;
 
-                for (int index = 0; index < count; index++)
+                for (var index = 0; index < count; index++)
                 {
-                    SDBees.Plugs.TemplateTreeNode.TemplateTreenode plugin = plugins[index];
-                    int invalidCount = 0;
+                    var plugin = plugins[index];
+                    var invalidCount = 0;
 
-                    WriteMessage("Prüfung " + plugin.GetType().ToString() + "\r\n");
+                    WriteMessage("Prüfung " + plugin.GetType() + "\r\n");
 
                     Error error = null;
 
@@ -113,22 +112,22 @@ namespace SDBees.Plugs.TemplateBase
 
         #region Protected Methods
 
-        private bool DbTableValid(SDBees.Plugs.TemplateTreeNode.TemplateTreenode plugin, Database database, bool fix, ref Error error)
+        private bool DbTableValid(TemplateTreenode plugin, Database database, bool fix, ref Error error)
         {
-            bool isValid = true;
+            var isValid = true;
 
-            TemplateDBBaseData baseData = plugin.CreateDataObject();
+            var baseData = plugin.CreateDataObject();
 
             // test the xml schema...
             //string xmlTableDefinition = baseData.Table.writeXml();
             //WriteMessage("Table = :" + xmlTableDefinition);
             //WriteMessage("\r\n");
 
-            List<string> columnsToFix = new List<string>();
-            foreach (KeyValuePair<string, Column> iterator in baseData.Table.Columns)
+            var columnsToFix = new List<string>();
+            foreach (var iterator in baseData.Table.Columns)
             {
-                Column column = iterator.Value;
-                string columnName = column.Name;
+                var column = iterator.Value;
+                var columnName = column.Name;
                 if (columnName != columnName.Trim())
                 {
                     columnsToFix.Add(column.Name);
@@ -136,7 +135,7 @@ namespace SDBees.Plugs.TemplateBase
                     isValid = false;
                 }
 
-                string cleanColumnName = database.MakeValidColumnName(columnName.Trim());
+                var cleanColumnName = database.MakeValidColumnName(columnName.Trim());
                 if (columnName != cleanColumnName)
                 {
                     if (!columnsToFix.Contains(columnName))
@@ -149,23 +148,23 @@ namespace SDBees.Plugs.TemplateBase
             }
             if (fix)
             {
-                foreach (string columnName in columnsToFix)
+                foreach (var columnName in columnsToFix)
                 {
-                    string oldColumnName = columnName;
-                    string newColumnName = database.MakeValidColumnName(columnName.Trim());
+                    var oldColumnName = columnName;
+                    var newColumnName = database.MakeValidColumnName(columnName.Trim());
 
                     baseData.RenameColumn(oldColumnName, newColumnName, database);
                 }
             }
 
-            string tableName = baseData.Table.Name;
+            var tableName = baseData.Table.Name;
 
             List<string> columnNames = null;
-            List<string> columnsMissingInXML = new List<string>();
+            var columnsMissingInXML = new List<string>();
             columnNames = null;
             if (database.GetTableColumns(baseData.Table.Name, out columnNames, ref error) > 0)
             {
-                foreach (string columnName in columnNames)
+                foreach (var columnName in columnNames)
                 {
                     if (!baseData.Table.Columns.ContainsKey(columnName))
                     {
@@ -177,13 +176,13 @@ namespace SDBees.Plugs.TemplateBase
             }
             if (fix)
             {
-                foreach (string columnName in columnsMissingInXML)
+                foreach (var columnName in columnsMissingInXML)
                 {
                     database.EraseColumn(tableName, columnName, ref error);
                 }
             }
 
-            TableSchema tableSchema = TableSchema.FindSchema(database, baseData.Table.Name, ref error);
+            var tableSchema = TableSchema.FindSchema(database, baseData.Table.Name, ref error);
             if (tableSchema != null)
             {
                 //string xmlSchemaDefinition = tableSchema.XmlSchema;

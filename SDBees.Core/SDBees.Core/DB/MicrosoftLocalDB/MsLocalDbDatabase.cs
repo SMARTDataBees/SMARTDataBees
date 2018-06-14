@@ -20,9 +20,6 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SDBees.DB.MicrosoftLocalDB
 {
@@ -44,7 +41,7 @@ namespace SDBees.DB.MicrosoftLocalDB
         // This method creates a connection to the database...
         protected override Connection CreateConnection(bool bReadOnly, ref Error error)
         {
-            MsLocalDbConnection connection = new MsLocalDbConnection(this);
+            var connection = new MsLocalDbConnection(this);
             if (!connection.Open(this, bReadOnly, ref error))
             {
                 // somehow failed...

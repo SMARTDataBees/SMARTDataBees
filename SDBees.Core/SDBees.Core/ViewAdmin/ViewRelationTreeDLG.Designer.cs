@@ -20,6 +20,10 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.ComponentModel;
+using System.Windows.Forms;
+
 namespace SDBees.ViewAdmin
 {
     partial class ViewRelationTreeDLG
@@ -27,7 +31,7 @@ namespace SDBees.ViewAdmin
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -94,7 +98,7 @@ namespace SDBees.ViewAdmin
 
         #endregion
 
-        private System.Windows.Forms.Panel panelView;
-        private System.Windows.Forms.Button button1;
+        private Panel panelView;
+        private Button button1;
     }
 }

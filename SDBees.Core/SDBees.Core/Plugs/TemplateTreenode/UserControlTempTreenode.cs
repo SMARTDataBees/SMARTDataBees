@@ -20,12 +20,7 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
+
 using System.Windows.Forms;
 
 namespace SDBees.Plugs.TemplateTreeNode
@@ -42,12 +37,12 @@ namespace SDBees.Plugs.TemplateTreeNode
         /// </summary>
         public PropertyGrid MyGrid()
         {
-            return this.propertyGridUserControl;
+            return propertyGridUserControl;
         }
 
         void m_propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
-            SDBees.Plugs.TemplateTreeNode.TreenodePropertyRow row = MyGrid().SelectedObject as SDBees.Plugs.TemplateTreeNode.TreenodePropertyRow;
+            var row = MyGrid().SelectedObject as TreenodePropertyRow;
 
             row.OnPropertyValueChanged(e);
         }

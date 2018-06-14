@@ -20,11 +20,10 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections.Generic;
-using System.Collections;
-using System.Text;
-using System.Windows.Forms;
+using SDBees.Plugs.Properties;
 
 namespace SDBees.DB
 {
@@ -124,13 +123,12 @@ namespace SDBees.DB
 
                     if (!mValues.ContainsKey(columnName))
                     {
-                        Column column = mTable.Columns[columnName];
+                        var column = mTable.Columns[columnName];
                         mValues[columnName] = column.CreateDefaultValue();
                     }
                     return mValues[columnName];
                 }
-                else
-                    return null;
+                return null;
             }
             catch (Exception ex)
             {
@@ -150,7 +148,7 @@ namespace SDBees.DB
                 return null;
             }
 
-            Column column = mTable.Columns[columnName];
+            var column = mTable.Columns[columnName];
 
             return column.UITypeConverter;
         }
@@ -163,7 +161,7 @@ namespace SDBees.DB
         /// <returns>true if successful</returns>
         public bool SetPropertyByColumn(string propertyName, object value)
         {
-            bool success = false;
+            var success = false;
 
             if (propertyName == mTable.PrimaryKey)
             {
@@ -186,11 +184,11 @@ namespace SDBees.DB
         /// <returns></returns>
         public List<string> GetPropertyNames()
         {
-            List<string> propertyNames = new List<string>();
+            var propertyNames = new List<string>();
 
-            foreach (KeyValuePair<string, Column> iterator in mTable.Columns)
+            foreach (var iterator in mTable.Columns)
             {
-                Column column = iterator.Value;
+                var column = iterator.Value;
                 if (column.Name != mTable.PrimaryKey)
                 {
                     propertyNames.Add(column.Name);
@@ -207,20 +205,20 @@ namespace SDBees.DB
         /// <returns>true if successful</returns>
         public virtual bool Save(ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             try
             {
                 // For objects that are not yet persistent and for which AutoCreate has been defined, create an ID now.
                 if (mIsNewObject && ((idColumn().Flags & (int)DbFlags.eAutoCreate) != 0))
                 {
-                    if (idColumn().Type == DbType.eGuidString)
+                    if (idColumn().Type == DbType.GuidString)
                     {
                         mId = Guid.NewGuid().ToString();
                     }
                     else
                     {
-                        Error myError = new Error("AutoCreate not supported for this type!", 9999, this.GetType(), error);
+                        var myError = new Error("AutoCreate not supported for this type!", 9999, GetType(), error);
                         error = myError;
                         return false;
                     }
@@ -275,7 +273,7 @@ namespace SDBees.DB
         /// <returns>true if successful</returns>
         public virtual bool Load(ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             Attributes attributes = null;
             GetAttributes(ref attributes);
@@ -313,14 +311,14 @@ namespace SDBees.DB
         /// <returns>true if successful</returns>
         public virtual bool Erase(ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if (mDatabase != null)
             {
-                Connection conn = mDatabase.Open(false, ref error);
+                var conn = mDatabase.Open(false, ref error);
 
-                Attribute attribute = new Attribute(idColumn(), mId);
-                string criteria = "(" + mDatabase.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error) + ")";
+                var attribute = new Attribute(idColumn(), mId);
+                var criteria = "(" + mDatabase.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error) + ")";
                 success = mDatabase.EraseRow(mTable, criteria, ref error);
 
                 mDatabase.Close(ref error);
@@ -345,15 +343,15 @@ namespace SDBees.DB
         /// <returns>string representing the summary</returns>
         public virtual string Summary()
         {
-            string mySummary = "";
+            var mySummary = "";
 
             Attributes attributes = null;
             GetAttributes(ref attributes);
 
-            foreach (KeyValuePair<string, Attribute> iterator in attributes)
+            foreach (var iterator in attributes)
             {
-                Attribute attribute = iterator.Value;
-                mySummary = iterator.Key + " = '" + attribute.Value.ToString() + "'\n";
+                var attribute = iterator.Value;
+                mySummary = iterator.Key + " = '" + attribute.Value + "'\n";
             }
 
             return mySummary;
@@ -380,10 +378,6 @@ namespace SDBees.DB
                     mTable.Columns.Add(column);
 
                     ModifyTableSchema(mTable, database);
-                }
-                else
-                {
-                    //ModifyTableSchema(mTable, database);
                 }
             }
             catch (Exception ex)
@@ -421,7 +415,7 @@ namespace SDBees.DB
             if (mTable.Columns.ContainsKey(oldColumnName))
             {
                 // Only rename the column if it exists
-                Column column = mTable.Columns[oldColumnName];
+                var column = mTable.Columns[oldColumnName];
                 mTable.Columns.Remove(oldColumnName);
 
                 // Since in some cases this is used to fix tables we should check before we get problems...
@@ -471,39 +465,39 @@ namespace SDBees.DB
             try
             {
                 Error error = null;
-                Connection conn = database.Open(false, ref error);
+                var conn = database.Open(false, ref error);
 
                 table = CreateTableSchema(database);
 
                 // set this table to the same reference...
                 mTable = table;
 
-                int versionDiff = CheckSchemaVersion();
+                var versionDiff = CheckSchemaVersion();
 
                 if (versionDiff < 0)
                 {
                     // Schema is older than implementation... Database should be migrated in the future
                     // for now the program will be aborted
-                    string message = "";
+                    var message = "";
                     message += "Datenbankversion ist von einer älteren Programmversion und sollte\r\n";
                     message += "zunächst aktualisiert werden!\r\n\r\n";
                     message += "Details:\r\n";
                     message += "Tabelle = " + mTable.Name + "\r\n";
-                    message += "Tabellenversion = " + mTable.SchemaVersion.ToString() + "\r\n";
-                    message += "Programmversion = " + RequiredSchemaVersion().ToString() + "\r\n\r\n";
+                    message += "Tabellenversion = " + mTable.SchemaVersion + "\r\n";
+                    message += "Programmversion = " + RequiredSchemaVersion() + "\r\n\r\n";
                     message += "Programm kann nicht vollständig ausgeführt werden.";
                     throw new Exception(message);
                 }
-                else if (versionDiff > 0)
+                if (versionDiff > 0)
                 {
                     // Schema is newer than implementation... program should be aborted
-                    string message = "";
+                    var message = "";
                     message += "Datenbankversion ist von einer zukünftigen Programmversion und kann\r\n";
                     message += "mit dieser Applikation nicht bearbeitet werden!\r\n\r\n";
                     message += "Details:\r\n";
                     message += "Tabelle = " + mTable.Name + "\r\n";
-                    message += "Tabellenversion = " + mTable.SchemaVersion.ToString() + "\r\n";
-                    message += "Programmversion = " + RequiredSchemaVersion().ToString() + "\r\n\r\n";
+                    message += "Tabellenversion = " + mTable.SchemaVersion + "\r\n";
+                    message += "Programmversion = " + RequiredSchemaVersion() + "\r\n\r\n";
                     message += "Programm kann nicht vollständig ausgeführt werden.";
                     throw new Exception(message);
                 }
@@ -512,11 +506,6 @@ namespace SDBees.DB
                 if (!database.TableExists(table.Name, ref error))
                 {
                     database.CreateTable(table, ref error);
-                }
-                else
-                {
-                    // Doesn't work for TableSchema object, but consider using this for other objects...
-                    // ModifyTableSchema(table, database);
                 }
 
                 Error.Display("Tabelle '" + table.Name + "' Erzeugen", error);
@@ -530,9 +519,9 @@ namespace SDBees.DB
             }
         }
 
-        public virtual List<KeyValuePair<SDBees.Plugs.Properties.PropertySpec, object>> GetAutomaticProperties()
+        public virtual List<KeyValuePair<PropertySpec, object>> GetAutomaticProperties()
         {
-            return new List<KeyValuePair<Plugs.Properties.PropertySpec, object>>();
+            return new List<KeyValuePair<PropertySpec, object>>();
         }
 
         #endregion
@@ -551,12 +540,12 @@ namespace SDBees.DB
                 attributes = new Attributes();
             }
 
-            foreach (KeyValuePair<string, Column> iterator in mTable.Columns)
+            foreach (var iterator in mTable.Columns)
             {
-                Column column = iterator.Value;
+                var column = iterator.Value;
                 if (column.Name != mTable.PrimaryKey)
                 {
-                    object value = GetPropertyByColumn(column.Name);
+                    var value = GetPropertyByColumn(column.Name);
 
                     attributes.Add(new Attribute(column, value));
                 }
@@ -575,13 +564,13 @@ namespace SDBees.DB
         protected void SetAttributes(Attributes attributes)
         {
             // Set the values to the object
-            foreach (KeyValuePair<string, Attribute> iterator in attributes)
+            foreach (var iterator in attributes)
             {
-                string columnName = iterator.Key;
+                var columnName = iterator.Key;
                 // Id column is handled differently...
                 if (columnName != mTable.PrimaryKey)
                 {
-                    Attribute attribute = iterator.Value;
+                    var attribute = iterator.Value;
                     mValues[columnName] = attribute.Value;
                 }
             }
@@ -612,12 +601,12 @@ namespace SDBees.DB
         protected bool ModifyTableSchema(Table table, Database database)
         {
             Error error = null;
-            Connection conn = database.Open(false, ref error);
+            var conn = database.Open(false, ref error);
 
             table.SchemaVersion = RequiredSchemaVersion();
 
             Table oldTable = null;
-            TableSchema schema = new TableSchema();
+            var schema = new TableSchema();
             if (!schema.Load(database, table.Name, ref error))
             {
                 // ignore this error...
@@ -658,7 +647,7 @@ namespace SDBees.DB
             else if (oldTable != null)
             {
                 // in case something went wrong, the table and the schema should match
-                string oldXmlSchema = oldTable.writeXml();
+                var oldXmlSchema = oldTable.writeXml();
                 table.readXml(oldXmlSchema);
             }
 
@@ -680,9 +669,9 @@ namespace SDBees.DB
             Table table = null;
 
             Error error = null;
-            string tableName = TableName();
+            var tableName = TableName();
 
-            TableSchema schema = new TableSchema();
+            var schema = new TableSchema();
             if (!schema.Load(database, tableName, ref error))
             {
                 // ignore this error...
@@ -690,12 +679,12 @@ namespace SDBees.DB
 
                 // There is no schema yet defined for this table... define the schema
                 table = new Table(tableName);
-                bool reloadIdOnInsert = false;
+                var reloadIdOnInsert = false;
 
-                Column primaryColumn = CreateIdColumn(ref reloadIdOnInsert);
+                var primaryColumn = CreateIdColumn(ref reloadIdOnInsert);
                 table.Columns.Add(primaryColumn);
 
-                Column sdbeesColumn = CreateSDBeesIdColumn(ref reloadIdOnInsert);
+                var sdbeesColumn = CreateSDBeesIdColumn(ref reloadIdOnInsert);
                 table.Columns.Add(sdbeesColumn);
 
                 table.PrimaryKey = primaryColumn.Name;
@@ -752,7 +741,7 @@ namespace SDBees.DB
         //protected abstract string TableName();
         protected string TableName()
         {
-            string sTablename = this.GetTableName;
+            var sTablename = GetTableName;
             return sTablename.ToLower();
 
             //return "usrAECBuildings";
@@ -777,13 +766,13 @@ namespace SDBees.DB
         /// <returns></returns>
         protected virtual Column CreateIdColumn(ref bool reloadIdOnInsert)
         {
-            Column column = new Column();
+            var column = new Column();
             column.Name = m_IdColumnName;
             column.DisplayName = m_IdColumnDisplayName;
             column.Description = "the unique id for the database";
             column.Category = "Internal";
-            column.Type = SDBees.DB.DbType.eGuidString;
-            column.Flags = (int)SDBees.DB.DbFlags.eAutoCreate;
+            column.Type = DbType.GuidString;
+            column.Flags = (int)DbFlags.eAutoCreate;
             column.Editable = false;
             column.Browsable = false;
             reloadIdOnInsert = false;
@@ -798,13 +787,13 @@ namespace SDBees.DB
         /// <returns></returns>
         protected virtual Column CreateSDBeesIdColumn(ref bool reloadIdOnInsert)
         {
-            Column column = new Column();
+            var column = new Column();
             column.Name = m_IdSDBeesColumnName;
             column.DisplayName = m_IdSDBeesColumnDisplayName;
             column.Description = "the unique id for the smartdatabees internal use";
             column.Category = "Internal";
-            column.Type = SDBees.DB.DbType.eGuidString;
-            column.Flags = (int)SDBees.DB.DbFlags.eAutoCreate;
+            column.Type = DbType.GuidString;
+            column.Flags = (int)DbFlags.eAutoCreate;
             column.Editable = false;
             column.Browsable = false;
             reloadIdOnInsert = false;

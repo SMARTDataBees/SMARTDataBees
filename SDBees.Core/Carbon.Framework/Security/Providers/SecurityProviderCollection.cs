@@ -29,8 +29,6 @@
 //
 //	============================================================================
 
-using System;
-
 namespace Carbon.Security.Providers
 {
 	/// <summary>
@@ -38,11 +36,5 @@ namespace Carbon.Security.Providers
 	/// </summary>
 	public class SecurityProviderCollection
 	{
-		public SecurityProviderCollection()
-		{
-			//
-			// TODO: Add constructor logic here
-			//
-		}
 	}
 }

@@ -21,15 +21,12 @@
 //
 // #EndHeader# ================================================================
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.Serialization;
 
 namespace SDBees.Core.Model
 {
-    public enum SDBeesPropertyValueType : int
+    public enum SDBeesPropertyValueType
     {
 		Text,
 		Double,
@@ -40,7 +37,7 @@ namespace SDBees.Core.Model
         Custom
     }
 
-    public enum SDBeesPropertyMeasureType : int
+    public enum SDBeesPropertyMeasureType
     {
         None,
         Length,
@@ -113,7 +110,7 @@ namespace SDBees.Core.Model
         }
 
 
-        private HashSet<string> m_enumerationValues = null;
+        private HashSet<string> m_enumerationValues;
         [DataMember]
         public HashSet<string> EnumerationValues
         {
@@ -137,7 +134,7 @@ namespace SDBees.Core.Model
 
         public static implicit operator SDBeesPropertyType(SDBeesPropertyValueType valueType)
         {
-            SDBeesPropertyType propType = new SDBeesPropertyType(valueType);
+            var propType = new SDBeesPropertyType(valueType);
             return propType;
         }
 	}

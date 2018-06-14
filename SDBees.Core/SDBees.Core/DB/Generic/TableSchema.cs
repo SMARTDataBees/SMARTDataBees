@@ -20,21 +20,18 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SDBees.DB
 {
     /// <summary>
     /// Class of persistent object that describes the schema of an object
     /// </summary>
-    public class TableSchema : SDBees.DB.Object
+    public class TableSchema : Object
     {
         #region Private Data Members
 
         // Persistent Table definition for this class
-        private static Table gTable = null;
+        private static Table gTable;
 
         #endregion
 
@@ -74,7 +71,7 @@ namespace SDBees.DB
         /// </summary>
         public TableSchema()
         {
-            base.Table = gTable;
+            Table = gTable;
         }
 
         /// <summary>
@@ -84,7 +81,7 @@ namespace SDBees.DB
         public TableSchema(string tableName)
         {
             Id = tableName;
-            base.Table = gTable;
+            Table = gTable;
         }
 
         /// <summary>
@@ -96,7 +93,7 @@ namespace SDBees.DB
         {
             Id = tableName;
             XmlSchema = xmlSchema;
-            base.Table = gTable;
+            Table = gTable;
         }
 
         #endregion
@@ -112,7 +109,7 @@ namespace SDBees.DB
         /// <returns>TableSchema object or null if not found</returns>
         public static TableSchema FindSchema(Database database, string tableName, ref Error error)
         {
-            TableSchema schema = new TableSchema();
+            var schema = new TableSchema();
             if (!schema.Load(database, tableName, ref error))
             {
                 schema = null;
@@ -127,7 +124,7 @@ namespace SDBees.DB
         /// <param name="database">Database</param>
         public static void InitTableSchema(Database database)
         {
-            TableSchema schema = new TableSchema();
+            var schema = new TableSchema();
             schema.InitTableSchema(ref gTable, database);
         }
 
@@ -143,13 +140,13 @@ namespace SDBees.DB
          * */
         protected override Table CreateTableSchema(Database database)
         {
-            Table table = new Table();
+            var table = new Table();
 
             table.Name = TableName();
 
-            Column column = new Column();
+            var column = new Column();
             column.Name = "tablename";
-            column.Type = SDBees.DB.DbType.eString;
+            column.Type = DbType.String;
             column.Size = 80;
             column.Flags = 0;
             table.Columns.Add(column);
@@ -158,7 +155,7 @@ namespace SDBees.DB
 
             column = new Column();
             column.Name = "xmlschema";
-            column.Type = SDBees.DB.DbType.eText;
+            column.Type = DbType.Text;
             table.Columns.Add(column);
 
             return table;

@@ -44,8 +44,7 @@ namespace Carbon.AutoUpdate.Common
 		/// Initializes a new instance of the AutoUpdateProductDescriptorEventArgs class.
 		/// </summary>
 		/// <param name="productDescriptor">The descriptor that is the context of the event.</param>
-		public AutoUpdateProductDescriptorEventArgs(AutoUpdateProductDescriptor productDescriptor) 
-			: base()
+		public AutoUpdateProductDescriptorEventArgs(AutoUpdateProductDescriptor productDescriptor)
 		{
 			_productDescriptor = productDescriptor;
 		}

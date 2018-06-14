@@ -30,9 +30,9 @@
 //	============================================================================
 
 using System;
-using System.Diagnostics;
 using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Carbon.Configuration
 {
@@ -56,9 +56,9 @@ namespace Carbon.Configuration
 			{
 				try
 				{
-					XmlConfigurationCategory category = entry.Value as XmlConfigurationCategory;
+					var category = entry.Value as XmlConfigurationCategory;
 					if (category != null)
-                        this.LoadOptions(category.Options);
+                        LoadOptions(category.Options);
 				}
 				catch(Exception ex)
 				{
@@ -73,7 +73,7 @@ namespace Carbon.Configuration
 			{
 				try
 				{
-					this.LoadOptions(category.Options);
+					LoadOptions(category.Options);
 				}
 				catch(Exception ex)
 				{
@@ -84,12 +84,12 @@ namespace Carbon.Configuration
 
 		public XmlConfigurationOptionCollectionTypeDescriptor(XmlConfigurationCategory category) : this()
 		{
-			this.LoadOptions(category.Options);
+			LoadOptions(category.Options);
 		}
 
 		public XmlConfigurationOptionCollectionTypeDescriptor(XmlConfigurationOptionCollection options) : this()
 		{
-			this.LoadOptions(options);
+			LoadOptions(options);
 		}
 
 		private void LoadOptions(XmlConfigurationOptionCollection options)
@@ -103,7 +103,7 @@ namespace Carbon.Configuration
 				{
 					if (!option.Hidden)
 					{
-						XmlConfigurationOptionPropertyDescriptor pd = new XmlConfigurationOptionPropertyDescriptor(option);                        
+						var pd = new XmlConfigurationOptionPropertyDescriptor(option);                        
 						_descriptors.Add(pd);
 						_table.Add(pd, option);
 					}
@@ -128,7 +128,7 @@ namespace Carbon.Configuration
 			return new EventDescriptorCollection(null);
 		}
 
-		EventDescriptorCollection System.ComponentModel.ICustomTypeDescriptor.GetEvents()
+		EventDescriptorCollection ICustomTypeDescriptor.GetEvents()
 		{
 			return new EventDescriptorCollection(null);
 		}
@@ -145,15 +145,12 @@ namespace Carbon.Configuration
 			{
 				if (pd != null)
 				{
-                    if (_table.ContainsKey(pd))
+				    if (_table.ContainsKey(pd))
                         return _table[pd];
-                    else
-                    {
-                        if (FindDescriptorInTableByDisplayname(pd))
-                        {
-                            return _table[GetDescriptorInTableByDisplayname(pd)];
-                        }
-                    }
+				    if (FindDescriptorInTableByDisplayname(pd))
+				    {
+				        return _table[GetDescriptorInTableByDisplayname(pd)];
+				    }
 				}
 			}
 			return null;
@@ -174,7 +171,7 @@ namespace Carbon.Configuration
 
         private bool FindDescriptorInTableByDisplayname(PropertyDescriptor pd)
         {
-            bool found = false;
+            var found = false;
 
             foreach (PropertyDescriptor item in _table.Keys)
             {
@@ -196,7 +193,7 @@ namespace Carbon.Configuration
 			return _descriptors;
 		}
 
-		PropertyDescriptorCollection System.ComponentModel.ICustomTypeDescriptor.GetProperties()
+		PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties()
 		{
 			return _descriptors;
 		}

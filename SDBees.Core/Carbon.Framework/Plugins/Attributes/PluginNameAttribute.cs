@@ -36,7 +36,7 @@ namespace Carbon.Plugins.Attributes
 	/// <summary>
 	/// Defines a plugin attribute for specifying the name for a plugin.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple=false)]
+	[AttributeUsage(AttributeTargets.Class)]
 	public sealed class PluginNameAttribute : Attribute
 	{
 		private readonly string _name;

@@ -29,16 +29,14 @@
 //
 //	============================================================================
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 
 namespace Carbon.Common
 {
 	/// <summary>
 	/// Defines a cancellable EventArgs class containing a KeyedObject instance as the context.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public class KeyedObjectCancelEventArgs : ObjectCancelEventArgs 
 	{
 		/// <summary>

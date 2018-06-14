@@ -20,16 +20,12 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
 using System.Windows.Forms;
-
 using SDBees.DB;
+using SDBees.Plugs.TemplateBase;
 using SDBees.Plugs.TemplateTreeNode;
 
 namespace SDBees.ViewAdmin
@@ -46,7 +42,7 @@ namespace SDBees.ViewAdmin
                 mChildId = childId;
                 mChildType = childType;
             }
-        };
+        }
 
         private ViewAdminLinkHelper mParent;
         private TemplateTreenodeTag mTemplateTreenodeTag;
@@ -104,7 +100,7 @@ namespace SDBees.ViewAdmin
 
         private void ActionAddObject(string name, ListBoxTag tag, string parentType, Guid parentId)
         {
-            ViewRelation viewRel = new ViewRelation();
+            var viewRel = new ViewRelation();
             viewRel.SetDefaults(Database);
             viewRel.ViewId = mViewId;
             viewRel.ParentType = parentType;
@@ -122,8 +118,8 @@ namespace SDBees.ViewAdmin
         private void ActionAddSelectedObjects(bool topLevel)
         {
             ListView lv = null;
-            string parentType = ViewRelation.m_StartNodeValue;
-            Guid parentId = Guid.Empty;
+            var parentType = ViewRelation.m_StartNodeValue;
+            var parentId = Guid.Empty;
             if (topLevel)
             {
                 lv = m_listViewSibling;
@@ -156,8 +152,8 @@ namespace SDBees.ViewAdmin
             Error _error = null;
             ViewAdmin.Current.MyDBManager.Database.Open(true, ref _error);
 
-            this.ListSibling.Enabled = true;
-            this.ListChilds.Enabled = true;
+            ListSibling.Enabled = true;
+            ListChilds.Enabled = true;
 
             FillListControlSibling();
             FillListControlChildren();
@@ -174,40 +170,40 @@ namespace SDBees.ViewAdmin
             {
                 // Zunächst die PlugIn-Typen bestimmen, die unter dem aktuellen Knoten eingefügt werden können...
                 Error error = null;
-                ArrayList objectIds = new ArrayList();
+                var objectIds = new ArrayList();
                 ViewDefinition.FindViewDefinitionsByParentType(Database, ref objectIds, mViewId, mTemplateTreenodeTag.NodeTypeOf, ref error);
 
                 m_listViewChilds.BeginUpdate();
 
-                foreach (object objectId in objectIds)
+                foreach (var objectId in objectIds)
                 {
-                    ViewDefinition viewDef = new ViewDefinition();
+                    var viewDef = new ViewDefinition();
                     if (viewDef.Load(Database, objectId, ref error))
                     {
                         // Jetzt aus dem PlugIn alle persistenten Objekte bestimmen...
-                        TemplateTreenode treenodePlugin = TemplateTreenode.GetPluginForType(viewDef.ChildType);
+                        var treenodePlugin = TemplateTreenode.GetPluginForType(viewDef.ChildType);
 
                         if (treenodePlugin.AllowRelationLinkingAsChild)
                         {
-                            this.m_listViewChilds.Enabled = true;
-                            ArrayList childIds = new ArrayList();
+                            m_listViewChilds.Enabled = true;
+                            var childIds = new ArrayList();
                             treenodePlugin.FindAllObjects(Database, ref childIds, ref error);
 
                             foreach (string childIdString in childIds)
                             {
                                 // Prüfen ob dieses Objekt bereits in dieser View referenziert wird...
-                                Guid childId = new Guid(childIdString);
-                                ArrayList _lstChildRelations = new ArrayList();
-                                int iRes = ViewRelation.FindViewRelationByChildIdParentType(Database, new Guid(childIdString), viewDef.ParentType, ref _lstChildRelations, ref error);
+                                var childId = new Guid(childIdString);
+                                var _lstChildRelations = new ArrayList();
+                                var iRes = ViewRelation.FindViewRelationByChildIdParentType(Database, new Guid(childIdString), viewDef.ParentType, ref _lstChildRelations, ref error);
 
                                 if (iRes <= 0)
                                 {
-                                    SDBees.Plugs.TemplateBase.TemplateDBBaseData baseData = treenodePlugin.CreateDataObject();
+                                    var baseData = treenodePlugin.CreateDataObject();
                                     if (baseData.Load(Database, childId, ref error))
                                     {
-                                        string imageKey = TemplateTreenode.getImageForPluginType(viewDef.ChildType, m_listViewChilds.SmallImageList);
+                                        var imageKey = TemplateTreenode.getImageForPluginType(viewDef.ChildType, m_listViewChilds.SmallImageList);
 
-                                        ListViewItem lvi = m_listViewChilds.Items.Add(baseData.Name);
+                                        var lvi = m_listViewChilds.Items.Add(baseData.Name);
                                         lvi.ImageKey = imageKey;
                                         lvi.Tag = new ListBoxTag(childId, viewDef.ChildType);
                                     }
@@ -217,7 +213,7 @@ namespace SDBees.ViewAdmin
                         }
                         else
                         {
-                            this.m_listViewChilds.Enabled = false;
+                            m_listViewChilds.Enabled = false;
                         }
                     }
                 }
@@ -235,42 +231,42 @@ namespace SDBees.ViewAdmin
 
             // Zunächst die PlugIn-Typen bestimmen, die parallel zum aktuellen Knoten eingefügt werden können...
             Error error = null;
-            ArrayList objectIds = new ArrayList();
-            string parentType = ViewRelation.m_StartNodeValue;
+            var objectIds = new ArrayList();
+            var parentType = ViewRelation.m_StartNodeValue;
             if (mParentTemplateTreenodeTag != null)
             {
                 parentType = mParentTemplateTreenodeTag.NodeTypeOf;
             }
             ViewDefinition.FindViewDefinitionsByParentType(Database, ref objectIds, mViewId, parentType, ref error);
 
-            foreach (object objectId in objectIds)
+            foreach (var objectId in objectIds)
             {
-                ViewDefinition viewDef = new ViewDefinition();
+                var viewDef = new ViewDefinition();
                 if (viewDef.Load(Database, objectId, ref error))
                 {
                     // Jetzt aus dem PlugIn alle persistenten Objekte bestimmen...
-                    TemplateTreenode treenodePlugin = TemplateTreenode.GetPluginForType(viewDef.ChildType);
+                    var treenodePlugin = TemplateTreenode.GetPluginForType(viewDef.ChildType);
 
                     if (treenodePlugin.AllowRelationLinkingAsSibling)
                     {
-                        this.m_listViewSibling.Enabled = true;
+                        m_listViewSibling.Enabled = true;
 
-                        ArrayList childIds = new ArrayList();
+                        var childIds = new ArrayList();
                         treenodePlugin.FindAllObjects(Database, ref childIds, ref error);
 
                         foreach (string childIdString in childIds)
                         {
                             // Prüfen ob dieses Objekt bereits in dieser View referenziert wird...
-                            Guid childId = new Guid(childIdString);
-                            ArrayList _lstChildRelations = new ArrayList();
+                            var childId = new Guid(childIdString);
+                            var _lstChildRelations = new ArrayList();
                             if (ViewRelation.FindViewRelationByChildIdParentType(Database, childId, parentType, ref _lstChildRelations, ref error) <= 0)
                             {
-                                SDBees.Plugs.TemplateBase.TemplateDBBaseData baseData = treenodePlugin.CreateDataObject();
+                                var baseData = treenodePlugin.CreateDataObject();
                                 if (baseData.Load(Database, childId, ref error))
                                 {
-                                    string imageKey = TemplateTreenode.getImageForPluginType(viewDef.ChildType, m_listViewSibling.SmallImageList);
+                                    var imageKey = TemplateTreenode.getImageForPluginType(viewDef.ChildType, m_listViewSibling.SmallImageList);
 
-                                    ListViewItem lvi = m_listViewSibling.Items.Add(baseData.Name);
+                                    var lvi = m_listViewSibling.Items.Add(baseData.Name);
                                     lvi.ImageKey = imageKey;
                                     lvi.Tag = new ListBoxTag(childId, viewDef.ChildType);
                                 }
@@ -279,7 +275,7 @@ namespace SDBees.ViewAdmin
                     }
                     else
                     {
-                        this.m_listViewSibling.Enabled = false;
+                        m_listViewSibling.Enabled = false;
                     }
                 }
             }

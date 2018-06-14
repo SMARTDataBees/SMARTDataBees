@@ -1,61 +1,64 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Text;
+using EXOE.CsharpHelper;
+using SDBees.Core.Connectivity.SDBeesLink.Service;
 
 namespace SDBees.Core.Connectivity
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ConnectivityHost
     {
-        static ServiceHost m_serviceHost;
+        private static ServiceHost _serviceHost;
 
         private ConnectivityHost()
         {
-            m_serviceHost = new ServiceHost(typeof(SDBeesLink.Service.SDBeesExternalPluginService));
-            m_serviceHost.Faulted += new EventHandler(m_serviceHost_Faulted);
-            m_serviceHost.Opening += m_serviceHost_Opening;
+            _serviceHost = new ServiceHost(typeof(SDBeesExternalPluginService));
         }
 
-        void m_serviceHost_Opening(object sender, EventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
-
-        void m_serviceHost_Faulted(object sender, EventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
-
-        public void OpenHost()
+        /// <summary>
+        /// Opens the host connection.
+        /// </summary>
+        public void Open()
         {
             try
             {
-                m_serviceHost.Open();
-                if (m_serviceHost.State == CommunicationState.Opened)
-                {
-                }
+                _serviceHost.Open();
             }
-            catch (System.ObjectDisposedException ex)
-            { }
-            catch (System.ServiceModel.CommunicationObjectFaultedException ex)
-            { }
-            catch (System.TimeoutException ex)
-            { }
-            catch (System.InvalidOperationException ex)
-            { }
-            catch (System.Exception ex)
-            { }
+            catch (ObjectDisposedException)
+            {
+
+            }
+            catch (CommunicationObjectFaultedException)
+            {
+
+            }
+            catch (TimeoutException)
+            {
+
+            }
+            catch (InvalidOperationException)
+            {
+
+            }
+            catch (Exception)
+            {
+                
+            }
         }
 
-        public string HostState()
-        {
-            return m_serviceHost.State.ToString();
-        }
 
-        public static ConnectivityHost Instance()
-        {
-            return EXOE.CsharpHelper.Singleton<ConnectivityHost>.Instance;
-        }
+        /// <summary>
+        /// Host state.
+        /// </summary>
+        /// <returns>returns the current state of the host</returns>
+        public string HostState() => _serviceHost.State.ToString();
+
+        /// <summary>
+        /// Connectivity host
+        /// </summary>
+        /// <returns>Returns the host instance</returns>
+        public static ConnectivityHost Instance() => Singleton<ConnectivityHost>.Instance;
     }
 }

@@ -1,20 +1,17 @@
-﻿using Carbon.Plugins;
-using SDBees.Plugs.Properties;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿using System;
+using Carbon.Plugins;
+using SDBees.Core.Connectivity.SDBeesLink.UI;
 using SDBees.Core.Model;
+using SDBees.Plugs.Properties;
 
 namespace SDBees.Core.Connectivity.SDBeesLink.Instances
 {
-    public class SDBeesDataSetEntityController : SDBees.Plugs.Properties.PropertyBag , IComparable<SDBeesDataSetEntityController>
+    public class SDBeesDataSetEntityController : PropertyBag , IComparable<SDBeesDataSetEntityController>
     {
         private PluginContext m_context;
         private SDBeesEntity m_ent;
-        private SDBeesEntityDefinition m_entityDefinition = null;
-        private SDBeesMappedEntityDefinition m_mappedEntityDefinition = null;
+        private SDBeesEntityDefinition m_entityDefinition;
+        private SDBeesMappedEntityDefinition m_mappedEntityDefinition;
 
         public SDBeesEntity MyEntity
         {
@@ -34,15 +31,15 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Instances
 
             m_mappedEntityDefinition = mappedEntityDefinition;
 
-            this.SetValue += SDBeesDataSetEntityController_SetValue;
-            this.GetValue += SDBeesDataSetEntityController_GetValue;
+            SetValue += SDBeesDataSetEntityController_SetValue;
+            GetValue += SDBeesDataSetEntityController_GetValue;
 
             FillPropertyRow();
         }
 
         void SDBeesDataSetEntityController_GetValue(object sender, PropertySpecEventArgs e)
         {
-            foreach (SDBeesProperty item in m_ent.Properties)
+            foreach (var item in m_ent.Properties)
             {
                 if (item.DefinitionId.ToString() == e.Property.Name)
                     e.Value = item.InstanceValue.ObjectValue;
@@ -52,7 +49,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Instances
 
         void SDBeesDataSetEntityController_SetValue(object sender, PropertySpecEventArgs e)
         {
-            foreach (SDBeesProperty item in m_ent.Properties)
+            foreach (var item in m_ent.Properties)
             {
                 if (item.DefinitionId.ToString() == e.Property.Name)
                 {
@@ -74,20 +71,20 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Instances
         {
             if (m_entityDefinition != null)
             {
-                bool _propFound = false;
-                foreach (SDBeesProperty prop in m_ent.Properties)
+                var _propFound = false;
+                foreach (var prop in m_ent.Properties)
                 {
                     _propFound = false;
-                    foreach (SDBeesPropertyDefinition propdef in m_entityDefinition.Properties)
+                    foreach (var propdef in m_entityDefinition.Properties)
                     {
                         if (propdef.Id == prop.DefinitionId)
                         {
-                            bool mappedPropertyDefinitionEditable = true;
+                            var mappedPropertyDefinitionEditable = true;
 
-                            SDBeesMappedEntityDefinition mappedEntityDefinition = m_mappedEntityDefinition;
+                            var mappedEntityDefinition = m_mappedEntityDefinition;
                             if (mappedEntityDefinition != null)
                             {
-                                foreach (SDBeesMappedPropertyDefinition mappedPropertyDefiniton in mappedEntityDefinition.PropertyMappings)
+                                foreach (var mappedPropertyDefiniton in mappedEntityDefinition.PropertyMappings)
                                 {
                                     if (mappedPropertyDefiniton.PropertyDefinitionId == prop.DefinitionId)
                                     {
@@ -97,12 +94,12 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Instances
                                 }
                             }
 
-                            PropertySpec spec = new PropertySpec(prop.DefinitionId.ToString(), prop.InstanceValue.ObjectValue.GetType().ToString());
+                            var spec = new PropertySpec(prop.DefinitionId.ToString(), prop.InstanceValue.ObjectValue.GetType().ToString());
                             spec.ConverterTypeName = propdef.PropertyTypeConverter;
                             spec.EditorTypeName = propdef.PropertyUiTypeEditor;
                             spec.ReadOnlyProperty = mappedPropertyDefinitionEditable && propdef.Editable ? false : true;
 
-                            this.Properties.Add(spec);
+                            Properties.Add(spec);
 
                             _propFound = true;
                             break;
@@ -110,9 +107,9 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Instances
                     }
                     if(!_propFound)
                     {
-                        PropertySpec spec = new PropertySpec(prop.DefinitionId.ToString(), prop.InstanceValue.ObjectValue.GetType().ToString());
+                        var spec = new PropertySpec(prop.DefinitionId.ToString(), prop.InstanceValue.ObjectValue.GetType().ToString());
                         spec.ReadOnlyProperty = true;
-                        this.Properties.Add(spec);
+                        Properties.Add(spec);
                     }
                 }
             }
@@ -120,11 +117,11 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Instances
 
         internal string GetColumnValueByName()
         {
-            string result = "";
+            var result = "";
 
-            string colName = SDBees.Core.Connectivity.SDBeesLink.UI.SDBeesDataSetDLG.SortColumn.Name;
+            var colName = SDBeesDataSetDLG.SortColumn.Name;
 
-            foreach (SDBeesProperty item in m_ent.Properties)
+            foreach (var item in m_ent.Properties)
             {
                 if (item.DefinitionId == colName)
                 {
@@ -137,7 +134,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Instances
 
         public int CompareTo(SDBeesDataSetEntityController other)
         {            
-            return this.GetColumnValueByName().CompareTo(other.GetColumnValueByName());
+            return GetColumnValueByName().CompareTo(other.GetColumnValueByName());
         }
     }
 }

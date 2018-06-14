@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 
 namespace SDBees.Utils
 {
@@ -11,8 +7,8 @@ namespace SDBees.Utils
         public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
         {
             // Get the subdirectories for the specified directory.
-            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
-            DirectoryInfo[] dirs = dir.GetDirectories();
+            var dir = new DirectoryInfo(sourceDirName);
+            var dirs = dir.GetDirectories();
 
             if (!dir.Exists)
             {
@@ -28,19 +24,19 @@ namespace SDBees.Utils
             }
 
             // Get the files in the directory and copy them to the new location.
-            FileInfo[] files = dir.GetFiles();
-            foreach (FileInfo file in files)
+            var files = dir.GetFiles();
+            foreach (var file in files)
             {
-                string temppath = Path.Combine(destDirName, file.Name);
+                var temppath = Path.Combine(destDirName, file.Name);
                 file.CopyTo(temppath, false);
             }
 
             // If copying subdirectories, copy them and their contents to new location. 
             if (copySubDirs)
             {
-                foreach (DirectoryInfo subdir in dirs)
+                foreach (var subdir in dirs)
                 {
-                    string temppath = Path.Combine(destDirName, subdir.Name);
+                    var temppath = Path.Combine(destDirName, subdir.Name);
                     DirectoryCopy(subdir.FullName, temppath, copySubDirs);
                 }
             }
@@ -48,10 +44,10 @@ namespace SDBees.Utils
 
         public static string GetTempDir()
         {
-            string temppath = System.IO.Path.GetTempPath();
-            string path = System.IO.Path.Combine(temppath, "SDBees");
-            if (!System.IO.Directory.Exists(path))
-                System.IO.Directory.CreateDirectory(path);
+            var temppath = Path.GetTempPath();
+            var path = Path.Combine(temppath, "SDBees");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
             return path;
         }
 
@@ -61,18 +57,18 @@ namespace SDBees.Utils
 
             string path = null;
 
-            if (System.IO.Path.IsPathRooted(fileName))
+            if (Path.IsPathRooted(fileName))
             {
-                path = System.IO.Path.GetDirectoryName(fileName);
+                path = Path.GetDirectoryName(fileName);
             }
             else
             {
-                path = Path.Combine(SDBees.Utils.DirectoryTools.GetTempDir(), System.IO.Path.GetDirectoryName(fileName));
+                path = Path.Combine(GetTempDir(), Path.GetDirectoryName(fileName));
             }
 
-            if (!System.IO.Directory.Exists(path))
+            if (!Directory.Exists(path))
             {
-                System.IO.Directory.CreateDirectory(path);
+                Directory.CreateDirectory(path);
             }
 
             result = Path.Combine(path, Path.GetFileName(fileName));

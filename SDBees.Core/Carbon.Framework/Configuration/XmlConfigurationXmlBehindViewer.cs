@@ -30,10 +30,7 @@
 //	============================================================================
 
 using System;
-using System.Collections;
 using System.ComponentModel;
-using System.Drawing;
-using System.Data;
 using System.Windows.Forms;
 
 namespace Carbon.Configuration
@@ -41,15 +38,15 @@ namespace Carbon.Configuration
 	/// <summary>
 	/// Summary description for XmlConfigurationXmlBehindViewer.
 	/// </summary>
-	public class XmlConfigurationXmlBehindViewer : System.Windows.Forms.UserControl
+	public class XmlConfigurationXmlBehindViewer : UserControl
 	{
-		private System.Windows.Forms.TextBox textBoxXml;
-		private System.Windows.Forms.CheckBox checkBoxWordWrap;
+		private TextBox textBoxXml;
+		private CheckBox checkBoxWordWrap;
 
 		/// <summary> 
 		/// Required designer variable.
 		/// </summary>
-		private System.ComponentModel.Container components = null;
+		private Container components = null;
 
 		public XmlConfigurationXmlBehindViewer()
 		{
@@ -123,9 +120,9 @@ namespace Carbon.Configuration
 		}
 		#endregion
 
-		private void checkBoxWordWrap_CheckedChanged(object sender, System.EventArgs e)
+		private void checkBoxWordWrap_CheckedChanged(object sender, EventArgs e)
 		{
-			this.textBoxXml.WordWrap = checkBoxWordWrap.Checked;
+			textBoxXml.WordWrap = checkBoxWordWrap.Checked;
 		}
 
 		/// <summary>
@@ -135,11 +132,11 @@ namespace Carbon.Configuration
 		{
 			get
 			{
-				return this.textBoxXml.Text;
+				return textBoxXml.Text;
 			}
 			set
 			{
-				this.textBoxXml.Text = value;
+				textBoxXml.Text = value;
 			}
 		}
 	}

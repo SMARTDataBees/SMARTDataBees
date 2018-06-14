@@ -149,7 +149,7 @@ namespace SDBees.Core.Model.Math
         /// <summary>
         /// Get type identifier
         /// </summary>
-        protected override Unit.UnitType Type
+        protected override UnitType Type
         {
             get { return UnitType.Inch; }
         }

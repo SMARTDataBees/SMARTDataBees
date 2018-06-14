@@ -20,17 +20,15 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
-using System.Windows.Forms;
-using System.IO;
 using System.Diagnostics;
-
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
 using SDBees.DB;
 using SDBees.Plugs.TemplateTreeNode;
 
@@ -41,8 +39,8 @@ namespace SDBees.EDM
 		internal class TreeNodeTag
 		{
 			internal string mFullpath = "";
-			internal bool mIsDirectory = false;
-			internal EDMBaseData mBaseData = null;
+			internal bool mIsDirectory;
+			internal EDMBaseData mBaseData;
 
 			internal bool IsRootDirectory
 			{
@@ -55,11 +53,11 @@ namespace SDBees.EDM
 				mIsDirectory = isDirectory;
 				mBaseData = baseData;
 			}
-		};
+		}
 
 		private TemplateTreenodeTag mTemplateTreenodeTag;
 
-		List<EDMTreeNodeHelper> _allEDMHelperPlugins = null;
+		List<EDMTreeNodeHelper> _allEDMHelperPlugins;
 
 		public TemplateTreenodeTag TemplateTreenodeTag
 		{
@@ -69,7 +67,7 @@ namespace SDBees.EDM
 
 		public Database Database
 		{
-			get { return SDBees.DB.SDBeesDBConnection.Current.Database; }
+			get { return SDBeesDBConnection.Current.Database; }
 		}
 
 		public void Refresh()
@@ -85,7 +83,7 @@ namespace SDBees.EDM
 		private void EDMUserControl1_Load(object sender, EventArgs e)
 		{
 			// Attach an event handler for the ContextMenuStrip control's Opening event.
-			contextMenu.Opening += new System.ComponentModel.CancelEventHandler(cms_Opening);
+			contextMenu.Opening += cms_Opening;
 
 			if (!DesignMode)
 			{
@@ -94,9 +92,9 @@ namespace SDBees.EDM
 
 			//Die HelperPlugins für den EDM-Manager besorgen
 			_allEDMHelperPlugins = EDMTreeNodeHelper.GetAllPlugins();
-			if (this._allEDMHelperPlugins.Count > 0)
+			if (_allEDMHelperPlugins.Count > 0)
 			{
-				this.neuToolStripMenuItemPlugins.Visible = true;
+				neuToolStripMenuItemPlugins.Visible = true;
 			}
 		}
 
@@ -108,7 +106,7 @@ namespace SDBees.EDM
 			if (mTemplateTreenodeTag != null)
 			{
 				// Is required for multiple purposes...
-				EDMManager manager = EDMManager.Current;
+				var manager = EDMManager.Current;
 
 				// Suppress repainting the TreeView until all the objects have been created.
 				tvFolders.BeginUpdate();
@@ -118,18 +116,18 @@ namespace SDBees.EDM
 				Error error = null;
 				if (manager.FindEDMDatasForPlugin(Database, PluginName, ref objectIds, ref error) > 0)
 				{
-					foreach (object objectId in objectIds)
+					foreach (var objectId in objectIds)
 					{
-						EDMBaseData baseData = new EDMBaseData();
+						var baseData = new EDMBaseData();
 						baseData.Load(Database, objectId, ref error);
 
 						if (error != null)
 							break;
 
-						string filespec = baseData.FileSpec;
-						string folderPath = baseData.FullPathname;
+						var filespec = baseData.FileSpec;
+						var folderPath = baseData.FullPathname;
 
-						DirectoryInfo folderInfo = new DirectoryInfo(folderPath);
+						var folderInfo = new DirectoryInfo(folderPath);
 						AddDirectory(folderInfo, tvFolders.Nodes, baseData);
 					}
 				}
@@ -139,18 +137,18 @@ namespace SDBees.EDM
 				error = null;
 				if (manager.FindEDMDatasForObject(Database, PluginName, mTemplateTreenodeTag.NodeGUID, ref objectIds, ref error) > 0)
 				{
-					foreach (object objectId in objectIds)
+					foreach (var objectId in objectIds)
 					{
-						EDMBaseData baseData = new EDMBaseData();
+						var baseData = new EDMBaseData();
 						baseData.Load(Database, objectId, ref error);
 
 						if (error != null)
 							break;
 
-						string filespec = baseData.FileSpec;
-						string folderPath = baseData.FullPathname;
+						var filespec = baseData.FileSpec;
+						var folderPath = baseData.FullPathname;
 
-						DirectoryInfo folderInfo = new DirectoryInfo(folderPath);
+						var folderInfo = new DirectoryInfo(folderPath);
 						AddDirectory(folderInfo, tvFolders.Nodes, baseData);
 					}
 				}
@@ -180,9 +178,9 @@ namespace SDBees.EDM
 				Directory.CreateDirectory(folderInfo.FullName);
 			}
 
-			TreeNode rootNode = new TreeNode(folderInfo.Name);
+			var rootNode = new TreeNode(folderInfo.Name);
 			rootNode.Tag = new TreeNodeTag(folderInfo.FullName, true, baseData);
-			int imageIndex = AddImage(folderInfo.FullName);
+			var imageIndex = AddImage(folderInfo.FullName);
 			if (imageIndex >= 0)
 			{
 				rootNode.ImageIndex = imageIndex;
@@ -191,19 +189,19 @@ namespace SDBees.EDM
 			nodes.Add(rootNode);
 
 			// Add child directories recursively...
-			DirectoryInfo[] subFolders = folderInfo.GetDirectories();
+			var subFolders = folderInfo.GetDirectories();
 
 			// Display the names of the directories.
-			foreach (DirectoryInfo subFolder in subFolders)
+			foreach (var subFolder in subFolders)
 			{
 				AddDirectory(subFolder, rootNode.Nodes, null);
 			}
 
 			// Add files...
-			FileInfo[] files = folderInfo.GetFiles();
+			var files = folderInfo.GetFiles();
 
 			// Display the names of the directories.
-			foreach (FileInfo file in files)
+			foreach (var file in files)
 			{
 				AddFile(file, rootNode.Nodes);
 			}
@@ -211,9 +209,9 @@ namespace SDBees.EDM
    
 		private void AddFile(FileInfo fileInfo, TreeNodeCollection nodes)
 		{
-			TreeNode rootNode = new TreeNode(fileInfo.Name);
+			var rootNode = new TreeNode(fileInfo.Name);
 			rootNode.Tag = new TreeNodeTag(fileInfo.FullName, false, null);
-			int imageIndex = AddImage(fileInfo.FullName);
+			var imageIndex = AddImage(fileInfo.FullName);
 			if (imageIndex >= 0)
 			{
 				rootNode.ImageIndex = imageIndex;
@@ -224,15 +222,15 @@ namespace SDBees.EDM
   
 		private int AddImage(string fullPathName)
 		{
-			int imageIndex = -1;
+			var imageIndex = -1;
 
 			if (File.Exists(fullPathName) || Directory.Exists(fullPathName))
 			{
 				// Get Type Name
-				SHFILEINFO info = ShellGetFileInfo.GetFileInfo(fullPathName);
+				var info = ShellGetFileInfo.GetFileInfo(fullPathName);
 
 				// Get ICON
-				Icon fileIcon = System.Drawing.Icon.FromHandle(info.hIcon);
+				var fileIcon = Icon.FromHandle(info.hIcon);
 
 				if (tvFolders.ImageList == null)
 				{
@@ -247,12 +245,12 @@ namespace SDBees.EDM
 
 		private void EnableControls()
 		{
-			TreeNode node = tvFolders.SelectedNode;
-			bool treenodeTagSelected = (mTemplateTreenodeTag != null);
+			var node = tvFolders.SelectedNode;
+			var treenodeTagSelected = (mTemplateTreenodeTag != null);
 
 			if (node != null)
 			{
-				TreeNodeTag tag = (TreeNodeTag)node.Tag;
+				var tag = (TreeNodeTag)node.Tag;
 
 				menuOpen.Enabled = true;
 				menuAdd.Enabled = tag.mIsDirectory;
@@ -268,20 +266,16 @@ namespace SDBees.EDM
 
 				if (tag.mIsDirectory)
 				{
-					foreach (EDMTreeNodeHelper treenodePlugin in _allEDMHelperPlugins)
+					foreach (var treenodePlugin in _allEDMHelperPlugins)
 					{
 						if (treenodePlugin != null)
 						{
 							if (treenodePlugin.NewItemsMenue() != null)
 							{
-								this.neuToolStripMenuItemPlugins.DropDownItems.Add(treenodePlugin.NewItemsMenue());   
+								neuToolStripMenuItemPlugins.DropDownItems.Add(treenodePlugin.NewItemsMenue());   
 							}
 						}
 					}
-				}
-				else
-				{
-					//TBD: Das Handling für die registrierten Extensions
 				}
 			}
 			else
@@ -304,7 +298,7 @@ namespace SDBees.EDM
 		{
 			if (selectedNode != null)
 			{
-				TreeNodeTag tag = (TreeNodeTag)selectedNode.Tag;
+				var tag = (TreeNodeTag)selectedNode.Tag;
 
 				if (!tag.mIsDirectory && File.Exists(tag.mFullpath))
 				{
@@ -315,15 +309,15 @@ namespace SDBees.EDM
 	   
 		private void ActionAdd(TreeNode selectedNode)
 		{
-			TreeNode node = selectedNode;
+			var node = selectedNode;
 			if (node == null)
 				return;
 
-			TreeNodeTag tag = (TreeNodeTag)node.Tag;
+			var tag = (TreeNodeTag)node.Tag;
 			if (!tag.mIsDirectory)
 				return;
 
-			OpenFileDialog dlg = new OpenFileDialog();
+			var dlg = new OpenFileDialog();
 			dlg.Title = "Dateien hinzufügen";
 			dlg.CheckFileExists = true;
 
@@ -335,18 +329,18 @@ namespace SDBees.EDM
 
 			if (dlg.ShowDialog() == DialogResult.OK)
 			{
-				int numCopied = 0;
+				var numCopied = 0;
 
-				foreach (string filename in dlg.FileNames)
+				foreach (var filename in dlg.FileNames)
 				{
-					FileInfo fileInfo = new FileInfo(filename);
-					string destinationFilename = tag.mFullpath + "\\" + fileInfo.Name;
+					var fileInfo = new FileInfo(filename);
+					var destinationFilename = tag.mFullpath + "\\" + fileInfo.Name;
 
-					bool copyFile = true;
-					bool fileExists = File.Exists(destinationFilename);
+					var copyFile = true;
+					var fileExists = File.Exists(destinationFilename);
 					if (fileExists)
 					{
-						string msg = "Datei '" + fileInfo.Name + "' ist bereits vorhanden. Soll diese überschrieben werden?";
+						var msg = "Datei '" + fileInfo.Name + "' ist bereits vorhanden. Soll diese überschrieben werden?";
 						if (MessageBox.Show(msg, "Datei überschreiben", MessageBoxButtons.YesNo) == DialogResult.No)
 						{
 							copyFile = false;
@@ -360,7 +354,7 @@ namespace SDBees.EDM
 
 						if (!fileExists)
 						{
-							FileInfo destInfo = new FileInfo(destinationFilename);
+							var destInfo = new FileInfo(destinationFilename);
 							AddFile(destInfo, node.Nodes);
 						}
 					}
@@ -376,11 +370,11 @@ namespace SDBees.EDM
    
 		private void ActionDelete(TreeNode selectedNode)
 		{
-			TreeNode node = selectedNode;
+			var node = selectedNode;
 			if (node == null)
 				return;
 
-			TreeNodeTag tag = (TreeNodeTag)node.Tag;
+			var tag = (TreeNodeTag)node.Tag;
 			if (tag.IsRootDirectory)
 			{
 				MessageBox.Show("Hauptverzeichnisse dürfen nicht gelöscht werden.");
@@ -388,9 +382,9 @@ namespace SDBees.EDM
 			}
 			if (tag.mIsDirectory)
 			{
-				DirectoryInfo info = new DirectoryInfo(tag.mFullpath);
+				var info = new DirectoryInfo(tag.mFullpath);
 
-				string msg = "Soll das Verzeichnis '" + info.Name + "' mit allen Unterverzeichnissen gelöscht werden?";
+				var msg = "Soll das Verzeichnis '" + info.Name + "' mit allen Unterverzeichnissen gelöscht werden?";
 				if (MessageBox.Show(msg, "Verzeichnis löschen", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
 					try
@@ -409,9 +403,9 @@ namespace SDBees.EDM
 			}
 			else
 			{
-				FileInfo info = new FileInfo(tag.mFullpath);
+				var info = new FileInfo(tag.mFullpath);
 
-				string msg = "Soll die Datei '" + info.Name + "' gelöscht werden?";
+				var msg = "Soll die Datei '" + info.Name + "' gelöscht werden?";
 				if (MessageBox.Show(msg, "Datei löschen", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
 					try
@@ -429,27 +423,27 @@ namespace SDBees.EDM
 	  
 		private void ActionLinkWithObject()
 		{
-			string objectId = mTemplateTreenodeTag.NodeGUID;
+			var objectId = mTemplateTreenodeTag.NodeGUID;
 			ActionLink(objectId);
 		}
   
 		private void ActionLinkWithPlugin()
 		{
-			string objectId = "";  // empty string means it's linked with the plugin
+			var objectId = "";  // empty string means it's linked with the plugin
 			ActionLink(objectId);
 		}
   
 		private void ActionLink(string objectId)
 		{
-			string rootDirectory = EDMManager.Current.RootDirectory;
+			var rootDirectory = EDMManager.Current.RootDirectory;
 
-			FolderBrowserDialog dlg = new FolderBrowserDialog();
+			var dlg = new FolderBrowserDialog();
 			dlg.SelectedPath = rootDirectory;
 			dlg.ShowNewFolderButton = true;
 
 			if (dlg.ShowDialog() == DialogResult.OK)
 			{
-				string folderName = dlg.SelectedPath;
+				var folderName = dlg.SelectedPath;
 
 				if (!EDMManager.Current.IsInRootDirectory(folderName))
 				{
@@ -457,9 +451,9 @@ namespace SDBees.EDM
 				}
 				else
 				{
-					string partialFoldername = EDMManager.Current.GetRelativePathname(folderName);
+					var partialFoldername = EDMManager.Current.GetRelativePathname(folderName);
 
-					EDMBaseData baseData = new EDMBaseData();
+					var baseData = new EDMBaseData();
 					baseData.SetDefaults(Database);
 					baseData.Name = partialFoldername;
 					baseData.PlugIn = mTemplateTreenodeTag.NodeTypeOf;
@@ -471,7 +465,7 @@ namespace SDBees.EDM
 
 					if (error == null)
 					{
-						DirectoryInfo folderInfo = new DirectoryInfo(folderName);
+						var folderInfo = new DirectoryInfo(folderName);
 						AddDirectory(folderInfo, tvFolders.Nodes, baseData);
 					}
 				}
@@ -480,7 +474,7 @@ namespace SDBees.EDM
    
 		private void ActionRemoveLink(TreeNode selectedNode)
 		{
-			TreeNodeTag tag = (TreeNodeTag)selectedNode.Tag;
+			var tag = (TreeNodeTag)selectedNode.Tag;
 
 			if (tag.mBaseData != null)
 			{
@@ -496,21 +490,21 @@ namespace SDBees.EDM
 
 		private void ActionCreateDirectory(TreeNode selectedNode)
 		{
-			TreeNodeTag tag = (TreeNodeTag)selectedNode.Tag;
+			var tag = (TreeNodeTag)selectedNode.Tag;
 
 			if (tag.mIsDirectory)
 			{
-				System.Windows.Forms.DialogResult dlgres = DialogResult.Abort;
-				string folderName = SDBees.DB.InputBox.Show("Name des neuen Verzeichnisses", "Verzeichnis erzeugen", ref dlgres);
+				var dlgres = DialogResult.Abort;
+				var folderName = InputBox.Show("Name des neuen Verzeichnisses", "Verzeichnis erzeugen", ref dlgres);
 				if (folderName != "")
 				{
-					string fullFolderName = tag.mFullpath + "\\" + folderName;
+					var fullFolderName = tag.mFullpath + "\\" + folderName;
 
 					try
 					{
 						Directory.CreateDirectory(fullFolderName);
 
-						DirectoryInfo folderInfo = new DirectoryInfo(fullFolderName);
+						var folderInfo = new DirectoryInfo(fullFolderName);
 						AddDirectory(folderInfo, selectedNode.Nodes, null);
 
 						if (!selectedNode.IsExpanded)
@@ -610,15 +604,15 @@ namespace SDBees.EDM
 		// This event handler is invoked when the ContextMenuStrip
 		// control's Opening event is raised. It will set the correct
 		// selectedNode in the TreeView
-		void cms_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+		void cms_Opening(object sender, CancelEventArgs e)
 		{
 			// Acquire references to the owning control and item.
-			TreeView treeView = contextMenu.SourceControl as TreeView;
+			var treeView = contextMenu.SourceControl as TreeView;
 
 			// Set the correct TreeNode depending on the MousePosition
 			// TBD: we need to igone this if the popup has been started from the Keyboard
-			Point mousePosition = treeView.PointToClient(Control.MousePosition);
-			TreeNode currentNode = treeView.GetNodeAt(mousePosition);
+			var mousePosition = treeView.PointToClient(MousePosition);
+			var currentNode = treeView.GetNodeAt(mousePosition);
 			treeView.SelectedNode = currentNode;
 
 

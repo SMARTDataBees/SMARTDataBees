@@ -20,8 +20,8 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -29,11 +29,7 @@ namespace SDBees.Security
 {
 	public class SecurityManager
 	{
-		public SecurityManager()
-		{
-		}
-
-		/// <summary>
+	    /// <summary>
 		/// Returns the Hash for the given String
 		/// </summary>
 		/// <param name="sInput"></param>
@@ -45,18 +41,18 @@ namespace SDBees.Security
 			try
 			{
 				//Encrypt the string
-				MD5CryptoServiceProvider md5Hasher = new MD5CryptoServiceProvider();
-				UTF8Encoding encoder = new UTF8Encoding();
+				var md5Hasher = new MD5CryptoServiceProvider();
+				var encoder = new UTF8Encoding();
 				hashedBytes = md5Hasher.ComputeHash(encoder.GetBytes(sInput));
 
 #if true
                 // Create a new Stringbuilder to collect the bytes
                 // and create a string.
-                StringBuilder sBuilder = new StringBuilder();
+                var sBuilder = new StringBuilder();
 
                 // Loop through each byte of the hashed data 
                 // and format each one as a hexadecimal string.
-                for (int i = 0; i < hashedBytes.Length; i++)
+                for (var i = 0; i < hashedBytes.Length; i++)
                 {
                     sBuilder.Append(hashedBytes[i].ToString("x2"));
                 }
@@ -74,7 +70,7 @@ namespace SDBees.Security
             }
 			catch (Exception ex)
 			{
-				System.Console.WriteLine(ex.ToString());
+				Console.WriteLine(ex.ToString());
 			}
 			return sReturn;
 		}

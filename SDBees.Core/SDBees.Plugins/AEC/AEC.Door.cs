@@ -161,7 +161,7 @@ namespace SDBees.Core.Plugins.AEC.Door
             if (MyDBManager != null)
             {
                 // Verify that the required Tables are created/updated in the database
-                Database database = MyDBManager.Database;
+                var database = MyDBManager.Database;
                 this.CreateDataObject().InitTableSchema(ref AECDoorBaseData.gTable, database);
             }
         }

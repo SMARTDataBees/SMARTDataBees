@@ -1,11 +1,14 @@
-﻿namespace SDBees.Core.Connectivity.SDBeesLink.UI
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace SDBees.Core.Connectivity.SDBeesLink.UI
 {
     partial class SDBeesExternalDocumentDLG
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -120,10 +123,10 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView m_dataGridViewExternalDocuments;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox m_textBox;
-        private System.Windows.Forms.ContextMenuStrip m_contextMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem m_modifyParentRelationsToolStripMenuItem;
+        private DataGridView m_dataGridViewExternalDocuments;
+        private Button button1;
+        private TextBox m_textBox;
+        private ContextMenuStrip m_contextMenuStrip;
+        private ToolStripMenuItem m_modifyParentRelationsToolStripMenuItem;
     }
 }

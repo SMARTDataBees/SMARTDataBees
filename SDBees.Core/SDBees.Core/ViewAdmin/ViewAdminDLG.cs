@@ -20,21 +20,14 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-
-using Carbon;
 using Carbon.Plugins;
-using Carbon.Plugins.Attributes;
-
-using SDBees.Plugs.Objects;
 using SDBees.DB;
+using SDBees.Plugs.Objects;
 using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Plugs.TreenodeHelper;
 
@@ -42,45 +35,44 @@ namespace SDBees.ViewAdmin
 {
     public partial class ViewAdminDLG : Form
     {
-        private ViewAdmin _refViewAdmin;
-        internal Hashtable _hashPlugins;
-        internal Hashtable _hashHelper;
+        private readonly ViewAdmin _refViewAdmin;
+        private readonly Hashtable _hashPlugins;
+        private readonly Hashtable _hashHelper;
 
         private Hashtable _hashViews;
-
-        private string _sCurrentViewID;
+        private string _currentViewId;
 
         public ToolStripComboBox _cmbViewSelector;
 
-        private bool _bConfigNodeSelected = false;
-        private bool _bConfigNodeofInsertion = false;
-
-        private int iLevelofInsertion = 0;
+        private bool _isConfigNodeSelected;
 
         public ViewAdminDLG(ViewAdmin baseRef)
         {
             try
             {
-                this._refViewAdmin = baseRef;
+                _refViewAdmin = baseRef;
                 InitializeComponent();
 
-                this._hashPlugins = new Hashtable();
-                this._hashHelper = new Hashtable();
-                this._hashViews = new Hashtable();
+                _hashPlugins = new Hashtable();
+                _hashHelper = new Hashtable();
+                _hashViews = new Hashtable();
 
-                this._sCurrentViewID = null;
+                _currentViewId = null;
 
-                this._cmbViewSelector = new ToolStripComboBox();
-                this._cmbViewSelector.Alignment = ToolStripItemAlignment.Right;
-                this._cmbViewSelector.Sorted = true;
-                this._cmbViewSelector.DropDownStyle = ComboBoxStyle.DropDownList;
+                _cmbViewSelector = new ToolStripComboBox
+                {
+                    Alignment = ToolStripItemAlignment.Right,
+                    Sorted = true,
+                    DropDownStyle = ComboBoxStyle.DropDownList
+                };
 
-                ContextMenu pluginListContextMenu = new ContextMenu();
-                pluginListContextMenu.Popup += new EventHandler(pluginListContextMenu_Popup);
-                this.m_listViewPlugins.ContextMenu = pluginListContextMenu;
+                var pluginListContextMenu = new ContextMenu();
+                pluginListContextMenu.Popup += pluginListContextMenu_Popup;
+                m_listViewPlugins.ContextMenu = pluginListContextMenu;
 
-                this._cmbViewSelector.SelectedIndexChanged += new EventHandler(_cmbViewSelector_SelectedIndexChanged);
-
+                _cmbViewSelector.SelectedIndexChanged += _cmbViewSelector_SelectedIndexChanged;
+                if (_cmbViewSelector.Items.Count > 0)
+                      _cmbViewSelector.SelectedIndex = 0;
 
             }
             catch (Exception ex)
@@ -96,104 +88,58 @@ namespace SDBees.ViewAdmin
 
             FillPluginList();
             FillHelperList();
-
-            //FillHashViews();
-
             FillViewComboBox();
         }
 
         void pluginListContextMenu_Popup(object sender, EventArgs e)
         {
-            this.m_listViewPlugins.ContextMenu.MenuItems.Clear();
+            m_listViewPlugins.ContextMenu.MenuItems.Clear();
 
-            if (this.m_listViewPlugins.SelectedItems.Count == 1)
+            if (m_listViewPlugins.SelectedItems.Count == 1)
             {
-                ListViewItem lvi = this.m_listViewPlugins.SelectedItems[0];
+                var lvi = m_listViewPlugins.SelectedItems[0];
 
-                MenuItem menuEditSchema = new MenuItem("Edit Schema of " + lvi.Text);
+                var menuEditSchema = new MenuItem("Edit Schema of " + lvi.Text);
                 menuEditSchema.Tag = lvi.Tag;
-                menuEditSchema.Click += new EventHandler(menuEditSchema_Click);
-                this.m_listViewPlugins.ContextMenu.MenuItems.Add(menuEditSchema);
+                menuEditSchema.Click += menuEditSchema_Click;
+                m_listViewPlugins.ContextMenu.MenuItems.Add(menuEditSchema);
             }
         }
 
         void menuEditSchema_Click(object sender, EventArgs e)
         {
-            MenuItem menuItem = (MenuItem)sender;
-            ObjectPlugin objPlug = (ObjectPlugin)menuItem.Tag;
+            var menuItem = (MenuItem)sender;
+            var objPlug = (ObjectPlugin)menuItem.Tag;
 
-            TemplateTreenode plugin = TemplateTreenode.GetPluginForType(objPlug.PluginType);
+            var plugin = TemplateTreenode.GetPluginForType(objPlug.PluginType);
             plugin.EditSchema();
         }
 
-        private void SelectCorrespondingNode(TemplateTreenodeTag tag, TreeNode trn)
-        {
-            try
-            {
-                if (this._bConfigNodeSelected != true)
-                {
-                    ObjectPlugin tntag = (ObjectPlugin)trn.Tag;
-                    if (tag.NodeTypeOf == tntag.PluginType)
-                    {
-                        this._bConfigNodeSelected = true;
-                        this.m_treeViewSystemConfig.SelectedNode = trn;
-                        this.iLevelofInsertion = GetLevel(this.m_treeViewSystemConfig.SelectedNode.FullPath);
-                        //break;
-                    }
-                    else if (trn.Nodes.Count > 0)
-                    {
-                        foreach (TreeNode tr in trn.Nodes)
-                        {
-                            SelectCorrespondingNode(tag, tr);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-        }
-
-        private int GetLevel(string p)
-        {
-            int iLevel = 0;
-            string[] aPathSegments = p.Split('\\');
-            iLevel = aPathSegments.Length - 1;
-            return iLevel;
-        }
-
-
-        void _treeviewSystem_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            //throw new Exception("The method or operation is not implemented.");
-        }
 
         private void ViewAdminDLG_Load(object sender, EventArgs e)
         {
             try
             {
-                this.toolStrip1.Items.Add(this._cmbViewSelector);
+                toolStrip1.Items.Add(_cmbViewSelector);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
-                //throw;
             }
         }
 
         void _cmbViewSelector_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Einlesen der Viewdaten
-            ObjectView objView = (ObjectView)this._hashViews[this._cmbViewSelector.SelectedItem.ToString()];
+            var objView = (ObjectView)_hashViews[_cmbViewSelector.SelectedItem.ToString()];
 
-            this._sCurrentViewID = objView.ViewGUID;
-            if (this._sCurrentViewID != null)
-                this._refViewAdmin.CurrentViewId = new Guid(this._sCurrentViewID);
+            _currentViewId = objView.ViewGUID;
+            if (_currentViewId != null)
+                _refViewAdmin.CurrentViewId = new Guid(_currentViewId);
             else
-                this._refViewAdmin.CurrentViewId = Guid.Empty;
+                _refViewAdmin.CurrentViewId = Guid.Empty;
 
-            this.LoadView(objView);
+            LoadView(objView);
 
             //Füllen der Pluginliste
 
@@ -202,26 +148,26 @@ namespace SDBees.ViewAdmin
 
         private void FillPluginList()
         {
-            this.m_listViewPlugins.SmallImageList = new ImageList();
+            m_listViewPlugins.SmallImageList = new ImageList();
+            m_listViewPlugins.Items.Clear();
 
-            foreach (ObjectPlugin obj in this._hashPlugins.Values)
+            foreach (ObjectPlugin obj in _hashPlugins.Values)
             {
-                string imageKey = TemplateTreenode.getImageForPluginType(obj.PluginType, this.m_listViewPlugins.SmallImageList);
+                var imageKey = TemplateTreenode.getImageForPluginType(obj.PluginType, m_listViewPlugins.SmallImageList);
 
-                ListViewItem item = new ListViewItem(obj.PluginName);
+                var item = new ListViewItem(obj.PluginName);
                 item.ImageKey = imageKey;
                 item.Tag = obj;
-                this.m_listViewPlugins.Items.Add(item);
+                m_listViewPlugins.Items.Add(item);
             }
         }
 
         private void FillHelperList()
         {
-            foreach (ObjectHelper obj in this._hashHelper.Values)
+            foreach (ObjectHelper obj in _hashHelper.Values)
             {
-                ListViewItem item = new ListViewItem(obj.PluginName);
-                item.Tag = obj;
-                this.m_listViewHelper.Items.Add(item);
+                var item = new ListViewItem(obj.PluginName) {Tag = obj};
+                m_listViewHelper.Items.Add(item);
             }
         }
 
@@ -231,31 +177,41 @@ namespace SDBees.ViewAdmin
 
             _cmbViewSelector.Items.Clear(); //Die Liste der vorhandenen Views löschen?
 
-            foreach (string var in this._hashViews.Keys)
+            foreach (string var in _hashViews.Keys)
             {
-                int iSelectedItem = _cmbViewSelector.Items.Add(var);
+                var iSelectedItem = _cmbViewSelector.Items.Add(var);
+            }
+            var propView = new ViewProperty();
+            Error error = null;
+            propView.Load(_refViewAdmin.MyDBManager.Database, _refViewAdmin.CurrentViewId, ref error);
+            var index = _cmbViewSelector.FindStringExact(propView.ViewName);
+            if (index >= 0)
+            {
+                _cmbViewSelector.SelectedIndex = index;
             }
         }
 
         private void FillHashViews()
         {
-            this._hashViews.Clear();
+            _hashViews.Clear();
 
             try
             {
-                ArrayList _idArray = new ArrayList();
-                Error _error = null;
-                ViewProperty.FindAllViewProperties(this._refViewAdmin.MyDBManager.Database, ref _idArray, ref _error);
+                var ids = new ArrayList();
+                Error error = null;
+                ViewProperty.FindAllViewProperties(_refViewAdmin.MyDBManager.Database, ref ids, ref error);
 
-                foreach (object var in _idArray)
+                foreach (var id in ids)
                 {
-                    ViewProperty propView = new ViewProperty();
-                    propView.Load(this._refViewAdmin.MyDBManager.Database, var, ref _error);
-                    ObjectView opbView = new ObjectView();
-                    opbView.ViewDescription = propView.ViewDescription;
-                    opbView.ViewName = propView.ViewName;
-                    opbView.ViewGUID = propView.Id.ToString();
-                    this._hashViews.Add(propView.ViewName, opbView);
+                    var propView = new ViewProperty();
+                    propView.Load(_refViewAdmin.MyDBManager.Database, id, ref error);
+                    var opbView = new ObjectView
+                    {
+                        ViewDescription = propView.ViewDescription,
+                        ViewName = propView.ViewName,
+                        ViewGUID = propView.Id.ToString()
+                    };
+                    _hashViews.Add(propView.ViewName, opbView);
                 }
             }
             catch (Exception ex)
@@ -267,52 +223,52 @@ namespace SDBees.ViewAdmin
 
         private void InitHelperHash()
         {
-            foreach (PluginDescriptor plgDesc in this._refViewAdmin.MyContext.PluginDescriptors)
+            foreach (PluginDescriptor plgDesc in _refViewAdmin.MyContext.PluginDescriptors)
             {
                 try
                 {
-                    Type t = plgDesc.PluginInstance.GetType();
-                    if (t.BaseType == typeof(SDBees.Plugs.TreenodeHelper.TemplateTreenodeHelper))
+                    var t = plgDesc.PluginInstance.GetType();
+                    if (t.BaseType == typeof(TemplateTreenodeHelper))
                     {
-                        SDBees.Plugs.TreenodeHelper.TemplateTreenodeHelper helperInstance = (SDBees.Plugs.TreenodeHelper.TemplateTreenodeHelper)plgDesc.PluginInstance;
+                        var helperInstance = (TemplateTreenodeHelper)plgDesc.PluginInstance;
                         Console.WriteLine(t.BaseType.ToString());
-                        ObjectHelper objHLP = new ObjectHelper();
+                        var objHLP = new ObjectHelper();
                         objHLP.PluginType = plgDesc.PluginType.ToString();
                         objHLP.PluginName = plgDesc.PluginName;
                         objHLP.PluginTabPageLabel = helperInstance.TabPageName();
                         objHLP.Plugin = plgDesc.PluginInstance;
-                        if (!this._hashHelper.ContainsKey(objHLP.PluginName))
-                            this._hashHelper.Add(objHLP.PluginName, objHLP);
+                        if (!_hashHelper.ContainsKey(objHLP.PluginName))
+                            _hashHelper.Add(objHLP.PluginName, objHLP);
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToString() + "\n" + plgDesc.ToString());
+                    MessageBox.Show(ex + "\n" + plgDesc);
                 }
             }
         }
 
         private void InitPluginHash()
         {
-            foreach (PluginDescriptor plgDesc in this._refViewAdmin.MyContext.PluginDescriptors)
+            foreach (PluginDescriptor plgDesc in _refViewAdmin.MyContext.PluginDescriptors)
             {
                 try
                 {
-                    Type t = plgDesc.PluginInstance.GetType();
-                    if (t.BaseType == typeof(SDBees.Plugs.TemplateTreeNode.TemplateTreenode))
+                    var t = plgDesc.PluginInstance.GetType();
+                    if (t.BaseType == typeof(TemplateTreenode))
                     {
                         //Console.WriteLine(t.BaseType.ToString());
-                        ObjectPlugin objPLG = new ObjectPlugin();
+                        var objPLG = new ObjectPlugin();
                         objPLG.PluginType = plgDesc.PluginType.ToString();
                         objPLG.PluginName = plgDesc.PluginName;
                         objPLG.Plugin = plgDesc.PluginInstance;
-                        if (!this._hashPlugins.ContainsKey(objPLG.PluginName))
-                            this._hashPlugins.Add(objPLG.PluginName, objPLG);
+                        if (!_hashPlugins.ContainsKey(objPLG.PluginName))
+                            _hashPlugins.Add(objPLG.PluginName, objPLG);
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToString() + "\n" + plgDesc.ToString());
+                    MessageBox.Show(ex + @"" + plgDesc);
                 }
             }
         }
@@ -320,7 +276,7 @@ namespace SDBees.ViewAdmin
         private void buttonNew_Click(object sender, EventArgs e)
         {
             //Die alte View sichern?
-            DialogResult dlgRes = DialogResult.None;
+            var dlgRes = DialogResult.None;
             if (_cmbViewSelector.Items.Count > 0)
             {
                 dlgRes = MessageBox.Show("Soll die aktuelle View gespeichert werden?", "View Sichern?", MessageBoxButtons.OKCancel);
@@ -329,30 +285,38 @@ namespace SDBees.ViewAdmin
             {
                 SaveView();
             }
-            ViewAdminAddNew _dlgNewView = new ViewAdminAddNew(ref this._hashViews);
+            var _dlgNewView = new ViewAdminAddNew(ref _hashViews);
             _dlgNewView.ShowDialog();
 
             try
             {
                 if (_dlgNewView.DialogResult == DialogResult.OK)
                 {
-                    if(this._hashViews.ContainsKey(_dlgNewView.ViewName))
-                        SaveViewProperty((ObjectView)this._hashViews[_dlgNewView.ViewName]);
 
-                    this.m_listViewPlugins.Items.Clear(); //Die Liste der verfügbaren Plugins löschen
+                    //if(this._hashViews.ContainsKey(_dlgNewView.ViewName))
+                    var opbView = new ObjectView();
+                    opbView.ViewDescription = _dlgNewView.ViewDescription;
+                    opbView.ViewName = _dlgNewView.ViewName;
+                    opbView.ViewGUID = _dlgNewView.ViewGuid;
+                    _hashViews.Add(_dlgNewView.ViewName, opbView);
+
+
+                    SaveViewProperty((ObjectView)_hashViews[_dlgNewView.ViewName]);
+
+                    m_listViewPlugins.Items.Clear(); //Die Liste der verfügbaren Plugins löschen
                     FillViewComboBox();
                     m_treeViewSystemConfig.Nodes.Clear(); //Die alte Treeview löschen
                     _cmbViewSelector.SelectedItem = _dlgNewView.ViewName;
                     // die ID setzen
-                    ObjectView objView = (ObjectView)this._hashViews[_dlgNewView.ViewName];
-                    this._sCurrentViewID = objView.ViewGUID;
-                    if (this._sCurrentViewID != null)
+                    var objView = (ObjectView)_hashViews[_dlgNewView.ViewName];
+                    _currentViewId = objView.ViewGUID;
+                    if (_currentViewId != null)
                     {
                         //this._refViewAdmin.CurrentViewId = new Guid(this._sCurrentViewID);
                     }
 
-                    this.FillPluginList();
-                    this.FillHelperList();
+                    FillPluginList();
+                    FillHelperList();
                 }
             }
             catch (Exception ex)
@@ -366,13 +330,13 @@ namespace SDBees.ViewAdmin
         {
             try
             {
-                DialogResult dlgRes = MessageBox.Show("Soll die aktuelle View gesichert werden?", "View Sichern", MessageBoxButtons.YesNo);
+                var dlgRes = MessageBox.Show("Soll die aktuelle View gesichert werden?", "View Sichern", MessageBoxButtons.YesNo);
 
                 if (dlgRes == DialogResult.Yes)
                 {
                     SaveView();
                 }
-                this.Close();
+                Close();
             }
             catch (Exception ex)
             {
@@ -383,7 +347,7 @@ namespace SDBees.ViewAdmin
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         #region SaveView
@@ -393,12 +357,12 @@ namespace SDBees.ViewAdmin
             // ViewRelations werden gelöscht
             DeleteViewRelations();
 
-            if (this.m_treeViewSystemConfig.TopNode != null)
+            if (m_treeViewSystemConfig.TopNode != null)
             {
-                if(this._cmbViewSelector.SelectedItem != null)
-                    this.SaveViewProperty((ObjectView)this._hashViews[this._cmbViewSelector.SelectedItem.ToString()]);
+                if(_cmbViewSelector.SelectedItem != null)
+                    SaveViewProperty((ObjectView)_hashViews[_cmbViewSelector.SelectedItem.ToString()]);
 
-                foreach (TreeNode trn in this.m_treeViewSystemConfig.Nodes)
+                foreach (TreeNode trn in m_treeViewSystemConfig.Nodes)
                 {
                     SaveViewDefinition(trn, ViewRelation.m_StartNodeValue);
                 }
@@ -412,20 +376,20 @@ namespace SDBees.ViewAdmin
 
         private void DeleteViewRelations()
         {
-            if (this._sCurrentViewID == null)
+            if (_currentViewId == null)
                 return;
 
             Error error = null;
-            ArrayList lstEraseIds = new ArrayList();
-            ViewDefinition viewDef = new ViewDefinition();
+            var lstEraseIds = new ArrayList();
+            var viewDef = new ViewDefinition();
 
             try
             {
-                ViewDefinition.FindViewDefinitions(this._refViewAdmin.MyDBManager.Database, ref lstEraseIds,
-                    new Guid(this._sCurrentViewID), ref error);
-                foreach (object var in lstEraseIds)
+                ViewDefinition.FindViewDefinitions(_refViewAdmin.MyDBManager.Database, ref lstEraseIds,
+                    new Guid(_currentViewId), ref error);
+                foreach (var var in lstEraseIds)
                 {
-                    viewDef.Load(this._refViewAdmin.MyDBManager.Database, var, ref error);
+                    viewDef.Load(_refViewAdmin.MyDBManager.Database, var, ref error);
                     viewDef.Erase(ref error);
                 }
             }
@@ -440,29 +404,29 @@ namespace SDBees.ViewAdmin
             try
             {
                 Error error = null;
-                ArrayList lstViewProps = new ArrayList();
-                ViewProperty viewProp = new ViewProperty();
-                if (this._sCurrentViewID != null)
+                var lstViewProps = new ArrayList();
+                var viewProp = new ViewProperty();
+                if (_currentViewId != null)
                 {
                     // Falls die view bereits existiert, laden...
-                    viewProp.Load(this._refViewAdmin.MyDBManager.Database, this._sCurrentViewID, ref error);
+                    viewProp.Load(_refViewAdmin.MyDBManager.Database, _currentViewId, ref error);
 
                     Error.Display("View konnte nicht geladen werden", error);
                 }
                 else
                 {
-                    viewProp.SetDefaults(this._refViewAdmin.MyDBManager.Database);
+                    viewProp.SetDefaults(_refViewAdmin.MyDBManager.Database);
                 }
 
                 viewProp.ViewName = objView.ViewName;
                 viewProp.ViewDescription = objView.ViewDescription;
                 viewProp.Save(ref error);
 
-                if (this._sCurrentViewID == null)
+                if (_currentViewId == null)
                 {
-                    this._sCurrentViewID = viewProp.Id.ToString();
-                    objView.ViewGUID = this._sCurrentViewID;
-                    this._refViewAdmin.CurrentViewId = new Guid(this._sCurrentViewID);
+                    _currentViewId = viewProp.Id.ToString();
+                    objView.ViewGUID = _currentViewId;
+                    _refViewAdmin.CurrentViewId = new Guid(_currentViewId);
                 }
 
                 if (error != null)
@@ -490,14 +454,14 @@ namespace SDBees.ViewAdmin
                 }
 
                 Error error = null;
-                ViewDefinition viewDef = new ViewDefinition();
-                viewDef.Database = this._refViewAdmin.MyDBManager.Database;
-                ObjectPlugin objTag = (ObjectPlugin)trn.Tag;
+                var viewDef = new ViewDefinition();
+                viewDef.Database = _refViewAdmin.MyDBManager.Database;
+                var objTag = (ObjectPlugin)trn.Tag;
                 //viewDef.Id = new Guid(this._sCurrentViewID);
                 viewDef.ParentType = tParentType;
                 viewDef.ChildType = objTag.PluginType;
                 viewDef.ChildName = objTag.PluginName;
-                viewDef.ViewId = this._sCurrentViewID;
+                viewDef.ViewId = _currentViewId;
                 viewDef.Save(ref error);
 
                 if (error != null)
@@ -521,13 +485,13 @@ namespace SDBees.ViewAdmin
         /// </summary>
         private void LoadView(ObjectView objView)
         {
-            Database database = this._refViewAdmin.MyDBManager.Database;
+            var database = _refViewAdmin.MyDBManager.Database;
             Error error = null;
             database.Open(false, ref error);
 
-            this.m_treeViewSystemConfig.Nodes.Clear();
-            this.m_treeViewSystemConfig.ImageList = new ImageList();
-            this.LoadViewStartDefinition(objView);
+            m_treeViewSystemConfig.Nodes.Clear();
+            m_treeViewSystemConfig.ImageList = new ImageList();
+            LoadViewStartDefinition(objView);
 
             database.Close(ref error);
         }
@@ -539,37 +503,39 @@ namespace SDBees.ViewAdmin
                 if (objView.ViewGUID == null)
                     return;
 
-                ArrayList lstObjViewDefs = new ArrayList();
+                var lstObjViewDefs = new ArrayList();
                 Error error = null;
 
-                ViewDefinition.FindViewDefinitionsByParentType(this._refViewAdmin.MyDBManager.Database,
+                ViewDefinition.FindViewDefinitionsByParentType(_refViewAdmin.MyDBManager.Database,
                   ref lstObjViewDefs, new Guid(objView.ViewGUID), ViewRelation.m_StartNodeValue, ref error);
 
                 if (lstObjViewDefs.Count == 1)
                 {
-                    this._sCurrentViewID = objView.ViewGUID;
-                    this._refViewAdmin.CurrentViewId = new Guid(this._sCurrentViewID);
+                    _currentViewId = objView.ViewGUID;
+                    _refViewAdmin.CurrentViewId = new Guid(_currentViewId);
                 }
 
-                ViewDefinition viewDef = new ViewDefinition();
-                foreach (object var in lstObjViewDefs)
+                var viewDef = new ViewDefinition();
+                foreach (var var in lstObjViewDefs)
                 {
                     //Das Startteil herausfinden. Kann ja auch unsortiert sein ...
-                    viewDef.Load(this._refViewAdmin.MyDBManager.Database, var, ref error);
+                    viewDef.Load(_refViewAdmin.MyDBManager.Database, var, ref error);
                     if (viewDef.ParentType == ViewRelation.m_StartNodeValue)
                     {
-                        string imageKey = TemplateTreenode.getImageForPluginType(viewDef.ChildType, this.m_treeViewSystemConfig.ImageList);
+                        var imageKey = TemplateTreenode.getImageForPluginType(viewDef.ChildType, m_treeViewSystemConfig.ImageList);
 
-                        TreeNode trnPLG = new TreeNode(viewDef.ChildName);
+                        var trnPLG = new TreeNode(viewDef.ChildName);
                         trnPLG.ImageKey = imageKey;
                         trnPLG.SelectedImageKey = imageKey;
-                        ObjectPlugin objPLG = new ObjectPlugin();
-                        objPLG.PluginName = viewDef.ChildName;
-                        objPLG.PluginType = viewDef.ChildType;
-                        objPLG.ViewID = viewDef.ViewId;
-                        objPLG.ID = viewDef.Id.ToString();
+                        var objPLG = new ObjectPlugin
+                        {
+                            PluginName = viewDef.ChildName,
+                            PluginType = viewDef.ChildType,
+                            ViewID = viewDef.ViewId,
+                            ID = viewDef.Id.ToString()
+                        };
                         trnPLG.Tag = objPLG;
-                        this.m_treeViewSystemConfig.Nodes.Add(trnPLG);
+                        m_treeViewSystemConfig.Nodes.Add(trnPLG);
 
 
                         error = LoadViewSubDefinitions(objView, error, viewDef.ChildType, trnPLG);
@@ -585,21 +551,21 @@ namespace SDBees.ViewAdmin
 
         private Error LoadViewSubDefinitions(ObjectView objView, Error error, string sParentType, TreeNode trnPLGParent)
         {
-            ArrayList lstChilds = new ArrayList();
-            int iDefs = ViewDefinition.FindViewDefinitionsByParentType(this._refViewAdmin.MyDBManager.Database, ref lstChilds,
+            var lstChilds = new ArrayList();
+            var iDefs = ViewDefinition.FindViewDefinitionsByParentType(_refViewAdmin.MyDBManager.Database, ref lstChilds,
               new Guid(objView.ViewGUID), sParentType, ref error);
 
-            ViewDefinition viewDefSub = new ViewDefinition();
-            foreach (object obj in lstChilds)
+            var viewDefSub = new ViewDefinition();
+            foreach (var obj in lstChilds)
             {
-                viewDefSub.Load(this._refViewAdmin.MyDBManager.Database, obj, ref error);
+                viewDefSub.Load(_refViewAdmin.MyDBManager.Database, obj, ref error);
 
-                string imageKey = TemplateTreenode.getImageForPluginType(viewDefSub.ChildType, this.m_treeViewSystemConfig.ImageList);
+                var imageKey = TemplateTreenode.getImageForPluginType(viewDefSub.ChildType, m_treeViewSystemConfig.ImageList);
 
-                TreeNode trnPLG_SUB = new TreeNode(viewDefSub.ChildName);
+                var trnPLG_SUB = new TreeNode(viewDefSub.ChildName);
                 trnPLG_SUB.ImageKey = imageKey;
                 trnPLG_SUB.SelectedImageKey = imageKey;
-                ObjectPlugin objPLG_SUB = new ObjectPlugin();
+                var objPLG_SUB = new ObjectPlugin();
                 objPLG_SUB.PluginName = viewDefSub.ChildName;
                 objPLG_SUB.PluginType = viewDefSub.ChildType;
                 objPLG_SUB.ViewID = viewDefSub.ViewId;
@@ -627,12 +593,12 @@ namespace SDBees.ViewAdmin
         {
             if (e.Data.GetDataPresent("System.Windows.Forms.TreeNode", true))
             {
-                TreeView trvSelected = (TreeView)sender;
-                TreeNode dropNode = (TreeNode)e.Data.GetData("System.Windows.Forms.TreeNode", true);
+                var trvSelected = (TreeView)sender;
+                var dropNode = (TreeNode)e.Data.GetData("System.Windows.Forms.TreeNode", true);
 
                 if (trvSelected.SelectedNode != null)
                 {
-                    TreeNode targetNode = trvSelected.SelectedNode;
+                    var targetNode = trvSelected.SelectedNode;
                     dropNode.Remove();
 
                     targetNode.Nodes.Add(dropNode);
@@ -642,16 +608,16 @@ namespace SDBees.ViewAdmin
             }
             else if (e.Data.GetDataPresent("System.Windows.Forms.ListViewItem", true))
             {
-                TreeView trvSelected = (TreeView)sender;
-                ListViewItem lstItem = (ListViewItem)e.Data.GetData("System.Windows.Forms.ListViewItem", true);
+                var trvSelected = (TreeView)sender;
+                var lstItem = (ListViewItem)e.Data.GetData("System.Windows.Forms.ListViewItem", true);
 
-                ObjectPlugin obj = (ObjectPlugin)lstItem.Tag;
-                string imageKey = TemplateTreenode.getImageForPluginType(obj.PluginType, trvSelected.ImageList);
+                var obj = (ObjectPlugin)lstItem.Tag;
+                var imageKey = TemplateTreenode.getImageForPluginType(obj.PluginType, trvSelected.ImageList);
 
                 if (trvSelected.SelectedNode != null)
                 {
                     //Es wird auf einen Viewnamen gedragd
-                    TreeNode trnNew = new TreeNode(lstItem.Text);
+                    var trnNew = new TreeNode(lstItem.Text);
                     trnNew.ImageKey = imageKey;
                     trnNew.SelectedImageKey = imageKey;
                     trnNew.Tag = lstItem.Tag;
@@ -662,7 +628,7 @@ namespace SDBees.ViewAdmin
                 {
                     if (trvSelected.Nodes.Count == 0)
                     {
-                        TreeNode trnNew = new TreeNode(lstItem.Text);
+                        var trnNew = new TreeNode(lstItem.Text);
                         trnNew.ImageKey = imageKey;
                         trnNew.Tag = lstItem.Tag;
                         trvSelected.Nodes.Add(trnNew);
@@ -699,11 +665,11 @@ namespace SDBees.ViewAdmin
             if (e.Data.GetDataPresent("System.Windows.Forms.TreeNode", true))
             {
                 //Die Treeview besorgen
-                TreeView trvSelected = (TreeView)sender;
+                var trvSelected = (TreeView)sender;
 
                 //Highlight der Nodes
-                Point pt = trvSelected.PointToClient(new Point(e.X, e.Y));
-                TreeNode tnTarget = trvSelected.GetNodeAt(pt);
+                var pt = trvSelected.PointToClient(new Point(e.X, e.Y));
+                var tnTarget = trvSelected.GetNodeAt(pt);
 
                 if (tnTarget != trvSelected.SelectedNode) //) && (tnTarget.Tag.GetType() == typeof(ObjectPlugin)))
                 {
@@ -712,7 +678,7 @@ namespace SDBees.ViewAdmin
                     //Check that the selected node is not the dropNode and
                     //also that it is not a child of the dropNode and
                     //therefore an invalid target
-                    TreeNode dropNode = (TreeNode)e.Data.GetData("System.Windows.Forms.TreeNode", true);
+                    var dropNode = (TreeNode)e.Data.GetData("System.Windows.Forms.TreeNode", true);
 
                     /*
                     while (tnTarget != null)
@@ -730,9 +696,9 @@ namespace SDBees.ViewAdmin
             }
             else if (e.Data.GetDataPresent("System.Windows.Forms.ListViewItem", true)) //Es wird ein Listviewitem gedraged
             {
-                TreeView trvSelected = (TreeView)sender;
-                Point pt = trvSelected.PointToClient(new Point(e.X, e.Y));
-                TreeNode tnTarget = trvSelected.GetNodeAt(pt);
+                var trvSelected = (TreeView)sender;
+                var pt = trvSelected.PointToClient(new Point(e.X, e.Y));
+                var tnTarget = trvSelected.GetNodeAt(pt);
                 if (tnTarget != null) //Das ListviewItem wird auf den Viewnamen gezogen
                 {
                     trvSelected.SelectedNode = tnTarget;
@@ -743,7 +709,7 @@ namespace SDBees.ViewAdmin
 
         private void treeViewConfig_ItemDrag(object sender, ItemDragEventArgs e)
         {
-            TreeNode tn = (TreeNode)e.Item;
+            var tn = (TreeNode)e.Item;
             if (tn.Tag.GetType() == typeof(ObjectPlugin))
             {
                 //Set the drag node and initiate the DragDrop 
@@ -759,8 +725,8 @@ namespace SDBees.ViewAdmin
         {
             if (e.Node.Tag.GetType() == typeof(ObjectView))
             {
-                ObjectView objView = (ObjectView)e.Node.Tag;
-                this._cmbViewSelector.Items.Remove(objView.ViewName);
+                var objView = (ObjectView)e.Node.Tag;
+                _cmbViewSelector.Items.Remove(objView.ViewName);
                 objView.ViewName = e.Label;
                 e.Node.Tag = objView;
             }
@@ -778,15 +744,15 @@ namespace SDBees.ViewAdmin
         {
             if (e.KeyCode == Keys.Delete)
             {
-                DialogResult dlgRes = MessageBox.Show("Do you really want to delete the selected node and the subnodes?", "Attention", MessageBoxButtons.YesNo);
+                var dlgRes = MessageBox.Show("Do you really want to delete the selected node and the subnodes?", "Attention", MessageBoxButtons.YesNo);
                 if (dlgRes == DialogResult.Yes)
                 {
-                    RemoveNodeAndAddBackToList(this.m_treeViewSystemConfig.SelectedNode);
+                    RemoveNodeAndAddBackToList(m_treeViewSystemConfig.SelectedNode);
                 }
             }
             else if (e.KeyCode == Keys.F2)
             {
-                this.m_treeViewSystemConfig.SelectedNode.BeginEdit();
+                m_treeViewSystemConfig.SelectedNode.BeginEdit();
             }
         }
 
@@ -797,13 +763,13 @@ namespace SDBees.ViewAdmin
                 RemoveNodeAndAddBackToList(trNodeTemp);
             }
 
-            ObjectPlugin obj = (ObjectPlugin)trNode.Tag;
-            string imageKey = TemplateTreenode.getImageForPluginType(obj.PluginType, this.m_listViewPlugins.SmallImageList);
+            var obj = (ObjectPlugin)trNode.Tag;
+            var imageKey = TemplateTreenode.getImageForPluginType(obj.PluginType, m_listViewPlugins.SmallImageList);
 
-            ListViewItem lstItem = new ListViewItem(trNode.Text);
+            var lstItem = new ListViewItem(trNode.Text);
             lstItem.ImageKey = imageKey;
             lstItem.Tag = trNode.Tag;
-            this.m_listViewPlugins.Items.Add(lstItem);
+            m_listViewPlugins.Items.Add(lstItem);
             trNode.Remove();
         }
         #endregion
@@ -817,6 +783,12 @@ namespace SDBees.ViewAdmin
         private void ViewAdminDLG_Shown(object sender, EventArgs e)
         {
             RefreshView();
+           
+        }
+
+        private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
         }
     }
 }

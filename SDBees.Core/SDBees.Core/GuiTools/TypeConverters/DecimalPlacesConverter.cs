@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
+using System.Windows.Forms;
 
 namespace SDBees.Core.GuiTools.TypeConverters
 {
@@ -25,7 +23,7 @@ namespace SDBees.Core.GuiTools.TypeConverters
 			return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
 		}
 
-		static bool inConversionMode = false;
+		static bool inConversionMode;
 		/// <summary>
 		/// Converts the given object to the type of this converter, using the specified context and culture information.
 		/// Called, when a property value is changed in UI.
@@ -48,7 +46,7 @@ namespace SDBees.Core.GuiTools.TypeConverters
 						{
 							inConversionMode = true;
 							places = 2;
-							System.Windows.Forms.MessageBox.Show("No values lower than 0 and greater than 9 allowed!");
+							MessageBox.Show("No values lower than 0 and greater than 9 allowed!");
 							inConversionMode = false;
 						}
 					}

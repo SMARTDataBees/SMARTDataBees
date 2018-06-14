@@ -20,16 +20,12 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.Runtime.Serialization;
+
 namespace SDBees.Core.Model
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-
-    using System.Runtime.Serialization;
-
-	/// <summary>
+    /// <summary>
 	/// Definition 
 	/// Mehrsprachigkeit ?
 	/// </summary>

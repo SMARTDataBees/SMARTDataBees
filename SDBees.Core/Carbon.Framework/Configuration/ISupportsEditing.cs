@@ -29,8 +29,6 @@
 //
 //	============================================================================
 
-using System;
-
 namespace Carbon.Configuration
 {
 	/// <summary>
@@ -61,7 +59,7 @@ namespace Carbon.Configuration
 		/// <summary>
 		/// The existing element will clone the incoming element and become an identical copy of the incoming element
 		/// </summary>
-		Synchronize = SupportedEditingActions.Overwrite | SupportedEditingActions.Add | SupportedEditingActions.Remove
+		Synchronize = Overwrite | Add | Remove
 	}	
 
 	/// <summary>

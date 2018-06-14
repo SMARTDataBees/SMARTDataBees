@@ -92,6 +92,7 @@
     <Compile Include="Connectivity\SDBeesLink\Client\SDBeesCallbackCommandQueue.cs" />
     <Compile Include="Connectivity\SDBeesLink\Client\SDBeesExternalServiceClient.cs" />
     <Compile Include="Connectivity\SDBeesLink\SDBeesExternalDocumentAdmin.cs" />
+    <Compile Include="Connectivity\SDBeesLink\SDBeesExternalDocumentManager.cs" />
     <Compile Include="Connectivity\SDBeesLink\UI\SDBeesDataSetEntityController.cs" />
     <Compile Include="Connectivity\SDBeesLink\UI\SDBeesExternalDocumentDLG.cs">
       <SubType>Form</SubType>
@@ -99,6 +100,7 @@
     <Compile Include="Connectivity\SDBeesLink\UI\SDBeesExternalDocumentDLG.Designer.cs">
       <DependentUpon>SDBeesExternalDocumentDLG.cs</DependentUpon>
     </Compile>
+    <Compile Include="DB\Generic\DbType.cs" />
     <Compile Include="DB\SQLite\SQLiteFilenameEditor.cs" />
     <Compile Include="Global\GlobalManager.cs" />
     <Compile Include="Global\SDBeesGlobalVars.cs" />
@@ -503,6 +505,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="GNU LESSER GENERAL PUBLIC LICENSE.rtf" />
     <None Include="Resources\SDBees.png" />
   </ItemGroup>
   <ItemGroup>

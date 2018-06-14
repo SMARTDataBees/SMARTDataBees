@@ -30,11 +30,13 @@
 //	============================================================================
 
 using System;
-using System.Diagnostics;
 using System.ComponentModel;
 using System.ComponentModel.Design;
+using System.Diagnostics;
+using System.Drawing.Design;
 using System.IO;
-using System.Xml;
+using System.Text;
+using System.Windows.Forms.Design;
 
 namespace Carbon.Configuration
 {
@@ -70,14 +72,14 @@ namespace Carbon.Configuration
 		/// </summary>
 		public static readonly string DefaultPathSeparator = "\\";
 
-		public event System.EventHandler TimeToSave;
+		public event EventHandler TimeToSave;
 
 		#region Instance Constructors
 
 		/// <summary>
 		/// Initializes a new instance of the XmlConfiguration class
 		/// </summary>
-		public XmlConfiguration() : base()
+		public XmlConfiguration()
 		{
 		
 		}
@@ -95,7 +97,7 @@ namespace Carbon.Configuration
 		/// Initializes a new instance of the XmlConfigurationOption class
 		/// </summary>
 		/// <param name="option">The option to base this option on</param>
-		public XmlConfiguration(XmlConfiguration configuration) : base((XmlConfigurationElement)configuration)
+		public XmlConfiguration(XmlConfiguration configuration) : base(configuration)
 		{
 			_path = configuration.Path;
 			_categories = configuration.Categories;			
@@ -109,7 +111,7 @@ namespace Carbon.Configuration
 		/// Gets or sets a collection of categories (sub-categories for this XmlConfigurationElement)
 		/// </summary>
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-		[Editor(typeof(CollectionEditor), typeof(System.Drawing.Design.UITypeEditor))]
+		[Editor(typeof(CollectionEditor), typeof(UITypeEditor))]
 		[Description("The collection of categories contained in this configuration.")]
 		[Category("Configuration Properties")]
 		public XmlConfigurationCategoryCollection Categories
@@ -120,10 +122,10 @@ namespace Carbon.Configuration
 				{
 					_categories = new XmlConfigurationCategoryCollection();
 					_categories.Parent = this;					
-					_categories.BeforeEdit += new XmlConfigurationElementCancelEventHandler(base.OnBeforeEdit);
-					_categories.Changed += new XmlConfigurationElementEventHandler(base.OnChanged);			
-					_categories.AfterEdit += new XmlConfigurationElementEventHandler(base.OnAfterEdit);
-					_categories.Changed += new XmlConfigurationElementEventHandler(Categories_Changed);
+					_categories.BeforeEdit += OnBeforeEdit;
+					_categories.Changed += OnChanged;			
+					_categories.AfterEdit += OnAfterEdit;
+					_categories.Changed += Categories_Changed;
 					if (_isBeingInitialized)
 						_categories.BeginInit();
 				}
@@ -133,10 +135,10 @@ namespace Carbon.Configuration
 			{
 				_categories = (XmlConfigurationCategoryCollection)value.Clone();
 				_categories.Parent = this;
-				_categories.BeforeEdit += new XmlConfigurationElementCancelEventHandler(base.OnBeforeEdit);
-				_categories.Changed += new XmlConfigurationElementEventHandler(base.OnChanged);			
-				_categories.AfterEdit += new XmlConfigurationElementEventHandler(base.OnAfterEdit);	
-				_categories.Changed += new XmlConfigurationElementEventHandler(Categories_Changed);
+				_categories.BeforeEdit += OnBeforeEdit;
+				_categories.Changed += OnChanged;			
+				_categories.AfterEdit += OnAfterEdit;	
+				_categories.Changed += Categories_Changed;
 				if (_isBeingInitialized)
 					_categories.BeginInit();
 			}
@@ -146,7 +148,7 @@ namespace Carbon.Configuration
 		/// Gets or sets the path where this configuration is saved (Example: 'C:\MyApp\MyConfig.xml')
 		/// </summary>
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-		[Editor(typeof(System.Windows.Forms.Design.FileNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
+		[Editor(typeof(FileNameEditor), typeof(UITypeEditor))]
 		[Description("The location of the file.")]
 		[Category("Configuration Properties")]
 		public string Path
@@ -162,10 +164,10 @@ namespace Carbon.Configuration
 					if (string.Compare(_path, value) == 0)
 						return;
 				}
-				catch(System.Exception){ /*screw it*/ }
+				catch(Exception){ /*screw it*/ }
 
 				_path = value;
-				base.OnChanged(this, new XmlConfigurationEventArgs(this, XmlConfigurationElementActions.Changed));
+				OnChanged(this, new XmlConfigurationEventArgs(this, XmlConfigurationElementActions.Changed));
 			}
 		}
 
@@ -193,9 +195,9 @@ namespace Carbon.Configuration
 		{
 			get
 			{
-				bool anyCategory = false;
+				var anyCategory = false;
 				
-				/// check this configuration's categories recursively for changes
+				// check this configuration's categories recursively for changes
 				if (_categories != null)
 					anyCategory = _categories.HasChanges;
 
@@ -229,14 +231,14 @@ namespace Carbon.Configuration
 
 		public void TraceCategories()
 		{
-			this.TraceCategories(_categories);
+			TraceCategories(_categories);
 		}
 
 		internal void TraceCategories(XmlConfigurationCategoryCollection categories)
 		{
-			System.Diagnostics.Debug.WriteLine(categories.Fullpath);
+			Debug.WriteLine(categories.Fullpath);
 			foreach(XmlConfigurationCategory category in categories)
-				this.TraceCategories(category.Categories);
+				TraceCategories(category.Categories);
 		}
 
 		/// <summary>
@@ -245,10 +247,10 @@ namespace Carbon.Configuration
 		/// <returns></returns>
 		public string ToXml()
 		{
-			MemoryStream stream = new MemoryStream();
-			XmlConfigurationWriter writer = new XmlConfigurationWriter();
+			var stream = new MemoryStream();
+			var writer = new XmlConfigurationWriter();
 			writer.Write(this, stream, true);			
-			string xml = System.Text.Encoding.ASCII.GetString(stream.GetBuffer());
+			var xml = Encoding.ASCII.GetString(stream.GetBuffer());
 			stream.Close();
 			return xml;
 		}
@@ -260,16 +262,16 @@ namespace Carbon.Configuration
 		public override object Clone()
 		{
 			XmlConfiguration clone = null;
-			XmlConfigurationElement element = (XmlConfigurationElement)base.Clone();
+			var element = (XmlConfigurationElement)base.Clone();
 			if (element != null)
 			{
 				clone = new XmlConfiguration(element);
 				clone.ResetBeforeEdit();
 				clone.ResetChanged();
 				clone.ResetAfterEdit();
-				clone.Path = this.Path;
-				clone.SetHasUnpersistedChanges(this.HasUnpersistedChanges());
-				clone.Categories =  (XmlConfigurationCategoryCollection)this.Categories.Clone();
+				clone.Path = Path;
+				clone.SetHasUnpersistedChanges(HasUnpersistedChanges());
+				clone.Categories =  (XmlConfigurationCategoryCollection)Categories.Clone();
 			}	
 			return clone;
 		}
@@ -315,16 +317,16 @@ namespace Carbon.Configuration
 			if (_categories != null)
 				_categories.EndEdit();
 			
-			bool result = base.EndEdit();						
-			this.AcceptChanges();
-			this.ItIsNowTimeToSave();
+			var result = base.EndEdit();						
+			AcceptChanges();
+			ItIsNowTimeToSave();
 			return result;
 		}
 		
 		protected override XmlConfigurationElement GetElementToEdit()
 		{
-			XmlConfiguration configuration = (XmlConfiguration)this.Clone();
-			return (XmlConfigurationElement)configuration;
+			var configuration = (XmlConfiguration)Clone();
+			return configuration;
 		}
 
 		public override void AcceptChanges()
@@ -339,17 +341,17 @@ namespace Carbon.Configuration
 		{
 			if (base.ApplyChanges (editableObject, actions))
 			{
-				XmlConfiguration configuration = editableObject as XmlConfiguration;			
+				var configuration = editableObject as XmlConfiguration;			
 				if (configuration != null)
 				{
 					if (_isBeingEdited)
-						this.BeginInit();									
+						BeginInit();									
 										
 					if (_categories != null)
-						_categories.ApplyChanges((ISupportsEditing)configuration.Categories, actions);
+						_categories.ApplyChanges(configuration.Categories, actions);
 
 					if (_isBeingEdited)
-						this.EndInit();
+						EndInit();
 				}
 				return true;
 			}
@@ -360,16 +362,16 @@ namespace Carbon.Configuration
 		{
 			if (base.ApplyToSelf(editableObject, actions))
 			{
-				XmlConfiguration configuration = editableObject as XmlConfiguration;			
+				var configuration = editableObject as XmlConfiguration;			
 				if (configuration != null)
 				{																				
 					if (_categories != null)
-						_categories.ApplyToSelf((ISupportsEditing)configuration.Categories, actions);
+						_categories.ApplyToSelf(configuration.Categories, actions);
 				}
 				return true;
 			}
 
-			this.ItIsNowTimeToSave();
+			ItIsNowTimeToSave();
 
 			return false;
 		}
@@ -390,7 +392,7 @@ namespace Carbon.Configuration
 			try
 			{
 				string elementType = null;
-				XmlConfigurationElementTypes et = e.Element.GetElementType();
+				var et = e.Element.GetElementType();
 				switch(et)
 				{
 				case XmlConfigurationElementTypes.XmlConfiguration:				elementType = "configuration"; break;
@@ -399,7 +401,8 @@ namespace Carbon.Configuration
 				case XmlConfigurationElementTypes.XmlConfigurationOption:		elementType = "option"; break;
 				};
 				
-				return string.Format("The {0} '{1}' is entering edit mode at {2} on {3}. The current user is {4}.", elementType, e.Element.Fullpath, DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString(), System.Environment.UserName);				
+				return
+				    $"The {elementType} '{e.Element.Fullpath}' is entering edit mode at {DateTime.Now.ToLongTimeString()} on {DateTime.Now.ToLongDateString()}. The current user is {Environment.UserName}.";				
 			}
 			catch(Exception ex)
 			{
@@ -413,7 +416,7 @@ namespace Carbon.Configuration
 			try
 			{
 				string elementType = null;
-				XmlConfigurationElementTypes et = e.Element.GetElementType();
+				var et = e.Element.GetElementType();
 				switch(et)
 				{
 				case XmlConfigurationElementTypes.XmlConfiguration:				elementType = "configuration"; break;
@@ -422,7 +425,7 @@ namespace Carbon.Configuration
 				case XmlConfigurationElementTypes.XmlConfigurationOption:		elementType = "option"; break;
 				};
 				
-				return string.Format("The {5} '{0}' was '{1}' in the '{2}' configuration at {3} on {4}. The {5} is{6}being edited. The current user is {7}.", e.Element.Fullpath, e.Action.ToString(), e.Element.Configuration.DisplayName, DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString(), elementType, (e.Element.IsBeingEdited ? " " : " not "), System.Environment.UserName);				
+				return string.Format("The {5} '{0}' was '{1}' in the '{2}' configuration at {3} on {4}. The {5} is{6}being edited. The current user is {7}.", e.Element.Fullpath, e.Action.ToString(), e.Element.Configuration.DisplayName, DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString(), elementType, (e.Element.IsBeingEdited ? " " : " not "), Environment.UserName);				
 			}
 			catch(Exception ex)
 			{
@@ -436,7 +439,7 @@ namespace Carbon.Configuration
 			try
 			{
 				string elementType = null;
-				XmlConfigurationElementTypes et = e.Element.GetElementType();
+				var et = e.Element.GetElementType();
 				switch(et)
 				{
 				case XmlConfigurationElementTypes.XmlConfiguration:				elementType = "configuration"; break;
@@ -445,7 +448,8 @@ namespace Carbon.Configuration
 				case XmlConfigurationElementTypes.XmlConfigurationOption:		elementType = "option"; break;
 				};
 				
-				return string.Format("The {0} '{1}' is leaving edit mode at {2} on {3}. The current user is {4}.", elementType, e.Element.Fullpath, DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString(), System.Environment.UserName);				
+				return
+				    $"The {elementType} '{e.Element.Fullpath}' is leaving edit mode at {DateTime.Now.ToLongTimeString()} on {DateTime.Now.ToLongDateString()}. The current user is {Environment.UserName}.";				
 			}
 			catch(Exception ex)
 			{
@@ -459,7 +463,7 @@ namespace Carbon.Configuration
 			try
 			{
 				string elementType = null;
-				XmlConfigurationElementTypes et = e.Element.GetElementType();
+				var et = e.Element.GetElementType();
 				switch(et)
 				{
 				case XmlConfigurationElementTypes.XmlConfiguration:				elementType = "configuration"; break;
@@ -468,7 +472,8 @@ namespace Carbon.Configuration
 				case XmlConfigurationElementTypes.XmlConfigurationOption:		elementType = "option"; break;
 				};
 				
-				return string.Format("The {0} '{1}' has cancelled edit mode at {2} on {3}. The current user is {4}.", elementType, e.Element.Fullpath, DateTime.Now.ToLongTimeString(), DateTime.Now.ToLongDateString(), System.Environment.UserName);				
+				return
+				    $"The {elementType} '{e.Element.Fullpath}' has cancelled edit mode at {DateTime.Now.ToLongTimeString()} on {DateTime.Now.ToLongDateString()}. The current user is {Environment.UserName}.";				
 			}
 			catch(Exception ex)
 			{
@@ -486,14 +491,14 @@ namespace Carbon.Configuration
 		/// <returns></returns>
 		public XmlConfigurationCategory FindCategory(string keyOrPath)
 		{
-			/// chunk up the path into the separate categories
-			string[] categories = keyOrPath.Split(XmlConfiguration.CategoryPathSeparators);
+			// chunk up the path into the separate categories
+			var categories = keyOrPath.Split(CategoryPathSeparators);
 			
-			/// strip the config key from the path
-			if (categories[0] == this.ElementName)
-				keyOrPath = string.Join(XmlConfiguration.DefaultPathSeparator, categories, 1, categories.Length - 1);
+			// strip the config key from the path
+			if (categories[0] == ElementName)
+				keyOrPath = string.Join(DefaultPathSeparator, categories, 1, categories.Length - 1);
 
-			return this.Categories.FindCategory(keyOrPath);
+			return Categories.FindCategory(keyOrPath);
 		}
 
 		/// <summary>
@@ -515,7 +520,7 @@ namespace Carbon.Configuration
 		public void ItIsNowTimeToSave()
 		{
 			// raise the event that it is time to save
-			this.OnTimeToSave(this, EventArgs.Empty);
+			OnTimeToSave(this, EventArgs.Empty);
 		}
 
 		/// <summary>
@@ -523,12 +528,12 @@ namespace Carbon.Configuration
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		protected void OnTimeToSave(object sender, System.EventArgs e)
+		protected void OnTimeToSave(object sender, EventArgs e)
 		{
 			try
 			{
-				if (this.TimeToSave != null)
-					this.TimeToSave(sender, e);
+				if (TimeToSave != null)
+					TimeToSave(sender, e);
 			}
 			catch(Exception ex)
 			{

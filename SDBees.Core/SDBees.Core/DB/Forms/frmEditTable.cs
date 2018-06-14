@@ -20,15 +20,12 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.IO;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
+using System.IO;
 using System.Windows.Forms;
-using SDBees.Plugs.Properties;
 
 namespace SDBees.DB
 {
@@ -36,7 +33,7 @@ namespace SDBees.DB
     {
         private Table mOrigTable;
         private Table mTable;
-        private SDBees.DB.SDBeesDBConnection m_dbManager;
+        private SDBeesDBConnection m_dbManager;
 
         /// <summary>
         /// Table this Form edits
@@ -58,7 +55,7 @@ namespace SDBees.DB
         /// <summary>
         /// Standard constructor
         /// </summary>
-        public frmEditTable(SDBees.DB.SDBeesDBConnection dbManager)
+        public frmEditTable(SDBeesDBConnection dbManager)
         {
             m_dbManager = dbManager;
 
@@ -78,7 +75,7 @@ namespace SDBees.DB
 
         private void SetFromObject()
         {
-            string xmlDefinition = mOrigTable.writeXml();
+            var xmlDefinition = mOrigTable.writeXml();
             mTable = new Table();
             mTable.readXml(xmlDefinition);
 
@@ -88,13 +85,13 @@ namespace SDBees.DB
         private void SetToObject()
         {
             // Update the original table...
-            string xmlDefinition = mTable.writeXml();
+            var xmlDefinition = mTable.writeXml();
             mOrigTable.readXml(xmlDefinition);
         }
 
         private void EnableControls()
         {
-            bool bColumnSelected = lbColumns.SelectedIndex >= 0;
+            var bColumnSelected = lbColumns.SelectedIndex >= 0;
             bnDeleteColumn.Enabled = bColumnSelected;
         }
 
@@ -109,9 +106,9 @@ namespace SDBees.DB
         private void updateControls()
         {
             lbColumns.Items.Clear();
-            foreach (KeyValuePair<string, Column> iterator in mTable.Columns)
+            foreach (var iterator in mTable.Columns)
             {
-                Column column = iterator.Value;
+                var column = iterator.Value;
                 lbColumns.Items.Add(column.DisplayName);
             }
         }
@@ -120,13 +117,13 @@ namespace SDBees.DB
         {
             Column result = null;
 
-            int index = lbColumns.SelectedIndex;
+            var index = lbColumns.SelectedIndex;
             if (index >= 0)
             {
-                string columnDisplayName = lbColumns.Items[index].ToString();
-                foreach (KeyValuePair<string, Column> iterator in mTable.Columns)
+                var columnDisplayName = lbColumns.Items[index].ToString();
+                foreach (var iterator in mTable.Columns)
                 {
-                    Column column = iterator.Value;
+                    var column = iterator.Value;
                     if (column.DisplayName == columnDisplayName)
                     {
                         result = column;
@@ -140,11 +137,11 @@ namespace SDBees.DB
 
         internal void updateProperties()
         {
-            Column column = selectedColumn();
+            var column = selectedColumn();
 
             if (column != null)
             {
-                ColumnPropertyRow propertyTable = new ColumnPropertyRow(column, this);
+                var propertyTable = new ColumnPropertyRow(column, this);
 
                 pgProperties.SelectedObject = propertyTable;
             }
@@ -156,28 +153,28 @@ namespace SDBees.DB
 
         internal void ColumnNameChanged(string oldName, string newName)
         {
-            int index = lbColumns.Items.IndexOf(oldName);
+            var index = lbColumns.Items.IndexOf(oldName);
             lbColumns.Items[index] = newName;
         }
 
         private void bnAddColumn_Click(object sender, EventArgs e)
         {
-            string columnName = "";
-            string displayName = "";
-            bool nameInUse = false;
-            int index = 1;
+            var columnName = "";
+            var displayName = "";
+            var nameInUse = false;
+            var index = 1;
             do
             {
-                columnName = "Eigenschaft" + index.ToString();
+                columnName = "Eigenschaft" + index;
                 nameInUse = mTable.Columns.ContainsKey(columnName);
                 index++;
             } while (nameInUse);
 
-            System.Drawing.Point location = Control.MousePosition;
+            var location = MousePosition;
 
             do
             {
-                System.Windows.Forms.DialogResult dlgres = DialogResult.Abort;
+                var dlgres = DialogResult.Abort;
                 columnName = InputBox.Show("Spaltenname", "Name für neue Spalte", columnName, location.X, location.Y, ref dlgres);
                 columnName = columnName.Trim();
                 if (columnName != "")
@@ -187,9 +184,9 @@ namespace SDBees.DB
 
                     nameInUse = false;
 
-                    foreach (KeyValuePair<string, Column> iterator in mTable.Columns)
+                    foreach (var iterator in mTable.Columns)
                     {
-                        Column existingColumn = iterator.Value;
+                        var existingColumn = iterator.Value;
                         if (string.Compare(existingColumn.Name, columnName, true) == 0)
                         {
                             nameInUse = true;
@@ -207,7 +204,7 @@ namespace SDBees.DB
 
             if (columnName != "")
             {
-                Column column = new Column(columnName, DbType.eString, displayName, "", "", 50, "", 0);
+                var column = new Column(columnName, DbType.String, displayName, "", "", 50, "", 0);
                 mTable.Columns.Add(column);
                 index = lbColumns.Items.Add(displayName);
                 lbColumns.SelectedIndex = index;
@@ -216,7 +213,7 @@ namespace SDBees.DB
 
         private void bnDeleteColumn_Click(object sender, EventArgs e)
         {
-            Column column = selectedColumn();
+            var column = selectedColumn();
 
             if (column != null)
             {
@@ -226,7 +223,7 @@ namespace SDBees.DB
                 }
                 else
                 {
-                    int index = lbColumns.SelectedIndex;
+                    var index = lbColumns.SelectedIndex;
 
                     mTable.Columns.Remove(column.Name);
                     lbColumns.Items.RemoveAt(lbColumns.SelectedIndex);
@@ -252,16 +249,16 @@ namespace SDBees.DB
 
         private void bnExport_Click(object sender, EventArgs e)
         {
-            string xmlSchema = mTable.writeXml();
+            var xmlSchema = mTable.writeXml();
 
-            SaveFileDialog dlg = new SaveFileDialog();
+            var dlg = new SaveFileDialog();
             dlg.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
             dlg.FilterIndex = 1;
             dlg.RestoreDirectory = true;
 
             if (dlg.ShowDialog() == DialogResult.OK)
             {
-                using (StreamWriter sw = new StreamWriter(dlg.FileName))
+                using (var sw = new StreamWriter(dlg.FileName))
                 {
                     // write the XML to the file...
                     sw.Write(xmlSchema);
@@ -271,17 +268,17 @@ namespace SDBees.DB
 
         private void bnImport_Click(object sender, EventArgs e)
         {
-            OpenFileDialog dlg = new OpenFileDialog();
+            var dlg = new OpenFileDialog();
             dlg.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
             dlg.FilterIndex = 1;
             dlg.RestoreDirectory = true;
 
             if (dlg.ShowDialog() == DialogResult.OK)
             {
-                using (StreamReader sr = new StreamReader(dlg.FileName))
+                using (var sr = new StreamReader(dlg.FileName))
                 {
                     // write the XML to the file...
-                    string xmlSchema = sr.ReadToEnd();
+                    var xmlSchema = sr.ReadToEnd();
                     mTable.readXml(xmlSchema);
 
                     updateControls();

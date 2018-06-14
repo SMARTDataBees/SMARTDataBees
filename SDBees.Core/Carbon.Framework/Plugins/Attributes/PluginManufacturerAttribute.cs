@@ -36,7 +36,7 @@ namespace Carbon.Plugins.Attributes
 	/// <summary>
 	/// Defines a plugin attribute for specifying the name of a plugin's manufacturer.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple=false)]
+	[AttributeUsage(AttributeTargets.Class)]
 	public sealed class PluginManufacturerAttribute : Attribute
 	{
 		private readonly string _manufacturer;

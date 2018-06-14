@@ -30,9 +30,9 @@
 //	============================================================================
 
 using System;
+using System.Collections;
 using System.Diagnostics;
 using System.IO;
-using System.Collections;
 
 namespace Carbon.Common
 {
@@ -90,15 +90,15 @@ namespace Carbon.Common
 			// we could swap this bubble sort out for an IComparer implementation.
 
 			// front to back - 1 
-			for(int i = 0; i < files.Length - 1; i++)
+			for(var i = 0; i < files.Length - 1; i++)
 			{
 				// front + 1 to back
-				for(int j = i + 1; j < files.Length; j++)
+				for(var j = i + 1; j < files.Length; j++)
 				{			
 					if (files[i].Version < files[j].Version)
 					{											 
 						// swap i with j, where i=1 and j=2
-						VersionedFile file = files[j];
+						var file = files[j];
 						files[j] = files[i];
 						files[i] = file;
 					}													
@@ -114,14 +114,14 @@ namespace Carbon.Common
 		/// <returns></returns>
 		public static VersionedFile[] CreateVersionedFiles(FileInfo[] files)
 		{			
-			ArrayList array = new ArrayList();
-			foreach(FileInfo file in files)
+			var array = new ArrayList();
+			foreach(var file in files)
 			{				
 				try
 				{
-					string name = file.Name.Replace(file.Extension, null);
-					Version version = new Version(name);
-					VersionedFile vf = new VersionedFile(version, file);
+					var name = file.Name.Replace(file.Extension, null);
+					var version = new Version(name);
+					var vf = new VersionedFile(version, file);
 					array.Add(vf);
 				}
 				catch (Exception ex)
@@ -140,20 +140,20 @@ namespace Carbon.Common
 		/// <returns></returns>
 		public static VersionedFile[] CreateVersionedFiles(string prependedTextToRemove, FileInfo[] files)
 		{
-			ArrayList array = new ArrayList();
-			foreach(FileInfo file in files)
+			var array = new ArrayList();
+			foreach(var file in files)
 			{				
 				try
 				{
 					// strip the file extention
-					string name = file.Name.Replace(file.Extension, null);
+					var name = file.Name.Replace(file.Extension, null);
 					
 					// remove prepended text here
 					name = name.Replace(prependedTextToRemove, null);
 					
 					// create a version from the file name that's remaining
-					Version version = new Version(name);
-					VersionedFile vf = new VersionedFile(version, file);
+					var version = new Version(name);
+					var vf = new VersionedFile(version, file);
 					array.Add(vf);
 				}
 				catch (Exception ex)

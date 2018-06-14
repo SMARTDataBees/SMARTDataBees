@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SDBees.Core.GuiTools.TypeConverters
 {
@@ -24,7 +22,7 @@ namespace SDBees.Core.GuiTools.TypeConverters
             return true;
         }
 
-        public override System.ComponentModel.TypeConverter.StandardValuesCollection
+        public override StandardValuesCollection
                 GetStandardValues(ITypeDescriptorContext context)
         {
             return new StandardValuesCollection(GetRegionDisplayNames());
@@ -32,9 +30,9 @@ namespace SDBees.Core.GuiTools.TypeConverters
 
         private ICollection GetRegionDisplayNames()
         {
-            List<string> items = new List<string>();
+            var items = new List<string>();
 
-            foreach (CultureInfo ci in GetCultures())
+            foreach (var ci in GetCultures())
             {
                 if (!String.IsNullOrEmpty(ci.DisplayName))
                     items.Add(ci.DisplayName);
@@ -53,14 +51,14 @@ namespace SDBees.Core.GuiTools.TypeConverters
 
         private static List<CultureInfo> GetCultures()
         {
-            return CultureInfo.GetCultures(CultureTypes.SpecificCultures).ToList<CultureInfo>();
+            return CultureInfo.GetCultures(CultureTypes.SpecificCultures).ToList();
         }
 
         public static string GetIsoCodeForDisplayname(string displayname)
         {
-            string result = "";
+            var result = "";
 
-            CultureInfo inf = GetCultures().First(it => it.DisplayName == displayname);
+            var inf = GetCultures().First(it => it.DisplayName == displayname);
             if (inf != null)
                 result = inf.Name;
             else
@@ -71,9 +69,9 @@ namespace SDBees.Core.GuiTools.TypeConverters
 
         public static string GetDefaultCountryDisplayName(string code)
         {
-            string result = "";
+            var result = "";
 
-            CultureInfo inf = GetCultures().FirstOrDefault(it => it.Name == code);
+            var inf = GetCultures().FirstOrDefault(it => it.Name == code);
             if (inf != null)
                 result = inf.DisplayName;
             else

@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
+using System.Windows.Forms;
+using SDBees.Core.Global;
+using SDBees.Core.Model.Math;
 
 namespace SDBees.Core.GuiTools.TypeConverters
 {
@@ -49,7 +49,7 @@ namespace SDBees.Core.GuiTools.TypeConverters
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
 
             return result;
@@ -58,24 +58,24 @@ namespace SDBees.Core.GuiTools.TypeConverters
         public static double ConvertUILengthUnitToDBLengthUnit(double doubleValue)
         {
             double result = 0;
-            if (SDBees.Core.Global.SDBeesGlobalVars.GetLengthUnits() == Model.Math.LengthUnits.Engineering)
+            if (SDBeesGlobalVars.GetLengthUnits() == LengthUnits.Engineering)
             {
-                SDBees.Core.Model.Math.UnitFoot un = new Model.Math.UnitFoot();
+                var un = new UnitFoot();
                 result = un.ToMillimeters(doubleValue);
             }
-            else if (SDBees.Core.Global.SDBeesGlobalVars.GetLengthUnits() == Model.Math.LengthUnits.Meters)
+            else if (SDBeesGlobalVars.GetLengthUnits() == LengthUnits.Meters)
             {
-                SDBees.Core.Model.Math.UnitMeter un = new Model.Math.UnitMeter();
+                var un = new UnitMeter();
                 result = un.ToMillimeters(doubleValue);
             }
-            else if (SDBees.Core.Global.SDBeesGlobalVars.GetLengthUnits() == Model.Math.LengthUnits.Millimeters)
+            else if (SDBeesGlobalVars.GetLengthUnits() == LengthUnits.Millimeters)
             {
-                SDBees.Core.Model.Math.UnitMillimeter un = new Model.Math.UnitMillimeter();
+                var un = new UnitMillimeter();
                 result = un.ToMillimeters(doubleValue);
             }
-            else if (SDBees.Core.Global.SDBeesGlobalVars.GetLengthUnits() == Model.Math.LengthUnits.Inches)
+            else if (SDBeesGlobalVars.GetLengthUnits() == LengthUnits.Inches)
             {
-                SDBees.Core.Model.Math.UnitInch un = new Model.Math.UnitInch();
+                var un = new UnitInch();
                 result = un.ToMillimeters(doubleValue);
             }
             return result;
@@ -98,7 +98,7 @@ namespace SDBees.Core.GuiTools.TypeConverters
 
             if (Double.TryParse(value.ToString(), out length))
             {
-                Int16 decimalplaces = SDBees.Core.Global.SDBeesGlobalVars.GetDecimalPlaces();
+                var decimalplaces = SDBeesGlobalVars.GetDecimalPlaces();
 
                 if (length != null && destinationType == typeof(string))
                 {
@@ -112,15 +112,15 @@ namespace SDBees.Core.GuiTools.TypeConverters
         public static object ConvertDBLengthUnitsToUILengthUnits(CultureInfo culture, double length)
         {
             object result = 0;
-            SDBees.Core.Model.Math.UnitMillimeter un = new Model.Math.UnitMillimeter();
-            if (SDBees.Core.Global.SDBeesGlobalVars.GetLengthUnits() == Model.Math.LengthUnits.Engineering)
-                result = un.ToFeet(length).ToString(SDBees.Core.Global.SDBeesGlobalVars.GetFormattingForDecimalPlaces(), culture);
-            else if (SDBees.Core.Global.SDBeesGlobalVars.GetLengthUnits() == Model.Math.LengthUnits.Meters)
-                result = un.ToMeters(length).ToString(SDBees.Core.Global.SDBeesGlobalVars.GetFormattingForDecimalPlaces(), culture);
-            else if (SDBees.Core.Global.SDBeesGlobalVars.GetLengthUnits() == Model.Math.LengthUnits.Millimeters)
-                result = un.ToMillimeters(length).ToString(SDBees.Core.Global.SDBeesGlobalVars.GetFormattingForDecimalPlaces(), culture);
-            else if (SDBees.Core.Global.SDBeesGlobalVars.GetLengthUnits() == Model.Math.LengthUnits.Inches)
-                result = un.ToInches(length).ToString(SDBees.Core.Global.SDBeesGlobalVars.GetFormattingForDecimalPlaces(), culture);
+            var un = new UnitMillimeter();
+            if (SDBeesGlobalVars.GetLengthUnits() == LengthUnits.Engineering)
+                result = un.ToFeet(length).ToString(SDBeesGlobalVars.GetFormattingForDecimalPlaces(), culture);
+            else if (SDBeesGlobalVars.GetLengthUnits() == LengthUnits.Meters)
+                result = un.ToMeters(length).ToString(SDBeesGlobalVars.GetFormattingForDecimalPlaces(), culture);
+            else if (SDBeesGlobalVars.GetLengthUnits() == LengthUnits.Millimeters)
+                result = un.ToMillimeters(length).ToString(SDBeesGlobalVars.GetFormattingForDecimalPlaces(), culture);
+            else if (SDBeesGlobalVars.GetLengthUnits() == LengthUnits.Inches)
+                result = un.ToInches(length).ToString(SDBeesGlobalVars.GetFormattingForDecimalPlaces(), culture);
             return result;
         }
 

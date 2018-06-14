@@ -1,7 +1,17 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Carbon.Plugins.Attributes;
+using SDBees.Core.Connectivity;
+using SDBees.Core.Connectivity.SDBeesLink;
+using SDBees.Core.Global;
+using SDBees.Core.Main.Systemtray;
+using SDBees.DB;
+using SDBees.Demoplugins.Dummys;
+using SDBees.EDM;
+using SDBees.Main.Window;
+using SDBees.Reporting;
+using SDBees.UserAdmin;
+using SDBees.ViewAdmin;
 
 // Allgemeine Informationen über eine Assembly werden über die folgenden 
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
@@ -38,21 +48,21 @@ using Carbon.Plugins.Attributes;
 [assembly: AssemblyVersion("2.0.0.*")]
 
 //SDBees Core plugins
-[assembly: PluginDefinition(typeof(SDBees.Core.Global.GlobalManager))]
-[assembly: PluginDefinition(typeof(SDBees.DB.SDBeesDBConnection))]
-[assembly: PluginDefinition(typeof(SDBees.Core.Connectivity.ConnectivityManager))]
-[assembly: PluginDefinition(typeof(SDBees.Core.Connectivity.SDBeesLink.SDBeesExternalDocumentAdmin))]
-[assembly: PluginDefinition(typeof(SDBees.Core.Main.Systemtray.ProcessIcon))]
-[assembly: PluginDefinition(typeof(SDBees.ViewAdmin.ViewAdmin))]
+[assembly: PluginDefinition(typeof(GlobalManager))]
+[assembly: PluginDefinition(typeof(SDBeesDBConnection))]
+[assembly: PluginDefinition(typeof(ConnectivityManager))]
+[assembly: PluginDefinition(typeof(SDBeesExternalDocumentAdmin))]
+[assembly: PluginDefinition(typeof(ProcessIcon))]
+[assembly: PluginDefinition(typeof(ViewAdmin))]
 
-[assembly: PluginDefinition(typeof(SDBees.ViewAdmin.ViewAdminLinkHelper))]
+[assembly: PluginDefinition(typeof(ViewAdminLinkHelper))]
 
-[assembly: PluginDefinition(typeof(SDBees.Main.Window.MainWindowApplication))]
+[assembly: PluginDefinition(typeof(MainWindowApplication))]
 
-[assembly: PluginDefinition(typeof(SDBees.UserAdmin.UserAdmin))]
-[assembly: PluginDefinition(typeof(SDBees.EDM.EDMManager))]
-[assembly: PluginDefinition(typeof(SDBees.Reporting.ReportingManager))]
+[assembly: PluginDefinition(typeof(UserAdmin))]
+[assembly: PluginDefinition(typeof(EDMManager))]
+[assembly: PluginDefinition(typeof(ReportingManager))]
 
-[assembly: PluginDefinition(typeof(SDBees.Demoplugins.Dummys.Dummy1))]
-[assembly: PluginDefinition(typeof(SDBees.Demoplugins.Dummys.Dummy2))]
+[assembly: PluginDefinition(typeof(Dummy1))]
+[assembly: PluginDefinition(typeof(Dummy2))]
 

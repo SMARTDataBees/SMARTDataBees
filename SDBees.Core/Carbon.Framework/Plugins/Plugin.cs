@@ -31,7 +31,6 @@
 
 using System;
 using System.Windows.Forms;
-
 using Carbon.Common;
 
 namespace Carbon.Plugins
@@ -41,12 +40,7 @@ namespace Carbon.Plugins
 	/// </summary>
 	public abstract class Plugin : DisposableObject
 	{
-		/// <summary>
-		/// Provide a constructor that derived classes will call
-		/// </summary>
-		protected Plugin() {}
-
-		/// <summary>
+	    /// <summary>
 		/// The abstract method that must be overriden by derived classes to start plugin functionality
         /// </summary>
         /// <param name="context">The PluginContext that is hosting this Plugin instance.</param>
@@ -72,7 +66,7 @@ namespace Carbon.Plugins
                 Log.WriteLine("Starting Plugin, Plugin: '{0}'.", e.Descriptor.PluginName);
 
                 // inform the plugin that it should start its services
-                this.Start(context, e);
+                Start(context, e);
 
 				        Application.DoEvents();
 
@@ -97,7 +91,7 @@ namespace Carbon.Plugins
                 Log.WriteLine("Stopping Plugin, Plugin: '{0}'.", e.Descriptor.PluginName);
 
                 // inform the plugin that it should stop its services
-                this.Stop(context, e);
+                Stop(context, e);
 
                 // fire the PluginStopped event of the PluginContext
                 context.OnPluginStopped(e);

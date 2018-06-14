@@ -30,12 +30,9 @@
 //	============================================================================
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.Serialization;
-using System.Text;
-using Carbon.Common;
 
 namespace Carbon.Common
 {
@@ -43,8 +40,8 @@ namespace Carbon.Common
 	/// Defines the base object for all 'Named' objects that exist in the Carbon.Common namespace.
 	/// This class is thread-safe, serializable, and cloneable.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
-	[Serializable()]
+	[DebuggerStepThrough]
+	[Serializable]
 	public class ObjectBase : DisposableObject, ICloneable, ISerializable
 	{
 		private string _name;
@@ -94,7 +91,7 @@ namespace Carbon.Common
 			_name = name;
 			_description = description;
 
-			this.Initialize();
+			Initialize();
 		}
 
 		/// <summary>
@@ -129,7 +126,7 @@ namespace Carbon.Common
 		/// </summary>
 		protected override void DisposeOfManagedResources()
 		{
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{				
 				/*
 				 * Images are notorious memory leaks, so be vigilant in their destruction.
@@ -159,17 +156,17 @@ namespace Carbon.Common
 		{
 			get
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
 					return _name;
 				}
 			}
 			set
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
-					ObjectCancelEventArgs e = new ObjectCancelEventArgs(this, ObjectActions.Changed, false);
-					this.OnBeforeChanged(this, e);
+					var e = new ObjectCancelEventArgs(this, ObjectActions.Changed, false);
+					OnBeforeChanged(this, e);
 					if (e.Cancel)
 					{
 						Debug.WriteLine("The property 'Name' could not be changed because the 'BeforeChanged' was cancelled.");
@@ -178,7 +175,7 @@ namespace Carbon.Common
 
 					_name = value;
 
-					this.OnAfterChanged(this, new ObjectEventArgs(this, ObjectActions.Changed));
+					OnAfterChanged(this, new ObjectEventArgs(this, ObjectActions.Changed));
 				}
 			}
 		}
@@ -190,17 +187,17 @@ namespace Carbon.Common
 		{
 			get
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
 					return _description;
 				}
 			}
 			set
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
-					ObjectCancelEventArgs e = new ObjectCancelEventArgs(this, ObjectActions.Changed, false);
-					this.OnBeforeChanged(this, e);
+					var e = new ObjectCancelEventArgs(this, ObjectActions.Changed, false);
+					OnBeforeChanged(this, e);
 					if (e.Cancel)
 					{
 						Debug.WriteLine("The property 'Description' could not be changed because the 'BeforeChanged' was cancelled.");
@@ -209,7 +206,7 @@ namespace Carbon.Common
 
 					_description = value;
 
-					this.OnAfterChanged(this, new ObjectEventArgs(this, ObjectActions.Changed));
+					OnAfterChanged(this, new ObjectEventArgs(this, ObjectActions.Changed));
 				}
 			}
 		}
@@ -221,17 +218,17 @@ namespace Carbon.Common
 		{
 			get
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
 					return _smallImage;
 				}
 			}
 			set
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
-					ObjectCancelEventArgs e = new ObjectCancelEventArgs(this, ObjectActions.Changed, false);
-					this.OnBeforeChanged(this, e);
+					var e = new ObjectCancelEventArgs(this, ObjectActions.Changed, false);
+					OnBeforeChanged(this, e);
 					if (e.Cancel)
 					{
 						Debug.WriteLine("The property 'SmallImage' could not be changed because the 'BeforeChanged' was cancelled.");
@@ -240,7 +237,7 @@ namespace Carbon.Common
 
 					_smallImage = value;
 
-					this.OnAfterChanged(this, new ObjectEventArgs(this, ObjectActions.Changed));
+					OnAfterChanged(this, new ObjectEventArgs(this, ObjectActions.Changed));
 				}
 			}
 		}
@@ -252,17 +249,17 @@ namespace Carbon.Common
 		{
 			get
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
 					return _largeImage;
 				}
 			}
 			set
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
-					ObjectCancelEventArgs e = new ObjectCancelEventArgs(this, ObjectActions.Changed, false);
-					this.OnBeforeChanged(this, e);
+					var e = new ObjectCancelEventArgs(this, ObjectActions.Changed, false);
+					OnBeforeChanged(this, e);
 					if (e.Cancel)
 					{
 						Debug.WriteLine("The property 'LargeImage' could not be changed because the 'BeforeChanged' was cancelled.");
@@ -271,7 +268,7 @@ namespace Carbon.Common
 
 					_largeImage = value;
 
-					this.OnAfterChanged(this, new ObjectEventArgs(this, ObjectActions.Changed));
+					OnAfterChanged(this, new ObjectEventArgs(this, ObjectActions.Changed));
 				}
 			}
 		}
@@ -304,7 +301,7 @@ namespace Carbon.Common
 			try
 			{
 				// required for thread affinity
-				EventHandler<ObjectCancelEventArgs> handler = this.BeforeChanged;
+				var handler = BeforeChanged;
 				if (handler != null)
 				{
 					handler(sender, e);
@@ -326,7 +323,7 @@ namespace Carbon.Common
 		/// <param name="e">The EventArgs for the event.</param>
 		protected virtual void OnAfterChanged(object sender, ObjectEventArgs e)
 		{
-			EventManager.Raise<ObjectEventArgs>(this.AfterChanged, sender, e);
+			EventManager.Raise(AfterChanged, sender, e);
 		}
 
 		#region ICloneable Members
@@ -337,7 +334,7 @@ namespace Carbon.Common
 		/// <returns></returns>
 		public virtual object Clone()
 		{
-			return this.MemberwiseClone();
+			return MemberwiseClone();
 		}
 
 		#endregion

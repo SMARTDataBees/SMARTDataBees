@@ -20,14 +20,18 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Xml.Serialization;	 // For serialization of an object to an XML Document file.
-using System.Runtime.Serialization.Formatters.Binary; // For serialization of an object to an XML Binary file.
-using System.IO;				 // For reading/writing data to an XML file.
-using System.IO.IsolatedStorage; // For accessing user isolated data.
-using System.Collections.Generic;
-using System.Windows.Forms;
+using System.IO;
+using System.IO.IsolatedStorage;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Windows.Forms;
+using System.Xml.Serialization;
+// For serialization of an object to an XML Document file.
+// For serialization of an object to an XML Binary file.
+// For reading/writing data to an XML file.
+// For accessing user isolated data.
 
 namespace SDBees.Utils.ObjectXmlSerializer
 {
@@ -55,7 +59,7 @@ namespace SDBees.Utils.ObjectXmlSerializer
     /// </summary>
     public static class ObjectXMLSerializer<T> where T : class // Specify that T must be A class.
     {
-        static XmlSerializerNamespaces xmlns = null;
+        static XmlSerializerNamespaces xmlns;
         #region Load methods
 
         /// <summary>
@@ -70,7 +74,7 @@ namespace SDBees.Utils.ObjectXmlSerializer
         /// <returns>Object loaded from an XML file in Document format.</returns>
         public static T Load(string path)
         {
-            T serializableObject = LoadFromDocumentFormat(null, path, null);
+            var serializableObject = LoadFromDocumentFormat(null, path, null);
             return serializableObject;
         }
 
@@ -81,7 +85,7 @@ namespace SDBees.Utils.ObjectXmlSerializer
         /// <returns>Object loaded from an XML stream</returns>
         public static T Load(StreamReader _textStreamReader)
         {
-            T serializableObject = LoadFromStreamReader(null, _textStreamReader);
+            var serializableObject = LoadFromStreamReader(null, _textStreamReader);
             return serializableObject;
         }
 
@@ -126,9 +130,9 @@ namespace SDBees.Utils.ObjectXmlSerializer
         /// <param name="path">Path of the file to load the object from.</param>
         /// <param name="extraTypes">Extra data types to enable deserialization of custom types within the object.</param>
         /// <returns>Object loaded from an XML file in Document format.</returns>
-        public static T Load(string path, System.Type[] extraTypes)
+        public static T Load(string path, Type[] extraTypes)
         {
-            T serializableObject = LoadFromDocumentFormat(extraTypes, path, null);
+            var serializableObject = LoadFromDocumentFormat(extraTypes, path, null);
             return serializableObject;
         }
 
@@ -145,7 +149,7 @@ namespace SDBees.Utils.ObjectXmlSerializer
         /// <returns>Object loaded from an XML file in Document format located in A specified isolated storage area.</returns>
         public static T Load(string fileName, IsolatedStorageFile isolatedStorageDirectory)
         {
-            T serializableObject = LoadFromDocumentFormat(null, fileName, isolatedStorageDirectory);
+            var serializableObject = LoadFromDocumentFormat(null, fileName, isolatedStorageDirectory);
             return serializableObject;
         }
 
@@ -192,9 +196,9 @@ namespace SDBees.Utils.ObjectXmlSerializer
         /// <param name="isolatedStorageDirectory">Isolated storage area directory containing the XML file to load the object from.</param>
         /// <param name="extraTypes">Extra data types to enable deserialization of custom types within the object.</param>
         /// <returns>Object loaded from an XML file located in A specified isolated storage area, using A specified serialized format.</returns>
-        public static T Load(string fileName, IsolatedStorageFile isolatedStorageDirectory, System.Type[] extraTypes)
+        public static T Load(string fileName, IsolatedStorageFile isolatedStorageDirectory, Type[] extraTypes)
         {
-            T serializableObject = LoadFromDocumentFormat(null, fileName, isolatedStorageDirectory);
+            var serializableObject = LoadFromDocumentFormat(null, fileName, isolatedStorageDirectory);
             return serializableObject;
         }
 
@@ -285,7 +289,7 @@ namespace SDBees.Utils.ObjectXmlSerializer
         /// <param name="path">Path of the file to save the object to.</param>
         /// <param name="extraTypes">Extra data types to enable serialization of custom types within the object.</param>
         /// <param name="enc"></param>
-        public static void Save(T serializableObject, string path, System.Type[] extraTypes, Encoding enc)
+        public static void Save(T serializableObject, string path, Type[] extraTypes, Encoding enc)
         {
             SaveToDocumentFormat(serializableObject, extraTypes, path, null, enc);
         }
@@ -354,7 +358,7 @@ namespace SDBees.Utils.ObjectXmlSerializer
         /// <param name="isolatedStorageDirectory">Isolated storage area directory containing the XML file to save the object to.</param>
         /// <param name="extraTypes">Extra data types to enable serialization of custom types within the object.</param>
         /// <param name="enc"></param>
-        public static void Save(T serializableObject, string fileName, IsolatedStorageFile isolatedStorageDirectory, System.Type[] extraTypes, Encoding enc)
+        public static void Save(T serializableObject, string fileName, IsolatedStorageFile isolatedStorageDirectory, Type[] extraTypes, Encoding enc)
         {
             SaveToDocumentFormat(serializableObject, null, fileName, isolatedStorageDirectory, enc);
         }
@@ -379,24 +383,24 @@ namespace SDBees.Utils.ObjectXmlSerializer
         {
             T serializableObject = null;
 
-            using (FileStream fileStream = CreateFileStream(isolatedStorageFolder, path))
+            using (var fileStream = CreateFileStream(isolatedStorageFolder, path))
             {
-                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                var binaryFormatter = new BinaryFormatter();
                 serializableObject = binaryFormatter.Deserialize(fileStream) as T;
             }
 
             return serializableObject;
         }
 
-        private static T LoadFromDocumentFormat(System.Type[] extraTypes, string path, IsolatedStorageFile isolatedStorageFolder)
+        private static T LoadFromDocumentFormat(Type[] extraTypes, string path, IsolatedStorageFile isolatedStorageFolder)
         {
             T serializableObject = null;
 
             try
             {
-                using (TextReader textReader = CreateTextReader(isolatedStorageFolder, path))
+                using (var textReader = CreateTextReader(isolatedStorageFolder, path))
                 {
-                    XmlSerializer xmlSerializer = CreateXmlSerializer(extraTypes);
+                    var xmlSerializer = CreateXmlSerializer(extraTypes);
                     serializableObject = xmlSerializer.Deserialize(textReader) as T;
                 }
             }
@@ -407,15 +411,15 @@ namespace SDBees.Utils.ObjectXmlSerializer
             return serializableObject;
         }
 
-        private static T LoadFromStreamReader(System.Type[] extraTypes, StreamReader _textStreamReader)
+        private static T LoadFromStreamReader(Type[] extraTypes, StreamReader _textStreamReader)
         {
             T serializableObject = null;
 
             try
             {
-                using (TextReader textReader = _textStreamReader as TextReader)
+                using (TextReader textReader = _textStreamReader)
                 {
-                    XmlSerializer xmlSerializer = CreateXmlSerializer(extraTypes);
+                    var xmlSerializer = CreateXmlSerializer(extraTypes);
                     serializableObject = xmlSerializer.Deserialize(textReader) as T;
                 }
             }
@@ -439,7 +443,7 @@ namespace SDBees.Utils.ObjectXmlSerializer
             return textReader;
         }
 
-        private static TextWriter CreateTextWriter(IsolatedStorageFile isolatedStorageFolder, string path, System.Text.Encoding encode)
+        private static TextWriter CreateTextWriter(IsolatedStorageFile isolatedStorageFolder, string path, Encoding encode)
         {
             TextWriter textWriter = null;
 
@@ -451,11 +455,11 @@ namespace SDBees.Utils.ObjectXmlSerializer
             return textWriter;
         }
 
-        private static XmlSerializer CreateXmlSerializer(System.Type[] extraTypes)
+        private static XmlSerializer CreateXmlSerializer(Type[] extraTypes)
         {
             try
             {
-                Type ObjectType = typeof(T);
+                var ObjectType = typeof(T);
 
                 XmlSerializer xmlSerializer = null;
 
@@ -474,13 +478,13 @@ namespace SDBees.Utils.ObjectXmlSerializer
             }
         }
 
-        private static void SaveToDocumentFormat(T serializableObject, System.Type[] extraTypes, string path, IsolatedStorageFile isolatedStorageFolder, Encoding enc)
+        private static void SaveToDocumentFormat(T serializableObject, Type[] extraTypes, string path, IsolatedStorageFile isolatedStorageFolder, Encoding enc)
         {
-            using (TextWriter textWriter = CreateTextWriter(isolatedStorageFolder, path, enc))
+            using (var textWriter = CreateTextWriter(isolatedStorageFolder, path, enc))
             {
                 try
                 {
-                    XmlSerializer xmlSerializer = CreateXmlSerializer(extraTypes);
+                    var xmlSerializer = CreateXmlSerializer(extraTypes);
                     if (xmlns == null)
                         xmlSerializer.Serialize(textWriter, serializableObject);
                     else
@@ -496,9 +500,9 @@ namespace SDBees.Utils.ObjectXmlSerializer
 
         private static void SaveToBinaryFormat(T serializableObject, string path, IsolatedStorageFile isolatedStorageFolder)
         {
-            using (FileStream fileStream = CreateFileStream(isolatedStorageFolder, path))
+            using (var fileStream = CreateFileStream(isolatedStorageFolder, path))
             {
-                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                var binaryFormatter = new BinaryFormatter();
                 binaryFormatter.Serialize(fileStream, serializableObject);
             }
         }

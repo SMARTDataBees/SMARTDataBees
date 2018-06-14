@@ -8,10 +8,16 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.CodeDom.Compiler;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
+using System.Globalization;
+using System.Resources;
+using System.Runtime.CompilerServices;
+
 namespace SDBees.Core.Properties {
-    using System;
-    
-    
     /// <summary>
     ///   Eine stark typisierte Ressourcenklasse zum Suchen von lokalisierten Zeichenfolgen usw.
     /// </summary>
@@ -19,27 +25,27 @@ namespace SDBees.Core.Properties {
     // -Klasse über ein Tool wie ResGen oder Visual Studio automatisch generiert.
     // Um einen Member hinzuzufügen oder zu entfernen, bearbeiten Sie die .ResX-Datei und führen dann ResGen
     // mit der /str-Option erneut aus, oder Sie erstellen Ihr VS-Projekt neu.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [GeneratedCode("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [DebuggerNonUserCode()]
+    [CompilerGenerated()]
     internal class Resources {
         
-        private static global::System.Resources.ResourceManager resourceMan;
+        private static ResourceManager resourceMan;
         
-        private static global::System.Globalization.CultureInfo resourceCulture;
+        private static CultureInfo resourceCulture;
         
-        [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Resources() {
         }
         
         /// <summary>
         ///   Gibt die zwischengespeicherte ResourceManager-Instanz zurück, die von dieser Klasse verwendet wird.
         /// </summary>
-        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        internal static ResourceManager ResourceManager {
             get {
-                if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SDBees.Core.Properties.Resources", typeof(Resources).Assembly);
+                if (ReferenceEquals(resourceMan, null)) {
+                    var temp = new ResourceManager("SDBees.Core.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -50,8 +56,8 @@ namespace SDBees.Core.Properties {
         ///   Überschreibt die CurrentUICulture-Eigenschaft des aktuellen Threads für alle
         ///   Ressourcenzuordnungen, die diese stark typisierte Ressourcenklasse verwenden.
         /// </summary>
-        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        internal static CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,120 +69,120 @@ namespace SDBees.Core.Properties {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap About {
+        internal static Bitmap About {
             get {
-                object obj = ResourceManager.GetObject("About", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                var obj = ResourceManager.GetObject("About", resourceCulture);
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Exit {
+        internal static Bitmap Exit {
             get {
-                object obj = ResourceManager.GetObject("Exit", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                var obj = ResourceManager.GetObject("Exit", resourceCulture);
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Explorer {
+        internal static Bitmap Explorer {
             get {
-                object obj = ResourceManager.GetObject("Explorer", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                var obj = ResourceManager.GetObject("Explorer", resourceCulture);
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Icon ähnlich wie (Symbol).
         /// </summary>
-        internal static System.Drawing.Icon IconFailed {
+        internal static Icon IconFailed {
             get {
-                object obj = ResourceManager.GetObject("IconFailed", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
+                var obj = ResourceManager.GetObject("IconFailed", resourceCulture);
+                return ((Icon)(obj));
             }
         }
         
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap SDBees {
+        internal static Bitmap SDBees {
             get {
-                object obj = ResourceManager.GetObject("SDBees", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                var obj = ResourceManager.GetObject("SDBees", resourceCulture);
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Icon ähnlich wie (Symbol).
         /// </summary>
-        internal static System.Drawing.Icon SDBees_Demoplugins_Dummys_Dummy1 {
+        internal static Icon SDBees_Demoplugins_Dummys_Dummy1 {
             get {
-                object obj = ResourceManager.GetObject("SDBees_Demoplugins_Dummys_Dummy1", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
+                var obj = ResourceManager.GetObject("SDBees_Demoplugins_Dummys_Dummy1", resourceCulture);
+                return ((Icon)(obj));
             }
         }
         
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Icon ähnlich wie (Symbol).
         /// </summary>
-        internal static System.Drawing.Icon SDBees_Demoplugins_Dummys_Dummy2 {
+        internal static Icon SDBees_Demoplugins_Dummys_Dummy2 {
             get {
-                object obj = ResourceManager.GetObject("SDBees_Demoplugins_Dummys_Dummy2", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
+                var obj = ResourceManager.GetObject("SDBees_Demoplugins_Dummys_Dummy2", resourceCulture);
+                return ((Icon)(obj));
             }
         }
         
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Icon ähnlich wie (Symbol).
         /// </summary>
-        internal static System.Drawing.Icon SDBeesIcon {
+        internal static Icon SDBeesIcon {
             get {
-                object obj = ResourceManager.GetObject("SDBeesIcon", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
+                var obj = ResourceManager.GetObject("SDBeesIcon", resourceCulture);
+                return ((Icon)(obj));
             }
         }
         
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap SecurityAllow {
+        internal static Bitmap SecurityAllow {
             get {
-                object obj = ResourceManager.GetObject("SecurityAllow", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                var obj = ResourceManager.GetObject("SecurityAllow", resourceCulture);
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap SecurityDeny {
+        internal static Bitmap SecurityDeny {
             get {
-                object obj = ResourceManager.GetObject("SecurityDeny", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                var obj = ResourceManager.GetObject("SecurityDeny", resourceCulture);
+                return ((Bitmap)(obj));
             }
         }
         
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Icon ähnlich wie (Symbol).
         /// </summary>
-        internal static System.Drawing.Icon StandardIcon {
+        internal static Icon StandardIcon {
             get {
-                object obj = ResourceManager.GetObject("StandardIcon", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
+                var obj = ResourceManager.GetObject("StandardIcon", resourceCulture);
+                return ((Icon)(obj));
             }
         }
         
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap User {
+        internal static Bitmap User {
             get {
-                object obj = ResourceManager.GetObject("User", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                var obj = ResourceManager.GetObject("User", resourceCulture);
+                return ((Bitmap)(obj));
             }
         }
     }

@@ -30,7 +30,7 @@
 //	============================================================================
 
 using System;
-
+using System.Diagnostics;
 using Carbon.Common;
 
 namespace Carbon.MultiThreading
@@ -39,7 +39,7 @@ namespace Carbon.MultiThreading
 	/// Provides a strongly-typed collection of BackgroundThread instances.
 	/// This class is thread safe.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public sealed class BackgroundThreadCollection : DisposableCollection
 	{
 		#region BackgroundThreadAlreadyExistsException
@@ -93,26 +93,18 @@ namespace Carbon.MultiThreading
 			return list.InnerList.ToArray(typeof(BackgroundThread)) as BackgroundThread[];
 		}
 
-		/// <summary>
-		/// Initializes a new instance of the BackgroundThreadCollection class
-		/// </summary>
-		public BackgroundThreadCollection()
-		{
-
-		}
-
-		/// <summary>
+	    /// <summary>
 		/// Adds a thread to the collection
 		/// </summary>
 		/// <param name="thread">The thread to add</param>
 		public void Add(BackgroundThread thread)
 		{
-			if (this.Contains(thread))
+			if (Contains(thread))
 				throw new BackgroundThreadAlreadyExistsException(thread);
 			
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
-				base.InnerList.Add(thread);
+				InnerList.Add(thread);
 			}
 		}
 
@@ -122,10 +114,10 @@ namespace Carbon.MultiThreading
 		/// <param name="thread">The thread to remove</param>
 		public void Remove(BackgroundThread thread)
 		{
-			if (this.Contains(thread))
-				lock (base.SyncRoot)
+			if (Contains(thread))
+				lock (SyncRoot)
 				{
-					base.InnerList.Remove(thread);
+					InnerList.Remove(thread);
 				}
 		}
 
@@ -151,10 +143,10 @@ namespace Carbon.MultiThreading
 			if (thread == null)
 				throw new ArgumentNullException("thread");
 			
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
-				foreach(BackgroundThread t in base.InnerList)
-					if (object.Equals(t, thread))
+				foreach(BackgroundThread t in InnerList)
+					if (Equals(t, thread))
 						return true;
 				return false;
 			}
@@ -167,9 +159,9 @@ namespace Carbon.MultiThreading
 		{
 			get
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
-					return base.InnerList[index] as BackgroundThread;
+					return InnerList[index] as BackgroundThread;
 				}
 			}
 		}

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
+using SDBees.Core.Connectivity;
 
 namespace SDBees.Core.Model
 {
@@ -28,13 +26,13 @@ namespace SDBees.Core.Model
             set { m_CADInfo = value; }
         }
 
-        internal static SDBeesCADDocument CreateFromDBRecord(Connectivity.ConnectivityManagerDocumentBaseData docdata)
+        internal static SDBeesCADDocument CreateFromDBRecord(ConnectivityManagerDocumentBaseData docdata)
         {
-            SDBeesCADDocument doc = new SDBeesCADDocument();
+            var doc = new SDBeesCADDocument();
             try
             {
-                doc.m_id = new Guid(docdata.GetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_IdSDBeesColumnName).ToString());
-                doc.m_CADInfo = SDBeesDocumentCADInfo.Create(docdata.GetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_DocumentCADInfoColumnName).ToString());
+                doc.m_id = new Guid(docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_IdSDBeesColumnName).ToString());
+                doc.m_CADInfo = SDBeesDocumentCADInfo.Create(docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_DocumentCADInfoColumnName).ToString());
             }
             catch (Exception ex)
             {

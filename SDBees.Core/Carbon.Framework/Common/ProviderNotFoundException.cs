@@ -30,13 +30,14 @@
 //	============================================================================
 
 using System;
+using System.Diagnostics;
 
 namespace Carbon.Common
 {
 	/// <summary>
 	/// Defines an exception that can be thrown when a Provider cannot be found.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public class ProviderNotFoundException : ApplicationException
 	{
 		private readonly string _name;
@@ -46,7 +47,7 @@ namespace Carbon.Common
 		/// </summary>
 		/// <param name="name">The name of the provider that could not be found</param>
 		public ProviderNotFoundException(string name) : 
-			base(string.Format("No provider could be found with the name '{0}'.\nPlease refer to the log files for exception details.", name))
+			base($"No provider could be found with the name '{name}'.\nPlease refer to the log files for exception details.")
 		{
 			_name = name;
 		}

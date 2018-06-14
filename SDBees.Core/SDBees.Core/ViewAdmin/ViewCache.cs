@@ -23,7 +23,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
-
+using System.Data;
 using SDBees.DB;
 
 namespace SDBees.ViewAdmin
@@ -32,9 +32,9 @@ namespace SDBees.ViewAdmin
     {
         #region Private Data Members
 
-        private static ViewCacheImplementation s_viewCache = null;
+        private static ViewCacheImplementation s_viewCache;
 
-        private static int s_enabled = 0;
+        private static int s_enabled;
 
         #endregion
 
@@ -76,7 +76,7 @@ namespace SDBees.ViewAdmin
         {
             if (s_enabled == 0)
             {
-                bool activateCache = true;
+                var activateCache = true;
 
                 s_viewCache = CreateViewCacheImplementation(SDBeesDBConnection.Current.Database, activateCache);
 
@@ -155,11 +155,11 @@ namespace SDBees.ViewAdmin
 
             public abstract ArrayList ViewDefinitions(string criteriaViewDef, ref Error error);
 
-            public abstract bool ViewDefinition(object id, out SDBees.ViewAdmin.ViewDefinition viewDefinition, ref Error error);
+            public abstract bool ViewDefinition(object id, out ViewDefinition viewDefinition, ref Error error);
 
             public abstract ArrayList ViewRelations(string criteria, ref Error error);
 
-            public abstract bool ViewRelation(object id, out SDBees.ViewAdmin.ViewRelation viewRelation, ref Error error);
+            public abstract bool ViewRelation(object id, out ViewRelation viewRelation, ref Error error);
 
             public abstract object Parent(Table table, string columnName, string idCriteria, ref Error error);
 
@@ -181,7 +181,7 @@ namespace SDBees.ViewAdmin
             {
                 get
                 {
-                    if (mViewDefinitionInstance == null) mViewDefinitionInstance = new SDBees.ViewAdmin.ViewDefinition();
+                    if (mViewDefinitionInstance == null) mViewDefinitionInstance = new ViewDefinition();
 
                     return mViewDefinitionInstance.Table;
                 }
@@ -191,7 +191,7 @@ namespace SDBees.ViewAdmin
             {
                 get
                 {
-                    if (mViewRelationInstance == null) mViewRelationInstance = new SDBees.ViewAdmin.ViewRelation();
+                    if (mViewRelationInstance == null) mViewRelationInstance = new ViewRelation();
 
                     return mViewRelationInstance.Table;
                 }
@@ -199,11 +199,11 @@ namespace SDBees.ViewAdmin
 
             private bool mEnabled = true;
 
-            private Database mDatabase = null;
+            private Database mDatabase;
 
-            private SDBees.ViewAdmin.ViewDefinition mViewDefinitionInstance = null;
+            private ViewDefinition mViewDefinitionInstance;
 
-            private SDBees.ViewAdmin.ViewRelation mViewRelationInstance = null;
+            private ViewRelation mViewRelationInstance;
         }
 
         public class ViewCacheImplementationOne : ViewCacheImplementation
@@ -228,13 +228,13 @@ namespace SDBees.ViewAdmin
 
             public override ArrayList ViewDefinitions(string criteriaViewDef, ref Error error)
             {
-                ArrayList lstViewDefs = new ArrayList();
+                var lstViewDefs = new ArrayList();
 
 #if PROFILER
                 SDBees.Profiler.Start("ViewCache.ViewDefinitions");
 #endif
 
-                bool found = mViewDefinitions.TryGetValue(criteriaViewDef, out lstViewDefs);
+                var found = mViewDefinitions.TryGetValue(criteriaViewDef, out lstViewDefs);
 
                 if (!found)
                 {
@@ -258,15 +258,15 @@ namespace SDBees.ViewAdmin
                 return lstViewDefs;
             }
 
-            public override bool ViewDefinition(object id, out SDBees.ViewAdmin.ViewDefinition viewDefinition, ref Error error)
+            public override bool ViewDefinition(object id, out ViewDefinition viewDefinition, ref Error error)
             {
-                bool result = false;
+                var result = false;
 
 #if PROFILER
                 SDBees.Profiler.Start("ViewCache.ViewDefinition");
 #endif
 
-                bool found = mViewDefinition.TryGetValue(id, out viewDefinition);
+                var found = mViewDefinition.TryGetValue(id, out viewDefinition);
 
                 if (!found)
                 {
@@ -274,19 +274,19 @@ namespace SDBees.ViewAdmin
                     SDBees.Profiler.Start("ViewCache.Load");
 #endif
 
-                    SDBees.DB.Object viewObject = new SDBees.ViewAdmin.ViewDefinition();
+                    Object viewObject = new ViewDefinition();
 
                     result = Load(database, ref viewObject, id, ref error);
 
                     if (result)
                     {
-                        viewDefinition = (SDBees.ViewAdmin.ViewDefinition)viewObject;
+                        viewDefinition = (ViewDefinition)viewObject;
 
                         mViewDefinition.Add(id, viewDefinition);
                     }
                     else
                     {
-                        viewDefinition = new SDBees.ViewAdmin.ViewDefinition();
+                        viewDefinition = new ViewDefinition();
                     }
 
 #if PROFILER
@@ -306,13 +306,13 @@ namespace SDBees.ViewAdmin
 
             public override ArrayList ViewRelations(string criteria, ref Error error)
             {
-                ArrayList objectIds = new ArrayList();
+                var objectIds = new ArrayList();
 
 #if PROFILER
                 SDBees.Profiler.Start("ViewCache.ViewRelations");
 #endif
 
-                bool found = mViewRelations.TryGetValue(criteria, out objectIds);
+                var found = mViewRelations.TryGetValue(criteria, out objectIds);
 
                 if (!found)
                 {
@@ -336,15 +336,15 @@ namespace SDBees.ViewAdmin
                 return objectIds;
             }
 
-            public override bool ViewRelation(object id, out SDBees.ViewAdmin.ViewRelation viewRelation, ref Error error)
+            public override bool ViewRelation(object id, out ViewRelation viewRelation, ref Error error)
             {
-                bool result = false;
+                var result = false;
 
 #if PROFILER
                 SDBees.Profiler.Start("ViewCache.ViewRelation");
 #endif
 
-                bool found = mViewRelation.TryGetValue(id, out viewRelation);
+                var found = mViewRelation.TryGetValue(id, out viewRelation);
 
                 if (!found)
                 {
@@ -352,19 +352,19 @@ namespace SDBees.ViewAdmin
                     SDBees.Profiler.Start("ViewCache.Load");
 #endif
 
-                    SDBees.DB.Object viewObject = new SDBees.ViewAdmin.ViewRelation();
+                    Object viewObject = new ViewRelation();
 
                     result = Load(database, ref viewObject, id, ref error);
 
                     if (result)
                     {
-                        viewRelation = (SDBees.ViewAdmin.ViewRelation)viewObject;
+                        viewRelation = (ViewRelation)viewObject;
 
                         mViewRelation.Add(id, viewRelation);
                     }
                     else
                     {
-                        viewRelation = new SDBees.ViewAdmin.ViewRelation();
+                        viewRelation = new ViewRelation();
                     }
 
 #if PROFILER
@@ -391,7 +391,7 @@ namespace SDBees.ViewAdmin
                 SDBees.Profiler.Start("ViewCache.Parent");
 #endif
 
-                bool found = mParent.TryGetValue(idCriteria, out result);
+                var found = mParent.TryGetValue(idCriteria, out result);
 
                 if (!found)
                 {
@@ -443,19 +443,19 @@ namespace SDBees.ViewAdmin
 
             private int Select(Database database, Table table, string criteria, ref ArrayList values, ref Error error)
             {
-                int result = 0;
+                var result = 0;
 
                 if (UseDataTable)
                 {
                     values = new ArrayList();
 
-                    System.Data.DataTable dataTable = GetDataTable(table);
+                    var dataTable = GetDataTable(table);
 
-                    System.Data.DataRow[] dataRows = dataTable.Select(criteria);
+                    var dataRows = dataTable.Select(criteria);
 
-                    foreach (System.Data.DataRow dataRow in dataRows)
+                    foreach (var dataRow in dataRows)
                     {
-                        object viewObject = dataRow[table.PrimaryKey];
+                        var viewObject = dataRow[table.PrimaryKey];
 
                         if (viewObject != null)
                         {
@@ -484,15 +484,12 @@ namespace SDBees.ViewAdmin
                 {
                     return database.SelectSingle(table.Name, searchColumn, criteria, ref error);
                 }
-                else
-                {
-                    return database.SelectSingle(table.Name, searchColumn, criteria, ref error);
-                }
+                return database.SelectSingle(table.Name, searchColumn, criteria, ref error);
             }
 
-            private System.Data.DataTable GetDataTable(Table table)
+            private DataTable GetDataTable(Table table)
             {
-                System.Data.DataTable dataTable = null;
+                DataTable dataTable = null;
 
                 if (!m_map.TryGetValue(table, out dataTable))
                 {
@@ -510,29 +507,29 @@ namespace SDBees.ViewAdmin
 
                 database.Open(true, ref error);
 
-                System.Data.DataTable viewDefinitionDataTable = SDBees.DB.SDBeesDBConnection.Current.GetDataTableForPlugin(new ViewDefinition().GetTableName);
+                var viewDefinitionDataTable = SDBeesDBConnection.Current.GetDataTableForPlugin(new ViewDefinition().GetTableName);
 
                 m_map.Add(ViewDefinitionTable, viewDefinitionDataTable);
 
-                System.Data.DataTable viewRelationDataTable = SDBees.DB.SDBeesDBConnection.Current.GetDataTableForPlugin(new ViewRelation().GetTableName);
+                var viewRelationDataTable = SDBeesDBConnection.Current.GetDataTableForPlugin(new ViewRelation().GetTableName);
 
                 m_map.Add(ViewRelationTable, viewRelationDataTable);
 
                 database.Close(ref error);
             }
 
-            private Dictionary<Table, System.Data.DataTable> m_map = new Dictionary<Table, System.Data.DataTable>();
+            private Dictionary<Table, DataTable> m_map = new Dictionary<Table, DataTable>();
 
             private Cache<string, ArrayList> mViewDefinitions = new Cache<string, ArrayList>("ViewDefinitions");
 
-            private Cache<object, SDBees.ViewAdmin.ViewDefinition> mViewDefinition = new Cache<object, SDBees.ViewAdmin.ViewDefinition>("ViewDefinition");
+            private Cache<object, ViewDefinition> mViewDefinition = new Cache<object, ViewDefinition>("ViewDefinition");
 
             private Cache<string, ArrayList> mViewRelations = new Cache<string, ArrayList>("ViewRelations");
 
-            private Cache<object, SDBees.ViewAdmin.ViewRelation> mViewRelation = new Cache<object, SDBees.ViewAdmin.ViewRelation>("ViewRelation");
+            private Cache<object, ViewRelation> mViewRelation = new Cache<object, ViewRelation>("ViewRelation");
 
             private Cache<string, object> mParent = new Cache<string, object>("Parent");
-        };
+        }
 
         internal class Cache<TKey, TValue> where TValue : new()
         {
@@ -570,7 +567,7 @@ namespace SDBees.ViewAdmin
 
             public bool TryGetValue(TKey key, out TValue value)
             {
-                bool result = false;
+                var result = false;
 
                 if (mEnabled)
                 {
@@ -619,15 +616,15 @@ namespace SDBees.ViewAdmin
 
             private bool mEnabled = true;
 
-            private Dictionary<TKey, TValue> mCache = null;
+            private Dictionary<TKey, TValue> mCache;
 
             private string mName = "Cache";
 
-            private int mHits = 0;
+            private int mHits;
 
-            private int mMisses = 0;
+            private int mMisses;
 
-            private int mPerformance = 0;
+            private int mPerformance;
         }
 
         #endregion

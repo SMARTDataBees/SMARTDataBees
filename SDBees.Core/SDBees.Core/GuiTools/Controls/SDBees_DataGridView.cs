@@ -9,18 +9,17 @@ using System.Windows.Forms;
 namespace SDBees.GuiTools.Controls
 {
     [Description("DataGridView that Saves Column Order, Width and Visibility to user.config")]
-    [ToolboxBitmap(typeof(System.Windows.Forms.DataGridView))]
+    [ToolboxBitmap(typeof(DataGridView))]
     public class SDBees_DataGridView : DataGridView
     {
         public SDBees_DataGridView()
-            : base()
         {
-            this.KeyDown += this_KeyDown;
+            KeyDown += this_KeyDown;
         }
 
         private void this_KeyDown(object sender, EventArgs e)
         {
-            KeyEventArgs keyEventArgs = e as KeyEventArgs;
+            var keyEventArgs = e as KeyEventArgs;
 
             if (keyEventArgs != null)
             {
@@ -39,12 +38,12 @@ namespace SDBees.GuiTools.Controls
 
         private void SetColumnOrder()
         {
-            if (this.Columns.Count > 0)
+            if (Columns.Count > 0)
             {
-                if (!gfDataGridViewSetting.Default.ColumnOrder.ContainsKey(this.Name))
+                if (!gfDataGridViewSetting.Default.ColumnOrder.ContainsKey(Name))
                     return;
 
-                List<ColumnOrderItem> columnOrder = gfDataGridViewSetting.Default.ColumnOrder[this.Name];
+                var columnOrder = gfDataGridViewSetting.Default.ColumnOrder[Name];
 
                 if (columnOrder != null)
                 {
@@ -53,9 +52,9 @@ namespace SDBees.GuiTools.Controls
                     {
                         try
                         {
-                            this.Columns[item.ColumnIndex].DisplayIndex = item.DisplayIndex;
-                            this.Columns[item.ColumnIndex].Visible = item.Visible;
-                            this.Columns[item.ColumnIndex].Width = item.Width;
+                            Columns[item.ColumnIndex].DisplayIndex = item.DisplayIndex;
+                            Columns[item.ColumnIndex].Visible = item.Visible;
+                            Columns[item.ColumnIndex].Width = item.Width;
                         }
                         catch (Exception ex)
                         {
@@ -69,13 +68,13 @@ namespace SDBees.GuiTools.Controls
         //---------------------------------------------------------------------
         private void SaveColumnOrder()
         {
-            if (this.Columns.Count > 0)
+            if (Columns.Count > 0)
             {
-                if (this.AllowUserToOrderColumns)
+                if (AllowUserToOrderColumns)
                 {
-                    List<ColumnOrderItem> columnOrder = new List<ColumnOrderItem>();
-                    DataGridViewColumnCollection columns = this.Columns;
-                    for (int i = 0; i < columns.Count; i++)
+                    var columnOrder = new List<ColumnOrderItem>();
+                    var columns = Columns;
+                    for (var i = 0; i < columns.Count; i++)
                     {
                         columnOrder.Add(new ColumnOrderItem
                         {
@@ -86,7 +85,7 @@ namespace SDBees.GuiTools.Controls
                         });
                     }
 
-                    gfDataGridViewSetting.Default.ColumnOrder[this.Name] = columnOrder;
+                    gfDataGridViewSetting.Default.ColumnOrder[Name] = columnOrder;
                     gfDataGridViewSetting.Default.Save();
                 }
             }
@@ -99,15 +98,15 @@ namespace SDBees.GuiTools.Controls
             //LoadSortInformations();
         }
 
-        bool m_dragColumnHeader = false;
+        bool m_dragColumnHeader;
         protected override void OnMouseDown(MouseEventArgs e)
         {
             try
             {
-                HitTestInfo hti = base.HitTest(e.X, e.Y);
+                var hti = HitTest(e.X, e.Y);
                 if ((AllowUserToOrderColumns) &&
                     (hti.Type == DataGridViewHitTestType.ColumnHeader) &&
-                    ((e.Button & System.Windows.Forms.MouseButtons.Left) == System.Windows.Forms.MouseButtons.Left))
+                    ((e.Button & MouseButtons.Left) == MouseButtons.Left))
                 {
                     m_cacheCurrentColumnIndex = hti.ColumnIndex;
 
@@ -125,8 +124,8 @@ namespace SDBees.GuiTools.Controls
         {
             try
             {
-                DataGridViewColumn col = this.Columns[e.ColumnIndex];
-                SaveSortInformations(col.Name, this.SortOrder);
+                var col = Columns[e.ColumnIndex];
+                SaveSortInformations(col.Name, SortOrder);
             }
             catch (Exception ex)
             {
@@ -138,14 +137,14 @@ namespace SDBees.GuiTools.Controls
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            bool save = false;
+            var save = false;
 
             try
             {
-                HitTestInfo hti = base.HitTest(e.X, e.Y);
+                var hti = HitTest(e.X, e.Y);
                 if ((AllowUserToOrderColumns) &&
                     (hti.Type == DataGridViewHitTestType.ColumnHeader) &&
-                    ((e.Button & System.Windows.Forms.MouseButtons.Left) == System.Windows.Forms.MouseButtons.Left) &&
+                    ((e.Button & MouseButtons.Left) == MouseButtons.Left) &&
                     m_dragColumnHeader)
                 {
                     m_dragColumnHeader = false;
@@ -177,7 +176,7 @@ namespace SDBees.GuiTools.Controls
             //ApplySortAndOrder();
         }
 
-        private int m_cacheCurrentColumnIndex = 0;
+        private int m_cacheCurrentColumnIndex;
 
         protected override void OnDataSourceChanged(EventArgs e)
         {
@@ -200,22 +199,22 @@ namespace SDBees.GuiTools.Controls
 
         private void clearSelection()
         {
-            if (0 < this.Rows.Count)
+            if (0 < Rows.Count)
             {
-                if (m_cacheCurrentColumnIndex < this.Rows[0].Cells.Count)
+                if (m_cacheCurrentColumnIndex < Rows[0].Cells.Count)
                 {
-                    this.CurrentCell = this.Rows[0].Cells[m_cacheCurrentColumnIndex];
+                    CurrentCell = Rows[0].Cells[m_cacheCurrentColumnIndex];
                 }
             }
 
-            this.ClearSelection();
+            ClearSelection();
         }
 
         private void ApplySortAndOrder()
         {
             if (DataSource != null)
             {
-                foreach (DataGridViewColumn column in this.Columns)
+                foreach (DataGridViewColumn column in Columns)
                 {
                     if (column.SortMode == DataGridViewColumnSortMode.NotSortable)
                     {
@@ -223,8 +222,8 @@ namespace SDBees.GuiTools.Controls
                     }
                 }
 
-                this.SetColumnOrder();
-                this.LoadSortInformations();
+                SetColumnOrder();
+                LoadSortInformations();
                 //this.SaveSortInformations(this.SortColumn.Name, this.SortOrder);
             }
         }
@@ -247,9 +246,9 @@ namespace SDBees.GuiTools.Controls
             //SortColumn = columnName;
         }
 
-        bool internalSorting = false;
+        bool internalSorting;
 
-        DataGridViewColumn m_sortColumn = null;
+        DataGridViewColumn m_sortColumn;
         public DataGridViewColumn MySortColumn
         {
             get { return m_sortColumn; }
@@ -260,18 +259,18 @@ namespace SDBees.GuiTools.Controls
         {
             if (gfDataGridViewSetting.Default.ActiveSortColumn != null && !String.IsNullOrEmpty(gfDataGridViewSetting.Default.ActiveSortColumn))
             {
-                if (this.Columns.Contains(gfDataGridViewSetting.Default.ActiveSortColumn))
+                if (Columns.Contains(gfDataGridViewSetting.Default.ActiveSortColumn))
                 {
-                    DataGridViewColumn col = this.Columns[gfDataGridViewSetting.Default.ActiveSortColumn];
+                    var col = Columns[gfDataGridViewSetting.Default.ActiveSortColumn];
                     if (col != null)
                     {
                         if (col.SortMode != DataGridViewColumnSortMode.NotSortable)
                         {
-                            this.internalSorting = true;
+                            internalSorting = true;
                             MySortColumn = col;
-                            SortOrder s = this.SortOrder;
+                            var s = SortOrder;
 
-                            ListSortDirection direction = gfDataGridViewSetting.Default.ActiveListSortOrder;
+                            var direction = gfDataGridViewSetting.Default.ActiveListSortOrder;
 
                             if (col.HeaderCell.SortGlyphDirection == SortOrder.Ascending)
                                 direction = ListSortDirection.Ascending;
@@ -299,9 +298,9 @@ namespace SDBees.GuiTools.Controls
             }
             else
             {
-                if (this.SortedColumn != null && this.SortOrder != SortOrder.None)
+                if (SortedColumn != null && SortOrder != SortOrder.None)
                 {
-                    SaveSortInformations(this.SortedColumn.Name, this.SortOrder);
+                    SaveSortInformations(SortedColumn.Name, SortOrder);
                     LoadSortInformations();
                 }
             }
@@ -313,7 +312,7 @@ namespace SDBees.GuiTools.Controls
     /// </summary>
     internal sealed class gfDataGridViewSetting : ApplicationSettingsBase
     {
-        private static gfDataGridViewSetting _defaultInstace = (gfDataGridViewSetting)ApplicationSettingsBase.Synchronized(new gfDataGridViewSetting());
+        private static gfDataGridViewSetting _defaultInstace = (gfDataGridViewSetting)Synchronized(new gfDataGridViewSetting());
         //---------------------------------------------------------------------
         public static gfDataGridViewSetting Default
         {

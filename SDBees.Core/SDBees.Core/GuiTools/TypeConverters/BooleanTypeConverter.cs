@@ -1,27 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
+using System.Globalization;
 
 namespace SDBees.Core.GuiTools.TypeConverters
 {
     public class BooleanTypeConverter : TypeConverter
     {
-        public BooleanTypeConverter() :base()
-        {
-
-        }
-
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
             return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
         }
 
-        public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             object result = null; // base.ConvertFrom(context, culture, value);
-            bool boolValue = false;
+            var boolValue = false;
 
             if(bool.TryParse(value.ToString(), out boolValue))
             {
@@ -45,7 +38,7 @@ namespace SDBees.Core.GuiTools.TypeConverters
             return result; 
         }
 
-        public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
             object result = null; //= base.ConvertTo(context, culture, value, destinationType);
             bool mybool;

@@ -20,12 +20,12 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using System.Data;
-using SDBees.DB.Forms;
+using SDBees.Core.Model;
 
 namespace SDBees.DB
 {
@@ -77,7 +77,7 @@ namespace SDBees.DB
         /// <summary>
         /// First value is not like, means is not contained in
         /// </summary>
-        eIsNotLike          = 10,
+        eIsNotLike          = 10
     }
 
     /// <summary>
@@ -96,7 +96,7 @@ namespace SDBees.DB
         /// <summary>
         /// One of both values must be true to fulfill the criteria
         /// </summary>
-        eOr                 = 2,   
+        eOr                 = 2   
     }
 
     /// <summary>
@@ -168,7 +168,7 @@ namespace SDBees.DB
             object result = null;
 
             ArrayList values = null;
-            int numFound = GetRowValues(ref values, tableName, columnName, criteria, false, true, 0, ref error);
+            var numFound = GetRowValues(ref values, tableName, columnName, criteria, false, true, 0, ref error);
             if (numFound == 1)
             {
                 result = values[0];
@@ -198,20 +198,20 @@ namespace SDBees.DB
             }
 
             // now build the query...
-            string query = MakeSelectQuery(tableName, columnName, criteria, topCount);
+            var query = MakeSelectQuery(tableName, columnName, criteria, topCount);
 
             // Execute the query and fill the data set...
-            DataSet ds = new DataSet();
+            var ds = new DataSet();
             if (FillDataSet(query,ref ds, ref error, tableName))
             {
                 // Get values from the table...
-                DataTable table = ds.Tables[0];
+                var table = ds.Tables[0];
                 foreach (DataRow dataRow in table.Rows)
                 {
-                    object vObject = dataRow[0];
+                    var vObject = dataRow[0];
                     if (vObject != DBNull.Value)
                     {
-                        string strValue = vObject.ToString();
+                        var strValue = vObject.ToString();
                         if (allowMultiple || (!values.Contains(strValue)))
                         {
                             values.Add(strValue);
@@ -231,16 +231,16 @@ namespace SDBees.DB
         /// <returns>true if successful</returns>
         public virtual bool CreateTable(Table table, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if (mDatabase != null)
             {
-                string columnDefinitions = "";
+                var columnDefinitions = "";
 
-                foreach (KeyValuePair<string, Column> iterator in table.Columns)
+                foreach (var iterator in table.Columns)
                 {
-                    Column column = iterator.Value;
-                    string columnDefinition = GetColumnDefinition(column);
+                    var column = iterator.Value;
+                    var columnDefinition = GetColumnDefinition(column);
 
                     if (columnDefinitions != "")
                     {
@@ -255,7 +255,7 @@ namespace SDBees.DB
                     columnDefinitions += columnDefinition;
                 }
 
-                string cmdString = "CREATE TABLE " + table.Name + " (" + columnDefinitions + ")";
+                var cmdString = "CREATE TABLE " + table.Name + " (" + columnDefinitions + ")";
 
                 success = ExecuteCommand(cmdString, ref error);
             }
@@ -272,18 +272,18 @@ namespace SDBees.DB
         /// <returns>true if successful</returns>
         public virtual bool UpdateTable(Table table, Table oldTable, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if (mDatabase != null)
             {
-                string specifications = "";
+                var specifications = "";
 
                 // First check for new and modified columns...
-                foreach (KeyValuePair<string, Column> iterator in table.Columns)
+                foreach (var iterator in table.Columns)
                 {
-                    Column column = iterator.Value;
+                    var column = iterator.Value;
 
-                    string columnDefinition = GetColumnDefinition(column);
+                    var columnDefinition = GetColumnDefinition(column);
 
                     if (!oldTable.Columns.ContainsKey(column.Name))
                     {
@@ -313,9 +313,9 @@ namespace SDBees.DB
                 }
 
                 // second step columns to drop
-                foreach (KeyValuePair<string, Column> iterator in oldTable.Columns)
+                foreach (var iterator in oldTable.Columns)
                 {
-                    Column column = iterator.Value;
+                    var column = iterator.Value;
 
                     if (!table.Columns.ContainsKey(column.Name))
                     {
@@ -328,7 +328,7 @@ namespace SDBees.DB
                     }
                 }
 
-                string cmdString = "ALTER TABLE " + table.Name + specifications;
+                var cmdString = "ALTER TABLE " + table.Name + specifications;
 
                 success = ExecuteCommand(cmdString, ref error);
             }
@@ -349,17 +349,17 @@ namespace SDBees.DB
 
             if (mDatabase != null)
             {
-                string criteria = "(TABLE_NAME = '" + tableName + "') AND (TABLE_SCHEMA = '" + mDatabase.Name + "')";
+                var criteria = "(TABLE_NAME = '" + tableName + "') AND (TABLE_SCHEMA = '" + mDatabase.Name + "')";
 
                 // now build the query...
-                string query = MakeSelectQuery("INFORMATION_SCHEMA.COLUMNS", "*", criteria, 0);
+                var query = MakeSelectQuery("INFORMATION_SCHEMA.COLUMNS", "*", criteria, 0);
 
                 // Execute the query and fill the data set...
-                DataSet dataSet = new DataSet();
+                var dataSet = new DataSet();
                 if (FillDataSet(query,ref dataSet, ref error, tableName))
                 {
                     // Get values from the table...
-                    DataTable dataTable = dataSet.Tables[0];
+                    var dataTable = dataSet.Tables[0];
 
                     if (dataTable.Rows.Count > 0)
                     {
@@ -367,11 +367,11 @@ namespace SDBees.DB
 
                         foreach (DataRow dataRow in dataTable.Rows)
                         {
-                            string columnName = dataRow["COLUMN_NAME"].ToString();
-                            string ordinalPosition = dataRow["ORDINAL_POSITION"].ToString();
-                            string dataType = dataRow["DATA_TYPE"].ToString();
-                            string defaultValue = dataRow["COLUMN_DEFAULT"].ToString();
-                            string isNullable = dataRow["IS_NULLABLE"].ToString();
+                            var columnName = dataRow["COLUMN_NAME"].ToString();
+                            var ordinalPosition = dataRow["ORDINAL_POSITION"].ToString();
+                            var dataType = dataRow["DATA_TYPE"].ToString();
+                            var defaultValue = dataRow["COLUMN_DEFAULT"].ToString();
+                            var isNullable = dataRow["IS_NULLABLE"].ToString();
                         }
                     }
                 }
@@ -390,21 +390,21 @@ namespace SDBees.DB
         /// <returns>True if successful</returns>
         public virtual bool RenameColumn(string tableName, string oldColumnName, string newColumnName, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             try
             {
                 // Use FormatAttributesForInsert to create the query...
-                string setClause = "SET COLUMN_NAME = '" + newColumnName + "'";
-                string criteria = "(TABLE_NAME = '" + tableName + "') AND (TABLE_SCHEMA = '" + mDatabase.Name + "')";
+                var setClause = "SET COLUMN_NAME = '" + newColumnName + "'";
+                var criteria = "(TABLE_NAME = '" + tableName + "') AND (TABLE_SCHEMA = '" + mDatabase.Name + "')";
                 criteria += " AND (COLUMN_NAME = '" + oldColumnName + "')";
-                string query = "UPDATE INFORMATION_SCHEMA.COLUMNS " + setClause + " WHERE " + criteria;
+                var query = "UPDATE INFORMATION_SCHEMA.COLUMNS " + setClause + " WHERE " + criteria;
 
                 success = ExecuteCommand(query, ref error);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                Error myError = new Error(ex.Message, 9999, this.GetType(), error);
+                var myError = new Error(ex.Message, 9999, GetType(), error);
                 error = myError;
                 success = false;
             }
@@ -421,18 +421,18 @@ namespace SDBees.DB
         /// <returns>True if successful</returns>
         public virtual bool EraseColumn(string tableName, string columnName, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             try
             {
                 // Use FormatAttributesForInsert to create the query...
-                string query = "ALTER TABLE " + tableName + " DROP COLUMN " + columnName;
+                var query = "ALTER TABLE " + tableName + " DROP COLUMN " + columnName;
 
                 success = ExecuteCommand(query, ref error);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                Error myError = new Error(ex.Message, 9999, this.GetType(), error);
+                var myError = new Error(ex.Message, 9999, GetType(), error);
                 error = myError;
                 success = false;
             }
@@ -449,22 +449,22 @@ namespace SDBees.DB
         /// <returns></returns>
         public virtual int GetTableColumns(string tableName, out List<string> columnNames, ref Error error)
         {
-            int numColumns = 0;
+            var numColumns = 0;
             columnNames = null;
 
             if (mDatabase != null)
             {
-                string criteria = "(TABLE_NAME = '" + tableName + "') AND (TABLE_SCHEMA = '" + mDatabase.Name + "')";
+                var criteria = "(TABLE_NAME = '" + tableName + "') AND (TABLE_SCHEMA = '" + mDatabase.Name + "')";
 
                 // now build the query...
-                string query = MakeSelectQuery("INFORMATION_SCHEMA.COLUMNS", "*", criteria, 0);
+                var query = MakeSelectQuery("INFORMATION_SCHEMA.COLUMNS", "*", criteria, 0);
 
                 // Execute the query and fill the data set...
-                DataSet dataSet = new DataSet();
+                var dataSet = new DataSet();
                 if (FillDataSet(query,ref dataSet, ref error, tableName))
                 {
                     // Get values from the table...
-                    DataTable dataTable = dataSet.Tables[0];
+                    var dataTable = dataSet.Tables[0];
 
                     if (dataTable.Rows.Count > 0)
                     {
@@ -473,7 +473,7 @@ namespace SDBees.DB
 
                         foreach (DataRow dataRow in dataTable.Rows)
                         {
-                            string columnName = dataRow["COLUMN_NAME"].ToString();
+                            var columnName = dataRow["COLUMN_NAME"].ToString();
                             columnNames.Add(columnName);
                         }
                     }
@@ -491,11 +491,11 @@ namespace SDBees.DB
         /// <returns>true if successful</returns>
         public virtual bool DeleteTable(string tableName, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if (mDatabase != null)
             {
-                string cmdString = "DROP TABLE " + tableName;
+                var cmdString = "DROP TABLE " + tableName;
 
                 success = ExecuteCommand(cmdString, ref error);
             }
@@ -511,14 +511,14 @@ namespace SDBees.DB
         /// <returns>true if it exists</returns>
         public virtual bool TableExists(string tableName, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if (mDatabase != null)
             {
-                string criteria = "(TABLE_NAME = '" + tableName + "') AND (TABLE_SCHEMA = '" + mDatabase.Name + "')";
+                var criteria = "(TABLE_NAME = '" + tableName + "') AND (TABLE_SCHEMA = '" + mDatabase.Name + "')";
 
                 ArrayList names = null;
-                int numTables = GetRowValues(ref names, "INFORMATION_SCHEMA.Tables", "TABLE_NAME", criteria, false, true, 1, ref error);
+                var numTables = GetRowValues(ref names, "INFORMATION_SCHEMA.Tables", "TABLE_NAME", criteria, false, true, 1, ref error);
 
                 return numTables > 0;
             }
@@ -542,21 +542,21 @@ namespace SDBees.DB
             try
             {
                 // Use FormatAttributesForInsert to create the query...
-                string query = "INSERT INTO " + table.Name + " " + FormatAttributesForInsert(attributes);
+                var query = "INSERT INTO " + table.Name + " " + FormatAttributesForInsert(attributes);
 
                 if (ExecuteCommand(query, ref error))
                 {
                     if (table.ReloadIdOnInsert)
                     {
                         // Now get the id using the unique criteria
-                        string criteria = "";
-                        foreach (KeyValuePair<string, Column> iterator in uniqueColumns)
+                        var criteria = "";
+                        foreach (var iterator in uniqueColumns)
                         {
-                            Column column = iterator.Value;
+                            var column = iterator.Value;
 
-                            Attribute attribute = attributes[column.Name];
+                            var attribute = attributes[column.Name];
 
-                            string singleCriteria = "(" + FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error) + ")";
+                            var singleCriteria = "(" + FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error) + ")";
 
                             if (criteria != "")
                             {
@@ -573,9 +573,9 @@ namespace SDBees.DB
                     }
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                Error myError = new Error(ex.Message, 9999, this.GetType(), error);
+                var myError = new Error(ex.Message, 9999, GetType(), error);
                 error = myError;
             }
 
@@ -593,20 +593,20 @@ namespace SDBees.DB
         /// <returns></returns>
         public virtual bool UpdateRow(Table table, Column idColumn, object id, Attributes attributes, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             try
             {
                 // Use FormatAttributesForInsert to create the query...
-                Attribute attribute = new Attribute(idColumn, id);
-                string criteria = "(" + FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error) + ")";
-                string query = "UPDATE " + table.Name + FormatAttributesForUpdate(attributes) + " WHERE " + criteria;
+                var attribute = new Attribute(idColumn, id);
+                var criteria = "(" + FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error) + ")";
+                var query = "UPDATE " + table.Name + FormatAttributesForUpdate(attributes) + " WHERE " + criteria;
 
                 success = ExecuteCommand(query, ref error);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                Error myError = new Error(ex.Message, 9999, this.GetType(), error);
+                var myError = new Error(ex.Message, 9999, GetType(), error);
                 error = myError;
                             success = false;
             }
@@ -625,34 +625,34 @@ namespace SDBees.DB
         /// <returns></returns>
         public virtual bool LoadRow(Table table, Column idColumn, object id, ref Attributes attributes, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             try
             {
-                DataSet dataset = new DataSet();
-                DbType type = table.Columns[table.PrimaryKey].Type;
-                string query = "SELECT * FROM " + table.Name + " WHERE " + table.PrimaryKey + " = " + GetQuotedValue(type, id);
+                var dataset = new DataSet();
+                var type = table.Columns[table.PrimaryKey].Type;
+                var query = "SELECT * FROM " + table.Name + " WHERE " + table.PrimaryKey + " = " + GetQuotedValue(type, id);
 
                 if (FillDataSet(query,ref dataset, ref error, table.Name))
                 {
                     // Get values from table
-                    DataTable dataTable = dataset.Tables[0];
+                    var dataTable = dataset.Tables[0];
 
                     if (dataTable.Rows.Count == 1)
                     {
-                        DataRow dataRow = dataTable.Rows[0];
+                        var dataRow = dataTable.Rows[0];
 
                         attributes = new Attributes();
 
                         foreach (DataColumn dataColumn in dataTable.Columns)
                         {
-                            string attributeName = dataColumn.ColumnName;
+                            var attributeName = dataColumn.ColumnName;
 
-                            Column column = table.Columns[attributeName];
+                            var column = table.Columns[attributeName];
 
-                            object value = column.ConvertValueFromDataRow(dataRow[attributeName]); // Convert raw value from the database to a value for the column!
+                            var value = column.ConvertValueFromDataRow(dataRow[attributeName]); // Convert raw value from the database to a value for the column!
 
-                            Attribute attribute = new Attribute(column, value);
+                            var attribute = new Attribute(column, value);
 
                             attributes.Add(attributeName, attribute);
                         }
@@ -662,16 +662,16 @@ namespace SDBees.DB
                     else
                     {
                         // Add this error to the list...
-                        string errMessage = "Fehler:" + dataTable.Rows.Count + " Einträge mit " + table.PrimaryKey + " = " + id.ToString() + " gefunden in Tabelle '" + table.Name + "'!";
-                        Error myError = new Error(errMessage, 9999, this.GetType(), error);
+                        var errMessage = "Fehler:" + dataTable.Rows.Count + " Einträge mit " + table.PrimaryKey + " = " + id + " gefunden in Tabelle '" + table.Name + "'!";
+                        var myError = new Error(errMessage, 9999, GetType(), error);
                         error = myError;
                     }
 
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                Error myError = new Error(ex.Message, 9999, this.GetType(), error);
+                var myError = new Error(ex.Message, 9999, GetType(), error);
                 error = myError;
                 success = false;
             }
@@ -688,17 +688,17 @@ namespace SDBees.DB
         /// <returns></returns>
         public bool EraseRow(Table table, string criteria, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             try
             {
-                string query = "DELETE FROM " + table.Name + " WHERE " + criteria;
+                var query = "DELETE FROM " + table.Name + " WHERE " + criteria;
 
                 success = ExecuteCommand(query, ref error);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                Error myError = new Error(ex.Message, 9999, this.GetType(), error);
+                var myError = new Error(ex.Message, 9999, GetType(), error);
                 error = myError;
                 success = false;
             }
@@ -715,7 +715,7 @@ namespace SDBees.DB
         /// <returns></returns>
         public string FormatCriteria(Attribute attribute, DbBinaryOperator operation, ref Error error)
         {
-            string criteria = "";
+            var criteria = "";
 
             criteria = "[" + attribute.Column.Name + "]" + " " + SQL_Label(operation, ref error) + " " + GetQuotedValue(attribute.Column.Type, attribute.Value);
 
@@ -734,7 +734,7 @@ namespace SDBees.DB
         /// <returns></returns>
         public string FormatCriteria(string criteria1, string criteria2, DbBooleanOperator operation, ref Error error)
         {
-            string criteria = "";
+            var criteria = "";
 
             criteria = "(" + criteria1 + ") " + SQL_Label(operation, ref error) + " (" + criteria2 + ")";
 
@@ -750,11 +750,11 @@ namespace SDBees.DB
         /// <returns></returns>
         public string FormatCriteria(ArrayList criterias, DbBooleanOperator operation, ref Error error)
         {
-            string criteria = "";
+            var criteria = "";
 
             if (criterias != null)
             {
-                string operationString = SQL_Label(operation, ref error);
+                var operationString = SQL_Label(operation, ref error);
 
                 if (error != null)
                     return criteria;
@@ -781,9 +781,9 @@ namespace SDBees.DB
         /// <returns>true if successful</returns>
         public abstract bool ExecuteCommand(string cmdString, ref Error error);
 
-        public abstract System.Data.DataSet GetReadOnlyDataSet();
+        public abstract DataSet GetReadOnlyDataSet();
 
-        public abstract System.Data.DataTable GetReadOnlyDataTable(string sTablename);
+        public abstract DataTable GetReadOnlyDataTable(string sTablename);
 
         #endregion
 
@@ -802,46 +802,46 @@ namespace SDBees.DB
         protected abstract string GetColumnDefinition(Column column);
         protected string DuplicateCharacters(string value)
         {
-            string newValue = value.Replace("'", "''");
+            var newValue = value.Replace("'", "''");
             newValue = newValue.Replace("\\", "\\\\");
 
             return newValue;
         }
         protected virtual string GetQuotedValue(DbType type, object value)
         {
-            string quotedValue = "";
+            var quotedValue = "";
 
             if (value == null)
             {
                 // NULL is not quoted!
                 quotedValue = "NULL";
             }
-            else if ((type == DbType.eString) || (type == DbType.eStringFixed) || (type == DbType.eBinary) ||
-                (type == DbType.eGuid) || (type == DbType.eGuidString) ||
-                (type == DbType.eText) || (type == DbType.eLongText))
+            else if ((type == DbType.String) || (type == DbType.StringFixed) || (type == DbType.Binary) ||
+                (type == DbType.Guid) || (type == DbType.GuidString) ||
+                (type == DbType.Text) || (type == DbType.LongText))
             {
                 quotedValue = "'" + DuplicateCharacters(value.ToString()) + "'";
             }
-            else if ((type == DbType.eDouble) || (type == DbType.eSingle) || (type == DbType.eCurrency))
+            else if ((type == DbType.Double) || (type == DbType.Single) || (type == DbType.Currency))
             {
                 quotedValue = value.ToString();
                 if (quotedValue.Length == 0) quotedValue = "0"; // TODO: Ralf Check this with Tim!
                 quotedValue = quotedValue.Replace(",", "."); // SQL requires "." not a comma for floating point numbers
             }
-            else if (type == DbType.eCrossSize)
+            else if (type == DbType.CrossSize)
             {
-                SDBees.Core.Model.SDBeesOpeningSize dtValue;
+                SDBeesOpeningSize dtValue;
                 if (value.GetType() == typeof(string))
                 {
-                    dtValue = new SDBees.Core.Model.SDBeesOpeningSize((string)value);
+                    dtValue = new SDBeesOpeningSize((string)value);
                 }
                 else
                 {
-                    dtValue = (SDBees.Core.Model.SDBeesOpeningSize)value;
+                    dtValue = (SDBeesOpeningSize)value;
                 }
-                quotedValue = "'" + dtValue.ToString() + "'";
+                quotedValue = "'" + dtValue + "'";
             }
-            else if (type == DbType.eDate)
+            else if (type == DbType.Date)
             {
                 DateTime dtValue;
                 if (value.GetType() == typeof(string))
@@ -854,7 +854,7 @@ namespace SDBees.DB
                 }
                 quotedValue = "'" + dtValue.ToString("yyyy-MM-dd") + "'";
             }
-            else if (type == DbType.eDateTime)
+            else if (type == DbType.DateTime)
             {
                 DateTime dtValue;
                 if (value.GetType() == typeof(string))
@@ -867,7 +867,7 @@ namespace SDBees.DB
                 }
                 quotedValue = "'" + dtValue.ToString("yyyy-MM-dd HH:mm:ss") + "'";
             }
-            else if (type == DbType.eBoolean)
+            else if (type == DbType.Boolean)
             {
                 bool dtValue;
                 if (value.GetType() == typeof(string))
@@ -897,12 +897,12 @@ namespace SDBees.DB
         }
         protected virtual string FormatAttributesForInsert(Attributes attributes)
         {
-            string strParams = "";
-            string strValues = "";
+            var strParams = "";
+            var strValues = "";
 
-            foreach (KeyValuePair<string, Attribute> iterator in attributes)
+            foreach (var iterator in attributes)
             {
-                Attribute attribute = iterator.Value;
+                var attribute = iterator.Value;
 
                 // First add the column name to the list of parameters...
                 if (strParams != "")
@@ -919,7 +919,7 @@ namespace SDBees.DB
                 strValues += GetQuotedValue(attribute.Column.Type, attribute.Value);
             }
 
-            string result = "";
+            var result = "";
             if (strParams != "")
             {
                 result = " (" + strParams + ") VALUES (" + strValues + ")";
@@ -929,11 +929,11 @@ namespace SDBees.DB
         }
         protected virtual string FormatAttributesForUpdate(Attributes attributes)
         {
-            string strValues = "";
+            var strValues = "";
 
-            foreach (KeyValuePair<string, Attribute> iterator in attributes)
+            foreach (var iterator in attributes)
             {
-                Attribute attribute = iterator.Value;
+                var attribute = iterator.Value;
 
                 // Now add the value to the list of values...
                 if (strValues != "")
@@ -943,7 +943,7 @@ namespace SDBees.DB
                 strValues += FormatColumnNameForUpdate(iterator.Key) + " = " + GetQuotedValue(attribute.Column.Type, attribute.Value);
             }
 
-            string result = "";
+            var result = "";
             if (strValues != "")
             {
                 result = " SET " + strValues;
@@ -955,8 +955,7 @@ namespace SDBees.DB
         {
             if (forInsert)
                 return FormatAttributesForInsert(attributes);
-            else
-                return FormatAttributesForUpdate(attributes);
+            return FormatAttributesForUpdate(attributes);
         }
 
         #endregion

@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
+using System.Reflection;
 
 namespace Carbon.Common
 {
@@ -15,10 +14,10 @@ namespace Carbon.Common
 		internal static void Initialize()
 		{
 			// use the default logs folder
-			string logsFolder = DefaultLogsFolder;
+			var logsFolder = DefaultLogsFolder;
 
 			// create the filename that will power the current log file listener
-			string filename = Path.Combine(logsFolder, DefaultLogName);
+			var filename = Path.Combine(logsFolder, DefaultLogName);
 
 			// make sure it exists
 			if (!CreateLogsFolder(logsFolder))
@@ -31,7 +30,7 @@ namespace Carbon.Common
 			}
 
 			// initialize a new log file listener
-			TextWriterTraceListener listener = new TextWriterTraceListener(new FileStream(filename, FileMode.Append, FileAccess.Write, FileShare.Read));
+			var listener = new TextWriterTraceListener(new FileStream(filename, FileMode.Append, FileAccess.Write, FileShare.Read));
 			listener.Name = "LogFileTraceListener";
 			listener.TraceOutputOptions =
 				TraceOptions.Callstack |
@@ -46,13 +45,13 @@ namespace Carbon.Common
 			Debug.AutoFlush = true;
 
 			Debug.WriteLine("################################################################################");
-			Debug.WriteLine(string.Format("# Log file opened at '{0}'.", DateTime.Now.ToString()));
-			Debug.WriteLine(string.Format("# OSVersion: '{0}'.", Environment.OSVersion.ToString()));
-			Debug.WriteLine(string.Format("# MachineName: '{0}'.", Environment.MachineName));
-			Debug.WriteLine(string.Format("# ProcessorCount: '{0}'.", Environment.ProcessorCount.ToString()));
-			Debug.WriteLine(string.Format("# UserName: '{0}'.", Environment.UserName));
-			Debug.WriteLine(string.Format("# UserInteractive: '{0}'.", Environment.UserInteractive.ToString()));
-			Debug.WriteLine(string.Format("# Plugin Context created by '{0}'.", System.Reflection.Assembly.GetEntryAssembly().Location));			
+			Debug.WriteLine($"# Log file opened at '{DateTime.Now.ToString()}'.");
+			Debug.WriteLine("# OSVersion: '{0}'.", Environment.OSVersion);
+			Debug.WriteLine($"# MachineName: '{Environment.MachineName}'.");
+			Debug.WriteLine("# ProcessorCount: '{0}'.", Environment.ProcessorCount);
+			Debug.WriteLine($"# UserName: '{Environment.UserName}'.");
+			Debug.WriteLine("# UserInteractive: '{0}'.", Environment.UserInteractive);
+			Debug.WriteLine($"# Plugin Context created by '{Assembly.GetEntryAssembly().Location}'.");			
 			Debug.WriteLine("################################################################################\n");						
 		}
 
@@ -62,7 +61,7 @@ namespace Carbon.Common
 		internal static void Shutdown()
 		{
 			Debug.WriteLine("\n################################################################################");
-			Debug.WriteLine(string.Format("# Log file closed at '{0}'.", DateTime.Now.ToString()));
+			Debug.WriteLine($"# Log file closed at '{DateTime.Now.ToString()}'.");
 			Debug.WriteLine("################################################################################");
 		}
 
@@ -95,7 +94,7 @@ namespace Carbon.Common
 		{
 			get
 			{
-				return string.Format("{0}.txt", DateTime.Now.ToString(DefaultDateFormat));
+				return $"{DateTime.Now.ToString(DefaultDateFormat)}.txt";
 			}
 		}
 
@@ -106,7 +105,7 @@ namespace Carbon.Common
 		{
 			get
 			{
-				return string.Format("{0}-Backup.txt", DateTime.Now.ToString(DefaultDateFormat));
+				return $"{DateTime.Now.ToString(DefaultDateFormat)}-Backup.txt";
 			}
 		}
 
@@ -139,13 +138,13 @@ namespace Carbon.Common
 			try
 			{
 				// calc the current filename
-				string currentFilename = Path.Combine(logsFolder, DefaultLogName);
+				var currentFilename = Path.Combine(logsFolder, DefaultLogName);
 
 				// look for it, if it exists, then back it up
 				if (File.Exists(currentFilename))
 				{
 					// calc the backup name
-					string backupFilename = Path.Combine(logsFolder, DefaultBackupLogName);
+					var backupFilename = Path.Combine(logsFolder, DefaultBackupLogName);
 
 					// if there was a previous backup, delete it
 					if (File.Exists(backupFilename))
@@ -170,14 +169,14 @@ namespace Carbon.Common
 			try
 			{
 				// look for all of the log files
-				DirectoryInfo info = new DirectoryInfo(logsFolder);
-				FileInfo[] files = info.GetFiles("*.txt", SearchOption.TopDirectoryOnly);
+				var info = new DirectoryInfo(logsFolder);
+				var files = info.GetFiles("*.txt", SearchOption.TopDirectoryOnly);
 
 				// delete any files that are more than a week old
-				DateTime now = DateTime.Now;
-				TimeSpan allowedDelta = new TimeSpan(7, 0, 0);
+				var now = DateTime.Now;
+				var allowedDelta = new TimeSpan(7, 0, 0);
 
-				foreach (FileInfo file in files)
+				foreach (var file in files)
 				{
 					if (now.Subtract(file.LastWriteTime) > allowedDelta)
 						file.Delete();

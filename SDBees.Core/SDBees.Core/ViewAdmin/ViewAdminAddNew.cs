@@ -20,66 +20,68 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
+using SDBees.Plugs.Objects;
 
 namespace SDBees.ViewAdmin
 {
-  public partial class ViewAdminAddNew : Form
-  {
-    private Hashtable _hashViewDefs;
-
-    public ViewAdminAddNew(ref Hashtable _hashView)
+    public partial class ViewAdminAddNew : Form
     {
-      this._hashViewDefs = _hashView;
-      InitializeComponent();
-    }
+        private Hashtable _hashViewDefs;
 
-    public string ViewName
-    {
-      get {return textBoxViewName.Text;}
-    }
-
-    public string ViewDescription
-    {
-      get { return this.richTextBoxDescription.Text; }
-    }
-
-    private void buttonOK_Click(object sender, EventArgs e)
-    {
-      if (this._hashViewDefs.ContainsKey(this.ViewName))
-      {
-        MessageBox.Show("Der Viewname ist bereits vorhanden!\nBitte einen neuen Namen wählen!");
-      }
-      else
-      {
-        if (this.ViewName != "")
+        public ViewAdminAddNew(ref Hashtable _hashView)
         {
-          SDBees.Plugs.Objects.ObjectView _plgObjViews = new SDBees.Plugs.Objects.ObjectView();
-          _plgObjViews.ViewName = this.ViewName;
-          _plgObjViews.ViewGUID = null;
-          _plgObjViews.ViewDescription = this.ViewDescription;
-          this._hashViewDefs.Add(this.ViewName, _plgObjViews);
-          this.DialogResult = DialogResult.OK;
-          this.Close();          
-        }
-        else
-        {
-          MessageBox.Show("Der Viewname darf nicht leer sein!");
-        }
-      }
-    }
+            _hashViewDefs = new Hashtable(); // _hashView;
 
-    private void buttonChancel_Click(object sender, EventArgs e)
-    {
-      this.DialogResult = DialogResult.Cancel;
-      this.Close();
+            InitializeComponent();
+        }
+
+        public string ViewName
+        {
+            get { return textBoxViewName.Text; }
+        }
+
+        public string ViewDescription
+        {
+            get { return richTextBoxDescription.Text; }
+        }
+
+        public string ViewGuid { get; private set; }
+
+
+        private void buttonOK_Click(object sender, EventArgs e)
+        {
+            if (_hashViewDefs.ContainsKey(ViewName))
+            {
+                MessageBox.Show("Der Viewname ist bereits vorhanden!\nBitte einen neuen Namen wählen!");
+            }
+            else
+            {
+                if (ViewName != "")
+                {
+                    var _plgObjViews = new ObjectView();
+                    _plgObjViews.ViewName = ViewName;
+                    _plgObjViews.ViewGUID = Guid.NewGuid() + "";
+                    ViewGuid = _plgObjViews.ViewGUID;
+                    _plgObjViews.ViewDescription = ViewDescription;
+                    _hashViewDefs.Add(ViewName, _plgObjViews);
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }
+                else
+                {
+                    MessageBox.Show("Der Viewname darf nicht leer sein!");
+                }
+            }
+        }
+
+        private void buttonChancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
     }
-  }
 }

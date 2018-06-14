@@ -47,9 +47,9 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Design;
-using System.Collections.Generic;
 
 namespace SDBees.Plugs.Properties
 {
@@ -142,12 +142,12 @@ namespace SDBees.Plugs.Properties
             this.category = category;
             this.description = description;
             this.defaultValue = defaultValue;
-            this.attributes = new List<Attribute>();
+            attributes = new List<Attribute>();
         }
 
         public PropertySpec()
         {
-            this.attributes = new List<Attribute>();
+            attributes = new List<Attribute>();
         }
 
         /// <summary>
@@ -411,7 +411,7 @@ namespace SDBees.Plugs.Properties
             set { description = value; }
         }
 
-        bool _readonly = false;
+        bool _readonly;
         /// <summary>
         /// Gets or sets the readonly Attribute for this property.
         /// </summary>
@@ -600,7 +600,7 @@ namespace SDBees.Plugs.Properties
         /// </value>
         public PropertySpec this[int index]
         {
-            get { return (PropertySpec)innerList[index]; }
+            get { return innerList[index]; }
             set { innerList[index] = value; }
         }
 
@@ -621,7 +621,7 @@ namespace SDBees.Plugs.Properties
         /// PropertySpecCollection.</param>
         public void AddRange(PropertySpec[] array)
         {
-            foreach (PropertySpec item in array)
+            foreach (var item in array)
             {
                 innerList.Add(item);
             }
@@ -653,7 +653,7 @@ namespace SDBees.Plugs.Properties
         /// <returns>true if item is found in the PropertySpecCollection; otherwise, false.</returns>
         public bool Contains(string name)
         {
-            foreach (PropertySpec spec in innerList)
+            foreach (var spec in innerList)
                 if (spec.Name == name)
                     return true;
 
@@ -712,9 +712,9 @@ namespace SDBees.Plugs.Properties
         /// if found; otherwise, -1.</returns>
         public int IndexOf(string name)
         {
-            int i = 0;
+            var i = 0;
 
-            foreach (PropertySpec spec in innerList)
+            foreach (var spec in innerList)
             {
                 if (spec.Name == name)
                     return i;
@@ -750,7 +750,7 @@ namespace SDBees.Plugs.Properties
         /// <param name="name">The name of the PropertySpec to remove from the PropertySpecCollection.</param>
         public void Remove(string name)
         {
-            int index = IndexOf(name);
+            var index = IndexOf(name);
             RemoveAt(index);
         }
 
@@ -769,8 +769,8 @@ namespace SDBees.Plugs.Properties
         /// <returns>A PropertySpec array containing copies of the elements of the PropertySpecCollection.</returns>
         public PropertySpec[] ToArray()
         {
-            ArrayList ar = new ArrayList();
-            foreach (PropertySpec item in innerList)
+            var ar = new ArrayList();
+            foreach (var item in innerList)
             {
                 ar.Add(item);
             }
@@ -794,7 +794,7 @@ namespace SDBees.Plugs.Properties
         /// </summary>
         int IList.Add(object value)
         {
-            int result = 0;
+            var result = 0;
 
             Add((PropertySpec)value);
             result = IndexOf((PropertySpec)value);
@@ -817,11 +817,11 @@ namespace SDBees.Plugs.Properties
         {
             get
             {
-                return ((PropertySpecCollection)this)[index];
+                return this[index];
             }
             set
             {
-                ((PropertySpecCollection)this)[index] = (PropertySpec)value;
+                this[index] = (PropertySpec)value;
             }
         }
 
@@ -852,12 +852,12 @@ namespace SDBees.Plugs.Properties
 
         int IList<PropertySpec>.IndexOf(PropertySpec item)
         {
-            return IndexOf((PropertySpec)item);
+            return IndexOf(item);
         }
 
         void IList<PropertySpec>.Insert(int index, PropertySpec item)
         {
-            Insert(index, (PropertySpec)item);
+            Insert(index, item);
         }
 
         void IList<PropertySpec>.RemoveAt(int index)
@@ -869,7 +869,7 @@ namespace SDBees.Plugs.Properties
         {
             get
             {
-                return (PropertySpec)innerList[index];
+                return innerList[index];
             }
             set
             {
@@ -1019,8 +1019,7 @@ namespace SDBees.Plugs.Properties
             {
                 if (item.DefaultValue == null)
                     return false;
-                else
-                    return !this.GetValue(component).Equals(item.DefaultValue);
+                return !GetValue(component).Equals(item.DefaultValue);
             }
 
             public override object GetValue(object component)
@@ -1028,8 +1027,8 @@ namespace SDBees.Plugs.Properties
                 // Have the property bag raise an event to get the current value
                 // of the property.
 
-                PropertySpecEventArgs e = new PropertySpecEventArgs(item, null);
-                PropertyBag myBag = (PropertyBag)component;
+                var e = new PropertySpecEventArgs(item, null);
+                var myBag = (PropertyBag)component;
                 if(myBag != null)
                     myBag.OnGetValue(e);
                 else
@@ -1048,9 +1047,9 @@ namespace SDBees.Plugs.Properties
                 // Have the property bag raise an event to set the current value
                 // of the property.
 
-                PropertySpecEventArgs e = new PropertySpecEventArgs(item, value);
+                var e = new PropertySpecEventArgs(item, value);
 
-                PropertyBag myBag = (PropertyBag)component;
+                var myBag = (PropertyBag)component;
                 if (myBag != null)
                     myBag.OnSetValue(e);
                 else
@@ -1059,12 +1058,11 @@ namespace SDBees.Plugs.Properties
 
             public override bool ShouldSerializeValue(object component)
             {
-                object val = this.GetValue(component);
+                var val = GetValue(component);
 
                 if (item.DefaultValue == null && val == null)
                     return false;
-                else
-                    return !val.Equals(item.DefaultValue);
+                return !val.Equals(item.DefaultValue);
             }
         }
         #endregion
@@ -1140,10 +1138,10 @@ namespace SDBees.Plugs.Properties
         }
 
 
-        string _classname = null;
+        string _classname;
         public string ClassName
         {
-            get { return this._classname; }
+            get { return _classname; }
             set
             {
                 if (!String.IsNullOrEmpty(value))
@@ -1151,10 +1149,10 @@ namespace SDBees.Plugs.Properties
             }
         }
 
-        string _modulename = null;
+        string _modulename;
         public string ModuleName
         {
-            get { return this._modulename; }
+            get { return _modulename; }
             set
             {
                 if (!String.IsNullOrEmpty(value))
@@ -1166,8 +1164,7 @@ namespace SDBees.Plugs.Properties
         {
             if (!String.IsNullOrEmpty(_classname))
                 return _classname;
-            else
-                return base.ToString();
+            return base.ToString();
         }
 
 
@@ -1218,14 +1215,13 @@ namespace SDBees.Plugs.Properties
             PropertySpec propertySpec = null;
             if (defaultProperty != null)
             {
-                int index = properties.IndexOf(defaultProperty);
+                var index = properties.IndexOf(defaultProperty);
                 propertySpec = properties[index];
             }
 
             if (propertySpec != null)
                 return new PropertySpecDescriptor(propertySpec, this, propertySpec.Name, null);
-            else
-                return null;
+            return null;
         }
 
         object ICustomTypeDescriptor.GetEditor(Type editorBaseType)
@@ -1255,11 +1251,11 @@ namespace SDBees.Plugs.Properties
             // A list here that contains property descriptors for the elements of the
             // Properties list in the bag.
 
-            ArrayList props = new ArrayList();
+            var props = new ArrayList();
 
             foreach (PropertySpec property in properties)
             {
-                ArrayList attrs = new ArrayList();
+                var attrs = new ArrayList();
 
                 // If A category, description, editor, or type converter are specified
                 // in the PropertySpec, create attributes to define that relationship.
@@ -1286,18 +1282,18 @@ namespace SDBees.Plugs.Properties
                 //if (property.Attributes != null)
                 //    attrs.AddRange(property.Attributes);
 
-                Attribute[] attrArray = (Attribute[])attrs.ToArray(typeof(Attribute));
+                var attrArray = (Attribute[])attrs.ToArray(typeof(Attribute));
 
                 // Create A new property descriptor for the property item, and add
                 // it to the list.
-                PropertySpecDescriptor pd = new PropertySpecDescriptor(property,
+                var pd = new PropertySpecDescriptor(property,
                     this, property.Name, attrArray);
                 props.Add(pd);
             }
 
             // Convert the list of PropertyDescriptors to A collection that the
             // ICustomTypeDescriptor can use, and return it.
-            PropertyDescriptor[] propArray = (PropertyDescriptor[])props.ToArray(
+            var propArray = (PropertyDescriptor[])props.ToArray(
                 typeof(PropertyDescriptor));
             return new PropertyDescriptorCollection(propArray);
         }
@@ -1325,8 +1321,8 @@ namespace SDBees.Plugs.Properties
 
         public IList<PropertySpec> MyInnerPropertyList
         {
-            get { return this.Properties.InnerList; }
-            set { this.Properties.InnerList = value; }
+            get { return Properties.InnerList; }
+            set { Properties.InnerList = value; }
         }
 
         /// <summary>

@@ -33,7 +33,6 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
-
 using Carbon.Common;
 
 namespace Carbon.UI
@@ -83,10 +82,10 @@ namespace Carbon.UI
 		/// <returns></returns>
 		public bool CanShow(Form window, params object[] args)
 		{
-			this.AssertValidWindow(window);
+			AssertValidWindow(window);
 
-			WindowManagerCancelEventArgs e = new WindowManagerCancelEventArgs(false, window, args);
-			this.OnCanShowWindow(this, e);
+			var e = new WindowManagerCancelEventArgs(false, window, args);
+			OnCanShowWindow(this, e);
 			return !e.Cancel;		
 		}
 		
@@ -97,11 +96,11 @@ namespace Carbon.UI
 		/// <param name="key">The key by which the window will be identified</param>
 		public void BeginTrackingLifetime(Form window, string key)
 		{
-			this.AssertValidWindow(window);
-			this.AssertValidKey(key);
-			this.AssertUniqueKey(key);
+			AssertValidWindow(window);
+			AssertValidKey(key);
+			AssertUniqueKey(key);
 
-			window.Closed += new EventHandler(this.OnManageWindowClosed);
+			window.Closed += OnManageWindowClosed;
 			_managedWindows.Add(key, window);
 		}
 
@@ -111,12 +110,12 @@ namespace Carbon.UI
 		/// <param name="key">The key by which the window will be identified</param>
 		public void EndTrackingLifetime(string key)
 		{			
-			this.AssertValidKey(key);
+			AssertValidKey(key);
 			
-			Form window = this.Find(key);
+			var window = Find(key);
 			if (window != null)
 			{
-				window.Closed -= new EventHandler(this.OnManageWindowClosed);
+				window.Closed -= OnManageWindowClosed;
 				_managedWindows.Remove(key);			
 			}
 		}			
@@ -155,8 +154,8 @@ namespace Carbon.UI
 		{
 			try
 			{
-				if (this.CanShowWindow != null)
-					this.CanShowWindow(sender, e);
+				if (CanShowWindow != null)
+					CanShowWindow(sender, e);
 			}
 			catch(Exception ex)
 			{
@@ -204,14 +203,14 @@ namespace Carbon.UI
 		/// <param name="e"></param>
 		private void OnManageWindowClosed(object sender, EventArgs e)
 		{
-			Form window = sender as Form;
+			var window = sender as Form;
 			if (window != null)
 			{
-				bool found = false;
+				var found = false;
 				object key = null;
 				foreach(DictionaryEntry entry in _managedWindows)
 				{
-					Form managedWindow = entry.Value as Form;
+					var managedWindow = entry.Value as Form;
 					if (managedWindow == window)
 					{						
 						key = entry.Key;
@@ -222,7 +221,7 @@ namespace Carbon.UI
 				
 				if (found)
 				{
-					window.Closed -= new EventHandler(this.OnManageWindowClosed);
+					window.Closed -= OnManageWindowClosed;
 					_managedWindows.Remove(key);	
 				}
 			}

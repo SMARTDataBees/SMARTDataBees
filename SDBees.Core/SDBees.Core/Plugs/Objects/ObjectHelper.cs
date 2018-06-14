@@ -20,26 +20,23 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SDBees.Plugs.Objects
 {
   public class ObjectHelper
   {
-    private string _sTypeOf = null;
-    private string _Name = null;
-    private string _TabPageLabel = null;
-    private object _Plugin = null;
+    private string _sTypeOf;
+    private string _Name;
+    private string _TabPageLabel;
+    private object _Plugin;
 
     /// <summary>
     /// The Type of the HelperPlugin
     /// </summary>
     public string PluginType
     {
-      get { return this._sTypeOf; }
-      set { this._sTypeOf = value; }
+      get { return _sTypeOf; }
+      set { _sTypeOf = value; }
     }
 
     /// <summary>
@@ -47,8 +44,8 @@ namespace SDBees.Plugs.Objects
     /// </summary>
     public string PluginName
     {
-      get { return this._Name; }
-      set { this._Name = value; }
+      get { return _Name; }
+      set { _Name = value; }
     }
 
     /// <summary>
@@ -56,8 +53,8 @@ namespace SDBees.Plugs.Objects
     /// </summary>
     public string PluginTabPageLabel
     {
-        get { return this._TabPageLabel; }
-        set { this._TabPageLabel = value; }
+        get { return _TabPageLabel; }
+        set { _TabPageLabel = value; }
     }
 
     /// <summary>
@@ -65,8 +62,8 @@ namespace SDBees.Plugs.Objects
     /// </summary>
     public object Plugin
     {
-        get { return this._Plugin; }
-        set { this._Plugin = value; }
+        get { return _Plugin; }
+        set { _Plugin = value; }
     }
 
     /// <summary>

@@ -1,11 +1,8 @@
 
-using System;
-
-using System.IO;
-
-using System.Diagnostics;
-
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using SDBees.Utils;
 
 namespace SDBees
 {
@@ -44,7 +41,7 @@ namespace SDBees
 
             public Node GetNode(string name, bool create)
             {
-                Node result = FindNode(m_parent, name);
+                var result = FindNode(m_parent, name);
 
                 if ((result == null) && create)
                 {
@@ -66,11 +63,11 @@ namespace SDBees
 
             public string callgraph()
             {
-                string result = "";
+                var result = "";
 
-                foreach (Node node in m_roots)
+                foreach (var node in m_roots)
                 {
-                    result += node.ToString() + newline;
+                    result += node + newline;
                 }
 
                 return result;
@@ -78,16 +75,16 @@ namespace SDBees
 
             public string flatlist()
             {
-                string result = "";
+                var result = "";
 
-                Functions functions = new Functions();
+                var functions = new Functions();
 
-                foreach (Node node in m_roots)
+                foreach (var node in m_roots)
                 {
                     node.AddFunctions(functions);
                 }
 
-                foreach (Function function in functions.Values)
+                foreach (var function in functions.Values)
                 {
                     result += function.result(functions.TotalTime) + newline;
                 }
@@ -101,7 +98,7 @@ namespace SDBees
 
                 if (parent == null)
                 {
-                    foreach (Node root in m_roots)
+                    foreach (var root in m_roots)
                     {
                         if (root.Name == name)
                         {
@@ -200,7 +197,7 @@ namespace SDBees
             {
                 Node result = null;
 
-                foreach (Node node in m_children)
+                foreach (var node in m_children)
                 {
                     if (node.Name == name)
                     {
@@ -222,7 +219,7 @@ namespace SDBees
             {
                 functions.AddFunction(Name, m_count, ElapsedMilliseconds(false));
 
-                foreach (Node child in m_children)
+                foreach (var child in m_children)
                 {
                     child.AddFunctions(functions);
                 }
@@ -246,7 +243,7 @@ namespace SDBees
 
             public void Log(string message)
             {
-                string lastMessage = (0 == m_messages.Count) ? null : m_messages[m_messages.Count - 1];
+                var lastMessage = (0 == m_messages.Count) ? null : m_messages[m_messages.Count - 1];
 
                 if ((lastMessage == null) || (lastMessage.CompareTo(message) != 0))
                 {
@@ -256,9 +253,9 @@ namespace SDBees
 
             public override string ToString()
             {
-                string result = "";
+                var result = "";
 
-                for (int index = 0; index < m_level; index++)
+                for (var index = 0; index < m_level; index++)
                 {
                     result += indent;
                 }
@@ -267,9 +264,9 @@ namespace SDBees
 
                 result += ListToString(m_messages, "LOG: ", m_level + 1);
 
-                foreach (Node child in m_children)
+                foreach (var child in m_children)
                 {
-                    result += newline + child.ToString();
+                    result += newline + child;
                 }
 
                 return result;
@@ -282,9 +279,9 @@ namespace SDBees
 
             private long ElapsedMillisecondsChildren()
             {
-                long result = 0L;
+                var result = 0L;
 
-                foreach (Node child in m_children)
+                foreach (var child in m_children)
                 {
                     result += child.ElapsedMilliseconds(true);
                 }
@@ -327,7 +324,7 @@ namespace SDBees
 
             public string result(long totalTime)
             {
-                return m_name + " : " + (double)m_milliseconds / 1000 + "s for #" + m_count + " " + (double)m_milliseconds / (double)totalTime * 100.0 + "%";               }        }
+                return m_name + " : " + (double)m_milliseconds / 1000 + "s for #" + m_count + " " + m_milliseconds / (double)totalTime * 100.0 + "%";               }        }
 
         public class Functions
         {
@@ -370,7 +367,7 @@ namespace SDBees
             {
                 get
                 {
-                    List<Function> result = new List<Function>();
+                    var result = new List<Function>();
 
                     result.AddRange(m_functions.Values);
 
@@ -395,11 +392,11 @@ namespace SDBees
 
             public override string ToString()
             {
-                string result = "";
+                var result = "";
 
-                int count = 1;
+                var count = 1;
 
-                foreach (Tree tree in this.ToArray())
+                foreach (var tree in ToArray())
                 {
                     result += "Callgraph of run #" + count + newline + tree.callgraph() + newline + "Functions of run #" + count + newline + tree.flatlist() + newline;
 
@@ -412,7 +409,7 @@ namespace SDBees
 
         // Member variables ...
 
-        private static bool s_enabled = false;
+        private static bool s_enabled;
 
         private static Results s_results = new Results();
 
@@ -474,7 +471,7 @@ namespace SDBees
         {
             if (Enabled)
             {
-                Node node = s_tree.GetNode(name, true);
+                var node = s_tree.GetNode(name, true);
 
                 if (node != null)
                 {
@@ -496,7 +493,7 @@ namespace SDBees
         {
             if (Enabled)
             {
-                Node node = s_nodeStack.Peek();
+                var node = s_nodeStack.Peek();
 
                 if (node != null)
                 {
@@ -516,7 +513,7 @@ namespace SDBees
         {
             if (Enabled)
             {
-                Node node = s_nodeStack.Peek();
+                var node = s_nodeStack.Peek();
 
                 if (node != null)
                 {
@@ -532,9 +529,9 @@ namespace SDBees
 
         private static void WriteLines(string lines, string filename, bool launchNotepad)
         {
-            string path = Path.Combine(SDBees.Utils.DirectoryTools.GetTempDir(), filename);
+            var path = Path.Combine(DirectoryTools.GetTempDir(), filename);
 
-            System.IO.StreamWriter file = new System.IO.StreamWriter(path);
+            var file = new StreamWriter(path);
 
             file.WriteLine(lines);
 
@@ -545,16 +542,16 @@ namespace SDBees
 
         private static string ListToString(List<string> messages, string prefix, int level)
         {
-            string result = "";
+            var result = "";
 
-            string indentation = "";
+            var indentation = "";
 
-            for (int index = 0; index < level; index++)
+            for (var index = 0; index < level; index++)
             {
                 indentation += indent;
             }
 
-            foreach (string message in messages)
+            foreach (var message in messages)
             {
                 result += newline + indentation + prefix + message;
             }

@@ -20,11 +20,12 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using SDBees.DB;
+using SDBees.Plugs.TemplateBase;
+using Attribute = SDBees.DB.Attribute;
 
 namespace SDBees.ViewAdmin
 {
@@ -32,11 +33,11 @@ namespace SDBees.ViewAdmin
     /// Database resident object representing the view properties. For each view there is
     /// one view property in the database. This class supports caching of view definitions
     /// </summary>
-    public class ViewProperty : SDBees.Plugs.TemplateBase.TemplateDBBaseData //SDBees.DB.Object
+    public class ViewProperty : TemplateDBBaseData //SDBees.DB.Object
     {
         #region Private Data Members
 
-        private static Table gTable = null;
+        private static Table gTable;
 
         #endregion
 
@@ -53,8 +54,8 @@ namespace SDBees.ViewAdmin
 
         public Guid ViewId
         {
-            get { return new Guid(this.Id.ToString());  }
-            set { this.Id = value.ToString(); }
+            get { return new Guid(Id.ToString());  }
+            set { Id = value.ToString(); }
         }
 
         /// <summary>
@@ -81,7 +82,7 @@ namespace SDBees.ViewAdmin
         /// </summary>
         public ViewProperty()
         {
-            base.Table = gTable;
+            Table = gTable;
         }
 
         #endregion
@@ -123,7 +124,7 @@ namespace SDBees.ViewAdmin
         {
             ViewProperty result = null;
 
-            Guid objectId = GetViewIdFromName(database, name, ref error);
+            var objectId = GetViewIdFromName(database, name, ref error);
 
             if (objectId != Guid.Empty)
             {
@@ -146,10 +147,10 @@ namespace SDBees.ViewAdmin
         /// <returns>Guid (object id) of the view</returns>
         public static Guid GetViewIdFromName(Database database, string name, ref Error error)
         {
-            Guid result = Guid.Empty;
+            var result = Guid.Empty;
 
-            SDBees.DB.Attribute attribute = new SDBees.DB.Attribute(gTable.Columns["viewname"], name);
-            string criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
+            var attribute = new Attribute(gTable.Columns["viewname"], name);
+            var criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
             ArrayList objectIds = null;
             if (database.Select(gTable, gTable.PrimaryKey, criteria, ref objectIds, ref error) > 0)
             {
@@ -170,14 +171,14 @@ namespace SDBees.ViewAdmin
         {
             viewDefinitions = new ArrayList();
 
-            if ((this.Database != null) && (this.Id != null))
+            if ((Database != null) && (Id != null))
             {
                 ArrayList objectIds = null;
-                int numChildren = ViewDefinition.FindViewDefinitionsByParentType(this.Database, ref objectIds, ViewId, parentType, ref error);
+                var numChildren = ViewDefinition.FindViewDefinitionsByParentType(Database, ref objectIds, ViewId, parentType, ref error);
 
-                foreach (object objectId in objectIds)
+                foreach (var objectId in objectIds)
                 {
-                    ViewDefinition viewDef = new ViewDefinition();
+                    var viewDef = new ViewDefinition();
                     if ((error == null) && viewDef.Load(Database, objectId, ref error))
                     {
                         viewDefinitions.Add(viewDef);
@@ -186,7 +187,7 @@ namespace SDBees.ViewAdmin
             }
             else
             {
-                error = new Error("GetChildren failed on non-persistent ViewProperties object", 9999, this.GetType(), error);
+                error = new Error("GetChildren failed on non-persistent ViewProperties object", 9999, GetType(), error);
             }
 
             return viewDefinitions.Count;
@@ -203,14 +204,14 @@ namespace SDBees.ViewAdmin
         {
             viewDefinitions.Clear();
 
-            if ((this.Database != null) && (this.Id != null))
+            if ((Database != null) && (Id != null))
             {
                 ArrayList objectIds = null;
-                int numParents = ViewDefinition.FindViewDefinitionByChildType(this.Database, ref objectIds, ViewId, childType, ref error);
+                var numParents = ViewDefinition.FindViewDefinitionByChildType(Database, ref objectIds, ViewId, childType, ref error);
 
-                foreach (object objectId in objectIds)
+                foreach (var objectId in objectIds)
                 {
-                    ViewDefinition viewDef = new ViewDefinition();
+                    var viewDef = new ViewDefinition();
                     if ((error == null) && viewDef.Load(Database, objectId, ref error))
                     {
                         viewDefinitions.Add(viewDef);
@@ -219,7 +220,7 @@ namespace SDBees.ViewAdmin
             }
             else
             {
-                error = new Error("GetParents failed on non-persistent ViewProperties object", 9999, this.GetType(), error);
+                error = new Error("GetParents failed on non-persistent ViewProperties object", 9999, GetType(), error);
             }
 
             return viewDefinitions.Count;
@@ -231,12 +232,12 @@ namespace SDBees.ViewAdmin
         /// <param name="database"></param>
         public static void InitTableSchema(Database database)
         {
-            ViewProperty viewProperties = new ViewProperty(); ;
+            var viewProperties = new ViewProperty(); ;
             viewProperties.InitTableSchema(ref gTable, database);
 
             // Now add columns always required by this plugIn
-            viewProperties.AddColumn(new Column("viewname", DbType.eString, "View Name", "View Name", "", 80, "", 0), database);
-            viewProperties.AddColumn(new Column("viewdescription", DbType.eString, "View Description", "View Description", "", 256, "", 0), database);
+            viewProperties.AddColumn(new Column("viewname", DbType.String, "View Name", "View Name", "", 80, "", 0), database);
+            viewProperties.AddColumn(new Column("viewdescription", DbType.String, "View Description", "View Description", "", 256, "", 0), database);
         }
 
         #endregion

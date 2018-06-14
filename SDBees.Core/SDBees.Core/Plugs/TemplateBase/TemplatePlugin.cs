@@ -20,26 +20,16 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
 
-using Carbon;
-using Carbon.Plugins;
-using Carbon.Plugins.Attributes;
-
-using SDBees.Main.Window;
-using SDBees.DB;
 using System.Collections;
+using System.Data;
+using System.Windows.Forms;
+using SDBees.DB;
 
 namespace SDBees.Plugs.TemplateBase
 {
-    public abstract class TemplatePlugin : SDBees.Plugs.TemplateBase.TemplateBase
+    public abstract class TemplatePlugin : TemplateBase
     {
-        public TemplatePlugin() :base()
-        { }
-
         /// <summary>
         /// Each database related Plugin has to return its own Database Table
         /// </summary>
@@ -50,9 +40,9 @@ namespace SDBees.Plugs.TemplateBase
         /// Each Treenode Plugin returns a .net Datatable for reporting functionalities
         /// </summary>
         /// <returns>The datatable</returns>
-        public System.Data.DataTable MyDataTable()
+        public DataTable MyDataTable()
         {
-            return this.MyDBManager.GetDataTableForPlugin(this.MyTable().Name);
+            return MyDBManager.GetDataTableForPlugin(MyTable().Name);
         }
 
         /// <summary>
@@ -65,7 +55,7 @@ namespace SDBees.Plugs.TemplateBase
         /// Gets the plugin this persistent object works with
         /// </summary>
         /// <returns></returns>
-        public abstract SDBees.Plugs.TemplateBase.TemplatePlugin GetPlugin();
+        public abstract TemplatePlugin GetPlugin();
 
         /// <summary>
         /// Gets the type of the plugin
@@ -87,7 +77,7 @@ namespace SDBees.Plugs.TemplateBase
         /// <returns></returns>
         public virtual bool DeleteDataObject(Database database, object objectId)
         {
-            TemplateDBBaseData dataObject = CreateDataObject();
+            var dataObject = CreateDataObject();
 
             Error error = null;
             if (dataObject.Load(database, objectId, ref error))
@@ -109,11 +99,10 @@ namespace SDBees.Plugs.TemplateBase
         /// <returns></returns>
         public int FindAllObjects(Database database, ref ArrayList objectIds, ref Error error)
         {
-            Table table = this.MyTable();
+            var table = MyTable();
             if (table != null)
                 return database.Select(table, table.PrimaryKey, ref objectIds, ref error);
-            else
-                return -1;
+            return -1;
         }
 
         /// <summary>
@@ -125,10 +114,10 @@ namespace SDBees.Plugs.TemplateBase
         /// <returns></returns>
         public bool ObjectExists(Database database, object objectId, ref Error error)
         {
-            Table table = this.MyTable();
+            var table = MyTable();
             ArrayList objectIds = null;
-            SDBees.DB.Attribute attribute = new SDBees.DB.Attribute(table.Columns[table.PrimaryKey], objectId.ToString());
-            string criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
+            var attribute = new Attribute(table.Columns[table.PrimaryKey], objectId.ToString());
+            var criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
             return (database.Select(table, table.PrimaryKey, criteria, ref objectIds, ref error) == 1);
         }
 
@@ -149,14 +138,14 @@ namespace SDBees.Plugs.TemplateBase
         {
             if (m_editSchemaAllowed)
             {
-                frmEditTable tableEditor = new frmEditTable(MyDBManager);
+                var tableEditor = new frmEditTable(MyDBManager);
                 // TBD: besser wäre eine "lesbarer" Name...
-                tableEditor.Text = this.GetType().ToString();
-                tableEditor.Table = this.MyTable();
+                tableEditor.Text = GetType().ToString();
+                tableEditor.Table = MyTable();
 
                 if (tableEditor.ShowDialog() == DialogResult.OK)
                 {
-                    SDBees.DB.Object dataObject = this.CreateDataObject();
+                    Object dataObject = CreateDataObject();
                     dataObject.ModifyTable(tableEditor.Table, MyDBManager.Database);
                 }                
             }
@@ -172,7 +161,7 @@ namespace SDBees.Plugs.TemplateBase
         /// <returns></returns>
         public void InitTableSchema(ref Table table, Database database)
         {
-            SDBees.DB.Object baseData = CreateDataObject();
+            Object baseData = CreateDataObject();
             baseData.InitTableSchema(ref table, database);
             //baseData.SetDefaults(database);
         }

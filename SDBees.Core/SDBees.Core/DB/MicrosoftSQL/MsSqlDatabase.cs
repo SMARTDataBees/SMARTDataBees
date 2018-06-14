@@ -20,9 +20,6 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SDBees.DB.MicrosoftSQL
 {
@@ -44,7 +41,7 @@ namespace SDBees.DB.MicrosoftSQL
         // This method creates a connection to the database...
         protected override Connection CreateConnection(bool bReadOnly, ref Error error)
         {
-            MsSqlConnection connection = new MsSqlConnection(this);
+            var connection = new MsSqlConnection(this);
             if (!connection.Open(this, bReadOnly, ref error))
             {
                 // somehow failed...

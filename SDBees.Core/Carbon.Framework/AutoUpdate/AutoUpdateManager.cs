@@ -30,28 +30,18 @@
 //	============================================================================
 
 using System;
-using System.Diagnostics;
-using System.Configuration;
 using System.Collections;
+using System.Diagnostics;
 using System.IO;
-using System.Net;
+using System.Text;
 using System.Threading;
-using System.Reflection;
 using System.Windows.Forms;
-
-using Carbon;
-using Carbon.Common;
-using Carbon.Common.Attributes;
-using Carbon.Configuration;
-using Carbon.Plugins;
-using Carbon.MultiThreading;
 using Carbon.AutoUpdate.Common;
 using Carbon.AutoUpdate.Common.Xml;
+using Carbon.MultiThreading;
+using Carbon.Plugins;
 using Carbon.UI;
-
 using ICSharpCode.SharpZipLib.Zip;
-using ICSharpCode.SharpZipLib.Zip.Compression;
-using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
 namespace Carbon.AutoUpdate
 {	
@@ -176,9 +166,9 @@ namespace Carbon.AutoUpdate
             _options = options;					
             _productToUpdate = AutoUpdateProductDescriptor.FromAssembly(PluginContext.Current.StartingAssembly, PluginContext.Current.AppVersion);			
             _downloaders = new AutoUpdateDownloaderList();
-            _downloaders.AddRange(this.CreateDownloadersForInternalUse());
+            _downloaders.AddRange(CreateDownloadersForInternalUse());
             if (_options.DownloadPath == null || _options.DownloadPath == string.Empty)
-                _options.DownloadPath = this.GetBootstrapPath();		
+                _options.DownloadPath = GetBootstrapPath();		
         }
 
         /// <summary>
@@ -206,9 +196,9 @@ namespace Carbon.AutoUpdate
             _options = options;
             _productToUpdate = productToUpdate;
             _downloaders = new AutoUpdateDownloaderList();
-            _downloaders.AddRange(this.CreateDownloadersForInternalUse());
+            _downloaders.AddRange(CreateDownloadersForInternalUse());
             if (_options.DownloadPath == null || _options.DownloadPath == string.Empty)
-                _options.DownloadPath = this.GetBootstrapPath();		
+                _options.DownloadPath = GetBootstrapPath();		
         }	
 
         #region My Public Properties
@@ -233,7 +223,7 @@ namespace Carbon.AutoUpdate
 
 				if (_options.DownloadPath == null || _options.DownloadPath == string.Empty)
 				{
-					_options.DownloadPath = this.GetBootstrapPath();
+					_options.DownloadPath = GetBootstrapPath();
 				}
             }
         }
@@ -306,8 +296,8 @@ namespace Carbon.AutoUpdate
             {
                 // each instance of the engine will use a background thread to perform it's work
                 _thread = new BackgroundThread();
-                _thread.Run += new BackgroundThreadStartEventHandler(OnThreadRun);
-                _thread.Finished += new BackgroundThreadEventHandler(OnThreadFinished);	
+                _thread.Run += OnThreadRun;
+                _thread.Finished += OnThreadFinished;	
 				//_thread.AllowThreadAbortException = true;
             }
 
@@ -342,7 +332,7 @@ namespace Carbon.AutoUpdate
         public virtual string GetBootstrapPath()
         {
             // look at the startup directory
-            DirectoryInfo directory = new DirectoryInfo(System.Windows.Forms.Application.StartupPath);
+            var directory = new DirectoryInfo(Application.StartupPath);
 	                
             // jump to it's parent, that is going to be the download path for all updates (*.update)
             return Path.GetDirectoryName(directory.FullName);
@@ -388,27 +378,27 @@ namespace Carbon.AutoUpdate
 
             // otherwise don't
             return null;
-        }		
-		
+        }
+
         /// <summary>
         /// Installs the .update file specified by decrypting it and then unziping the contents to a new versioned directory (ie. 1.0.0.1)
         /// </summary>
         /// <param name="progressViewer"></param>
-        /// <param name="updateFilename"></param>
+        /// <param name="downloadDescriptor"></param>
         /// <returns></returns>
         protected virtual bool InstallUpdate(IProgressViewer progressViewer, AutoUpdateDownloadDescriptor downloadDescriptor)
         {
             string zipFilename = null;
             try
             {
-                Debug.WriteLine(string.Format("Preparing to install update from '{0}'.", downloadDescriptor.DownloadedPath), MY_TRACE_CATEGORY);
+                Debug.WriteLine($"Preparing to install update from '{downloadDescriptor.DownloadedPath}'.", MY_TRACE_CATEGORY);
 
                 // decrypt the .update file first				
-                if (!this.DecryptToZip(progressViewer, downloadDescriptor, out zipFilename))
+                if (!DecryptToZip(progressViewer, downloadDescriptor, out zipFilename))
                     return false;
 
                 // then unzip the .zip file
-                if (this.Unzip(progressViewer, downloadDescriptor, zipFilename))
+                if (Unzip(progressViewer, downloadDescriptor, zipFilename))
                 {	// delete the zip file
                     File.Delete(zipFilename);
                     return true;
@@ -434,7 +424,7 @@ namespace Carbon.AutoUpdate
         /// Decrypts the .update file to a .zip file using the name of the .update file as a base in the same directory as the .update file
         /// </summary>
         /// <param name="progressViewer"></param>
-        /// <param name="updateFilename"></param>
+        /// <param name="downloadDescriptor"></param>
         /// <param name="zipFilename"></param>
         /// <returns></returns>
         protected virtual bool DecryptToZip(IProgressViewer progressViewer, AutoUpdateDownloadDescriptor downloadDescriptor, out string zipFilename)
@@ -445,7 +435,7 @@ namespace Carbon.AutoUpdate
                 ProgressViewer.SetExtendedDescription(progressViewer, "Parsing update...");
 
                 // save the path to the update
-                string updateFilename = downloadDescriptor.DownloadedPath;
+                var updateFilename = downloadDescriptor.DownloadedPath;
 
                 // format the .zip file
                 zipFilename = Path.Combine(Path.GetDirectoryName(updateFilename), Path.GetFileName(updateFilename).Replace(Path.GetExtension(updateFilename), null) + ".zip");
@@ -481,19 +471,21 @@ namespace Carbon.AutoUpdate
         {
             try
             {
-                bool fileExists = File.Exists(file);
-                Debug.WriteLine(string.Format("Preparing to start a process.\n\tThe file '{0}' {1}.", file, (fileExists ? "exists" : "does not exist")), MY_TRACE_CATEGORY);				
+                var fileExists = File.Exists(file);
+                Debug.WriteLine(
+                    $"Preparing to start a process.\n\tThe file '{file}' {(fileExists ? "exists" : "does not exist")}.", MY_TRACE_CATEGORY);				
 
                 if (fileExists)
                 {
-                    ProgressViewer.SetExtendedDescription(progressViewer, string.Format("Creating process '{0}'...",Path.GetFileName(file)));	
+                    ProgressViewer.SetExtendedDescription(progressViewer,
+                        $"Creating process '{Path.GetFileName(file)}'...");	
 
-                    ProcessStartInfo pi = new ProcessStartInfo();
+                    var pi = new ProcessStartInfo();
 
                     pi.FileName = file;
                     pi.WorkingDirectory = new FileInfo(file).DirectoryName;
 
-                    Process p = Process.Start(pi);
+                    var p = Process.Start(pi);
                     if (p != null)
                     {
                         p.WaitForExit(); 
@@ -538,26 +530,27 @@ namespace Carbon.AutoUpdate
 				//rootName = rootName.Replace(prependedTextToRemove, null);
 
 				// extract here
-				string rootPath = Path.GetDirectoryName(zipFilename);
+				var rootPath = Path.GetDirectoryName(zipFilename);
 
 				// the destination where the files will be unzipped for the new version
 				//newVersionPath = Path.Combine(rootPath, rootName);
 				newVersionPath = Path.Combine(rootPath, downloadDescriptor.Manifest.Product.Version.ToString());
 
 				// make sure the directory where the new version will be extracted exists
-				bool folderExists = Directory.Exists(newVersionPath);
-				Debug.WriteLine(string.Format("Confirming the new version's path.\n\tThe folder '{0}' {1}.", newVersionPath, (folderExists ? "already exists" : "does not exist")), MY_TRACE_CATEGORY);
+				var folderExists = Directory.Exists(newVersionPath);
+				Debug.WriteLine(
+				    $"Confirming the new version's path.\n\tThe folder '{newVersionPath}' {(folderExists ? "already exists" : "does not exist")}.", MY_TRACE_CATEGORY);
 				if (!folderExists)
 				{
-					Debug.WriteLine(string.Format("Creating the new verion's folder '{0}'.", newVersionPath), MY_TRACE_CATEGORY);
+					Debug.WriteLine($"Creating the new verion's folder '{newVersionPath}'.", MY_TRACE_CATEGORY);
 					Directory.CreateDirectory(newVersionPath);
 				}
 
 				// try and find the postbuildevent.bat file
-				string postBuildFile = Path.Combine(rootPath, "PostBuildEvent.bat");
+				var postBuildFile = Path.Combine(rootPath, "PostBuildEvent.bat");
 
 				// open the zip file using a zip input stream
-				Debug.WriteLine(string.Format("Opening the archive '{0}' for reading.", zipFilename), MY_TRACE_CATEGORY);
+				Debug.WriteLine($"Opening the archive '{zipFilename}' for reading.", MY_TRACE_CATEGORY);
 				zipStream = new ZipInputStream(File.OpenRead(zipFilename));
 
 				// ready each zip entry
@@ -566,15 +559,15 @@ namespace Carbon.AutoUpdate
 				{
 					try
 					{
-						string zipEntryFilename = Path.Combine(rootPath, zipEntry.Name);
+						var zipEntryFilename = Path.Combine(rootPath, zipEntry.Name);
 						zipEntryFilename = zipEntryFilename.Replace("/", "\\");
 
 						// trace the entry to where it is going
-						Debug.WriteLine(string.Format("Extracting '{0}' to '{1}'.", zipEntry.Name, zipEntryFilename), MY_TRACE_CATEGORY);
+						Debug.WriteLine($"Extracting '{zipEntry.Name}' to '{zipEntryFilename}'.", MY_TRACE_CATEGORY);
 
 						if (zipEntry.IsDirectory)
 						{
-							Debug.WriteLine(string.Format("Creating the folder '{0}'.", zipEntryFilename), MY_TRACE_CATEGORY);
+							Debug.WriteLine($"Creating the folder '{zipEntryFilename}'.", MY_TRACE_CATEGORY);
 							Directory.CreateDirectory(zipEntryFilename);
 						}
 						else
@@ -582,8 +575,8 @@ namespace Carbon.AutoUpdate
 							ProgressViewer.SetExtendedDescription(progressViewer, "Extracting " + zipEntry.Name + "...");
 
 							// make sure the directory exists
-							FileInfo fi = new FileInfo(zipEntryFilename);
-							DirectoryInfo di = fi.Directory;
+							var fi = new FileInfo(zipEntryFilename);
+							var di = fi.Directory;
 							if (!Directory.Exists(di.FullName))
 								Directory.CreateDirectory(di.FullName);
 							fi = null;
@@ -591,8 +584,8 @@ namespace Carbon.AutoUpdate
 
 							// create each file
 							fs = File.Create(zipEntryFilename);
-							int size = 2048;
-							byte[] data = new byte[size];
+							var size = 2048;
+							var data = new byte[size];
 							while (true)
 							{
 								size = zipStream.Read(data, 0, data.Length);
@@ -690,7 +683,7 @@ namespace Carbon.AutoUpdate
                     return;
 
                 // redirect the url of the update to the alternate location
-                downloadDescriptor.Manifest.UrlOfUpdate = string.Format("{0}\\{1}\\{1}-{2}.Update", options.AlternatePath, downloadDescriptor.Manifest.Product.Name, downloadDescriptor.Manifest.Product.Version.ToString());			
+                downloadDescriptor.Manifest.UrlOfUpdate = string.Format("{0}\\{1}\\{1}-{2}.Update", options.AlternatePath, downloadDescriptor.Manifest.Product.Name, downloadDescriptor.Manifest.Product.Version);			
             }
             catch(ThreadAbortException)
             {
@@ -711,27 +704,30 @@ namespace Carbon.AutoUpdate
                     return;
 
                 // format a path to the product's alternate path
-                string altPath = Path.Combine(downloadDescriptor.Options.AlternatePath, downloadDescriptor.Manifest.Product.Name);
+                var altPath = Path.Combine(downloadDescriptor.Options.AlternatePath, downloadDescriptor.Manifest.Product.Name);
 
                 // if the path doesn't exist, just bail, we don't create alternate paths
-                bool folderExists = Directory.Exists(altPath);
-                Debug.WriteLine(string.Format("Confirming the product's 'Alternate Download Path' folder.\n\tThe folder '{0}' {1}.", altPath, (folderExists ? "already exists" : "does not exist")), MY_TRACE_CATEGORY);
+                var folderExists = Directory.Exists(altPath);
+                Debug.WriteLine(
+                    $"Confirming the product's 'Alternate Download Path' folder.\n\tThe folder '{altPath}' {(folderExists ? "already exists" : "does not exist")}.", MY_TRACE_CATEGORY);
                 if (!folderExists)
                 {
-                    Debug.WriteLine(string.Format("Creating the product's 'Alternate Download Path' folder at '{0}'.", altPath), MY_TRACE_CATEGORY);
+                    Debug.WriteLine($"Creating the product's 'Alternate Download Path' folder at '{altPath}'.", MY_TRACE_CATEGORY);
                     Directory.CreateDirectory(altPath);
                 }
 				
                 // format a path to the file in the alternate path
-                string dstPath = Path.Combine(altPath, string.Format("{0}-{1}.manifest", downloadDescriptor.Manifest.Product.Name, downloadDescriptor.Manifest.Product.Version.ToString()));
+                var dstPath = Path.Combine(altPath,
+                    $"{downloadDescriptor.Manifest.Product.Name}-{downloadDescriptor.Manifest.Product.Version}.manifest");
 
-                bool fileExists = File.Exists(dstPath);
-                Debug.WriteLine(string.Format("Preparing to copy the manifest to the product's 'Alternate Download Path' folder.\n\tThe file '{0}' {1}.", dstPath, (fileExists ? "already exists" : "does not exist")), MY_TRACE_CATEGORY);
+                var fileExists = File.Exists(dstPath);
+                Debug.WriteLine(
+                    $"Preparing to copy the manifest to the product's 'Alternate Download Path' folder.\n\tThe file '{dstPath}' {(fileExists ? "already exists" : "does not exist")}.", MY_TRACE_CATEGORY);
 							
                 // otherwise write the manifest to the alternate path
                 ProgressViewer.SetExtendedDescription(progressViewer, "Creating a backup copy of the manifest file.");
-                Debug.WriteLine(string.Format("Copying the manifest to '{0}'.", dstPath), MY_TRACE_CATEGORY);
-                XmlAutoUpdateManifestWriter.Write(downloadDescriptor.Manifest, dstPath, System.Text.Encoding.UTF8);				
+                Debug.WriteLine($"Copying the manifest to '{dstPath}'.", MY_TRACE_CATEGORY);
+                XmlAutoUpdateManifestWriter.Write(downloadDescriptor.Manifest, dstPath, Encoding.UTF8);				
             }
             catch(ThreadAbortException)
             {
@@ -747,7 +743,7 @@ namespace Carbon.AutoUpdate
         /// Creates a copy of the update file in the alternate path
         /// </summary>
         /// <param name="progressViewer"></param>
-        /// <param name="updateFilename"></param>
+        /// <param name="downloadDescriptor"></param>
         /// <returns></returns>
         public virtual void CreateCopyOfUpdateInAlternatePath(IProgressViewer progressViewer, AutoUpdateDownloadDescriptor downloadDescriptor)
         {				 													
@@ -758,27 +754,29 @@ namespace Carbon.AutoUpdate
                     return;
 
                 // take the alternate path
-                string altPath = Path.Combine(downloadDescriptor.Options.AlternatePath, downloadDescriptor.Manifest.Product.Name);
+                var altPath = Path.Combine(downloadDescriptor.Options.AlternatePath, downloadDescriptor.Manifest.Product.Name);
 
                 // see if the folder exists
-                bool folderExists = Directory.Exists(altPath);				
-                Debug.WriteLine(string.Format("Confirming the product's 'Alternate Download Path' folder.\n\tThe folder '{0}' {1}.", altPath, (folderExists ? "already exists" : "does not exist")), MY_TRACE_CATEGORY);
+                var folderExists = Directory.Exists(altPath);				
+                Debug.WriteLine(
+                    $"Confirming the product's 'Alternate Download Path' folder.\n\tThe folder '{altPath}' {(folderExists ? "already exists" : "does not exist")}.", MY_TRACE_CATEGORY);
                 if (!folderExists)
                 {
-                    Debug.WriteLine(string.Format("Creating the product's 'Alternate Download Path' folder at '{0}'.", altPath), MY_TRACE_CATEGORY);
+                    Debug.WriteLine($"Creating the product's 'Alternate Download Path' folder at '{altPath}'.", MY_TRACE_CATEGORY);
                     Directory.CreateDirectory(altPath);
                 }
 	
                 // format the backup filename from the alternate path, and the url where the update
-                string dstPath = Path.Combine(altPath, Path.GetFileName(downloadDescriptor.Manifest.UrlOfUpdate));
+                var dstPath = Path.Combine(altPath, Path.GetFileName(downloadDescriptor.Manifest.UrlOfUpdate));
 
                 // see if the file already exists
-                bool fileExists = File.Exists(dstPath);
-                Debug.WriteLine(string.Format("Preparing to copy the update to the product's 'Alternate Download Path' folder.\n\tThe file '{0}' {1}.", dstPath, (fileExists ? "already exists" : "does not exist")), MY_TRACE_CATEGORY);
+                var fileExists = File.Exists(dstPath);
+                Debug.WriteLine(
+                    $"Preparing to copy the update to the product's 'Alternate Download Path' folder.\n\tThe file '{dstPath}' {(fileExists ? "already exists" : "does not exist")}.", MY_TRACE_CATEGORY);
 				
                 // copy the .update we downloaded to the backup location in the alternate path directory
                 ProgressViewer.SetExtendedDescription(progressViewer, "Creating a backup copy of the update file.");
-                Debug.WriteLine(string.Format("Copying the update to '{0}'.", dstPath), MY_TRACE_CATEGORY);				
+                Debug.WriteLine($"Copying the update to '{dstPath}'.", MY_TRACE_CATEGORY);				
                 File.Copy(downloadDescriptor.DownloadedPath, dstPath, false);								
             }
             catch(ThreadAbortException)
@@ -798,9 +796,8 @@ namespace Carbon.AutoUpdate
         /// <param name="ea"></param>
         protected virtual void OnThreadRun(object sender, BackgroundThreadStartEventArgs threadStartEventArgs)
         {
-            bool downloaded = false;
-            bool installed = false;
-            bool finalized = false;
+            var installed = false;
+            var finalized = false;
             AutoUpdateDownloadDescriptor recommendedUpdateDescriptor = null;
 
             try
@@ -808,19 +805,19 @@ namespace Carbon.AutoUpdate
                 /*
                  * Raise the AutoUpdateProcessStarted event
                  * */
-                AutoUpdateManagerEventArgs startedArgs = new AutoUpdateManagerEventArgs(this, null);
-                this.OnAutoUpdateProcessStarted(this, startedArgs);
+                var startedArgs = new AutoUpdateManagerEventArgs(this, null);
+                OnAutoUpdateProcessStarted(this, startedArgs);
 
                 #region Step 1. QueryForLatestVersion
 
                 /*
                  * Raise the BeforeQueryForLatestVersion event
                  * */
-                AutoUpdateManagerCancelEventArgs beforeQueryArgs = new AutoUpdateManagerCancelEventArgs(this, startedArgs.ProgressViewer, false);
-                this.OnBeforeQueryForLatestVersion(this, beforeQueryArgs);
+                var beforeQueryArgs = new AutoUpdateManagerCancelEventArgs(this, startedArgs.ProgressViewer, false);
+                OnBeforeQueryForLatestVersion(this, beforeQueryArgs);
 
                 // create an array list to hold all of the available updates
-                ArrayList listOfAvailableDownloads = new ArrayList();				
+                var listOfAvailableDownloads = new ArrayList();				
 				
                 // use the downloaders to check for downloads
                 foreach(AutoUpdateDownloader downloader in _downloaders)
@@ -846,16 +843,16 @@ namespace Carbon.AutoUpdate
                 }
 
                 // create a simple array of the updates that are available for download
-                AutoUpdateDownloadDescriptor[] availableDownloads = listOfAvailableDownloads.ToArray(typeof(AutoUpdateDownloadDescriptor)) as AutoUpdateDownloadDescriptor[];
+                var availableDownloads = listOfAvailableDownloads.ToArray(typeof(AutoUpdateDownloadDescriptor)) as AutoUpdateDownloadDescriptor[];
 
                 // sort and select the download that contains the newest version
-                recommendedUpdateDescriptor = this.SelectTheDownloadWithTheNewestUpdate(availableDownloads);
+                recommendedUpdateDescriptor = SelectTheDownloadWithTheNewestUpdate(availableDownloads);
 
                 /*
                  * Raise the AfterQueryForLatestVersion event
                  * */
-                AutoUpdateManagerWithDownloadDescriptorEventArgs afterQueryArgs = new AutoUpdateManagerWithDownloadDescriptorEventArgs(this, beforeQueryArgs.ProgressViewer, recommendedUpdateDescriptor);
-                this.OnAfterQueryForLatestVersion(this, afterQueryArgs);
+                var afterQueryArgs = new AutoUpdateManagerWithDownloadDescriptorEventArgs(this, beforeQueryArgs.ProgressViewer, recommendedUpdateDescriptor);
+                OnAfterQueryForLatestVersion(this, afterQueryArgs);
 
                 // if the manager could not find a suitable recomendation for downloading, we're done 
                 if (recommendedUpdateDescriptor == null)
@@ -863,7 +860,7 @@ namespace Carbon.AutoUpdate
                     /*
                      * Raise the NoLaterVersionAvailable event
                      * */
-                    this.OnNoLaterVersionAvailable(this, new AutoUpdateManagerEventArgs(this, afterQueryArgs.ProgressViewer));
+                    OnNoLaterVersionAvailable(this, new AutoUpdateManagerEventArgs(this, afterQueryArgs.ProgressViewer));
                     return;
                 }
 				
@@ -873,7 +870,7 @@ namespace Carbon.AutoUpdate
                     /*
                      * Raise the NoLaterVersionAvailable event
                      * */
-                    this.OnNoLaterVersionAvailable(this, new AutoUpdateManagerEventArgs(this, afterQueryArgs.ProgressViewer));
+                    OnNoLaterVersionAvailable(this, new AutoUpdateManagerEventArgs(this, afterQueryArgs.ProgressViewer));
                     return;
                 }
                 
@@ -890,8 +887,8 @@ namespace Carbon.AutoUpdate
                 /*
                  * Raise the BeforeDownload event
                  * */
-                AutoUpdateManagerWithDownloadDescriptorCancelEventArgs beforeDownloadArgs = new AutoUpdateManagerWithDownloadDescriptorCancelEventArgs(this, afterQueryArgs.ProgressViewer, recommendedUpdateDescriptor, false);
-                this.OnBeforeDownload(this, beforeDownloadArgs);
+                var beforeDownloadArgs = new AutoUpdateManagerWithDownloadDescriptorCancelEventArgs(this, afterQueryArgs.ProgressViewer, recommendedUpdateDescriptor, false);
+                OnBeforeDownload(this, beforeDownloadArgs);
 				
                 // bail if the download was cancelled
                 if (beforeDownloadArgs.Cancel)
@@ -899,14 +896,14 @@ namespace Carbon.AutoUpdate
 				
                 // use the downloader that found the update to download it
                 // the update may be available via some proprietary communications channel (http, ftp, or Unc paths)
-                downloaded = recommendedUpdateDescriptor.Downloader.Download(beforeDownloadArgs.ProgressViewer, recommendedUpdateDescriptor);
+                var downloaded = recommendedUpdateDescriptor.Downloader.Download(beforeDownloadArgs.ProgressViewer, recommendedUpdateDescriptor);
 
                 /*
                  * Raise the AfterDownload event
                  * */
-                AutoUpdateManagerWithDownloadDescriptorEventArgs afterDownloadArgs = new AutoUpdateManagerWithDownloadDescriptorEventArgs(this, beforeDownloadArgs.ProgressViewer, recommendedUpdateDescriptor);
+                var afterDownloadArgs = new AutoUpdateManagerWithDownloadDescriptorEventArgs(this, beforeDownloadArgs.ProgressViewer, recommendedUpdateDescriptor);
                 afterDownloadArgs.OperationStatus = downloaded;
-                this.OnAfterDownload(this, afterDownloadArgs);
+                OnAfterDownload(this, afterDownloadArgs);
 				
                 // if the download failed bail out
                 if (!downloaded)
@@ -919,14 +916,14 @@ namespace Carbon.AutoUpdate
                 /*
                  * Raise the BeforeInstall event
                  * */
-                AutoUpdateManagerWithDownloadDescriptorCancelEventArgs beforeInstallArgs = new AutoUpdateManagerWithDownloadDescriptorCancelEventArgs(this, afterDownloadArgs.ProgressViewer, recommendedUpdateDescriptor, false);
-                this.OnBeforeInstall(this, beforeInstallArgs);
+                var beforeInstallArgs = new AutoUpdateManagerWithDownloadDescriptorCancelEventArgs(this, afterDownloadArgs.ProgressViewer, recommendedUpdateDescriptor, false);
+                OnBeforeInstall(this, beforeInstallArgs);
 
                 // if the installation was not cancelled
                 if (!beforeInstallArgs.Cancel)
                 {				
                     // install the update
-                    installed = this.InstallUpdate(beforeInstallArgs.ProgressViewer, recommendedUpdateDescriptor);
+                    installed = InstallUpdate(beforeInstallArgs.ProgressViewer, recommendedUpdateDescriptor);
 
                     // if the update was installed, now is the time to finalize the installation
                     if (installed)
@@ -941,9 +938,9 @@ namespace Carbon.AutoUpdate
                 /*
                  * Raise the AfterInstall event
                  * */				
-                AutoUpdateManagerWithDownloadDescriptorEventArgs afterInstallArgs = new AutoUpdateManagerWithDownloadDescriptorEventArgs(this, beforeInstallArgs.ProgressViewer, recommendedUpdateDescriptor);				
+                var afterInstallArgs = new AutoUpdateManagerWithDownloadDescriptorEventArgs(this, beforeInstallArgs.ProgressViewer, recommendedUpdateDescriptor);				
                 afterInstallArgs.OperationStatus = installed && finalized;																	
-                this.OnAfterInstall(this, afterInstallArgs);
+                OnAfterInstall(this, afterInstallArgs);
 				
                 #endregion
 
@@ -952,22 +949,22 @@ namespace Carbon.AutoUpdate
                 /*
                  * Raise the X event
                  * */
-                AutoUpdateManagerWithDownloadDescriptorCancelEventArgs beforeUpdateAltPathArgs = new AutoUpdateManagerWithDownloadDescriptorCancelEventArgs(this, afterInstallArgs.ProgressViewer, recommendedUpdateDescriptor, false);
-                this.OnBeforeUpdateAlternatePath(this, beforeUpdateAltPathArgs);
+                var beforeUpdateAltPathArgs = new AutoUpdateManagerWithDownloadDescriptorCancelEventArgs(this, afterInstallArgs.ProgressViewer, recommendedUpdateDescriptor, false);
+                OnBeforeUpdateAlternatePath(this, beforeUpdateAltPathArgs);
 
                 if (!beforeUpdateAltPathArgs.Cancel)
                 {
                     // copy the manifest & the update there 
-                    this.AdjustUrlOfUpdateInManifest(_options, recommendedUpdateDescriptor);
-                    this.CreateCopyOfManifestInAlternatePath(beforeUpdateAltPathArgs.ProgressViewer, recommendedUpdateDescriptor);
-                    this.CreateCopyOfUpdateInAlternatePath(beforeUpdateAltPathArgs.ProgressViewer, recommendedUpdateDescriptor);
+                    AdjustUrlOfUpdateInManifest(_options, recommendedUpdateDescriptor);
+                    CreateCopyOfManifestInAlternatePath(beforeUpdateAltPathArgs.ProgressViewer, recommendedUpdateDescriptor);
+                    CreateCopyOfUpdateInAlternatePath(beforeUpdateAltPathArgs.ProgressViewer, recommendedUpdateDescriptor);
                 }
 				
                 // delete the downloaded .update file, don't leave it laying around
                 File.Delete(recommendedUpdateDescriptor.DownloadedPath);
 
-                AutoUpdateManagerWithDownloadDescriptorEventArgs afterUpdateAltPathArgs = new AutoUpdateManagerWithDownloadDescriptorEventArgs(this, beforeUpdateAltPathArgs.ProgressViewer, recommendedUpdateDescriptor);
-                this.OnAfterUpdateAlternatePath(this, afterUpdateAltPathArgs);
+                var afterUpdateAltPathArgs = new AutoUpdateManagerWithDownloadDescriptorEventArgs(this, beforeUpdateAltPathArgs.ProgressViewer, recommendedUpdateDescriptor);
+                OnAfterUpdateAlternatePath(this, afterUpdateAltPathArgs);
 
                 #endregion
 
@@ -978,8 +975,8 @@ namespace Carbon.AutoUpdate
                     /*
                      * Raise the BeforeSwitchToLatestVersion event
                      * */
-                    AutoUpdateManagerWithDownloadDescriptorCancelEventArgs beforeSwitchedArgs = new AutoUpdateManagerWithDownloadDescriptorCancelEventArgs(this, afterUpdateAltPathArgs.ProgressViewer, recommendedUpdateDescriptor, false);
-                    this.OnBeforeSwitchToLatestVersion(this, beforeSwitchedArgs);
+                    var beforeSwitchedArgs = new AutoUpdateManagerWithDownloadDescriptorCancelEventArgs(this, afterUpdateAltPathArgs.ProgressViewer, recommendedUpdateDescriptor, false);
+                    OnBeforeSwitchToLatestVersion(this, beforeSwitchedArgs);
 
                     // if switching to the latest version was not cancelled
                     if (!beforeSwitchedArgs.Cancel)
@@ -987,8 +984,8 @@ namespace Carbon.AutoUpdate
                         /*
                         * Raise the SwitchToLatestVersion event
                         * */
-                        AutoUpdateManagerWithDownloadDescriptorEventArgs switchToArgs = new AutoUpdateManagerWithDownloadDescriptorEventArgs(this, beforeSwitchedArgs.ProgressViewer, recommendedUpdateDescriptor);
-                        this.OnSwitchToLatestVersion(this, switchToArgs);
+                        var switchToArgs = new AutoUpdateManagerWithDownloadDescriptorEventArgs(this, beforeSwitchedArgs.ProgressViewer, recommendedUpdateDescriptor);
+                        OnSwitchToLatestVersion(this, switchToArgs);
 
                         // the rest should be history because the AutoUpdateSnapIn should catch that event and switch to the latest version using the bootstrap
                     }
@@ -1013,7 +1010,7 @@ namespace Carbon.AutoUpdate
             catch(Exception ex)
             {
                 Debug.WriteLine(ex);
-                this.OnException(this, new AutoUpdateExceptionEventArgs(ex));				
+                OnException(this, new AutoUpdateExceptionEventArgs(ex));				
             }
         }
 
@@ -1025,7 +1022,7 @@ namespace Carbon.AutoUpdate
         protected virtual void OnThreadFinished(object sender, BackgroundThreadEventArgs e)
         {
             // signal that the process has ended
-            this.OnAutoUpdateProcessEnded(this, new AutoUpdateManagerEventArgs(this, null));
+            OnAutoUpdateProcessEnded(this, new AutoUpdateManagerEventArgs(this, null));
         }		
 		
         #endregion
@@ -1041,10 +1038,10 @@ namespace Carbon.AutoUpdate
         {
             try
             {
-                Debug.WriteLine(string.Format("Starting auto-update process at '{0}'.", DateTime.Now.ToString()), MY_TRACE_CATEGORY);
+                Debug.WriteLine($"Starting auto-update process at '{DateTime.Now.ToString()}'.", MY_TRACE_CATEGORY);
 
-                if (this.AutoUpdateProcessStarted != null)
-                    this.AutoUpdateProcessStarted(sender, e);
+                if (AutoUpdateProcessStarted != null)
+                    AutoUpdateProcessStarted(sender, e);
             }
             catch(ThreadAbortException)
             {
@@ -1065,8 +1062,8 @@ namespace Carbon.AutoUpdate
         {
             try
             {
-                if (this.BeforeQueryForLatestVersion != null)
-                    this.BeforeQueryForLatestVersion(sender, e);
+                if (BeforeQueryForLatestVersion != null)
+                    BeforeQueryForLatestVersion(sender, e);
             }
             catch(ThreadAbortException)
             {
@@ -1087,8 +1084,8 @@ namespace Carbon.AutoUpdate
         {
             try
             {
-                if (this.AfterQueryForLatestVersion != null)
-                    this.AfterQueryForLatestVersion(sender, e);
+                if (AfterQueryForLatestVersion != null)
+                    AfterQueryForLatestVersion(sender, e);
             }
             catch(ThreadAbortException)
             {
@@ -1109,8 +1106,8 @@ namespace Carbon.AutoUpdate
         {
             try
             {
-                if (this.NoLaterVersionAvailable != null)
-                    this.NoLaterVersionAvailable(sender, e);
+                if (NoLaterVersionAvailable != null)
+                    NoLaterVersionAvailable(sender, e);
             }
             catch(ThreadAbortException)
             {
@@ -1131,8 +1128,8 @@ namespace Carbon.AutoUpdate
         {
             try
             {
-                if (this.BeforeDownload != null)
-                    this.BeforeDownload(sender, e);
+                if (BeforeDownload != null)
+                    BeforeDownload(sender, e);
 
                 // cancel it if it's not supposed to download automatically
                 if (!e.OverrideOptions && !e.Cancel)
@@ -1158,8 +1155,8 @@ namespace Carbon.AutoUpdate
         {
             try
             {
-                if (this.AfterDownload != null)
-                    this.AfterDownload(sender, e);
+                if (AfterDownload != null)
+                    AfterDownload(sender, e);
             }
             catch(ThreadAbortException)
             {
@@ -1180,8 +1177,8 @@ namespace Carbon.AutoUpdate
         {
             try
             {				
-                if (this.BeforeInstall != null)
-                    this.BeforeInstall(sender, e);
+                if (BeforeInstall != null)
+                    BeforeInstall(sender, e);
 
                 // cancel if it's not supposed to install automatically
                 if (!e.OverrideOptions && !e.Cancel)
@@ -1207,8 +1204,8 @@ namespace Carbon.AutoUpdate
         {
             try
             {
-                if (this.AfterInstall != null)
-                    this.AfterInstall(sender, e);
+                if (AfterInstall != null)
+                    AfterInstall(sender, e);
             }
             catch(ThreadAbortException)
             {
@@ -1229,8 +1226,8 @@ namespace Carbon.AutoUpdate
         {
             try
             {				
-                if (this.BeforeUpdateAlternatePath != null)
-                    this.BeforeUpdateAlternatePath(sender, e);
+                if (BeforeUpdateAlternatePath != null)
+                    BeforeUpdateAlternatePath(sender, e);
 
                 // cancel if it's not supposed to update the alternate path automatically
                 if (!e.OverrideOptions && !e.Cancel)
@@ -1256,8 +1253,8 @@ namespace Carbon.AutoUpdate
         {
             try
             {
-                if (this.AfterUpdateAlternatePath != null)
-                    this.AfterUpdateAlternatePath(sender, e);
+                if (AfterUpdateAlternatePath != null)
+                    AfterUpdateAlternatePath(sender, e);
             }
             catch(ThreadAbortException)
             {
@@ -1278,8 +1275,8 @@ namespace Carbon.AutoUpdate
         {
             try
             {				
-                if (this.BeforeSwitchToLatestVersion != null)
-                    this.BeforeSwitchToLatestVersion(sender, e);
+                if (BeforeSwitchToLatestVersion != null)
+                    BeforeSwitchToLatestVersion(sender, e);
 
                 // cancel if it's not supposed to switch to the latest version automatically
                 if (!e.OverrideOptions && !e.Cancel)
@@ -1305,8 +1302,8 @@ namespace Carbon.AutoUpdate
         {
             try
             {
-                if (this.SwitchToLatestVersion != null)
-                    this.SwitchToLatestVersion(sender, e);
+                if (SwitchToLatestVersion != null)
+                    SwitchToLatestVersion(sender, e);
             }
             catch(ThreadAbortException)
             {
@@ -1327,8 +1324,8 @@ namespace Carbon.AutoUpdate
         {
             try
             {
-                if (this.Exception != null)
-                    this.Exception(sender, e);
+                if (Exception != null)
+                    Exception(sender, e);
             }
             catch(ThreadAbortException)
             {
@@ -1349,10 +1346,10 @@ namespace Carbon.AutoUpdate
         {
             try
             {
-                Debug.WriteLine(string.Format("Ending auto-update process at '{0}'.", DateTime.Now.ToString()), MY_TRACE_CATEGORY);
+                Debug.WriteLine($"Ending auto-update process at '{DateTime.Now.ToString()}'.", MY_TRACE_CATEGORY);
 
-                if (this.AutoUpdateProcessEnded != null)
-                    this.AutoUpdateProcessEnded(sender, e);
+                if (AutoUpdateProcessEnded != null)
+                    AutoUpdateProcessEnded(sender, e);
             }
             catch(ThreadAbortException)
             {

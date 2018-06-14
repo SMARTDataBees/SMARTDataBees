@@ -20,9 +20,6 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SDBees.DB.MySQL
 {
@@ -48,7 +45,7 @@ namespace SDBees.DB.MySQL
         /// <returns></returns>
         protected override Connection CreateConnection(bool bReadOnly, ref Error error)
         {
-            MySqlConnection connection = new MySqlConnection(this);
+            var connection = new MySqlConnection(this);
             if (!connection.Open(this, bReadOnly, ref error))
             {
                 // somehow failed...

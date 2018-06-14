@@ -20,19 +20,16 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
-using System.Text;
-
 using System.Windows.Forms;
-
+using Carbon.Plugins;
+using Carbon.Plugins.Attributes;
+using SDBees.Core.Global;
+using SDBees.DB;
+using SDBees.Main.Window;
 using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Plugs.TreenodeHelper;
-using SDBees.DB;
-
-using Carbon;
-using Carbon.Plugins.Attributes;
-using Carbon.Plugins;
 
 namespace SDBees.ViewAdmin
 {
@@ -42,22 +39,19 @@ namespace SDBees.ViewAdmin
 	[PluginId("109A3C52-E543-452A-9CDF-BD9A32B51639")]
 	[PluginManufacturer("CAD-Development")]
 	[PluginVersion("1.0.0")]
-	[PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
-	[PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
-	[PluginDependency(typeof(SDBees.ViewAdmin.ViewAdmin))]
-    [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
+	[PluginDependency(typeof(MainWindowApplication))]
+	[PluginDependency(typeof(SDBeesDBConnection))]
+	[PluginDependency(typeof(ViewAdmin))]
+    [PluginDependency(typeof(GlobalManager))]
 
-    public class ViewAdminLinkHelper : SDBees.Plugs.TreenodeHelper.TemplateTreenodeHelper
+    public class ViewAdminLinkHelper : TemplateTreenodeHelper
 	{
-		private static ViewAdminLinkHelper _theInstance = null;
-		private ViewAdminLinkHelperCtrl _myControl = null;
+		private static ViewAdminLinkHelper _theInstance;
+		private readonly ViewAdminLinkHelperCtrl _myControl;
 
-		public static ViewAdminLinkHelper Current
-		{
-			get{return _theInstance;}
-		}
+		public static ViewAdminLinkHelper Current => _theInstance;
 
-		public ViewAdminLinkHelper():base()
+	    public ViewAdminLinkHelper()
 		{
 			_theInstance = this;
 			_myControl = new ViewAdminLinkHelperCtrl(this);
@@ -67,7 +61,7 @@ namespace SDBees.ViewAdmin
 		{
             Console.WriteLine("View Admin LinkHelper Plugin starts\n");
 
-            this.StartMe(context, e);
+            StartMe(context, e);
         }
 
 		protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
@@ -75,7 +69,7 @@ namespace SDBees.ViewAdmin
             Console.WriteLine("View Admin LinkHelper Plugin stops\n");
         }
 
-		public override System.Windows.Forms.UserControl MyUserControl()
+		public override UserControl MyUserControl()
 		{
 			return _myControl;
 		}
@@ -87,15 +81,15 @@ namespace SDBees.ViewAdmin
         {
             if (tabPage != null)
             {
-                this._myControl.TemplateTreenodeTag = selectedTag;
-                this._myControl.ParentTemplateTreenodeTag = parentTag;
-                this._myControl.ViewId = viewId;
+                _myControl.TemplateTreenodeTag = selectedTag;
+                _myControl.ParentTemplateTreenodeTag = parentTag;
+                _myControl.ViewId = viewId;
 
                 tabPage.Controls.Clear();
-                tabPage.Controls.Add(this.MyUserControl());
-                this.MyUserControl().Dock = DockStyle.Fill;
+                tabPage.Controls.Add(MyUserControl());
+                MyUserControl().Dock = DockStyle.Fill;
 
-                this._myControl.UpdateView();
+                _myControl.UpdateView();
             }
         }
 

@@ -29,16 +29,14 @@
 //
 //	============================================================================
 
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 
 namespace Carbon.Common
 {
 	/// <summary>
 	/// Defines an EventArgs class that contains a KeyedObject instance as the context.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public class KeyedObjectEventArgs : ObjectEventArgs 
 	{
 		/// <summary>

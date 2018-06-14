@@ -38,24 +38,19 @@ namespace Carbon.Configuration
 {
 	public sealed class FolderBrowserUITypeEditor : UITypeEditor 
 	{
-		public FolderBrowserUITypeEditor()
-			: base()
-		{
-		}
-
-		public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
+	    public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
 		{
 			return UITypeEditorEditStyle.Modal;
 		}		
 
 		public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
 		{
-			return this.EditPath(value.ToString());
+			return EditPath(value.ToString());
 		}
 
 		private string EditPath(string path)
 		{
-			FolderBrowserDialog dialog = new FolderBrowserDialog();
+			var dialog = new FolderBrowserDialog();
 			dialog.SelectedPath = path;
 			if (dialog.ShowDialog() == DialogResult.OK)
 			{

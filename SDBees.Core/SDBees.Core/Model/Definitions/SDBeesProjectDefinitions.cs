@@ -20,16 +20,14 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
 namespace SDBees.Core.Model
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-
-    using System.Runtime.Serialization;
-
-	/// <remarks>SDBees Projekt Definition</remarks>
+    /// <remarks>SDBees Projekt Definition</remarks>
 	[DataContract]
 	public class SDBeesProjectDefinitions
 	{
@@ -69,17 +67,17 @@ namespace SDBees.Core.Model
 
 		public SDBeesExternalMappings getPluginMappings(SDBeesPluginId pluginId)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public  bool addMappedProperty(SDBeesExternalMappings mappings)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
         public bool addEntityDefinition(SDBeesEntityDefinition entityDefinition)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 	}
 }

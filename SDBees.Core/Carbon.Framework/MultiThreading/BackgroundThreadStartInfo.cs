@@ -29,14 +29,14 @@
 //
 //	============================================================================
 
-using System;
+using System.Diagnostics;
 
 namespace Carbon.MultiThreading
 {
 	/// <summary>
 	/// Defines the starting information passed to a BackgroundThread when the thread is created or started
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public sealed class BackgroundThreadStartInfo 
 	{
         //private bool _allowThreadAbortExceptions;

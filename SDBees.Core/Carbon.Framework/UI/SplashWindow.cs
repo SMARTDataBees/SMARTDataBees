@@ -30,11 +30,11 @@
 //	============================================================================
 
 using System;
-using System.IO;
-using System.Drawing;
 using System.ComponentModel;
+using System.Drawing;
+using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
-
 using Carbon.Common;
 using Carbon.Plugins;
 
@@ -55,17 +55,16 @@ namespace Carbon.UI
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		private System.ComponentModel.Container components = null;
+		private readonly Container _components = null;
 
-		/// <summary>
-		/// Initializes a new instance of the SplashWindow class
-		/// </summary>
-		public SplashWindow()
+
+	    /// <inheritdoc />
+	    public SplashWindow()
 		{
-			this.InitializeComponent();
-			this.DisplayInformationAboutAssembly(PluginContext.Current.StartingAssembly, true);			
-			this.TopMost = true;
-			this.ShowInTaskbar = true; // BUG: Windows 9x Fuckers!!!!! Gotta be there. I hate 98...
+			InitializeComponent();
+			DisplayInformationAboutAssembly(PluginContext.Current.StartingAssembly);			
+			TopMost = true;
+			ShowInTaskbar = true; // BUG: Windows 9x Fuckers!!!!! Gotta be there. I hate 98...
 		}		
 
 		/// <summary>
@@ -74,13 +73,10 @@ namespace Carbon.UI
 		protected override void Dispose( bool disposing )
 		{
 			if( disposing )
-			{				
-				if (components != null)
-				{
-					components.Dispose();
-				}
+			{
+			    _components?.Dispose();
 
-				if (_informationPanel != null)
+			    if (_informationPanel != null)
 				{
 					_informationPanel.Dispose();
 					_informationPanel = null;
@@ -97,7 +93,7 @@ namespace Carbon.UI
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(SplashWindow));
+			var resources = new System.Resources.ResourceManager(typeof(SplashWindow));
 			this._informationPanel = new InformationPanel();
 			this._labelText = new System.Windows.Forms.Label();
 			this.SuspendLayout();
@@ -166,7 +162,7 @@ namespace Carbon.UI
 		/// Reads the meta data from assembly attributes and extracts the shell icon to display on the progress dialog
 		/// </summary>
 		/// <param name="assembly"></param>
-		private void DisplayInformationAboutAssembly(System.Reflection.Assembly assembly, bool showVersion)
+		private void DisplayInformationAboutAssembly(Assembly assembly)
 		{
 			try
 			{
@@ -176,7 +172,7 @@ namespace Carbon.UI
 				if (assembly != null)
 				{
 					// snag the name of the file minus path and extention and set it as the heading
-					string filename = Path.GetFileName(assembly.Location);
+					var filename = Path.GetFileName(assembly.Location);
 					filename = filename.Replace(Path.GetExtension(assembly.Location), null);							
 					ProgressViewer.SetHeading(this, filename);
 
@@ -197,14 +193,14 @@ namespace Carbon.UI
 //
 
 					// get the large icon for the info panel
-					Icon largeIcon = ShellUtilities.GetIconFromPath(assembly.Location, IconSizes.LargeIconSize, IconStyles.NormalIconStyle, FileAttributes.Normal);	
+					var largeIcon = ShellUtilities.GetIconFromPath(assembly.Location, IconSizes.LargeIconSize, IconStyles.NormalIconStyle, FileAttributes.Normal);	
 					if (largeIcon != null)							
-						ProgressViewer.SetImage(this, largeIcon.ToBitmap() as Image);
+						ProgressViewer.SetImage(this, largeIcon.ToBitmap());
 					
 					// get the small icon for the window
-					Icon smallIcon = ShellUtilities.GetIconFromPath(assembly.Location, IconSizes.SmallIconSize, IconStyles.NormalIconStyle, FileAttributes.Normal);	
+					var smallIcon = ShellUtilities.GetIconFromPath(assembly.Location, IconSizes.SmallIconSize, IconStyles.NormalIconStyle, FileAttributes.Normal);	
 					if (smallIcon != null)				
-						this.Icon = smallIcon;
+						Icon = smallIcon;
 				}
 			}
 			catch(Exception ex)
@@ -221,7 +217,7 @@ namespace Carbon.UI
 		/// <param name="text">The text to display</param>
 		public void SetTitle(string text)
 		{				
-			this.Text = text;
+			Text = text;
 		}
 
 		/// <summary>
@@ -232,7 +228,7 @@ namespace Carbon.UI
 		{			
 			if (_informationPanel.InvokeRequired)
 			{
-				this.Invoke(new SetTextEventHandler(this.SetHeading), new object[] {text});
+				Invoke(new SetTextEventHandler(SetHeading), text);
 				return;
 			}	
 			
@@ -247,7 +243,7 @@ namespace Carbon.UI
 		{
 			if (_informationPanel.InvokeRequired)
 			{
-				this.Invoke(new SetTextEventHandler(this.SetDescription), new object[] {text});
+				Invoke(new SetTextEventHandler(SetDescription), text);
 				return;
 			}	
 			
@@ -262,7 +258,7 @@ namespace Carbon.UI
 		{
 			if (_labelText.InvokeRequired)
 			{
-				this.Invoke(new SetTextEventHandler(this.SetExtendedDescription), new object[] {text});
+				Invoke(new SetTextEventHandler(SetExtendedDescription), text);
 				return;
 			}	
 			
@@ -277,7 +273,7 @@ namespace Carbon.UI
 		{
 			if (_informationPanel.InvokeRequired)
 			{
-				this.Invoke(new SetImageEventHandler(this.SetImage), new object[] {image});
+				Invoke(new SetImageEventHandler(SetImage), image);
 				return;
 			}	
 			
@@ -293,7 +289,7 @@ namespace Carbon.UI
 		{
 			if (_informationPanel.InvokeRequired)
 			{
-				this.Invoke(new SetMarqueeMovingEventHandler(this.SetMarqueeMoving), new object[] {moving, reset});
+				Invoke(new SetMarqueeMovingEventHandler(SetMarqueeMoving), moving, reset);
 				return;
 			}	
 			

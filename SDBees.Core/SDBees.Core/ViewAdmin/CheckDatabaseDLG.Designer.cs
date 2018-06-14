@@ -20,6 +20,10 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.ComponentModel;
+using System.Windows.Forms;
+
 namespace SDBees.ViewAdmin
 {
     partial class CheckDatabaseDLG
@@ -27,7 +31,7 @@ namespace SDBees.ViewAdmin
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -141,11 +145,11 @@ namespace SDBees.ViewAdmin
 
         #endregion
 
-        private System.Windows.Forms.CheckBox cbAutomaticFix;
-        private System.Windows.Forms.CheckBox cbAutomaticDelete;
-        private System.Windows.Forms.Button bnStart;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripProgressBar progressBar;
-        private System.Windows.Forms.TextBox ebOutput;
+        private CheckBox cbAutomaticFix;
+        private CheckBox cbAutomaticDelete;
+        private Button bnStart;
+        private StatusStrip statusStrip1;
+        private ToolStripProgressBar progressBar;
+        private TextBox ebOutput;
     }
 }

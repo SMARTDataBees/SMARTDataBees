@@ -38,7 +38,7 @@ namespace Carbon.Common
 	/// <summary>
 	/// Provides methods for loading Types and creating instances of loaded Types.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public static class TypeUtilities
 	{
 		#region RequiredConstructorNotFoundException
@@ -58,7 +58,7 @@ namespace Carbon.Common
 			/// <param name="typeToCreate">The Type that was to be created</param>
 			/// <param name="constructorParamTypes">The array of Types that define the required constructor's prototype</param>
 			internal RequiredConstructorNotFoundException(Type typeToCreate, Type[] constructorParamTypes) : 
-				base(string.Format("The Type '{0}' does not provide a constructor with the required parameter types.", typeToCreate.FullName))
+				base($"The Type '{typeToCreate.FullName}' does not provide a constructor with the required parameter types.")
 			{
 				_typeToCreate = typeToCreate;
 				_constructorParamTypes = constructorParamTypes;
@@ -105,7 +105,7 @@ namespace Carbon.Common
 			/// <param name="type">The Type that should derive from the specified base Type</param>
 			/// <param name="requiredBaseType">The base Type the specified Type needs to derive from</param>
 			internal TypeDoesNotDeriveFromRequiredBaseTypeException(Type type, Type requiredBaseType) : 
-				base(string.Format("The Type '{0}' does not derive from the required base Type '{1}'.", type.FullName, requiredBaseType.FullName))
+				base($"The Type '{type.FullName}' does not derive from the required base Type '{requiredBaseType.FullName}'.")
 			{
 				_type = type;
 				_requiredBaseType = requiredBaseType;
@@ -150,7 +150,8 @@ namespace Carbon.Common
 			/// <param name="type">The type that should implement the required interface Type.</param>
 			/// <param name="requiredInterfaceType">The interface Type that should be implemented.</param>
 			internal TypeDoesNotImplementRequiredInterfaceTypeException(Type type, Type requiredInterfaceType)
-				: base(string.Format("The Type '{0}' does not implement the required interface Type '{1}'.", type.FullName, requiredInterfaceType.FullName))
+				: base(
+				        $"The Type '{type.FullName}' does not implement the required interface Type '{requiredInterfaceType.FullName}'.")
 			{
 				_type = type;
 				_requiredInterfaceType = type;
@@ -256,7 +257,7 @@ namespace Carbon.Common
 			//return Activator.CreateInstance(type, args);
 
 			// look for the required constructor
-			ConstructorInfo ci = type.GetConstructor(constructorParamTypes);
+			var ci = type.GetConstructor(constructorParamTypes);
 			if (ci == null)
 				// if the required constructor cannot be found, we cannot continue
 				// check the class definition and add the appropriate constructor

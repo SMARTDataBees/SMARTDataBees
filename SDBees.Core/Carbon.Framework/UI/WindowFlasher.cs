@@ -40,9 +40,9 @@ namespace Carbon.UI
 	 * and bring it up to standards. Ah the things you learn with time... :P
 	 * */
 
-	using UINT	= System.UInt32;
-	using HWND	= System.IntPtr;
-	using DWORD = System.Int32;
+	using UINT	= UInt32;
+	using HWND	= IntPtr;
+	using DWORD = Int32;
 
 	/// <summary>
 	/// Provides a class for flashing the title bar of a window.

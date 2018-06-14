@@ -20,11 +20,12 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using SDBees.DB;
+using SDBees.Plugs.TemplateBase;
+using Attribute = SDBees.DB.Attribute;
 
 namespace SDBees.ViewAdmin
 {
@@ -32,11 +33,11 @@ namespace SDBees.ViewAdmin
     /// Database resident object representing a view definition, this means a parent/child relationship
     /// for a specific view
     /// </summary>
-    public class ViewDefinition : SDBees.Plugs.TemplateBase.TemplateDBBaseData //SDBees.DB.Object
+    public class ViewDefinition : TemplateDBBaseData //SDBees.DB.Object
     {
         #region Private Data Members
 
-        private static Table gTable = null;
+        private static Table gTable;
 
         #endregion
 
@@ -92,7 +93,7 @@ namespace SDBees.ViewAdmin
         /// </summary>
         public ViewDefinition() : base("ViewRelations", "TestView", "General")
         {
-            base.Table = gTable;
+            Table = gTable;
         }
 
         #endregion
@@ -121,8 +122,8 @@ namespace SDBees.ViewAdmin
         /// <returns>Number of found entries</returns>
         public static int FindViewDefinitions(Database database, ref ArrayList objectIds, Guid viewId, ref Error error)
         {
-            SDBees.DB.Attribute attView = new SDBees.DB.Attribute(gTable.Columns[m_ViewPropIdColumnName], viewId.ToString());
-            string criteria = database.FormatCriteria(attView, DbBinaryOperator.eIsEqual, ref error);
+            var attView = new Attribute(gTable.Columns[m_ViewPropIdColumnName], viewId.ToString());
+            var criteria = database.FormatCriteria(attView, DbBinaryOperator.eIsEqual, ref error);
 
             return Select(database, gTable, gTable.PrimaryKey, criteria, ref objectIds, ref error);
         }
@@ -138,12 +139,12 @@ namespace SDBees.ViewAdmin
         /// <returns>Number of found entries</returns>
         public static int FindViewDefinitionByChildType(Database database, ref ArrayList objectIds, Guid viewId, string childType, ref Error error)
         {
-            SDBees.DB.Attribute attView = new SDBees.DB.Attribute(gTable.Columns[m_ViewPropIdColumnName], viewId.ToString());
-            string criteria1 = database.FormatCriteria(attView, DbBinaryOperator.eIsEqual, ref error);
-            SDBees.DB.Attribute attChildType = new SDBees.DB.Attribute(gTable.Columns[m_ChildTypeColumnName], childType);
-            string criteria2 = database.FormatCriteria(attChildType, DbBinaryOperator.eIsEqual, ref error);
+            var attView = new Attribute(gTable.Columns[m_ViewPropIdColumnName], viewId.ToString());
+            var criteria1 = database.FormatCriteria(attView, DbBinaryOperator.eIsEqual, ref error);
+            var attChildType = new Attribute(gTable.Columns[m_ChildTypeColumnName], childType);
+            var criteria2 = database.FormatCriteria(attChildType, DbBinaryOperator.eIsEqual, ref error);
 
-            string criteria = database.FormatCriteria(criteria1, criteria2, DbBooleanOperator.eAnd, ref error);
+            var criteria = database.FormatCriteria(criteria1, criteria2, DbBooleanOperator.eAnd, ref error);
 
             return Select(database, gTable, gTable.PrimaryKey, criteria, ref objectIds, ref error);
         }
@@ -159,12 +160,12 @@ namespace SDBees.ViewAdmin
         /// <returns>Number of found entries</returns>
         public static int FindViewDefinitionsByParentType(Database database, ref ArrayList objectIds, Guid viewId, string parentType, ref Error error)
         {
-            SDBees.DB.Attribute attView = new SDBees.DB.Attribute(gTable.Columns[m_ViewPropIdColumnName], viewId.ToString());
-            string criteria1 = database.FormatCriteria(attView, DbBinaryOperator.eIsEqual, ref error);
-            SDBees.DB.Attribute attParentType = new SDBees.DB.Attribute(gTable.Columns[m_ParentTypeColumnName], parentType);
-            string criteria2 = database.FormatCriteria(attParentType, DbBinaryOperator.eIsEqual, ref error);
+            var attView = new Attribute(gTable.Columns[m_ViewPropIdColumnName], viewId.ToString());
+            var criteria1 = database.FormatCriteria(attView, DbBinaryOperator.eIsEqual, ref error);
+            var attParentType = new Attribute(gTable.Columns[m_ParentTypeColumnName], parentType);
+            var criteria2 = database.FormatCriteria(attParentType, DbBinaryOperator.eIsEqual, ref error);
 
-            string criteria = database.FormatCriteria(criteria1, criteria2, DbBooleanOperator.eAnd, ref error);
+            var criteria = database.FormatCriteria(criteria1, criteria2, DbBooleanOperator.eAnd, ref error);
 
             return Select(database, gTable, gTable.PrimaryKey, criteria, ref objectIds, ref error);
         }
@@ -181,15 +182,15 @@ namespace SDBees.ViewAdmin
         /// <returns>Number of found entries</returns>
         public static int FindViewDefinitionsByTypes(Database database, ref ArrayList objectIds, Guid viewId, string parentType, string childType, ref Error error)
         {
-            ArrayList criterias = new ArrayList();
-            SDBees.DB.Attribute attView = new SDBees.DB.Attribute(gTable.Columns[m_ViewPropIdColumnName], viewId.ToString());
+            var criterias = new ArrayList();
+            var attView = new Attribute(gTable.Columns[m_ViewPropIdColumnName], viewId.ToString());
             criterias.Add(database.FormatCriteria(attView, DbBinaryOperator.eIsEqual, ref error));
-            SDBees.DB.Attribute attParentType = new SDBees.DB.Attribute(gTable.Columns[m_ParentTypeColumnName], parentType);
+            var attParentType = new Attribute(gTable.Columns[m_ParentTypeColumnName], parentType);
             criterias.Add(database.FormatCriteria(attParentType, DbBinaryOperator.eIsEqual, ref error));
-            SDBees.DB.Attribute attChildType = new SDBees.DB.Attribute(gTable.Columns[m_ChildTypeColumnName], childType);
+            var attChildType = new Attribute(gTable.Columns[m_ChildTypeColumnName], childType);
             criterias.Add(database.FormatCriteria(attChildType, DbBinaryOperator.eIsEqual, ref error));
 
-            string criteria = database.FormatCriteria(criterias, DbBooleanOperator.eAnd, ref error);
+            var criteria = database.FormatCriteria(criterias, DbBooleanOperator.eAnd, ref error);
 
             return Select(database, gTable, gTable.PrimaryKey, criteria, ref objectIds, ref error);
         }
@@ -205,7 +206,7 @@ namespace SDBees.ViewAdmin
         /// <returns>True if it exists</returns>
         public static bool ViewDefinitionExists(Database database, Guid viewId, string parentType, string childType, ref Error error)
         {
-            ArrayList objectIds = new ArrayList();
+            var objectIds = new ArrayList();
             return (FindViewDefinitionsByTypes(database, ref objectIds, viewId, parentType, childType, ref error) > 0);
         }
 
@@ -220,14 +221,14 @@ namespace SDBees.ViewAdmin
         /// <param name="database"></param>
         public static void InitTableSchema(Database database)
         {
-            ViewDefinition viewDefinition = new ViewDefinition();
+            var viewDefinition = new ViewDefinition();
             viewDefinition.InitTableSchema(ref gTable, database);
 
             // Now add columns always required by this plugIn
-            viewDefinition.AddColumn(new Column(m_ViewPropIdColumnName, DbType.eGuidString, "View", "View", "", 0, "", 0), database);
-            viewDefinition.AddColumn(new Column(m_ParentTypeColumnName, DbType.eString, "Parent Type", "Parent Type", "", 80, "", (int)DbFlags.eAllowNull), database);
-            viewDefinition.AddColumn(new Column(m_ChildTypeColumnName, DbType.eString, "Child Type", "Child Type", "", 80, "", 0), database);
-            viewDefinition.AddColumn(new Column(m_ChildNameColumnName, DbType.eString, "Child Name", "Child Name", "", 80, "", 0), database);
+            viewDefinition.AddColumn(new Column(m_ViewPropIdColumnName, DbType.GuidString, "View", "View", "", 0, "", 0), database);
+            viewDefinition.AddColumn(new Column(m_ParentTypeColumnName, DbType.String, "Parent Type", "Parent Type", "", 80, "", (int)DbFlags.eAllowNull), database);
+            viewDefinition.AddColumn(new Column(m_ChildTypeColumnName, DbType.String, "Child Type", "Child Type", "", 80, "", 0), database);
+            viewDefinition.AddColumn(new Column(m_ChildNameColumnName, DbType.String, "Child Name", "Child Name", "", 80, "", 0), database);
         }
 
         #endregion
@@ -263,7 +264,7 @@ namespace SDBees.ViewAdmin
 
         private static int Select(Database database, Table table, string searchColumn, ref ArrayList objectIds, ref Error _error)
         {
-            int result = database.Select(table.Name, searchColumn, ref objectIds, ref _error);
+            var result = database.Select(table.Name, searchColumn, ref objectIds, ref _error);
 
             return result;
         }
@@ -272,7 +273,7 @@ namespace SDBees.ViewAdmin
         {
             objectIds = ViewCache.Instance.ViewDefinitions(criteria, ref _error);
 
-            int result = objectIds == null ? 0 : objectIds.Count;
+            var result = objectIds == null ? 0 : objectIds.Count;
 
             return result;
         }

@@ -20,8 +20,8 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
@@ -123,14 +123,14 @@ namespace SDBees.DB
         /// <returns>XML description</returns>
         public string writeXml()
         {
-            string strXml = "";
+            var strXml = "";
 
             // create the XML structure and consider all the columns
-            XmlWriterSettings settings = new XmlWriterSettings();
+            var settings = new XmlWriterSettings();
             settings.Indent = false;
             settings.IndentChars = ("  ");
-            StringBuilder xmlStringBuilder = new StringBuilder();
-            using (XmlWriter writer = XmlWriter.Create(xmlStringBuilder, settings))
+            var xmlStringBuilder = new StringBuilder();
+            using (var writer = XmlWriter.Create(xmlStringBuilder, settings))
             {
                 // Write XML data.
                 writer.WriteStartElement("TableSchema");
@@ -142,16 +142,16 @@ namespace SDBees.DB
                 // Now write the columns
                 writer.WriteStartElement("Columns");
 
-                foreach (KeyValuePair<string, Column> iterator in mColumns)
+                foreach (var iterator in mColumns)
                 {
-                    Column column = iterator.Value;
-                    string xmlColumn = column.Xmlwrite();
+                    var column = iterator.Value;
+                    var xmlColumn = column.Xmlwrite();
 
                     if (xmlColumn != "")
                     {
-                        XmlDocument xmlDocument = new XmlDocument();
+                        var xmlDocument = new XmlDocument();
                         xmlDocument.LoadXml(xmlColumn);
-                        XmlNode xmlNode = xmlDocument.SelectSingleNode("Column");
+                        var xmlNode = xmlDocument.SelectSingleNode("Column");
 
                         writer.WriteNode(new XmlNodeReader(xmlNode), false);
                     }
@@ -179,32 +179,32 @@ namespace SDBees.DB
             Init();
 
             // Interpret the xml and create the necessary columns
-            XmlDocument xmlDoc = new XmlDocument();
+            var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xmlContent);
 
-            XmlNode rootNode = xmlDoc.SelectSingleNode("TableSchema");
+            var rootNode = xmlDoc.SelectSingleNode("TableSchema");
             XmlReader reader = new XmlNodeReader(rootNode);
 
             reader.Read();
             mName = reader.GetAttribute("Name");
             mPrimaryKey = reader.GetAttribute("PrimaryKey");
-            string strVersion = reader.GetAttribute("SchemaVersion");
+            var strVersion = reader.GetAttribute("SchemaVersion");
             if ((strVersion == null) || (strVersion == ""))
             {
                 mSchemaVersion = 100;
             }
             else 
             {
-                mSchemaVersion = (int)System.Convert.ChangeType(strVersion, typeof(int));
+                mSchemaVersion = (int)Convert.ChangeType(strVersion, typeof(int));
             }
 
-            mReloadIdOnInsert = System.Convert.ToBoolean(reader.GetAttribute("ReloadOnInsert"));
+            mReloadIdOnInsert = Convert.ToBoolean(reader.GetAttribute("ReloadOnInsert"));
 
             // Find the columns and read them...
-            XmlNodeList columnsNodeList = rootNode.SelectSingleNode("Columns").SelectNodes("Column");
+            var columnsNodeList = rootNode.SelectSingleNode("Columns").SelectNodes("Column");
             foreach (XmlNode columnNode in columnsNodeList)
             {
-                Column newColumn = new Column();
+                var newColumn = new Column();
                 newColumn.Xmlread(columnNode.OuterXml);
 
                 mColumns.Add(newColumn);

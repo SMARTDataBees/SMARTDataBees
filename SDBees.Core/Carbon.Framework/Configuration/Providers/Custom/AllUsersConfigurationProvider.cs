@@ -29,9 +29,7 @@
 //
 //	============================================================================
 
-using System;
 using System.IO;
-
 using Carbon.Common;
 
 namespace Carbon.Configuration.Providers.Custom
@@ -68,7 +66,7 @@ namespace Carbon.Configuration.Providers.Custom
         {
             get 
             {
-                string fileTitle = this.ConfigurationName + ".xml";
+                var fileTitle = ConfigurationName + ".xml";
 
                 return Path.Combine(CarbonConfig.AllUsersDataPath, fileTitle);
             }

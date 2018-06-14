@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace SDBees.Core.Model
 {
 
-    public enum SDBeesUnitType : int
+    public enum SDBeesUnitType
     {
         Text,
         Double,

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
+using SDBees.Core.Connectivity;
 
 namespace SDBees.Core.Model.Instances
 {
@@ -91,27 +89,27 @@ namespace SDBees.Core.Model.Instances
             set { m_CADInfo = value; }
         }
 
-        internal static SDBeesDBDocument CreateFromDBRecord(Connectivity.ConnectivityManagerDocumentBaseData docdata)
+        internal static SDBeesDBDocument CreateFromDBRecord(ConnectivityManagerDocumentBaseData docdata)
         {
-            SDBeesDBDocument doc = new SDBeesDBDocument();
+            var doc = new SDBeesDBDocument();
             try
             {
-                doc.m_id= new Guid(docdata.GetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_IdColumnName).ToString());
+                doc.m_id= new Guid(docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_IdColumnName).ToString());
 
-                Guid gSDBees = new Guid(docdata.GetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_IdSDBeesColumnName).ToString());
+                var gSDBees = new Guid(docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_IdSDBeesColumnName).ToString());
                 if (gSDBees == Guid.Empty)
                     gSDBees = Guid.NewGuid();
 
                 doc.m_instanceId = gSDBees;
 
-                doc.m_name = docdata.GetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_NameColumnName).ToString();
-                doc.m_roleid = docdata.GetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_RoleIdColumnName).ToString();
-                doc.m_application = docdata.GetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_ApplicationColumnName).ToString();
-                doc.m_docfilename = docdata.GetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_DocumentFileColumnName).ToString();
-                doc.m_document_root = docdata.GetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_DocumentRootColumnName).ToString();
-                doc.m_document_root_type = docdata.GetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_DocumentRootTypeColumnName).ToString();
-                doc.m_documentassignment = docdata.GetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_DocumentAssignmentColumnName).ToString();
-                doc.m_CADInfo = SDBeesDocumentCADInfo.Create(docdata.GetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_DocumentCADInfoColumnName).ToString());
+                doc.m_name = docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_NameColumnName).ToString();
+                doc.m_roleid = docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_RoleIdColumnName).ToString();
+                doc.m_application = docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_ApplicationColumnName).ToString();
+                doc.m_docfilename = docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_DocumentFileColumnName).ToString();
+                doc.m_document_root = docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_DocumentRootColumnName).ToString();
+                doc.m_document_root_type = docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_DocumentRootTypeColumnName).ToString();
+                doc.m_documentassignment = docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_DocumentAssignmentColumnName).ToString();
+                doc.m_CADInfo = SDBeesDocumentCADInfo.Create(docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_DocumentCADInfoColumnName).ToString());
             }
             catch (Exception ex)
             {
@@ -122,18 +120,18 @@ namespace SDBees.Core.Model.Instances
         }
 
 
-        public static Connectivity.ConnectivityManagerDocumentBaseData CreateFromSDBeesDocument(SDBeesDBDocument doc)
+        public static ConnectivityManagerDocumentBaseData CreateFromSDBeesDocument(SDBeesDBDocument doc)
         {
-            SDBees.Core.Connectivity.ConnectivityManagerDocumentBaseData docData = new Connectivity.ConnectivityManagerDocumentBaseData();
-            docData.SetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_IdSDBeesColumnName, doc.InstanceId);
-            docData.SetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_NameColumnName, doc.Name);
-            docData.SetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_RoleIdColumnName, doc.Roleid);
-            docData.SetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_ApplicationColumnName, doc.Application);
-            docData.SetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_DocumentFileColumnName, doc.Docfilename);
-            docData.SetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_DocumentRootColumnName, doc.Document_root);
-            docData.SetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_DocumentRootTypeColumnName, doc.Document_root_type);
-            docData.SetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_DocumentAssignmentColumnName, doc.Documentassignment);
-            docData.SetPropertyByColumn(Connectivity.ConnectivityManagerDocumentBaseData.m_DocumentCADInfoColumnName, SDBeesDocumentCADInfo.Serialize(doc.CADInfo));
+            var docData = new ConnectivityManagerDocumentBaseData();
+            docData.SetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_IdSDBeesColumnName, doc.InstanceId);
+            docData.SetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_NameColumnName, doc.Name);
+            docData.SetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_RoleIdColumnName, doc.Roleid);
+            docData.SetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_ApplicationColumnName, doc.Application);
+            docData.SetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_DocumentFileColumnName, doc.Docfilename);
+            docData.SetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_DocumentRootColumnName, doc.Document_root);
+            docData.SetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_DocumentRootTypeColumnName, doc.Document_root_type);
+            docData.SetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_DocumentAssignmentColumnName, doc.Documentassignment);
+            docData.SetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_DocumentCADInfoColumnName, SDBeesDocumentCADInfo.Serialize(doc.CADInfo));
 
             return docData;
         }

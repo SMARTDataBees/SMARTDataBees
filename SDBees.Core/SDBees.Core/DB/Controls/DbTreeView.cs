@@ -20,13 +20,15 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.Text;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using SDBees.Core.Utils;
 using SDBees.GuiTools;
+using SDBees.ViewAdmin;
 
 namespace SDBees.DB
 {
@@ -38,7 +40,7 @@ namespace SDBees.DB
         #region Private Data Members
 
         private Table mTable;
-        private SDBees.DB.SDBeesDBConnection m_dbManager;
+        private SDBeesDBConnection m_dbManager;
         private Database m_database;
         private string mNodeColumnName;
         private string mParentNodeColumnName;
@@ -46,7 +48,7 @@ namespace SDBees.DB
         private string mFilter;
         private object mParentNullId;
         private List<MenuDefinition> mMenuDefinitions;
-        protected ViewAdmin.ViewCache.ViewCacheImplementation mViewCache { get { return ViewAdmin.ViewCache.Instance; } }
+        protected ViewCache.ViewCacheImplementation mViewCache { get { return ViewCache.Instance; } }
 
         #endregion
 
@@ -126,9 +128,9 @@ namespace SDBees.DB
         /// <summary>
         /// Standard constructor
         /// </summary>
-        public DbTreeView(SDBees.DB.SDBeesDBConnection dbManager) : this(dbManager, null)
+        public DbTreeView(SDBeesDBConnection dbManager) : this(dbManager, null)
         {
-            this.TreeViewNodeSorter = (IComparer)new TreeNodeComparer();
+            TreeViewNodeSorter = new TreeNodeComparer();
         }
 
         /// <summary>
@@ -136,18 +138,18 @@ namespace SDBees.DB
         /// </summary>
         public DbTreeView(Database database) : this(null, database)
         {
-            this.TreeViewNodeSorter = (IComparer)new TreeNodeComparer();
+            TreeViewNodeSorter = new TreeNodeComparer();
         }
 
         public DbTreeView() : this(null, null)
         {
-            this.TreeViewNodeSorter = (IComparer)new TreeNodeComparer();
+            TreeViewNodeSorter = new TreeNodeComparer();
         }
 
         /// <summary>
         /// Private constructor
         /// </summary>
-        private DbTreeView(SDBees.DB.SDBeesDBConnection dbManager, Database database)
+        private DbTreeView(SDBeesDBConnection dbManager, Database database)
         {
             if (dbManager != null)
                 m_dbManager = dbManager;
@@ -173,22 +175,22 @@ namespace SDBees.DB
             mMenuDefinitions = new List<MenuDefinition>();
 
             // typical settings of the control
-            this.HideSelection = false;
-            this.FullRowSelect = false;
+            HideSelection = false;
+            FullRowSelect = false;
 
             // Create a context menu...
-            this.ContextMenu = new ContextMenu();
-            this.ContextMenu.Popup += new EventHandler(ContextMenu_Popup);
+            ContextMenu = new ContextMenu();
+            ContextMenu.Popup += ContextMenu_Popup;
 
             // Drag & Drop
-            this.AllowDrop = false;
-            this.ItemDrag += new ItemDragEventHandler(DbTreeView_ItemDrag);
-            this.DragOver += new DragEventHandler(DbTreeView_DragOver);
-            this.DragDrop += new DragEventHandler(DbTreeView_DragDrop);
-            this.DragEnter += new DragEventHandler(DbTreeView_DragEnter);
+            AllowDrop = false;
+            ItemDrag += DbTreeView_ItemDrag;
+            DragOver += DbTreeView_DragOver;
+            DragDrop += DbTreeView_DragDrop;
+            DragEnter += DbTreeView_DragEnter;
 
             // Hotkeys
-            this.KeyDown += new KeyEventHandler(DbTreeView_KeyDown);
+            KeyDown += DbTreeView_KeyDown;
         }
 
 
@@ -200,10 +202,10 @@ namespace SDBees.DB
                 FixSelectionAtMousePosition();
 
                 // Create the drag information that will be pass
-                DbDragData dragData = new DbDragData();
-                if (this.SelNodes.Count > 0)
+                var dragData = new DbDragData();
+                if (SelNodes.Count > 0)
                 {
-                    foreach (MWTreeNodeWrapper tnWrapper in this.SelNodes.Values)
+                    foreach (MWTreeNodeWrapper tnWrapper in SelNodes.Values)
                     {
                         dragData.DragItems.Add(tnWrapper.Node);
                     }
@@ -235,15 +237,15 @@ namespace SDBees.DB
                 if (e.Data.GetDataPresent(typeof(DbDragData)))
                 {
                     // Retrieve the client coordinates of the mouse position.
-                    Point targetPoint = this.PointToClient(new Point(e.X, e.Y));
+                    var targetPoint = PointToClient(new Point(e.X, e.Y));
 
                     // Select the node at the mouse position.
-                    TreeNode tn = this.GetNodeAt(targetPoint);
+                    var tn = GetNodeAt(targetPoint);
                     SelectSingleNode(tn);
 
                     if (tn != null)
                     {
-                        DbDragData dragData = (DbDragData)e.Data.GetData(typeof(DbDragData));
+                        var dragData = (DbDragData)e.Data.GetData(typeof(DbDragData));
 
                         e.Effect = GetDragOverEffect(sender, e, tn, dragData);
                     }
@@ -268,19 +270,19 @@ namespace SDBees.DB
                 if (e.Data.GetDataPresent(typeof(DbDragData)))
                 {
 
-                    DbDragData dragData = (DbDragData)e.Data.GetData(typeof(DbDragData));
+                    var dragData = (DbDragData)e.Data.GetData(typeof(DbDragData));
 
                     // Perform drag-and-drop, depending upon the effect.
                     if (e.Effect == DragDropEffects.Copy ||
                         e.Effect == DragDropEffects.Move)
                     {
-                        string message = "";
+                        var message = "";
 
-                        foreach (object dragItem in dragData.DragItems)
+                        foreach (var dragItem in dragData.DragItems)
                         {
                             if (typeof(TreeNode).IsInstanceOfType(dragItem))
                             {
-                                TreeNode treeNode = (TreeNode)dragItem;
+                                var treeNode = (TreeNode)dragItem;
 
                                 if (message != "")
                                 {
@@ -322,15 +324,15 @@ namespace SDBees.DB
         /// <returns></returns>
         public TreeNode SingleSelectedNode()
         {
-            if (this.SelNodes.Count == 1)
+            if (SelNodes.Count == 1)
             {
-                foreach (MWTreeNodeWrapper tnWrapper in this.SelNodes.Values)
+                foreach (MWTreeNodeWrapper tnWrapper in SelNodes.Values)
                 {
                     return tnWrapper.Node;
                 }
             }
 
-            if (this.SelNodes.Count > 1)
+            if (SelNodes.Count > 1)
                 return null;
 
             if (SelectedNode != null)
@@ -364,7 +366,7 @@ namespace SDBees.DB
         {
             if (InvokeRequired)
             {
-                FillHelper h = new FillHelper(Fill);
+                FillHelper h = Fill;
                 BeginInvoke(h);
             }
             else
@@ -392,7 +394,7 @@ namespace SDBees.DB
 
                     try
                     {
-                        SDBees.ViewAdmin.ViewCache.Enable();
+                        ViewCache.Enable();
 
                         BeginUpdate();
 
@@ -402,7 +404,7 @@ namespace SDBees.DB
                     }
                     finally
                     {
-                        SDBees.ViewAdmin.ViewCache.Disable();
+                        ViewCache.Disable();
                     }
 
                     FillEnded();
@@ -422,7 +424,7 @@ namespace SDBees.DB
                 }
                 else
                 {
-                    error = new Error("Object not setup correctly", 9999, this.GetType(), error);
+                    error = new Error("Object not setup correctly", 9999, GetType(), error);
                 }
             }
             catch (Exception ex)
@@ -461,7 +463,7 @@ namespace SDBees.DB
         public virtual void AddContextMenuItem(MenuItem menuItem, bool enableForMultiSelect, bool enableForSingleSelect, int weight)
         {
             // TBD: consider the weight...
-            MenuDefinition menuDefinition = new MenuDefinition(menuItem, enableForMultiSelect, enableForSingleSelect, weight);
+            var menuDefinition = new MenuDefinition(menuItem, enableForMultiSelect, enableForSingleSelect, weight);
             mMenuDefinitions.Add(menuDefinition);
         }
 
@@ -477,22 +479,22 @@ namespace SDBees.DB
         /// <param name="error">ref to the error handler</param>
         protected virtual void FillChildren(TreeNodeCollection nodes, object parentId, string parentType, ref Error error)
         {
-            string m_Sorting = "";
+            var m_Sorting = "";
 
             if (Database.UseGlobalCaching == false)
             {
                 //m_Sorting = String.Format(" ORDER BY {0} ASC", ViewAdmin.ViewRelation.m_ChildNameColumnName);
             }
 
-            string criteriaViewDef = "";
+            var criteriaViewDef = "";
 
             try
             {
-                ArrayList criteriaLstViewDefs = new ArrayList();
+                var criteriaLstViewDefs = new ArrayList();
 
                 if (String.IsNullOrEmpty(parentType))
                 {
-                    criteriaLstViewDefs.Add(String.Format("parent_type='{0}'", ViewAdmin.ViewRelation.m_StartNodeValue));
+                    criteriaLstViewDefs.Add(String.Format("parent_type='{0}'", ViewRelation.m_StartNodeValue));
                     if (String.IsNullOrEmpty(mFilter))
                     {
                         criteriaViewDef = criteriaLstViewDefs[0].ToString();
@@ -518,32 +520,32 @@ namespace SDBees.DB
                 }
 
                 //Load the viewDef
-                ArrayList lstViewDefs = mViewCache.ViewDefinitions(criteriaViewDef, ref error);
-                int numRelDefs = lstViewDefs.Count;
+                var lstViewDefs = mViewCache.ViewDefinitions(criteriaViewDef, ref error);
+                var numRelDefs = lstViewDefs.Count;
 
-                for (int i = 0; i < numRelDefs; i++)
+                for (var i = 0; i < numRelDefs; i++)
                 {
-                    ViewAdmin.ViewDefinition db = null;
+                    ViewDefinition db = null;
                     if (mViewCache.ViewDefinition(lstViewDefs[i], out db, ref error))
                     {
-                        SDBees.DB.Attribute attParent = new SDBees.DB.Attribute(mTable.Columns[mParentNodeColumnName], parentId.ToString());
-                        string criteria = Database.FormatCriteria(attParent, DbBinaryOperator.eIsEqual, ref error);
+                        var attParent = new Attribute(mTable.Columns[mParentNodeColumnName], parentId.ToString());
+                        var criteria = Database.FormatCriteria(attParent, DbBinaryOperator.eIsEqual, ref error);
                         if (Database.UseGlobalCaching == false)
                         {
                             criteria += m_Sorting;
                         }
 
-                        ArrayList objectIds = mViewCache.ViewRelations(criteria, ref error);
-                        int numEntries = objectIds.Count;
+                        var objectIds = mViewCache.ViewRelations(criteria, ref error);
+                        var numEntries = objectIds.Count;
 
-                        for (int index = 0; index < numEntries; index++)
+                        for (var index = 0; index < numEntries; index++)
                         {
-                            ViewAdmin.ViewRelation viewRel = null;
+                            ViewRelation viewRel = null;
                             if (mViewCache.ViewRelation(objectIds[index], out viewRel, ref error))
                             {
                                 if (viewRel.ChildType == db.ChildType)
                                 {
-                                    TreeNode treeNode = CreateNode(objectIds[index], ref error);
+                                    var treeNode = CreateNode(objectIds[index], ref error);
                                     if (treeNode != null)
                                     {
                                         //ArrayList objectIdValidRels = null;
@@ -553,11 +555,11 @@ namespace SDBees.DB
                                         NodeAdded(treeNode);
 
                                         // Recurse for this node
-                                        object nextParentId = objectIds[index];
+                                        var nextParentId = objectIds[index];
                                         if (mNodeColumnName != mTable.PrimaryKey)
                                         {
-                                            SDBees.DB.Attribute attribute = new SDBees.DB.Attribute(mTable.Columns[mTable.PrimaryKey], nextParentId.ToString());
-                                            string idCriteria = Database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
+                                            var attribute = new Attribute(mTable.Columns[mTable.PrimaryKey], nextParentId.ToString());
+                                            var idCriteria = Database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
                                             nextParentId = mViewCache.Parent(mTable, mNodeColumnName, idCriteria, ref error);
                                         }
 
@@ -674,9 +676,9 @@ namespace SDBees.DB
         {
             TreeNode treeNode = null;
 
-            SDBees.DB.Attribute attribute = new SDBees.DB.Attribute(mTable.Columns[mTable.PrimaryKey], nodeId.ToString());
-            string idCriteria = Database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
-            object nodeLabel = Database.SelectSingle(mTable.Name, mDisplayColumnName, idCriteria, ref error);
+            var attribute = new Attribute(mTable.Columns[mTable.PrimaryKey], nodeId.ToString());
+            var idCriteria = Database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
+            var nodeLabel = Database.SelectSingle(mTable.Name, mDisplayColumnName, idCriteria, ref error);
 
             if (nodeLabel != null)
             {
@@ -737,7 +739,7 @@ namespace SDBees.DB
         /// <returns></returns>
         protected virtual DragDropEffects GetDragOverEffect(object sender, DragEventArgs e, TreeNode treeNodeToDrop, DbDragData dragData)
         {
-            DragDropEffects result = DragDropEffects.None;
+            var result = DragDropEffects.None;
 
             if ((e.AllowedEffect & DragDropEffects.Move) == DragDropEffects.Move)
             {
@@ -748,7 +750,7 @@ namespace SDBees.DB
                 result = DragDropEffects.Copy;
             }
 
-            object senderControl = dragData.SenderControl();
+            var senderControl = dragData.SenderControl();
 
             if (senderControl != this)
             {
@@ -761,11 +763,11 @@ namespace SDBees.DB
             else
             {
                 // This is dragged within the same tree view, check that its not dragged to a child of the selection
-                foreach (object dragItem in dragData.DragItems)
+                foreach (var dragItem in dragData.DragItems)
                 {
                     if (typeof(TreeNode).IsInstanceOfType(dragItem))
                     {
-                        TreeNode treeNode = (TreeNode)dragItem;
+                        var treeNode = (TreeNode)dragItem;
 
                         if (NodeIsDescendantOrSelf(treeNodeToDrop, treeNode))
                         {
@@ -791,33 +793,30 @@ namespace SDBees.DB
             {
                 return false;
             }
-            else if (parentNode == childNode)
+            if (parentNode == childNode)
             {
                 return true;
             }
-            else
-            {
-                return NodeIsDescendantOrSelf(childNode.Parent, parentNode);
-            }
+            return NodeIsDescendantOrSelf(childNode.Parent, parentNode);
         }
 
         protected void FixSelectionAtMousePosition()
         {
             // We must (single) select the node beneath the mouse position if it is not in a multi-select
-            Point mousePosition = this.PointToClient(Control.MousePosition);
-            TreeNode currentNode = this.GetNodeAt(mousePosition);
+            var mousePosition = PointToClient(MousePosition);
+            var currentNode = GetNodeAt(mousePosition);
 
             // check the current selection situation
-            if (this.SelNodes.Count < 2)
+            if (SelNodes.Count < 2)
             {
                 // If a single node has been selected, then we should switch...
-                this.SelectSingleNode(currentNode);
+                SelectSingleNode(currentNode);
             }
-            else if ((currentNode != null) && (this.SelNodes.Count > 1) && !this.IsTreeNodeSelected(currentNode))
+            else if ((currentNode != null) && (SelNodes.Count > 1) && !IsTreeNodeSelected(currentNode))
             {
                 // If multiple nodes have been selected but the one just right clicked is not in the selection
                 // then we should switch the selection
-                this.SelectSingleNode(currentNode);
+                SelectSingleNode(currentNode);
             }
         }
 
@@ -830,7 +829,7 @@ namespace SDBees.DB
         /// <param name="e"></param>
         protected void ContextMenu_Popup(object sender, EventArgs e)
         {
-            this.ContextMenu.MenuItems.Clear();
+            ContextMenu.MenuItems.Clear();
 
             // We must (single) select the node beneath the mouse position if it is not in a multi-select
             FixSelectionAtMousePosition();
@@ -845,15 +844,15 @@ namespace SDBees.DB
         /// </summary>
         protected virtual void CreateContextMenu()
         {
-            bool multipleSelection = (this.SelNodes.Count > 1);
-            bool singleSelection = (this.SelNodes.Count == 1);
+            var multipleSelection = (SelNodes.Count > 1);
+            var singleSelection = (SelNodes.Count == 1);
 
-            foreach (MenuDefinition menuDefinition in mMenuDefinitions)
+            foreach (var menuDefinition in mMenuDefinitions)
             {
                 // consider multiselect etc...
                 if ((multipleSelection && menuDefinition.mEnableForMultiSelect) || (singleSelection && menuDefinition.mEnableForSingleSelect))
                 {
-                    this.ContextMenu.MenuItems.Add(menuDefinition.mMenuItem);
+                    ContextMenu.MenuItems.Add(menuDefinition.mMenuItem);
                 }
             }
         }
@@ -875,13 +874,13 @@ namespace SDBees.DB
             mEnableForSingleSelect = enableForSingleSelect;
             mWeight = weight;
         }
-    };
+    }
 
     internal class TreeNodeComparer : IComparer
     {
         public int Compare(object x, object y)
         {
-            return SDBees.Core.Utils.SearchTools.Compare((x as TreeNode).Text, (y as TreeNode).Text);
+            return SearchTools.Compare((x as TreeNode).Text, (y as TreeNode).Text);
         }
     }
 }

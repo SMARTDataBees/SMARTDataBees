@@ -32,7 +32,6 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-
 using Carbon.Common;
 using Carbon.Configuration;
 using Carbon.Configuration.Providers.Custom;
@@ -86,23 +85,22 @@ namespace Carbon.AutoUpdate.Common
 		/// <summary>
 		/// Initializes a new instance of the AutoUpdateOptions class
 		/// </summary>
-		public AutoUpdateOptions() 
-			: base()
+		public AutoUpdateOptions()
 		{
-			this.BeginInit();
+			BeginInit();
 
-			this.DownloadPath = string.Empty;
-			this.AlternatePath = string.Empty;
-			this.WebServiceUrl = string.Empty;
+			DownloadPath = string.Empty;
+			AlternatePath = string.Empty;
+			WebServiceUrl = string.Empty;
 
-			this.EndInit();
+			EndInit();
 		}
 
 		protected override void DisposeOfManagedResources()
 		{
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
-				this.Changed = null;
+				Changed = null;
 			}
 
 			base.DisposeOfManagedResources();
@@ -112,7 +110,7 @@ namespace Carbon.AutoUpdate.Common
 
 		public void BeginInit()
 		{
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
 				_initializing = true;
 			}
@@ -120,7 +118,7 @@ namespace Carbon.AutoUpdate.Common
 
 		public void EndInit()
 		{
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
 				_initializing = false;
 			}
@@ -143,51 +141,51 @@ namespace Carbon.AutoUpdate.Common
 			// we only care about options
 			if (e.Element.GetElementType() == XmlConfigurationElementTypes.XmlConfigurationOption)
 			{
-				string[] optionNames = Enum.GetNames(typeof(AutoUpdateOptionNames));
+				var optionNames = Enum.GetNames(typeof(AutoUpdateOptionNames));
 
-				foreach (string name in optionNames)
+				foreach (var name in optionNames)
 				{
-					string fullPath = string.Format("{0}\\{1}\\{2}", AllUsersConfigurationProvider.Current.ConfigurationName, ConfigurationCategoryName, name);
+					var fullPath = $"{AllUsersConfigurationProvider.Current.ConfigurationName}\\{ConfigurationCategoryName}\\{name}";
 
 					if (string.Compare(e.Element.Fullpath, fullPath, true) == 0)
 					{
-						AutoUpdateOptionNames optionName = (AutoUpdateOptionNames)Enum.Parse(typeof(AutoUpdateOptionNames), name);
+						var optionName = (AutoUpdateOptionNames)Enum.Parse(typeof(AutoUpdateOptionNames), name);
 
 						try
 						{
-							this.BeginInit();
+							BeginInit();
 
-							XmlConfigurationOption option = (XmlConfigurationOption)e.Element;
+							var option = (XmlConfigurationOption)e.Element;
 
 							// read the value back out into our copy
 							switch (optionName)
 							{
 								case AutoUpdateOptionNames.AutomaticallyCheckForUpdates:
-									this.AutomaticallyCheckForUpdates = Convert.ToBoolean(option.Value);
+									AutomaticallyCheckForUpdates = Convert.ToBoolean(option.Value);
 									break;
 
 								case AutoUpdateOptionNames.AutomaticallyDownloadUpdates:
-									this.AutomaticallyDownloadUpdates = Convert.ToBoolean(option.Value);
+									AutomaticallyDownloadUpdates = Convert.ToBoolean(option.Value);
 									break;
 
 								case AutoUpdateOptionNames.AutomaticallyInstallUpdates:
-									this.AutomaticallyInstallUpdates = Convert.ToBoolean(option.Value);
+									AutomaticallyInstallUpdates = Convert.ToBoolean(option.Value);
 									break;
 
 								case AutoUpdateOptionNames.AutomaticallySwitchToNewVersion:
-									this.AutomaticallySwitchToNewVersion = Convert.ToBoolean(option.Value);
+									AutomaticallySwitchToNewVersion = Convert.ToBoolean(option.Value);
 									break;
 
 								case AutoUpdateOptionNames.AutomaticallyUpdateAlternatePath:
-									this.AutomaticallyUpdateAlternatePath = Convert.ToBoolean(option.Value);
+									AutomaticallyUpdateAlternatePath = Convert.ToBoolean(option.Value);
 									break;
 
 								case AutoUpdateOptionNames.AlternatePath:
-									this.AlternatePath = Convert.ToString(option.Value);
+									AlternatePath = Convert.ToString(option.Value);
 									break;
 
 								case AutoUpdateOptionNames.WebServiceUrl:
-									this.WebServiceUrl = Convert.ToString(option.Value);
+									WebServiceUrl = Convert.ToString(option.Value);
 									break;
 							};
 						}
@@ -197,11 +195,11 @@ namespace Carbon.AutoUpdate.Common
 						}
 						finally
 						{
-							this.EndInit();
+							EndInit();
 						}
 
 						// raise the changed event to signal that this option was changed
-						EventManager.Raise<AutoUpdateOptionsEventArgs>(this.Changed, this, new AutoUpdateOptionsEventArgs(this, optionName));
+						EventManager.Raise(Changed, this, new AutoUpdateOptionsEventArgs(this, optionName));
 						break;
 					}
 				}
@@ -225,7 +223,7 @@ namespace Carbon.AutoUpdate.Common
 
 				if (!_initializing)
 				{
-					Save(this, AutoUpdateOptions.DefaultOptions, AutoUpdateOptionNames.AutomaticallyCheckForUpdates);
+					Save(this, DefaultOptions, AutoUpdateOptionNames.AutomaticallyCheckForUpdates);
 				}
 			}
 		}
@@ -245,7 +243,7 @@ namespace Carbon.AutoUpdate.Common
 
 				if (!_initializing)
 				{
-					Save(this, AutoUpdateOptions.DefaultOptions, AutoUpdateOptionNames.AutomaticallyDownloadUpdates);
+					Save(this, DefaultOptions, AutoUpdateOptionNames.AutomaticallyDownloadUpdates);
 				}
 			}
 		}
@@ -265,7 +263,7 @@ namespace Carbon.AutoUpdate.Common
 
 				if (!_initializing)
 				{
-					Save(this, AutoUpdateOptions.DefaultOptions, AutoUpdateOptionNames.AutomaticallyInstallUpdates);
+					Save(this, DefaultOptions, AutoUpdateOptionNames.AutomaticallyInstallUpdates);
 				}
 			}
 		}
@@ -285,7 +283,7 @@ namespace Carbon.AutoUpdate.Common
 
 				if (!_initializing)
 				{
-					Save(this, AutoUpdateOptions.DefaultOptions, AutoUpdateOptionNames.AutomaticallySwitchToNewVersion);
+					Save(this, DefaultOptions, AutoUpdateOptionNames.AutomaticallySwitchToNewVersion);
 				}
 			}
 		}
@@ -305,7 +303,7 @@ namespace Carbon.AutoUpdate.Common
 
 				if (!_initializing)
 				{
-					Save(this, AutoUpdateOptions.DefaultOptions, AutoUpdateOptionNames.AutomaticallyUpdateAlternatePath);
+					Save(this, DefaultOptions, AutoUpdateOptionNames.AutomaticallyUpdateAlternatePath);
 				}
 			}
 		}
@@ -340,7 +338,7 @@ namespace Carbon.AutoUpdate.Common
 
 				if (!_initializing)
 				{
-					Save(this, AutoUpdateOptions.DefaultOptions, AutoUpdateOptionNames.AlternatePath);
+					Save(this, DefaultOptions, AutoUpdateOptionNames.AlternatePath);
 				}
 			}
 		}
@@ -360,7 +358,7 @@ namespace Carbon.AutoUpdate.Common
 
 				if (!_initializing)
 				{
-					Save(this, AutoUpdateOptions.DefaultOptions, AutoUpdateOptionNames.WebServiceUrl);
+					Save(this, DefaultOptions, AutoUpdateOptionNames.WebServiceUrl);
 				}
 			}
 		}
@@ -380,7 +378,7 @@ namespace Carbon.AutoUpdate.Common
 			{
 				throw new ArgumentNullException("defaultOptions");
 			}
-			AutoUpdateOptions options = new AutoUpdateOptions();
+			var options = new AutoUpdateOptions();
 
 			try
 			{
@@ -421,8 +419,8 @@ namespace Carbon.AutoUpdate.Common
 
 			try
 			{
-				XmlConfiguration configuration = AllUsersConfigurationProvider.Current.Configuration;
-				XmlConfigurationCategory category = configuration.Categories[ConfigurationCategoryName, true];
+				var configuration = AllUsersConfigurationProvider.Current.Configuration;
+				var category = configuration.Categories[ConfigurationCategoryName, true];
 				XmlConfigurationOption option = null;
 
 				switch (optionName)
@@ -528,8 +526,8 @@ namespace Carbon.AutoUpdate.Common
 
 			try
 			{
-				XmlConfiguration configuration = AllUsersConfigurationProvider.Current.Configuration;
-				XmlConfigurationCategory category = configuration.Categories[ConfigurationCategoryName, true];
+				var configuration = AllUsersConfigurationProvider.Current.Configuration;
+				var category = configuration.Categories[ConfigurationCategoryName, true];
 				XmlConfigurationOption option = null;
 
 				// this could be refactored again

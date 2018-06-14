@@ -20,6 +20,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Reflection;
 
 namespace  Carbon.Configuration
@@ -40,7 +41,7 @@ namespace  Carbon.Configuration
 			_type = type;
 		}
 		
-		public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+		public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
 		{
 			if(value is Enum && destinationType == typeof(string)) 
 			{
@@ -53,7 +54,7 @@ namespace  Carbon.Configuration
 			return base.ConvertTo (context, culture, value, destinationType);
 		}
 		
-		public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
 		{
 			if(value is string) 
 			{
@@ -73,8 +74,8 @@ namespace  Carbon.Configuration
 		/// <returns>The description, if any, else it's .ToString()</returns>
 		public static string GetEnumDescription(Enum value)
 		{
-			FieldInfo fi= value.GetType().GetField(value.ToString()); 
-			DescriptionAttribute[] attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+			var fi= value.GetType().GetField(value.ToString()); 
+			var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
 			return (attributes.Length>0)?attributes[0].Description:value.ToString();
 		}
     
@@ -84,10 +85,10 @@ namespace  Carbon.Configuration
 		/// <param name="value">The type of the Enumeration</param>
 		/// <param name="name">The name of the Enumeration value</param>
 		/// <returns>The description, if any, else the passed name</returns>
-		public static string GetEnumDescription(System.Type value, string name)
+		public static string GetEnumDescription(Type value, string name)
 		{
-			FieldInfo fi= value.GetField(name); 
-			DescriptionAttribute[] attributes = 
+			var fi= value.GetField(name); 
+			var attributes = 
 				(DescriptionAttribute[])fi.GetCustomAttributes(
 				typeof(DescriptionAttribute), false);
 			return (attributes.Length>0)?attributes[0].Description:name;
@@ -102,7 +103,7 @@ namespace  Carbon.Configuration
 		/// <returns></returns>
 		public static object[] GetEnumValueAttribute(Type enumType, Enum value, Type attributeType)
 		{
-			FieldInfo fi = enumType.GetField(value.ToString());
+			var fi = enumType.GetField(value.ToString());
 			return fi.GetCustomAttributes(attributeType, false);
 		}
 
@@ -112,12 +113,12 @@ namespace  Carbon.Configuration
 		/// <param name="value">The Enum type</param>
 		/// <param name="description">The description or name of the element</param>
 		/// <returns>The value, or the passed in description, if it was not found</returns>
-		public static object GetEnumValue(System.Type value, string description)
+		public static object GetEnumValue(Type value, string description)
 		{
-			FieldInfo [] fis = value.GetFields();
-			foreach(FieldInfo fi in fis) 
+			var fis = value.GetFields();
+			foreach(var fi in fis) 
 			{
-				DescriptionAttribute[] attributes = 
+				var attributes = 
 					(DescriptionAttribute[])fi.GetCustomAttributes(
 					typeof(DescriptionAttribute), false);
 				if(attributes.Length>0) 

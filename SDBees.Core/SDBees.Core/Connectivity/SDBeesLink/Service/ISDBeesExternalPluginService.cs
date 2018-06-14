@@ -4,18 +4,13 @@
 //     Changes to this file will be lost if the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+
+using System;
+using System.ServiceModel;
+using SDBees.Core.Model;
+
 namespace SDBees.Core.Connectivity.SDBeesLink.Service
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-
-    using System.Runtime.Serialization;
-    using System.ServiceModel;
-
-    using SDBees.Core.Model;
-
     /// <summary>
     /// Registrieren und Deregistrieren und Synchronisieren von Dokumenten
     /// </summary>

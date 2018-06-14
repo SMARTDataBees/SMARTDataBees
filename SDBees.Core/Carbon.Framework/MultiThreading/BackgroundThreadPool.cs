@@ -30,9 +30,8 @@
 //	============================================================================
 
 using System;
-using System.Collections;
+using System.Diagnostics;
 using System.Threading;
-
 using Carbon.Common;
 
 namespace Carbon.MultiThreading
@@ -40,7 +39,7 @@ namespace Carbon.MultiThreading
 	/// <summary>
 	/// Defines a ThreadPool class that can queue/dequeue BackgroundThread objects for work.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public sealed class BackgroundThreadPool : DisposableObject
 	{
 		#region BackgroundThreadPoolJobAlreadyFinishedException
@@ -90,9 +89,9 @@ namespace Carbon.MultiThreading
 		{
 			_threads = new BackgroundThreadCollection();
 			_jobQueue = new BackgroundThreadPoolJobQueue();
-			_maxThreads = BackgroundThreadPool.DefaultMaximumNumberOfThreads;
+			_maxThreads = DefaultMaximumNumberOfThreads;
 
-			this.StartProcessingJobs();
+			StartProcessingJobs();
 		}
 		
 		/// <summary>
@@ -105,7 +104,7 @@ namespace Carbon.MultiThreading
 			_jobQueue = new BackgroundThreadPoolJobQueue();
 			_maxThreads = maxThreads;
 
-			this.StartProcessingJobs();
+			StartProcessingJobs();
 		}
 
 		/// <summary>
@@ -118,7 +117,7 @@ namespace Carbon.MultiThreading
 			_processingThread = null;
 
 			// dispose of all of the thread pool threads
-			this.DestroyThreads(false /* all threads */);
+			DestroyThreads(false /* all threads */);
 		}
 		
 		#region My Private Methods
@@ -130,7 +129,7 @@ namespace Carbon.MultiThreading
 		{
 			_processingThread = new BackgroundThread();
             //_processingThread.AllowThreadAbortException = true;
-			_processingThread.Run += new BackgroundThreadStartEventHandler(OnProcessJobs);
+			_processingThread.Run += OnProcessJobs;
 			_processingThread.Start(true, new object[] {_maxThreads});			
 		}
 		
@@ -153,16 +152,16 @@ namespace Carbon.MultiThreading
 						if (_threads.Count < _maxThreads)
 						{				
 							// lock the job queue
-							lock (this.JobQueue.SyncRoot)
+							lock (JobQueue.SyncRoot)
 							{
 								// if there are jobs waiting
-								if (this.JobQueue.Count > 0)
+								if (JobQueue.Count > 0)
 								{
 									// dequeue the next waiting job
-									BackgroundThreadPoolJob job = this.JobQueue.Dequeue();
+									var job = JobQueue.Dequeue();
 
 									// create a new background thread pool thread to process the job
-									BackgroundThreadPoolThread thread = new BackgroundThreadPoolThread(job);															
+									var thread = new BackgroundThreadPoolThread(job);															
 
 									// and finally add the thread to our list of threads
 									_threads.Add(thread);
@@ -170,7 +169,7 @@ namespace Carbon.MultiThreading
 							}
 						}	
    					
-						this.DestroyThreads(true /* only the finished ones */);
+						DestroyThreads(true /* only the finished ones */);
 					}
 
 					Thread.Sleep(100);
@@ -229,13 +228,13 @@ namespace Carbon.MultiThreading
 		public BackgroundThreadPoolJob QueueJob(string name, BackgroundThreadStartInfo startInfo)
 		{
 			// lock the queue
-			lock (this.JobQueue.SyncRoot)
+			lock (JobQueue.SyncRoot)
 			{
 				// create a new job
-				BackgroundThreadPoolJob job = new BackgroundThreadPoolJob(name, startInfo);
+				var job = new BackgroundThreadPoolJob(name, startInfo);
 				
 				// and enqueue the job to be processed
-				this.JobQueue.Enqueue(job);
+				JobQueue.Enqueue(job);
 
 				// return the job that was created and enqueued
 				return job;
@@ -249,10 +248,10 @@ namespace Carbon.MultiThreading
 		public void QueueJob(BackgroundThreadPoolJob job)
 		{
 			// lock the queue
-			lock (this.JobQueue.SyncRoot)
+			lock (JobQueue.SyncRoot)
 			{				
 				// and enqueue the job to be processed
-				this.JobQueue.Enqueue(job);
+				JobQueue.Enqueue(job);
 			}
 		}
 
@@ -281,11 +280,11 @@ namespace Carbon.MultiThreading
 				lock (_threads.SyncRoot)
 				{
 					// enum the threads
-					for (int i = 0; i < _threads.Count; i++)
+					for (var i = 0; i < _threads.Count; i++)
 					{
 						// get the thread at each index
-						BackgroundThread thread = _threads[i];
-						bool kill = true;
+						var thread = _threads[i];
+						var kill = true;
 
 						// if we're only killing threads that are finished, and this one is not finished, skip it
 						if (onlyFinishedThreads)
@@ -296,7 +295,7 @@ namespace Carbon.MultiThreading
 						if (kill)
 						{
 							// kill it and remove it from our list, then backup 1 because the list shrank and go again
-							this.DestroyThread((BackgroundThread)_threads[i], true);
+							DestroyThread(_threads[i], true);
 							_threads.RemoveAt(i);                   
 							i--;
 						}

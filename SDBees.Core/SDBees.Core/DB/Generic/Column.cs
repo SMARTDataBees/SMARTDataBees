@@ -20,100 +20,15 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using SDBees.Core.Model;
 
 namespace SDBees.DB
 {
-    /// <summary>
-    /// Types that can be used in columns of a table of an SQL database
-    /// </summary>
-    public enum DbType
-    {
-        /// <summary>
-        /// Illegal or not initialized Type
-        /// </summary>
-        eUnknown        = 0,
-        /// <summary>
-        /// Binary type
-        /// </summary>
-        eBinary         = 1,
-        /// <summary>
-        /// Boolean type, for some SQL this is called "bit"
-        /// </summary>
-        eBoolean        = 2,
-        /// <summary>
-        /// Byte type, 8 bit unsigned integer
-        /// </summary>
-        eByte           = 3,
-        /// <summary>
-        /// Currency type
-        /// </summary>
-        eCurrency       = 4,
-        /// <summary>
-        /// Date type
-        /// </summary>
-        eDate           = 5,
-        /// <summary>
-        /// Date and time
-        /// </summary>
-        eDateTime       = 6,
-        /// <summary>
-        /// Decimal type
-        /// </summary>
-        eDecimal        = 7,
-        /// <summary>
-        /// Double precision floating point value (64 bits)
-        /// </summary>
-        eDouble         = 8,
-        /// <summary>
-        /// Guid type, might not be compatible for all SQL vendors. Use eGuidString instead.
-        /// </summary>
-        eGuid           = 9,
-        /// <summary>
-        /// Signed 16 bit integer value (-32767 .. +32767)
-        /// </summary>
-        eInt16          = 10,
-        /// <summary>
-        /// Signed 32 bit integer value (-2 billion ... + 2 billions)
-        /// </summary>
-        eInt32          = 11,
-        /// <summary>
-        /// Signed 64 bit integer value (huge range)
-        /// </summary>
-        eInt64          = 12,
-        /// <summary>
-        /// Single precision floating point value (32 bits)
-        /// </summary>
-        eSingle         = 13,
-        /// <summary>
-        /// String value, maximum size can be set
-        /// </summary>
-        eString         = 14,
-        /// <summary>
-        /// String value, fixed size can be set
-        /// </summary>
-        eStringFixed    = 15,
-        /// <summary>
-        /// Guid that has been introduced for SDBees that is vendor independent
-        /// </summary>
-        eGuidString     = 16,
-        /// <summary>
-        /// Text that is stored as a pointer to the storing location.
-        /// </summary>
-        eText           = 17,
-        /// <summary>
-        /// Text that is stored as a pointer to the storing location.
-        /// </summary>
-        eLongText       = 18,
-        /// <summary>
-        /// Custom class SDBeesOpeningSize. 
-        /// <summary>
-        eCrossSize      = 19
-    }
-
     /// <summary>
     /// Flags used for columns (not all apply to all SQL vendors
     /// </summary>
@@ -265,10 +180,10 @@ namespace SDBees.DB
         {
             get
             {
-                StringBuilder strBuilder = new StringBuilder();
+                var strBuilder = new StringBuilder();
                 if (mSelectionList != null)
                 {
-                    foreach (string strValue in mSelectionList)
+                    foreach (var strValue in mSelectionList)
                     {
                         if (strBuilder.Length > 0)
                         {
@@ -287,9 +202,9 @@ namespace SDBees.DB
                 }
                 else
                 {
-                    string[] v = ((string)value).Split(new char[] { ',' });
+                    var v = value.Split(',');
                     mSelectionList = new List<string>();
-                    foreach (string strValue in v)
+                    foreach (var strValue in v)
                     {
                         mSelectionList.Add(strValue.Trim());
                     }
@@ -301,58 +216,58 @@ namespace SDBees.DB
         {
             Type returnType;
 
-            switch (this.Type)
+            switch (Type)
             {
-                case DbType.eCrossSize:
-                    returnType = typeof(SDBees.Core.Model.SDBeesOpeningSize);
+                case DbType.CrossSize:
+                    returnType = typeof(SDBeesOpeningSize);
                     break;
 
-                case DbType.eString:
-                case DbType.eStringFixed:
-                case DbType.eGuidString:
-                case DbType.eText:
-                case DbType.eLongText:
-                case DbType.eBinary:
+                case DbType.String:
+                case DbType.StringFixed:
+                case DbType.GuidString:
+                case DbType.Text:
+                case DbType.LongText:
+                case DbType.Binary:
                     returnType = typeof(string);
                     break;
 
-                case DbType.eBoolean:
-                    returnType = typeof(System.Boolean);
+                case DbType.Boolean:
+                    returnType = typeof(Boolean);
                     break;
 
-                case DbType.eByte:
-                    returnType = typeof(System.Byte);
+                case DbType.Byte:
+                    returnType = typeof(Byte);
                     break;
 
-                case DbType.eDouble:
-                case DbType.eCurrency:
-                    returnType = typeof(System.Double);
+                case DbType.Double:
+                case DbType.Currency:
+                    returnType = typeof(Double);
                     break;
 
-                case DbType.eDate:
-                case DbType.eDateTime:
-                    returnType = typeof(System.DateTime);
+                case DbType.Date:
+                case DbType.DateTime:
+                    returnType = typeof(DateTime);
                     break;
 
-                case DbType.eInt64:
-                case DbType.eDecimal:
-                    returnType = typeof(System.Int64);
+                case DbType.Int64:
+                case DbType.Decimal:
+                    returnType = typeof(Int64);
                     break;
 
-                case DbType.eGuid:
-                    returnType = typeof(System.Guid);
+                case DbType.Guid:
+                    returnType = typeof(Guid);
                     break;
 
-                case DbType.eInt16:
-                    returnType = typeof(System.Int16);
+                case DbType.Int16:
+                    returnType = typeof(Int16);
                     break;
 
-                case DbType.eInt32:
-                    returnType = typeof(System.Int32);
+                case DbType.Int32:
+                    returnType = typeof(Int32);
                     break;
 
-                case DbType.eSingle:
-                    returnType = typeof(System.Single);
+                case DbType.Single:
+                    returnType = typeof(Single);
                     break;
 
                 default:
@@ -374,7 +289,7 @@ namespace SDBees.DB
                 mType = value;
 
                 // Now check if a type has a specific custom size...
-                if (mType == DbType.eGuidString)
+                if (mType == DbType.GuidString)
                 {
                     mSize = 40;
                 }
@@ -500,7 +415,7 @@ namespace SDBees.DB
             if (otherColumn.mSelectionList != null)
             {
                 mSelectionList = new List<string>();
-                foreach (string entry in otherColumn.mSelectionList)
+                foreach (var entry in otherColumn.mSelectionList)
                 {
                     mSelectionList.Add(entry);
                 }
@@ -524,39 +439,39 @@ namespace SDBees.DB
         {
             object defaultValue = null;
 
-            if (mType == DbType.eCrossSize)
+            if (mType == DbType.CrossSize)
             {
-                defaultValue = new SDBees.Core.Model.SDBeesOpeningSize();
+                defaultValue = new SDBeesOpeningSize();
             }
-            else if ((mType == DbType.eString) || (mType == DbType.eStringFixed) || (mType == DbType.eText) || (mType == DbType.eLongText))
+            else if ((mType == DbType.String) || (mType == DbType.StringFixed) || (mType == DbType.Text) || (mType == DbType.LongText))
             {
                 defaultValue = "";
             }
-            else if (mType == DbType.eGuidString)
+            else if (mType == DbType.GuidString)
             {
                 defaultValue = Guid.Empty.ToString();
             }
-            else if (mType == DbType.eBoolean)
+            else if (mType == DbType.Boolean)
             {
                 defaultValue = false;
             }
-            else if ((mType == DbType.eBinary) ||
-                     (mType == DbType.eByte) ||
-                     (mType == DbType.eCurrency) ||
-                     (mType == DbType.eDecimal) ||
-                     (mType == DbType.eDouble) ||
-                     (mType == DbType.eInt16) ||
-                     (mType == DbType.eInt32) ||
-                     (mType == DbType.eInt64) ||
-                     (mType == DbType.eSingle))
+            else if ((mType == DbType.Binary) ||
+                     (mType == DbType.Byte) ||
+                     (mType == DbType.Currency) ||
+                     (mType == DbType.Decimal) ||
+                     (mType == DbType.Double) ||
+                     (mType == DbType.Int16) ||
+                     (mType == DbType.Int32) ||
+                     (mType == DbType.Int64) ||
+                     (mType == DbType.Single))
             {
                 defaultValue = 0;
             }
-            else if (mType == DbType.eDate)
+            else if (mType == DbType.Date)
             {
                 defaultValue = DateTime.Now;
             }
-            else if (mType == DbType.eDateTime)
+            else if (mType == DbType.DateTime)
             {
                 defaultValue = DateTime.Now;
             }
@@ -573,11 +488,11 @@ namespace SDBees.DB
         {
             object result = null;
 
-            if (mType == DbType.eCrossSize)
+            if (mType == DbType.CrossSize)
             {
-                result = new SDBees.Core.Model.SDBeesOpeningSize(value.ToString());
+                result = new SDBeesOpeningSize(value.ToString());
             }
-            else if (mType == DbType.eBoolean)
+            else if (mType == DbType.Boolean)
             {
                 result = value.ToString() != "0" ? true : false;
             }
@@ -596,68 +511,68 @@ namespace SDBees.DB
         /// <returns></returns>
         public bool IsValidValue(string defaultValue)
         {
-            bool isValid = false;
+            var isValid = false;
 
             try
             {
-                if (mType == DbType.eCrossSize)
+                if (mType == DbType.CrossSize)
                 {
                     isValid = true; // TODO: RALF CHECK THIS!
                 }
-                else if ((mType == DbType.eString) || (mType == DbType.eStringFixed) || (mType == DbType.eText) || (mType == DbType.eLongText))
+                else if ((mType == DbType.String) || (mType == DbType.StringFixed) || (mType == DbType.Text) || (mType == DbType.LongText))
                 {
                     isValid = true;
                 }
-                else if (mType == DbType.eGuidString)
+                else if (mType == DbType.GuidString)
                 {
-                    Guid myGuid = new Guid(defaultValue);
+                    var myGuid = new Guid(defaultValue);
                     isValid = true;
                 }
-                else if (mType == DbType.eBinary)
+                else if (mType == DbType.Binary)
                 {
                     isValid = true;
                 }
-                else if (mType == DbType.eBoolean)
+                else if (mType == DbType.Boolean)
                 {
                     defaultValue = defaultValue.Trim();
                     isValid = (defaultValue == "true") || (defaultValue == "false");
                 }
-                else if (mType == DbType.eByte)
+                else if (mType == DbType.Byte)
                 {
-                    System.Byte value = (System.Byte)System.Convert.ChangeType(defaultValue, typeof(System.Byte));
+                    var value = (Byte)Convert.ChangeType(defaultValue, typeof(Byte));
                     isValid = true;
                 }
-                else if (mType == DbType.eInt16)
+                else if (mType == DbType.Int16)
                 {
-                    System.Int16 value = (System.Int16)System.Convert.ChangeType(defaultValue, typeof(System.Int16));
+                    var value = (Int16)Convert.ChangeType(defaultValue, typeof(Int16));
                     isValid = true;
                 }
-                else if (mType == DbType.eInt32)
+                else if (mType == DbType.Int32)
                 {
-                    System.Int32 value = (System.Int32)System.Convert.ChangeType(defaultValue, typeof(System.Int32));
+                    var value = (Int32)Convert.ChangeType(defaultValue, typeof(Int32));
                     isValid = true;
                 }
-                else if (mType == DbType.eInt64)
+                else if (mType == DbType.Int64)
                 {
-                    System.Int64 value = (System.Int64)System.Convert.ChangeType(defaultValue, typeof(System.Int64));
+                    var value = (Int64)Convert.ChangeType(defaultValue, typeof(Int64));
                     isValid = true;
                 }
-                else if ((mType == DbType.eDouble) || (mType == DbType.eDecimal) || (mType == DbType.eCurrency))
+                else if ((mType == DbType.Double) || (mType == DbType.Decimal) || (mType == DbType.Currency))
                 {
-                    System.Double value = (System.Double)System.Convert.ChangeType(defaultValue, typeof(System.Double));
+                    var value = (Double)Convert.ChangeType(defaultValue, typeof(Double));
                     isValid = true;
                 }
-                else if (mType == DbType.eSingle)
+                else if (mType == DbType.Single)
                 {
-                    System.Single value = (System.Single)System.Convert.ChangeType(defaultValue, typeof(System.Single));
+                    var value = (Single)Convert.ChangeType(defaultValue, typeof(Single));
                     isValid = true;
                 }
-                else if (mType == DbType.eDate)
+                else if (mType == DbType.Date)
                 {
                     // TBD: ...
                     isValid = true;
                 }
-                else if (mType == DbType.eDateTime)
+                else if (mType == DbType.DateTime)
                 {
                     // TBD: ...
                     isValid = true;
@@ -677,7 +592,7 @@ namespace SDBees.DB
         /// <returns>Returns true for binary, string fixed string and guid string types</returns>
         public bool HasCustomSize()
         {
-            return (mType == DbType.eCrossSize) || (mType == DbType.eBinary) || (mType == DbType.eString) || (mType == DbType.eStringFixed) || (mType == DbType.eGuidString);
+            return (mType == DbType.CrossSize) || (mType == DbType.Binary) || (mType == DbType.String) || (mType == DbType.StringFixed) || (mType == DbType.GuidString);
         }
 
         /// <summary>
@@ -686,7 +601,7 @@ namespace SDBees.DB
         /// <returns>Returns true for string and fixed string types</returns>
         public bool IsSelectionListPossible()
         {
-            return (mType == DbType.eString) || (mType == DbType.eStringFixed);
+            return (mType == DbType.String) || (mType == DbType.StringFixed);
         }
 
         /// <summary>
@@ -697,11 +612,11 @@ namespace SDBees.DB
         public void FixValues()
         {
             // Now check if a type has a specific custom size...
-            if (mType == DbType.eGuidString)
+            if (mType == DbType.GuidString)
             {
                 mSize = 40;
             }
-            else if ((mSize < 1) && ((mType == DbType.eString) || (mType == DbType.eStringFixed)))
+            else if ((mSize < 1) && ((mType == DbType.String) || (mType == DbType.StringFixed)))
             {
                 mSize = 50;
             }
@@ -739,14 +654,14 @@ namespace SDBees.DB
         /// <returns>XML description</returns>
         public string Xmlwrite()
         {
-            string strXml = "";
+            var strXml = "";
 
             // create the XML structure
-            XmlWriterSettings settings = new XmlWriterSettings();
+            var settings = new XmlWriterSettings();
             settings.Indent = false;
             settings.IndentChars = ("  ");
-            StringBuilder xmlStringBuilder = new StringBuilder();
-            using (XmlWriter writer = XmlWriter.Create(xmlStringBuilder, settings))
+            var xmlStringBuilder = new StringBuilder();
+            using (var writer = XmlWriter.Create(xmlStringBuilder, settings))
             {
                 // Write XML data.
                 writer.WriteStartElement("Column");
@@ -769,8 +684,8 @@ namespace SDBees.DB
                 writer.WriteAttributeString("Editable", mEditable.ToString());
                 writer.WriteAttributeString("Browsable", mBrowsable.ToString());
 
-                writer.WriteAttributeString("UIType", this.m_UITypeConverter.ToString());
-                writer.WriteAttributeString("UITypeEditor", this.m_UITypeEditor.ToString());
+                writer.WriteAttributeString("UIType", m_UITypeConverter);
+                writer.WriteAttributeString("UITypeEditor", m_UITypeEditor);
 
                 writer.WriteEndElement(); // Column
                 writer.Flush();
@@ -792,10 +707,10 @@ namespace SDBees.DB
 
             // Interpret the xml
             // Interpret the xml and create the necessary columns
-            XmlDocument xmlDoc = new XmlDocument();
+            var xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(xmlContent);
 
-            XmlNode rootNode = xmlDoc.SelectSingleNode("Column");
+            var rootNode = xmlDoc.SelectSingleNode("Column");
             XmlReader reader = new XmlNodeReader(rootNode);
 
             reader.Read();
@@ -803,14 +718,14 @@ namespace SDBees.DB
             mDisplayName = reader.GetAttribute("DisplayName");
             mDescription = reader.GetAttribute("Description");
             mCategory = reader.GetAttribute("Category");
-            mType = (DbType) System.Convert.ToInt32(reader.GetAttribute("DBType"));
-            mSize = System.Convert.ToInt32(reader.GetAttribute("Size"));
+            mType = (DbType) Convert.ToInt32(reader.GetAttribute("DBType"));
+            mSize = Convert.ToInt32(reader.GetAttribute("Size"));
             mDefault = reader.GetAttribute("Default");
-            mFlags = System.Convert.ToInt32(reader.GetAttribute("Flags"));
-            mSeed = System.Convert.ToInt32(reader.GetAttribute("Seed"));
-            mIncrement = System.Convert.ToInt32(reader.GetAttribute("Increment"));
-            mEditable = System.Convert.ToBoolean(reader.GetAttribute("Editable"));
-            mBrowsable = System.Convert.ToBoolean(reader.GetAttribute("Browsable"));
+            mFlags = Convert.ToInt32(reader.GetAttribute("Flags"));
+            mSeed = Convert.ToInt32(reader.GetAttribute("Seed"));
+            mIncrement = Convert.ToInt32(reader.GetAttribute("Increment"));
+            mEditable = Convert.ToBoolean(reader.GetAttribute("Editable"));
+            mBrowsable = Convert.ToBoolean(reader.GetAttribute("Browsable"));
             try
             {
                 m_UITypeConverter = reader.GetAttribute("UIType");
@@ -819,7 +734,7 @@ namespace SDBees.DB
             catch (Exception ex)
             {
             }
-            string strTmp = reader.GetAttribute("SelectionList");
+            var strTmp = reader.GetAttribute("SelectionList");
             SelectionListString = strTmp;
         }
 
@@ -835,7 +750,7 @@ namespace SDBees.DB
             mDescription = "";
             mCategory = "";
             mSelectionList = null;
-            mType = DbType.eUnknown;
+            mType = DbType.Unknown;
             mSize = 0;
             mDefault = "";
             mFlags = 0;
@@ -861,5 +776,5 @@ namespace SDBees.DB
         {
             Add(column.Name, column);
         }
-    };
+    }
 }

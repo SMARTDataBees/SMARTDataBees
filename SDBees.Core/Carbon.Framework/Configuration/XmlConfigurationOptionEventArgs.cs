@@ -28,7 +28,6 @@
 //	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 //	============================================================================
-using System;
 
 namespace Carbon.Configuration
 {
@@ -58,7 +57,7 @@ namespace Carbon.Configuration
 			}
 			set
 			{
-				base.Element = (XmlConfigurationOption)value;
+				base.Element = value;
 			}
 		}
 	}

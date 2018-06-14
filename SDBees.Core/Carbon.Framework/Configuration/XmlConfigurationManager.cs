@@ -30,6 +30,7 @@
 //	============================================================================
 
 using System;
+using System.Diagnostics;
 
 namespace Carbon.Configuration
 {
@@ -69,8 +70,8 @@ namespace Carbon.Configuration
 		/// <returns></returns>
 		public XmlConfiguration[] EnumConfigurations(params XmlConfiguration[] configurations)
 		{			
-			XmlConfigurationManagerEventArgs e = new XmlConfigurationManagerEventArgs(configurations);
-			this.OnEnumeratingConfigurations(this, e);
+			var e = new XmlConfigurationManagerEventArgs(configurations);
+			OnEnumeratingConfigurations(this, e);
 			return e.Configurations.ToArray();
 		}
 
@@ -83,12 +84,12 @@ namespace Carbon.Configuration
 		{
 			try
 			{
-				if (this.EnumeratingConfigurations != null)
-					this.EnumeratingConfigurations(sender, e);
+				if (EnumeratingConfigurations != null)
+					EnumeratingConfigurations(sender, e);
 			}
 			catch(Exception ex)
 			{
-				System.Diagnostics.Debug.WriteLine(ex);
+				Debug.WriteLine(ex);
 			}
 		}	
 	}

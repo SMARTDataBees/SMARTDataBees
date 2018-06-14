@@ -1,34 +1,32 @@
-﻿using Carbon.Plugins;
-using SDBees.Core.Connectivity.SDBeesLink.Instances;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
+using System.Configuration;
 using System.Drawing;
-using System.Linq;
-using System.ServiceModel;
-using System.Text;
 using System.Windows.Forms;
-
+using Carbon.Plugins;
+using SDBees.Core.Connectivity.SDBeesLink.Instances;
+using SDBees.Core.Connectivity.SDBeesLink.Service;
 using SDBees.Core.Model;
+using SDBees.Plugs.Explorer;
 
 namespace SDBees.Core.Connectivity.SDBeesLink.UI
 {
-    public partial class SDBeesDataSetDLG : Form, SDBees.Plugs.Explorer.iExplorer
+    public partial class SDBeesDataSetDLG : Form, iExplorer
     {
         PluginContext m_context;
 
-        Dictionary<string, SDBeesEntityDefinition> m_entityDefinitions = null;
+        Dictionary<string, SDBeesEntityDefinition> m_entityDefinitions;
 
-        Dictionary<string, SDBeesMappedEntityDefinition> m_mappedEntityDefinitions = null;
+        Dictionary<string, SDBeesMappedEntityDefinition> m_mappedEntityDefinitions;
 
         public SDBeesDataSetDLG(Dictionary<string, SDBeesEntityDefinition> entityDefinitions)
         {
             InitializeComponent();
 
-            this.m_context = ConnectivityManager.Current.MyContext;
+            m_context = ConnectivityManager.Current.MyContext;
 
-            this.m_entityDefinitions = entityDefinitions;
+            m_entityDefinitions = entityDefinitions;
 
             SetUpComponents();
         }
@@ -39,26 +37,26 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
 
             try
             { 
-                this.Text = System.Configuration.ConfigurationManager.AppSettings["MainWindowTitle"] + " DataSet-Manager";
+                Text = ConfigurationManager.AppSettings["MainWindowTitle"] + " DataSet-Manager";
             }
             catch (Exception ex)
             {
             }
 
-            this.m_splitContainer.Dock = DockStyle.Fill;
-            this.m_propertyGrid.Dock = DockStyle.Fill;
-            this.m_dataGridViewSDBeesEntitys.Dock = DockStyle.Fill;
-            this.m_dataGridViewSDBeesEntitys.SelectionChanged += m_dataGridViewSDBeesEntitys_SelectionChanged;
+            m_splitContainer.Dock = DockStyle.Fill;
+            m_propertyGrid.Dock = DockStyle.Fill;
+            m_dataGridViewSDBeesEntitys.Dock = DockStyle.Fill;
+            m_dataGridViewSDBeesEntitys.SelectionChanged += m_dataGridViewSDBeesEntitys_SelectionChanged;
         }
 
         void m_dataGridViewSDBeesEntitys_SelectionChanged(object sender, EventArgs e)
         {
             if(sender is DataGridView)
             {
-                if(this.m_dataGridViewSDBeesEntitys.SelectedRows.Count > 0)
+                if(m_dataGridViewSDBeesEntitys.SelectedRows.Count > 0)
                 {
-                    List<SDBeesDataSetEntityController> _controllers = new List<SDBeesDataSetEntityController>();
-                    foreach (DataGridViewRow item in this.m_dataGridViewSDBeesEntitys.SelectedRows)
+                    var _controllers = new List<SDBeesDataSetEntityController>();
+                    foreach (DataGridViewRow item in m_dataGridViewSDBeesEntitys.SelectedRows)
                     {
                         _controllers.Add(m_SDBeesDataSetEntControllers[item.Index]);
                     }
@@ -68,7 +66,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
             }
         }
 
-        private SDBeesDataSet m_dataSet = null;
+        private SDBeesDataSet m_dataSet;
         public SDBeesDataSet MyDataSet
         {
             get { return m_dataSet; }
@@ -98,17 +96,17 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
         {
             if (m_dataSet != null)
             {
-                foreach (SDBeesEntity entity in m_dataSet.Entities)
+                foreach (var entity in m_dataSet.Entities)
                 {
-                    SDBeesEntityDefinition entityDefinition = GetEntityDefinition(entity);
+                    var entityDefinition = GetEntityDefinition(entity);
 
-                    SDBeesMappedEntityDefinition mappedEntityDefinition = GetMappedEntityDefinition(entity);
+                    var mappedEntityDefinition = GetMappedEntityDefinition(entity);
 
-                    SDBeesDataSetEntityController entControl = new SDBeesDataSetEntityController(entity, entityDefinition, mappedEntityDefinition);
+                    var entControl = new SDBeesDataSetEntityController(entity, entityDefinition, mappedEntityDefinition);
 
                     m_SDBeesDataSetEntControllers.Add(entControl);
                 }
-                this.m_labelNumberOfItems.Text = String.Format("Number of items : {0}", m_dataSet.Entities.Count.ToString());
+                m_labelNumberOfItems.Text = String.Format("Number of items : {0}", m_dataSet.Entities.Count);
             }
         }
 
@@ -135,7 +133,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
             {
                 m_mappedEntityDefinitions = new Dictionary<string, SDBeesMappedEntityDefinition>();
 
-                foreach (SDBeesMappedEntityDefinition mappedEntityDefinition in m_dataSet.Mappings.EntityMappings)
+                foreach (var mappedEntityDefinition in m_dataSet.Mappings.EntityMappings)
                 {
                     m_mappedEntityDefinitions[mappedEntityDefinition.MappedEntityDefinitionId.Id] = mappedEntityDefinition;
                 }
@@ -154,17 +152,17 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
 
         private void SDBeesDataSetDLG_Load(object sender, EventArgs e)
         {
-            this.m_dataGridViewSDBeesEntitys.AutoGenerateColumns = true;
-            this.m_dataGridViewSDBeesEntitys.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
-            this.m_dataGridViewSDBeesEntitys.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-            this.m_dataGridViewSDBeesEntitys.EditMode = DataGridViewEditMode.EditProgrammatically;
-            this.m_dataGridViewSDBeesEntitys.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            this.m_dataGridViewSDBeesEntitys.MultiSelect = true;
+            m_dataGridViewSDBeesEntitys.AutoGenerateColumns = true;
+            m_dataGridViewSDBeesEntitys.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
+            m_dataGridViewSDBeesEntitys.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            m_dataGridViewSDBeesEntitys.EditMode = DataGridViewEditMode.EditProgrammatically;
+            m_dataGridViewSDBeesEntitys.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            m_dataGridViewSDBeesEntitys.MultiSelect = true;
 
-            BindingSource bindingSource1 = new BindingSource();
-            bindingSource1.DataSource = this.m_SDBeesDataSetEntControllers;
+            var bindingSource1 = new BindingSource();
+            bindingSource1.DataSource = m_SDBeesDataSetEntControllers;
             //bindingSource1.DataMember = m_dataSet.entities;
-            this.m_dataGridViewSDBeesEntitys.DataSource = bindingSource1;
+            m_dataGridViewSDBeesEntitys.DataSource = bindingSource1;
         }
 
         private void SDBeesDataSetDLG_FormClosing(object sender, FormClosingEventArgs e)
@@ -172,16 +170,16 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
 
         }
 
-        public Service.SDBeesExternalPluginService MyPluginService { get; set; }
+        public SDBeesExternalPluginService MyPluginService { get; set; }
 
         private void m_dataGridViewSDBeesEntitys_RowHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (this.m_dataGridViewSDBeesEntitys != null)
+            if (m_dataGridViewSDBeesEntitys != null)
             {
-                Point point1 = this.m_dataGridViewSDBeesEntitys.CurrentCellAddress;
-                if (point1.X-1 == e.ColumnIndex && point1.Y == e.RowIndex && e.Button == MouseButtons.Left && this.m_dataGridViewSDBeesEntitys.EditMode == DataGridViewEditMode.EditProgrammatically)
+                var point1 = m_dataGridViewSDBeesEntitys.CurrentCellAddress;
+                if (point1.X-1 == e.ColumnIndex && point1.Y == e.RowIndex && e.Button == MouseButtons.Left && m_dataGridViewSDBeesEntitys.EditMode == DataGridViewEditMode.EditProgrammatically)
                 {
-                    SDBeesDataSetEntityController con = this.m_SDBeesDataSetEntControllers[e.RowIndex];
+                    var con = m_SDBeesDataSetEntControllers[e.RowIndex];
 
                     MyPluginService.ShowEntity(con.MyEntity.Id.ToString(), con.MyEntity.AlienIds);
                 }
@@ -191,23 +189,23 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
 
         private void SDBeesDataSetDLG_Shown(object sender, EventArgs e)
         {
-            this.WindowState = FormWindowState.Minimized;
-            this.Show();
-            this.WindowState = FormWindowState.Normal;
-            this.BringToFront();
+            WindowState = FormWindowState.Minimized;
+            Show();
+            WindowState = FormWindowState.Normal;
+            BringToFront();
         }
 
         private void m_buttonOK_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void m_propertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
-            this.m_dataGridViewSDBeesEntitys.Refresh();
+            m_dataGridViewSDBeesEntitys.Refresh();
         }
 
-        static DataGridViewColumn newColumn = null;
+        static DataGridViewColumn newColumn;
 
         public static DataGridViewColumn SortColumn
         {
@@ -232,19 +230,19 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
             return null;
         }
 
-        DataGridViewColumn oldColumn = null;
+        DataGridViewColumn oldColumn;
         ListSortDirection direction;
 
         private void m_dataGridViewSDBeesEntitys_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            newColumn = this.m_dataGridViewSDBeesEntitys.Columns[e.ColumnIndex];
-            oldColumn = this.m_dataGridViewSDBeesEntitys.SortedColumn;
+            newColumn = m_dataGridViewSDBeesEntitys.Columns[e.ColumnIndex];
+            oldColumn = m_dataGridViewSDBeesEntitys.SortedColumn;
             // If oldColumn is null, then the DataGridView is not sorted.
             if (oldColumn != null)
             {
                 // Sort the same column again, reversing the SortOrder.
                 if (oldColumn == newColumn &&
-                    this.m_dataGridViewSDBeesEntitys.SortOrder == SortOrder.Ascending)
+                    m_dataGridViewSDBeesEntitys.SortOrder == SortOrder.Ascending)
                 {
                     direction = ListSortDirection.Descending;
                 }
@@ -261,7 +259,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
             }
 
             // Sort the selected column.
-            this.m_dataGridViewSDBeesEntitys.Sort(newColumn, direction);
+            m_dataGridViewSDBeesEntitys.Sort(newColumn, direction);
             newColumn.HeaderCell.SortGlyphDirection =
                 direction == ListSortDirection.Ascending ?
                 SortOrder.Ascending : SortOrder.Descending;
@@ -270,7 +268,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
         private void m_dataGridViewSDBeesEntitys_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             // Put each of the columns into programmatic sort mode.
-            foreach (DataGridViewColumn column in this.m_dataGridViewSDBeesEntitys.Columns)
+            foreach (DataGridViewColumn column in m_dataGridViewSDBeesEntitys.Columns)
             {
                 column.SortMode = DataGridViewColumnSortMode.Programmatic;
             }
@@ -307,11 +305,6 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
 
     public class SDBeesDataSetEntityControllerBindingList : BindingList<SDBeesDataSetEntityController>
     {
-        public SDBeesDataSetEntityControllerBindingList() : base()
-        {
-            
-        }
-
         protected override bool SupportsSortingCore
         {
             get { return true; }
@@ -329,7 +322,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
             get { return m_sortDirectionCore; }
         }
 
-        private PropertyDescriptor m_sortPropertyCore = null;
+        private PropertyDescriptor m_sortPropertyCore;
         protected override PropertyDescriptor SortPropertyCore
         {
             get { return m_sortPropertyCore; }
@@ -339,7 +332,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
         {
             m_sortDirectionCore = direction;
             m_sortPropertyCore = prop;
-            var listRef = this.Items as List<SDBeesDataSetEntityController>;
+            var listRef = Items as List<SDBeesDataSetEntityController>;
             if (listRef == null)
                 return;
             var comparer = new SDBeesEntityComparer(prop, direction);
