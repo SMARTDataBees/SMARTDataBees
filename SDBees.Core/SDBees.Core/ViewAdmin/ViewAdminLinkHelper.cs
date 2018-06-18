@@ -46,14 +46,13 @@ namespace SDBees.ViewAdmin
 
     public class ViewAdminLinkHelper : TemplateTreenodeHelper
 	{
-		private static ViewAdminLinkHelper _theInstance;
-		private readonly ViewAdminLinkHelperCtrl _myControl;
+	    private readonly ViewAdminLinkHelperCtrl _myControl;
 
-		public static ViewAdminLinkHelper Current => _theInstance;
+		public static ViewAdminLinkHelper Current { get; private set; }
 
 	    public ViewAdminLinkHelper()
 		{
-			_theInstance = this;
+			Current = this;
 			_myControl = new ViewAdminLinkHelperCtrl(this);
 		}
 

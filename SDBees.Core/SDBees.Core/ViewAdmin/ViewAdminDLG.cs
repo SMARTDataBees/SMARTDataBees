@@ -72,7 +72,7 @@ namespace SDBees.ViewAdmin
 
                 _cmbViewSelector.SelectedIndexChanged += _cmbViewSelector_SelectedIndexChanged;
                 if (_cmbViewSelector.Items.Count > 0)
-                      _cmbViewSelector.SelectedIndex = 0;
+                    _cmbViewSelector.SelectedIndex = 0;
 
             }
             catch (Exception ex)
@@ -166,7 +166,7 @@ namespace SDBees.ViewAdmin
         {
             foreach (ObjectHelper obj in _hashHelper.Values)
             {
-                var item = new ListViewItem(obj.PluginName) {Tag = obj};
+                var item = new ListViewItem(obj.PluginName) { Tag = obj };
                 m_listViewHelper.Items.Add(item);
             }
         }
@@ -211,7 +211,8 @@ namespace SDBees.ViewAdmin
                         ViewName = propView.ViewName,
                         ViewGUID = propView.Id.ToString()
                     };
-                    _hashViews.Add(propView.ViewName, opbView);
+                    if (_hashViews.ContainsKey(propView.ViewName) == false)
+                        _hashViews.Add(propView.ViewName, opbView);
                 }
             }
             catch (Exception ex)
@@ -310,11 +311,7 @@ namespace SDBees.ViewAdmin
                     // die ID setzen
                     var objView = (ObjectView)_hashViews[_dlgNewView.ViewName];
                     _currentViewId = objView.ViewGUID;
-                    if (_currentViewId != null)
-                    {
-                        //this._refViewAdmin.CurrentViewId = new Guid(this._sCurrentViewID);
-                    }
-
+                   
                     FillPluginList();
                     FillHelperList();
                 }
@@ -359,7 +356,7 @@ namespace SDBees.ViewAdmin
 
             if (m_treeViewSystemConfig.TopNode != null)
             {
-                if(_cmbViewSelector.SelectedItem != null)
+                if (_cmbViewSelector.SelectedItem != null)
                     SaveViewProperty((ObjectView)_hashViews[_cmbViewSelector.SelectedItem.ToString()]);
 
                 foreach (TreeNode trn in m_treeViewSystemConfig.Nodes)
@@ -406,14 +403,14 @@ namespace SDBees.ViewAdmin
                 Error error = null;
                 var lstViewProps = new ArrayList();
                 var viewProp = new ViewProperty();
-                if (_currentViewId != null)
-                {
-                    // Falls die view bereits existiert, laden...
-                    viewProp.Load(_refViewAdmin.MyDBManager.Database, _currentViewId, ref error);
+                //if (_currentViewId != null)
+                //{
+                //    // Falls die view bereits existiert, laden...
+                //    viewProp.Load(_refViewAdmin.MyDBManager.Database, _currentViewId, ref error);
 
-                    Error.Display("View konnte nicht geladen werden", error);
-                }
-                else
+                //    Error.Display("View konnte nicht geladen werden", error);
+                //}
+                //else
                 {
                     viewProp.SetDefaults(_refViewAdmin.MyDBManager.Database);
                 }
@@ -783,7 +780,7 @@ namespace SDBees.ViewAdmin
         private void ViewAdminDLG_Shown(object sender, EventArgs e)
         {
             RefreshView();
-           
+
         }
 
         private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
