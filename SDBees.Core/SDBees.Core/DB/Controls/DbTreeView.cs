@@ -25,10 +25,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
+using SDBees.Core.Admin;
 using SDBees.Core.Utils;
 using SDBees.GuiTools;
-using SDBees.ViewAdmin;
 
 namespace SDBees.DB
 {
@@ -528,7 +529,8 @@ namespace SDBees.DB
                     ViewDefinition db = null;
                     if (mViewCache.ViewDefinition(lstViewDefs[i], out db, ref error))
                     {
-                        var attParent = new Attribute(mTable.Columns[mParentNodeColumnName], parentId.ToString());
+                        var column = mTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(mTable));
+                        var attParent = new Attribute(column, parentId.ToString());
                         var criteria = Database.FormatCriteria(attParent, DbBinaryOperator.eIsEqual, ref error);
                         if (Database.UseGlobalCaching == false)
                         {
@@ -558,7 +560,8 @@ namespace SDBees.DB
                                         var nextParentId = objectIds[index];
                                         if (mNodeColumnName != mTable.PrimaryKey)
                                         {
-                                            var attribute = new Attribute(mTable.Columns[mTable.PrimaryKey], nextParentId.ToString());
+                                            var primaryKeyColumn = mTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(mTable.PrimaryKey));
+                                            var attribute = new Attribute(primaryKeyColumn, nextParentId.ToString());
                                             var idCriteria = Database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
                                             nextParentId = mViewCache.Parent(mTable, mNodeColumnName, idCriteria, ref error);
                                         }
@@ -675,8 +678,8 @@ namespace SDBees.DB
         protected virtual TreeNode CreateNode (object nodeId, ref Error error)
         {
             TreeNode treeNode = null;
-
-            var attribute = new Attribute(mTable.Columns[mTable.PrimaryKey], nodeId.ToString());
+            var column = mTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(mTable.PrimaryKey));
+            var attribute = new Attribute(column, nodeId.ToString());
             var idCriteria = Database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
             var nodeLabel = Database.SelectSingle(mTable.Name, mDisplayColumnName, idCriteria, ref error);
 

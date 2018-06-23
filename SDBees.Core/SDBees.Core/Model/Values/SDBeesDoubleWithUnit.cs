@@ -18,37 +18,26 @@ namespace SDBees.Core.Model
     {
         public SDBeesDoubleWithUnit()
         {
-            m_value = 0.0;
-            m_unit = "";
+            Value = 0.0;
+            Unit = "";
         }
 
         public SDBeesDoubleWithUnit(double value, string unit)
         {
-            m_value = value;
-            m_unit = unit;
+            Value = value;
+            Unit = unit;
         }
 
-		private double m_value;
         /// <summary>
         /// Der Double Wert
         /// </summary>
         [DataMember]
-        public double Value
-		{
-            get { return m_value; }
-            set { m_value = value; }
-		}
+        public double Value { get; set; }
 
-        private string m_unit;
         /// <summary>
         /// Die einheit
         /// </summary>
         [DataMember]
-        public string Unit
-        {
-            get { return m_unit; }
-            set { m_unit = value; }
-        }
-
+        public string Unit { get; set; }
     }
 }

@@ -25,52 +25,26 @@ namespace SDBees.Plugs.Objects
 {
   public class ObjectPlugin
   {
-    private string _sTypeOf;
-    private string _Name;
-    private string _ViewID;
-    private string _ID;
-    private object _Plugin;
-
-    public ObjectPlugin()
+      public ObjectPlugin()
     {
-      _sTypeOf = "";
-      _Name = "";
-      _ViewID = "";
-      _ID = "";
-      _Plugin = null;
+      PluginType = "";
+      PluginName = "";
+      ViewID = "";
+      ID = "";
+      Plugin = null;
     }
 
-    public string ID
-    {
-      get { return _ID; }
-      set { _ID = value; }
-    }
+    public string ID { get; set; }
 
-    public string PluginType
-    {
-      get { return _sTypeOf; }
-      set { _sTypeOf = value; }
-    }
+      public string PluginType { get; set; }
 
-    public string PluginName
-    {
-      get { return _Name; }
-      set { _Name = value; }
-    }
+      public string PluginName { get; set; }
 
-    public object Plugin
-    {
-        get { return _Plugin; }
-        set { _Plugin = value; }
-    }
+      public object Plugin { get; set; }
 
-    /// <summary>
+      /// <summary>
     /// Die ID der aktuellen View
     /// </summary>
-    public string ViewID
-    {
-      get { return _ViewID; }
-      set { _ViewID = value; }
-    }
+    public string ViewID { get; set; }
   }
 }

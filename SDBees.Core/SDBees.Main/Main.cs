@@ -22,12 +22,9 @@
 // #EndHeader# ================================================================
 using System;
 using System.Reflection;
-using System.Windows.Forms;
 using System.Threading;
 //using Razor.SnapIns;
 using Carbon;
-using Carbon.Plugins;
-using Carbon.Plugins.Attributes;
 using System.IO;
 
 namespace SDBees.Main
@@ -58,21 +55,23 @@ namespace SDBees.Main
 
         private static void CreateServerConfig()
         {
-            var conf = SDBees.DB.Generic.ServerConfigHandler.LoadConfig(false);
+            var conf = DB.Generic.ServerConfigHandler.LoadConfig(false);
             if (conf != null && conf.ConfigItems.Count == 0)
             {
-                var item = new DB.Generic.ServerConfigItem();
+                var item = new DB.Generic.ServerConfigItem
+                {
+                    ProjectName = m_DirDemo,
+                    ProjectDescription = "Some demofiles for SMARTDataBees tests",
+                    ServerDatabasePath = GetTargetDir() + "\\" + m_DirDemo + m_dbExtension,
+                    ServerTableCaching = false,
+                    ServerType = DB.Generic.Servers.SQLite,
+                    ConfigItemName = m_DirDemo
+                };
 
-                item.ProjectName = m_DirDemo;
-                item.ProjectDescription = "Some demofiles for SMARTDataBees tests";
-                item.ServerDatabasePath = GetTargetDir() + "\\" + m_DirDemo + m_dbExtension;
-                item.ServerTableCaching = false;
-                item.ServerType = DB.Generic.Servers.SQLite;
-                item.ConfigItemName = m_DirDemo;
 
                 conf.ConfigItems.Add(item);
 
-                SDBees.DB.Generic.ServerConfigHandler.SaveConfig(conf);
+                DB.Generic.ServerConfigHandler.SaveConfig(conf);
             }
         }
 

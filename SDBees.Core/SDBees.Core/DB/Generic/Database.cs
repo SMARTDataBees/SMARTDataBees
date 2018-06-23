@@ -595,7 +595,7 @@ namespace SDBees.DB
         /// <param name="attributes">Attributes of this row</param>
         /// <param name="error">Contains error information if this fails</param>
         /// <returns></returns>
-        public object CreateRow(Table table, Column idColumn, Columns uniqueColumns, Attributes attributes, ref Error error)
+        public object CreateRow(Table table, Column idColumn, List<Column> uniqueColumns, Attributes attributes, ref Error error)
         {
             object id = null;
 

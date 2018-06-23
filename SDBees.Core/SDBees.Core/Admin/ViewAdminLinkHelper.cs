@@ -31,7 +31,7 @@ using SDBees.Main.Window;
 using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Plugs.TreenodeHelper;
 
-namespace SDBees.ViewAdmin
+namespace SDBees.Core.Admin
 {
 	[PluginName("View Admin LinkHelper Plugin")]
 	[PluginAuthors("Tim Hoffeller")]
@@ -41,7 +41,7 @@ namespace SDBees.ViewAdmin
 	[PluginVersion("1.0.0")]
 	[PluginDependency(typeof(MainWindowApplication))]
 	[PluginDependency(typeof(SDBeesDBConnection))]
-	[PluginDependency(typeof(ViewAdmin))]
+	[PluginDependency(typeof(Core.Admin.ViewAdmin))]
     [PluginDependency(typeof(GlobalManager))]
 
     public class ViewAdminLinkHelper : TemplateTreenodeHelper

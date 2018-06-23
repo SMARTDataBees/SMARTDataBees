@@ -51,7 +51,7 @@ namespace Carbon.Plugins.Attributes
 		/// </summary>
 		/// <param name="t">A Type whose defining assembly is searched for the bitmap resource</param>
 		/// <param name="name">The name of the embedded bitmap resource</param>
-		public PluginImageAttribute(Type type, String name) : base(type, name) {}
+		public PluginImageAttribute(Type type, string name) : base(type, name) {}
 
 		/// <summary>
 		/// Initializes a new instance of the PluginImageAttribute class

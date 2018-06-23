@@ -375,14 +375,12 @@ namespace SDBees.DB.Generic
 
         private static void CreateMandatorConfig(bool createDefaults = true)
         {
-            var cfg = new ServerConfig();
-            cfg.ConfigSaveDate = DateTime.Now;
+            var configuration = new ServerConfig {ConfigSaveDate = DateTime.Now};
 
             if(createDefaults)
-                cfg.AddDefaultItem();
+                configuration.AddDefaultItem();
 
-
-            ObjectXMLSerializer<ServerConfig>.Save(cfg, GetMandatorConfigFile(), Encoding.UTF8);
+            ObjectXMLSerializer<ServerConfig>.Save(configuration, GetMandatorConfigFile(), Encoding.UTF8);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 using Carbon.Plugins.Attributes;
+using SDBees.Core.Admin;
 using SDBees.Core.Connectivity;
 using SDBees.Core.Connectivity.SDBeesLink;
 using SDBees.Core.Global;
@@ -11,7 +12,6 @@ using SDBees.EDM;
 using SDBees.Main.Window;
 using SDBees.Reporting;
 using SDBees.UserAdmin;
-using SDBees.ViewAdmin;
 
 // Allgemeine Informationen über eine Assembly werden über die folgenden 
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,

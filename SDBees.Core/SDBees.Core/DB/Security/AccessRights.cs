@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Linq;
 
 namespace SDBees.DB
 {
@@ -333,7 +334,8 @@ namespace SDBees.DB
             var database = server.SecurityDatabase;
 
             var baseData = new RightsBaseData();
-            var attribute = new Attribute(baseData.Table.Columns["userid"], userId);
+            var column = baseData.Table.Columns.FirstOrDefault(clmn => clmn.Name.Equals("userid"));
+            var attribute = new Attribute(column, userId);
             var criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
 
             numFound = database.Select(baseData.Table, baseData.Table.PrimaryKey, criteria, ref objectIds, ref error);

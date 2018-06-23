@@ -26,7 +26,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace SDBees.ViewAdmin
+namespace SDBees.Core.Admin
 {
 	partial class ViewAdminLinkHelperCtrl
 	{

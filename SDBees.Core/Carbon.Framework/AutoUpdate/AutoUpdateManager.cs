@@ -153,17 +153,13 @@ namespace Carbon.AutoUpdate
         public AutoUpdateManager(AutoUpdateOptions options) 
         {
             // we can't do anything without options to control our behavior
-			if (options == null)
-			{
-				throw new ArgumentNullException("options");
-			}
 
             /*
              * the default options will be used
              * to update the current hosting engine 
              * and download into the bootstrap directory along side the other versions of this hosting engine
              * */
-            _options = options;					
+            _options = options ?? throw new ArgumentNullException("options");					
             _productToUpdate = AutoUpdateProductDescriptor.FromAssembly(PluginContext.Current.StartingAssembly, PluginContext.Current.AppVersion);			
             _downloaders = new AutoUpdateDownloaderList();
             _downloaders.AddRange(CreateDownloadersForInternalUse());
@@ -214,17 +210,9 @@ namespace Carbon.AutoUpdate
             }
             set
             {
-				if (value == null)
-				{
-					throw new ArgumentNullException("Options");
-				}
-
-                _options = value;
-
-				if (_options.DownloadPath == null || _options.DownloadPath == string.Empty)
-				{
-					_options.DownloadPath = GetBootstrapPath();
-				}
+                _options = value ?? throw new ArgumentNullException($"options");
+                if (string.IsNullOrEmpty(_options.DownloadPath))
+                    _options.DownloadPath = GetBootstrapPath();
             }
         }
 		
@@ -233,19 +221,8 @@ namespace Carbon.AutoUpdate
         /// </summary>
         public AutoUpdateProductDescriptor ProductToUpdate
         {
-            get
-            {
-                return _productToUpdate;
-            }
-            set
-            {
-				if (value == null)
-				{
-					throw new ArgumentNullException("ProductToUpdate");
-				}
-                
-                _productToUpdate = value;
-            }
+            get => _productToUpdate;
+            set => _productToUpdate = value ?? throw new ArgumentNullException(@"productToUpdate");
         }
 		
         /// <summary>
@@ -478,18 +455,17 @@ namespace Carbon.AutoUpdate
                 if (fileExists)
                 {
                     ProgressViewer.SetExtendedDescription(progressViewer,
-                        $"Creating process '{Path.GetFileName(file)}'...");	
+                        $"Creating process '{Path.GetFileName(file)}'...");
 
-                    var pi = new ProcessStartInfo();
-
-                    pi.FileName = file;
-                    pi.WorkingDirectory = new FileInfo(file).DirectoryName;
-
-                    var p = Process.Start(pi);
-                    if (p != null)
+                    var processStartInfo = new ProcessStartInfo
                     {
-                        p.WaitForExit(); 
-                    }
+                        FileName = file,
+                        WorkingDirectory = new FileInfo(file).DirectoryName
+                    };
+
+
+                    var p = Process.Start(processStartInfo);
+                    p?.WaitForExit();
                 }	
             }
             catch(ThreadAbortException)
@@ -1040,8 +1016,7 @@ namespace Carbon.AutoUpdate
             {
                 Debug.WriteLine($"Starting auto-update process at '{DateTime.Now.ToString()}'.", MY_TRACE_CATEGORY);
 
-                if (AutoUpdateProcessStarted != null)
-                    AutoUpdateProcessStarted(sender, e);
+                AutoUpdateProcessStarted?.Invoke(sender, e);
             }
             catch(ThreadAbortException)
             {
@@ -1062,8 +1037,7 @@ namespace Carbon.AutoUpdate
         {
             try
             {
-                if (BeforeQueryForLatestVersion != null)
-                    BeforeQueryForLatestVersion(sender, e);
+                BeforeQueryForLatestVersion?.Invoke(sender, e);
             }
             catch(ThreadAbortException)
             {
@@ -1084,8 +1058,7 @@ namespace Carbon.AutoUpdate
         {
             try
             {
-                if (AfterQueryForLatestVersion != null)
-                    AfterQueryForLatestVersion(sender, e);
+                AfterQueryForLatestVersion?.Invoke(sender, e);
             }
             catch(ThreadAbortException)
             {
@@ -1128,8 +1101,7 @@ namespace Carbon.AutoUpdate
         {
             try
             {
-                if (BeforeDownload != null)
-                    BeforeDownload(sender, e);
+                BeforeDownload?.Invoke(sender, e);
 
                 // cancel it if it's not supposed to download automatically
                 if (!e.OverrideOptions && !e.Cancel)
@@ -1155,8 +1127,7 @@ namespace Carbon.AutoUpdate
         {
             try
             {
-                if (AfterDownload != null)
-                    AfterDownload(sender, e);
+                AfterDownload?.Invoke(sender, e);
             }
             catch(ThreadAbortException)
             {
@@ -1176,9 +1147,8 @@ namespace Carbon.AutoUpdate
         protected virtual void OnBeforeInstall(object sender, AutoUpdateManagerWithDownloadDescriptorCancelEventArgs e)
         {
             try
-            {				
-                if (BeforeInstall != null)
-                    BeforeInstall(sender, e);
+            {
+                BeforeInstall?.Invoke(sender, e);
 
                 // cancel if it's not supposed to install automatically
                 if (!e.OverrideOptions && !e.Cancel)
@@ -1204,8 +1174,7 @@ namespace Carbon.AutoUpdate
         {
             try
             {
-                if (AfterInstall != null)
-                    AfterInstall(sender, e);
+                AfterInstall?.Invoke(sender, e);
             }
             catch(ThreadAbortException)
             {
@@ -1225,9 +1194,8 @@ namespace Carbon.AutoUpdate
         protected virtual void OnBeforeUpdateAlternatePath(object sender, AutoUpdateManagerWithDownloadDescriptorCancelEventArgs e)
         {
             try
-            {				
-                if (BeforeUpdateAlternatePath != null)
-                    BeforeUpdateAlternatePath(sender, e);
+            {
+                BeforeUpdateAlternatePath?.Invoke(sender, e);
 
                 // cancel if it's not supposed to update the alternate path automatically
                 if (!e.OverrideOptions && !e.Cancel)
@@ -1253,8 +1221,7 @@ namespace Carbon.AutoUpdate
         {
             try
             {
-                if (AfterUpdateAlternatePath != null)
-                    AfterUpdateAlternatePath(sender, e);
+                AfterUpdateAlternatePath?.Invoke(sender, e);
             }
             catch(ThreadAbortException)
             {
@@ -1274,9 +1241,8 @@ namespace Carbon.AutoUpdate
         protected virtual void OnBeforeSwitchToLatestVersion(object sender, AutoUpdateManagerWithDownloadDescriptorCancelEventArgs e)
         {
             try
-            {				
-                if (BeforeSwitchToLatestVersion != null)
-                    BeforeSwitchToLatestVersion(sender, e);
+            {
+                BeforeSwitchToLatestVersion?.Invoke(sender, e);
 
                 // cancel if it's not supposed to switch to the latest version automatically
                 if (!e.OverrideOptions && !e.Cancel)

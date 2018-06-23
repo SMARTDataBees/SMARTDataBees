@@ -80,7 +80,6 @@ namespace Carbon.Configuration
         /// The configurations that are currently selected into the control
         /// </summary>
         private XmlConfigurationCollection _selectedConfigurations;
-        private bool _placeElementsIntoEditMode;
 
         public event XmlConfigurationElementEventHandler ConfigurationChanged;
 
@@ -123,7 +122,7 @@ namespace Carbon.Configuration
             _treeView.AfterSelect += OnAfterNodeSelected;
             _treeView.ImageList = _imageList;
 
-            _placeElementsIntoEditMode = true;
+            PlaceElementsIntoEditMode = true;
 
             _contextMenu.Popup += OnGridContextMenuPoppedUp;
             //			this.ClearNodes();
@@ -367,7 +366,7 @@ namespace Carbon.Configuration
                 if (configuration != null)
                 {
                     configuration.Changed += OnConfigurationChanged;
-                    if (_placeElementsIntoEditMode)
+                    if (PlaceElementsIntoEditMode)
                         configuration.BeginEdit();
                     _selectedConfigurations.Add(configuration);
                     AddNodesForCategories(_treeView, null, configuration.Categories);
@@ -543,7 +542,7 @@ namespace Carbon.Configuration
                 if (configuration.IsBeingEdited)
                     configuration.EndEdit();
 
-                if (_placeElementsIntoEditMode)
+                if (PlaceElementsIntoEditMode)
                     configuration.BeginEdit();
             }
         }
@@ -905,8 +904,7 @@ namespace Carbon.Configuration
             {
                 tabControlXmlViews.SuspendLayout();
 
-                var view = new XmlConfigurationXmlBehindViewer();
-                view.Xml = configuration.ToXml();
+                var view = new XmlConfigurationXmlBehindViewer {Xml = configuration.ToXml()};
 
                 var page = new TabPage(configuration.ElementName);
                 page.Controls.Add(view);
@@ -941,23 +939,19 @@ namespace Carbon.Configuration
                 _propertyGrid.SelectedObject = null;
                 _labelCategory.Text = null;
 
-                if (n != null)
+                if (n?.Categories.Count > 0)
                 {
-                    if (n.Categories.Count > 0)
+
+                    var td = new XmlConfigurationOptionCollectionTypeDescriptor(n.Categories);
+                    _propertyGrid.SelectedObject = td;
+
+                    foreach (DictionaryEntry entry in n.Categories)
                     {
-
-                        var td = new XmlConfigurationOptionCollectionTypeDescriptor(n.Categories);
-                        if (td != null)
-                            _propertyGrid.SelectedObject = td;
-
-                        foreach (DictionaryEntry entry in n.Categories)
+                        var category = entry.Value as XmlConfigurationCategory;
+                        if (category != null)
                         {
-                            var category = entry.Value as XmlConfigurationCategory;
-                            if (category != null)
-                            {
-                                _labelCategory.Text = category.DisplayName;
-                                break;
-                            }
+                            _labelCategory.Text = category.DisplayName;
+                            break;
                         }
                     }
                 }
@@ -972,17 +966,7 @@ namespace Carbon.Configuration
 
         #region Public Properties
 
-        public bool PlaceElementsIntoEditMode
-        {
-            get
-            {
-                return _placeElementsIntoEditMode;
-            }
-            set
-            {
-                _placeElementsIntoEditMode = value;
-            }
-        }
+        public bool PlaceElementsIntoEditMode { get; set; }
 
 
         /// <summary>
@@ -993,10 +977,7 @@ namespace Carbon.Configuration
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public XmlConfigurationCollection SelectedConfigurations
         {
-            get
-            {
-                return _selectedConfigurations;
-            }
+            get => _selectedConfigurations;
             set
             {
                 ClearNodes();
@@ -1024,8 +1005,7 @@ namespace Carbon.Configuration
         {
             try
             {
-                if (ConfigurationChanged != null)
-                    ConfigurationChanged(sender, e);
+                ConfigurationChanged?.Invoke(sender, e);
 
                 //				System.Diagnostics.Debug.WriteLine(XmlConfiguration.DescribeElementChanging(e));
             }
@@ -1044,7 +1024,7 @@ namespace Carbon.Configuration
         {
             if (_selectedConfigurations != null)
                 foreach (XmlConfiguration configuration in _selectedConfigurations)
-                    if (_placeElementsIntoEditMode)
+                    if (PlaceElementsIntoEditMode)
                         configuration.Changed -= OnConfigurationChanged;
         }
 
@@ -1089,19 +1069,16 @@ namespace Carbon.Configuration
         {
             // grab one of our custom menu items
             var menuItem = sender as XmlConfigurationOptionPropertyDescriptorMenuItem;
-            if (menuItem != null)
+            // and the option it points to
+            var option = menuItem?.Option;
+            if (option != null)
             {
-                // and the option it points to
-                var option = menuItem.Option;
-                if (option != null)
-                {
-                    // toggle the check
-                    option.HasChanges = !menuItem.Checked;
+                // toggle the check
+                option.HasChanges = !menuItem.Checked;
 
-                    // if changed, then trigger the changed event for the option
-                    if (option.HasChanges)
-                        option.TriggerChange();
-                }
+                // if changed, then trigger the changed event for the option
+                if (option.HasChanges)
+                    option.TriggerChange();
             }
         }
 
@@ -1114,31 +1091,21 @@ namespace Carbon.Configuration
         {
             // grab the grid
             var grid = _propertyGrid;
-            if (grid != null)
+            // grab the selected item
+            var item = grid?.SelectedGridItem;
+            if (item != null)
             {
-                // grab the selected item
-                if (grid.SelectedGridItem != null)
+                // grab the descriptor as one of our option descriptors
+                var descriptor = item.PropertyDescriptor as XmlConfigurationOptionPropertyDescriptor;
+                var option = descriptor?.Option;
+                if (option != null)
                 {
-                    var item = grid.SelectedGridItem;
-                    if (item != null)
-                    {
-                        // grab the descriptor as one of our option descriptors
-                        var descriptor = item.PropertyDescriptor as XmlConfigurationOptionPropertyDescriptor;
-                        if (descriptor != null)
-                        {
-                            var option = descriptor.Option;
-                            if (option != null)
-                            {
-                                // construct a new menu item for it
-                                var menuItem = new XmlConfigurationOptionPropertyDescriptorMenuItem("Has changes", OnToggleOptionHasChangesClicked, option);
-                                // determine its checked state
-                                menuItem.Checked = option.HasChanges;
-                                // rinse and repeat								
-                                _contextMenu.MenuItems.Clear();
-                                _contextMenu.MenuItems.Add(menuItem);
-                            }
-                        }
-                    }
+                    // construct a new menu item for it
+                    var menuItem =
+                        new XmlConfigurationOptionPropertyDescriptorMenuItem("Has changes",
+                            OnToggleOptionHasChangesClicked, option) {Checked = option.HasChanges};						
+                    _contextMenu.MenuItems.Clear();
+                    _contextMenu.MenuItems.Add(menuItem);
                 }
             }
         }

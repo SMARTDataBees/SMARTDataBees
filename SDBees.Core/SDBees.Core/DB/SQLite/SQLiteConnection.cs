@@ -23,9 +23,9 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.Linq;
 using Carbon.Configuration;
 using SDBees.Core.Global;
 using SDBees.DB.Forms;
@@ -377,13 +377,14 @@ namespace SDBees.DB.SQLite
                 var specifications = "";
 
                 // First check for new and modified columns...
-                foreach (var iterator in table.Columns)
+                foreach (var column in table.Columns)
                 {
-                    var column = iterator.Value;
-
+                  
                     var columnDefinition = GetColumnDefinition(column);
 
-                    if (!oldTable.Columns.ContainsKey(column.Name))
+
+                    var clm = oldTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(column.Name));
+                    if (clm == null)
                     {
                         // This is a new column...
                         if (specifications != "")
@@ -401,11 +402,11 @@ namespace SDBees.DB.SQLite
                 }
 
                 // second step columns to drop
-                foreach (var iterator in oldTable.Columns)
+                foreach (var column in oldTable.Columns)
                 {
-                    var column = iterator.Value;
 
-                    if (!table.Columns.ContainsKey(column.Name))
+                    var clm = table.Columns.FirstOrDefault(clmn => clmn.Name.Equals(column.Name));
+                    if (clm == null)
                     {
                         if (specifications != "")
                         {

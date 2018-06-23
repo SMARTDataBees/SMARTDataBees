@@ -23,23 +23,21 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Text;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace SDBees.DB
 {
     /// <summary>
     /// Class wrapping a database table
     /// </summary>
+    [XmlRoot("TableSchema")]
     public class Table
     {
         #region Private Data Members
-
-        private string mName;
-        private Columns mColumns;
-        private string mPrimaryKey;
-        private bool mReloadIdOnInsert;
-        private int mSchemaVersion;
 
         #endregion
 
@@ -48,181 +46,68 @@ namespace SDBees.DB
         /// <summary>
         /// Name of the table as stored in the database
         /// </summary>
-        public string Name 
-        {
-            get { return mName; }
-            set { mName = value; }
-        }
+        [XmlAttribute("Name")]
+        public string Name { get; set; }
 
         /// <summary>
         /// Collection of columns in this table
         /// </summary>
-        public Columns Columns
-        {
-            get { return mColumns; }
-            set { mColumns = value; }
-        }
+        public List<Column> Columns { get; set; }
 
         /// <summary>
         /// Set or get the name of the primary key of this table
         /// </summary>
-        public string PrimaryKey
-        {
-            get { return mPrimaryKey; }
-            set { mPrimaryKey = value; }
-        }
+        [XmlAttribute("PrimaryKey")]
+        public string PrimaryKey { get; set; }
 
         /// <summary>
         /// Set or get ReloadOnInsert. This flag is used to get the id determined by the SQL server
         /// when automatic ids are specified.
         /// </summary>
-        public bool ReloadIdOnInsert
+        [XmlIgnore]
+        public bool ReloadIdOnInsert { get; set; }
+
+        /// <summary>
+        /// Xml helper value for the serializer
+        /// </summary>
+        [XmlAttribute("ReloadOnInsert")]
+        public string ReloadOnInsert
         {
-            get { return mReloadIdOnInsert; }
-            set { mReloadIdOnInsert = value; }
+            get => ReloadIdOnInsert ? "True" : "False";
+            set => ReloadIdOnInsert = string.Compare(value, "false", StringComparison.OrdinalIgnoreCase) != 0;
         }
 
         /// <summary>
         /// Set or get the version of this schema
         /// </summary>
-        public int SchemaVersion
-        {
-            get { return mSchemaVersion; }
-            set { mSchemaVersion = value; }
-        }
+        [XmlAttribute("SchemaVersion"), DefaultValue(100)]
+        public int SchemaVersion { get; set; }
 
         #endregion
 
-        #region Constructor/Destructor
 
         /// <summary>
         /// Standard constructor
         /// </summary>
-        public Table()
+        public Table() 
         {
-            Init();
+            Name = "";
+            Columns = new List<Column>();
+            PrimaryKey = "";
+            ReloadIdOnInsert = false;
+            SchemaVersion = 100;
         }
 
         /// <summary>
         /// Standard constructor passing the name as parameter
         /// </summary>
         /// <param name="name"></param>
-        public Table(string name)
+        public Table(string name) : this()
         {
-            Init();
-            mName = name;
+            Name = name;
         }
 
-        #endregion
-
-        #region Public Methods
-
-        /// <summary>
-        /// Create an XML string from from the definition of this table
-        /// </summary>
-        /// <returns>XML description</returns>
-        public string writeXml()
-        {
-            var strXml = "";
-
-            // create the XML structure and consider all the columns
-            var settings = new XmlWriterSettings();
-            settings.Indent = false;
-            settings.IndentChars = ("  ");
-            var xmlStringBuilder = new StringBuilder();
-            using (var writer = XmlWriter.Create(xmlStringBuilder, settings))
-            {
-                // Write XML data.
-                writer.WriteStartElement("TableSchema");
-                writer.WriteAttributeString("Name", mName);
-                writer.WriteAttributeString("PrimaryKey", mPrimaryKey);
-                writer.WriteAttributeString("ReloadOnInsert", mReloadIdOnInsert.ToString());
-                writer.WriteAttributeString("SchemaVersion", mSchemaVersion.ToString());
-
-                // Now write the columns
-                writer.WriteStartElement("Columns");
-
-                foreach (var iterator in mColumns)
-                {
-                    var column = iterator.Value;
-                    var xmlColumn = column.Xmlwrite();
-
-                    if (xmlColumn != "")
-                    {
-                        var xmlDocument = new XmlDocument();
-                        xmlDocument.LoadXml(xmlColumn);
-                        var xmlNode = xmlDocument.SelectSingleNode("Column");
-
-                        writer.WriteNode(new XmlNodeReader(xmlNode), false);
-                    }
-                }
-
-                writer.WriteEndElement(); // Columns
-
-                writer.WriteEndElement(); // TableSchema
-                writer.Flush();
-
-                strXml = xmlStringBuilder.ToString();
-            }
-
-
-            return strXml;
-        }
-
-        /// <summary>
-        /// Redefine the table properties and columns from an XML description
-        /// </summary>
-        /// <param name="xmlContent">XML description of a table and it's columns</param>
-        public void readXml(string xmlContent)
-        {
-            // remove all columns and other information...
-            Init();
-
-            // Interpret the xml and create the necessary columns
-            var xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(xmlContent);
-
-            var rootNode = xmlDoc.SelectSingleNode("TableSchema");
-            XmlReader reader = new XmlNodeReader(rootNode);
-
-            reader.Read();
-            mName = reader.GetAttribute("Name");
-            mPrimaryKey = reader.GetAttribute("PrimaryKey");
-            var strVersion = reader.GetAttribute("SchemaVersion");
-            if ((strVersion == null) || (strVersion == ""))
-            {
-                mSchemaVersion = 100;
-            }
-            else 
-            {
-                mSchemaVersion = (int)Convert.ChangeType(strVersion, typeof(int));
-            }
-
-            mReloadIdOnInsert = Convert.ToBoolean(reader.GetAttribute("ReloadOnInsert"));
-
-            // Find the columns and read them...
-            var columnsNodeList = rootNode.SelectSingleNode("Columns").SelectNodes("Column");
-            foreach (XmlNode columnNode in columnsNodeList)
-            {
-                var newColumn = new Column();
-                newColumn.Xmlread(columnNode.OuterXml);
-
-                mColumns.Add(newColumn);
-            }
-        }
-
-        #endregion
-
-        #region Protected Methods
-
-        private void Init()
-        {
-            mName = "";
-            mColumns = new Columns();
-            mPrimaryKey = "";
-            mReloadIdOnInsert = false;
-            mSchemaVersion = 100;
-        }
-        #endregion
     }
+
+
 }

@@ -5,13 +5,12 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Windows.Forms;
 using System.Xml;
+using SDBees.Core.Admin;
 using SDBees.Core.Connectivity;
 using SDBees.DB;
-using SDBees.Plugs.Properties;
 using SDBees.Plugs.TemplateBase;
 using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Utils;
-using SDBees.ViewAdmin;
 using Object = SDBees.DB.Object;
 
 namespace SDBees.Core.Model.Basic
@@ -22,43 +21,28 @@ namespace SDBees.Core.Model.Basic
     {
         public SDBeesSetBase()
         {
-            m_entities = new HashSet<SDBeesEntity>();
-            m_relations = new HashSet<SDBeesRelation>();
-            m_timeStamp = DateTime.Now;
+            Entities = new HashSet<SDBeesEntity>();
+            Relations = new HashSet<SDBeesRelation>();
+            TimeStamp = DateTime.Now;
         }
 
-        private HashSet<SDBeesEntity> m_entities = new HashSet<SDBeesEntity>();
         /// <summary>
         /// Die zu übertragenden Entity Instanzen
         /// </summary>
         [DataMember]
-        public HashSet<SDBeesEntity> Entities
-        {
-            get { return m_entities; }
-            set { m_entities = value; }
-        }
+        public HashSet<SDBeesEntity> Entities { get; set; } = new HashSet<SDBeesEntity>();
 
-        private HashSet<SDBeesRelation> m_relations;
         /// <summary>
         /// Die zu übertragenden Beziehungs Instanzen
         /// </summary>
         [DataMember]
-        public HashSet<SDBeesRelation> Relations
-        {
-            get { return m_relations; }
-            set { m_relations = value; }
-        }
+        public HashSet<SDBeesRelation> Relations { get; set; }
 
-        private DateTime m_timeStamp;
         /// <summary>
         /// ZeitStempel
         /// </summary>
         [DataMember]
-        public DateTime TimeStamp
-        {
-            get { return m_timeStamp; }
-            set { m_timeStamp = value; }
-        }
+        public DateTime TimeStamp { get; set; }
 
         protected static SDBeesSetBase DataSetRead(string fileName, Type t)
         {
@@ -239,9 +223,11 @@ namespace SDBees.Core.Model.Basic
                     var relSD = new ViewRelation();
                     if (relSD.Load(SDBeesDBConnection.Current.MyDBManager.Database, itemid, ref _error))
                     {
-                        var rel = new SDBeesRelation();
-                        rel.SourceId = ent.Id.ToString();
-                        rel.TargetId = relSD.GetPropertyByColumn(ViewRelation.m_ChildIdColumnName).ToString();
+                        var rel = new SDBeesRelation
+                        {
+                            SourceId = ent.Id.ToString(),
+                            TargetId = relSD.GetPropertyByColumn(ViewRelation.m_ChildIdColumnName).ToString()
+                        };
 
                         if (!IsRelationInstanceContainedInDataSet(rel, dset))
                             dset.Relations.Add(rel);
@@ -268,9 +254,11 @@ namespace SDBees.Core.Model.Basic
                     var relSD = new ViewRelation();
                     if (relSD.Load(SDBeesDBConnection.Current.MyDBManager.Database, itemid, ref _error))
                     {
-                        var rel = new SDBeesRelation();
-                        rel.SourceId = relSD.GetPropertyByColumn(ViewRelation.m_ParentIdColumnName).ToString();
-                        rel.TargetId = ent.Id.ToString();
+                        var rel = new SDBeesRelation
+                        {
+                            SourceId = relSD.GetPropertyByColumn(ViewRelation.m_ParentIdColumnName).ToString(),
+                            TargetId = ent.Id.ToString()
+                        };
 
                         if (!IsRelationInstanceContainedInDataSet(rel, dset))
                             dset.Relations.Add(rel);
@@ -292,9 +280,11 @@ namespace SDBees.Core.Model.Basic
 #if PROFILER
                 SDBees.Profiler.Start("SDBeesSetBase::CreateEntity 1");
 #endif
-                var ent = new SDBeesEntity();
-                ent.Id = tnbasedata.GetPropertyByColumn(Object.m_IdColumnName).ToString();
-                ent.DefinitionId = TemplateDBBaseData.GetPluginForBaseData(tnbasedata).GetEntityDefinition().Id;
+                var ent = new SDBeesEntity
+                {
+                    Id = tnbasedata.GetPropertyByColumn(Object.m_IdColumnName).ToString(),
+                    DefinitionId = TemplateDBBaseData.GetPluginForBaseData(tnbasedata).GetEntityDefinition().Id
+                };
                 var instanceId = tnbasedata.GetPropertyByColumn(Object.m_IdSDBeesColumnName).ToString();
                 if (string.IsNullOrEmpty(instanceId))
                 {
@@ -313,8 +303,7 @@ namespace SDBees.Core.Model.Basic
                 {
                     if (name != Object.m_IdSDBeesColumnName || name != Object.m_IdColumnName)
                     {
-                        var prop = new SDBeesProperty();
-                        prop.DefinitionId = name;
+                        var prop = new SDBeesProperty {DefinitionId = name};
                         prop.InstanceValue.SetObjectValue(tnbasedata.GetPropertyByColumn(name));
                         ent.Properties.Add(prop);
                     }
@@ -338,8 +327,7 @@ namespace SDBees.Core.Model.Basic
 #endif
                 foreach (var pair in automaticProperties)
                 {
-                    var prop = new SDBeesProperty();
-                    prop.DefinitionId = pair.Key.Name;
+                    var prop = new SDBeesProperty {DefinitionId = pair.Key.Name};
                     prop.InstanceValue.SetObjectValue(pair.Value);
                     ent.Properties.Add(prop);
                 }
@@ -359,27 +347,46 @@ namespace SDBees.Core.Model.Basic
                     {
                         if (alienData.Load(ConnectivityManager.Current.MyDBManager.Database, item, ref _error))
                         {
-                            var aid = new SDBeesAlienId();
-                            aid.AlienInstanceId.Id = alienData.GetPropertyByColumn(ConnectivityManagerAlienBaseData.m_AlienIdColumnName).ToString();
-                            aid.App = alienData.GetPropertyByColumn(ConnectivityManagerAlienBaseData.m_AlienApplicationColumnName).ToString();
+                            var aid = new SDBeesAlienId
+                            {
+                                AlienInstanceId =
+                                {
+                                    Id = alienData
+                                        .GetPropertyByColumn(ConnectivityManagerAlienBaseData.m_AlienIdColumnName)
+                                        .ToString()
+                                },
+                                App = alienData
+                                    .GetPropertyByColumn(ConnectivityManagerAlienBaseData.m_AlienApplicationColumnName)
+                                    .ToString(),
+                                DocumentId =
+                                {
+                                    Id = alienData
+                                        .GetPropertyByColumn(ConnectivityManagerAlienBaseData
+                                            .m_AlienDocumentIdColumnName).ToString()
+                                },
+                                Id = {Id = alienData.GetPropertyByColumn(Object.m_IdColumnName).ToString()},
+                                InternalId = alienData.GetPropertyByColumn(Object.m_IdSDBeesColumnName).ToString(),
+                                InternalDbObjectType =
+                                    alienData.GetPropertyByColumn(ConnectivityManagerAlienBaseData
+                                        .m_AlienInternalDBElementTypeColumnName).ToString(),
+                                InternalDbObjectId =
+                                    alienData.GetPropertyByColumn(ConnectivityManagerAlienBaseData
+                                        .m_AlienInternalDBElementIdColumnName).ToString()
+                            };
 
-#if false
-                            //Create the documentData
-                            // retrieve the id in db based on sdbeesid
-                            string dbid = ConnectivityManagerDocumentBaseData.GetDocumentDbIdBySDBeesId(docId.Id, ref _error);
+#if false //Create the documentData
+// retrieve the id in db based on sdbeesid
+                            string dbid =
+ConnectivityManagerDocumentBaseData.GetDocumentDbIdBySDBeesId(docId.Id, ref _error);
                             ConnectivityManagerDocumentBaseData docData = new ConnectivityManagerDocumentBaseData();
                             if (docData.Load(SDBees.DB.SDBeesDBConnection.Current.MyDBManager.Database, dbid, ref _error))
                             {
-                                aid.DocumentId.Id = docData.GetPropertyByColumn(SDBees.DB.Object.m_IdSDBeesColumnName).ToString();
+                                aid.DocumentId.Id =
+docData.GetPropertyByColumn(SDBees.DB.Object.m_IdSDBeesColumnName).ToString();
                             }
 #else
-                            aid.DocumentId.Id = alienData.GetPropertyByColumn(ConnectivityManagerAlienBaseData.m_AlienDocumentIdColumnName).ToString();
 #endif
-                            aid.Id.Id = alienData.GetPropertyByColumn(Object.m_IdColumnName).ToString();
 
-                            aid.InternalId = alienData.GetPropertyByColumn(Object.m_IdSDBeesColumnName).ToString();
-                            aid.InternalDbObjectType = alienData.GetPropertyByColumn(ConnectivityManagerAlienBaseData.m_AlienInternalDBElementTypeColumnName).ToString();
-                            aid.InternalDbObjectId = alienData.GetPropertyByColumn(ConnectivityManagerAlienBaseData.m_AlienInternalDBElementIdColumnName).ToString();
 
                             //if (docId != null && aid.DocumentId.Id == docId)
                                 ent.AlienIds.Add(aid);

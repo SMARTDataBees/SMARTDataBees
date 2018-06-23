@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
+using SDBees.Core.Admin;
 using SDBees.Core.Connectivity;
 using SDBees.DB;
 using SDBees.Plugs.TemplateBase;
 using SDBees.Plugs.TemplateTreeNode;
-using SDBees.ViewAdmin;
 using Object = SDBees.DB.Object;
 
 namespace SDBees.Core.Model.Instances
@@ -86,7 +86,7 @@ namespace SDBees.Core.Model.Instances
                 {
                     var _lstTemp = new ArrayList();
                     var dataDoc = SDBeesDBDocument.CreateFromSDBeesDocument(doc);
-                    if (!ConnectivityManagerDocumentBaseData.ObjectExistsInDbWithSDBeesId(dataDoc.Table, doc.InstanceId, ref _error, ref _lstTemp))
+                    if (!TemplateDBBaseData.ObjectExistsInDbWithSDBeesId(dataDoc.Table, doc.InstanceId, ref _error, ref _lstTemp))
                     {
                         if (dataDoc.Save(ConnectivityManager.Current.MyDBManager.Database, ref _error))
                         {
@@ -263,7 +263,7 @@ namespace SDBees.Core.Model.Instances
                 {
                     var docid = new SDBeesDocumentId
                     {
-                        Id = docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_IdSDBeesColumnName).ToString()
+                        Id = docdata.GetPropertyByColumn(Object.m_IdSDBeesColumnName).ToString()
                     };
 
                     if (!docIds.Contains<SDBeesDocumentId>(docid))
@@ -348,7 +348,7 @@ namespace SDBees.Core.Model.Instances
             var isInList = false;
             foreach (var row in lstOfSelctedElements.Values)
             {
-                var id = row[ConnectivityManagerDocumentBaseData.m_IdColumnDisplayName].ToString();
+                var id = row[Object.m_IdColumnDisplayName].ToString();
                 if (id == ent.Id.Id)
                 {
                     isInList = true;

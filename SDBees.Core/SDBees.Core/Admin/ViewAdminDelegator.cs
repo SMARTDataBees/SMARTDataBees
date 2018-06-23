@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using SDBees.DB;
 using SDBees.Plugs.TemplateTreeNode;
 
-namespace SDBees.ViewAdmin
+namespace SDBees.Core.Admin
 {
     /// <summary>
     /// Class to delegate view specific requests to the view administrator

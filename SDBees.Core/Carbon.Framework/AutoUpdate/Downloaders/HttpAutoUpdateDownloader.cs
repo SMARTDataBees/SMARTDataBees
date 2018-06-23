@@ -32,7 +32,6 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
-using System.Xml;
 using Carbon.AutoUpdate.Common;
 using Carbon.AutoUpdate.Common.Xml;
 using Carbon.UI;

@@ -23,6 +23,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using SDBees.Core.Utils;
 using SDBees.Plugs.Properties;
 
 namespace SDBees.DB
@@ -123,7 +125,7 @@ namespace SDBees.DB
 
                     if (!mValues.ContainsKey(columnName))
                     {
-                        var column = mTable.Columns[columnName];
+                        var column = mTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(columnName));
                         mValues[columnName] = column.CreateDefaultValue();
                     }
                     return mValues[columnName];
@@ -148,7 +150,7 @@ namespace SDBees.DB
                 return null;
             }
 
-            var column = mTable.Columns[columnName];
+            var column = mTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(columnName));
 
             return column.UITypeConverter;
         }
@@ -168,11 +170,15 @@ namespace SDBees.DB
                 mId = value;
                 success = true;
             }
-            else if (mTable.Columns.ContainsKey(propertyName))
+            else
             {
-                mValues[propertyName] = value;
-//                mValues[propertyName] = mTable.Columns[propertyName].ConvertValueFromDataRow(value);
-                success = true;
+                var column = mTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(propertyName));
+                if (column != null)
+                {
+                    mValues[propertyName] = value;
+                    //                mValues[propertyName] = mTable.Columns[propertyName].ConvertValueFromDataRow(value);
+                    success = true;
+                }
             }
 
             return success;
@@ -186,9 +192,8 @@ namespace SDBees.DB
         {
             var propertyNames = new List<string>();
 
-            foreach (var iterator in mTable.Columns)
+            foreach (var column in mTable.Columns)
             {
-                var column = iterator.Value;
                 if (column.Name != mTable.PrimaryKey)
                 {
                     propertyNames.Add(column.Name);
@@ -372,7 +377,8 @@ namespace SDBees.DB
         {
             try
             {
-                if (!mTable.Columns.ContainsKey(column.Name))
+                 var clm = mTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(column.Name));
+                if (clm == null)
                 {
                     // Only add the column if it does not exist
                     mTable.Columns.Add(column);
@@ -395,11 +401,11 @@ namespace SDBees.DB
         /// <param name="database">Database</param>
         public virtual void RemoveColumn(string columnName, Database database)
         {
-            if (mTable.Columns.ContainsKey(columnName))
+            var column = mTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(columnName));
+            if (column != null)
             {
                 // Only remove the column if it exists
-                mTable.Columns.Remove(columnName);
-
+                mTable.Columns.Remove(column);
                 ModifyTableSchema(mTable, database);
             }
         }
@@ -412,11 +418,12 @@ namespace SDBees.DB
         /// <param name="database">Database</param>
         public virtual void RenameColumn(string oldColumnName, string newColumnName, Database database)
         {
-            if (mTable.Columns.ContainsKey(oldColumnName))
+            var clm = mTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(oldColumnName));
+            if (clm != null)
             {
                 // Only rename the column if it exists
-                var column = mTable.Columns[oldColumnName];
-                mTable.Columns.Remove(oldColumnName);
+                var column = mTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(oldColumnName));
+                mTable.Columns.Remove(column);
 
                 // Since in some cases this is used to fix tables we should check before we get problems...
                 if (oldColumnName.Trim() != newColumnName.Trim())
@@ -540,9 +547,9 @@ namespace SDBees.DB
                 attributes = new Attributes();
             }
 
-            foreach (var iterator in mTable.Columns)
+            foreach (var column in mTable.Columns)
             {
-                var column = iterator.Value;
+
                 if (column.Name != mTable.PrimaryKey)
                 {
                     var value = GetPropertyByColumn(column.Name);
@@ -581,7 +588,7 @@ namespace SDBees.DB
         /// used to "find" the newly created object again
         /// </summary>
         /// <returns></returns>
-        protected virtual Columns uniqueColumns()
+        protected virtual List<Column> uniqueColumns()
         {
             // We should not get here if the ReloadIdOnInsert is set in the table
             if (mTable.ReloadIdOnInsert)
@@ -615,18 +622,17 @@ namespace SDBees.DB
                 // There is no schema yet defined for this table... define the schema
                 schema.Name = table.Name;
                 schema.Database = database;
-                schema.XmlSchema = table.writeXml();
+                schema.XmlSchema =  Serializer.ToXml(table);
 
                 // ...but don't save it to the database yet...
             }
             else
             {
                 // schema has been defined in database for this table, so read it...
-                oldTable = new Table();
-                oldTable.readXml(schema.XmlSchema);
+                oldTable = Serializer.FromXml(schema.XmlSchema);
 
                 // and update it... but don't save it to the database yet...
-                schema.XmlSchema = table.writeXml();
+                schema.XmlSchema =  Serializer.ToXml(table);
             }
 
             // check if the table exists and evtually update the schema
@@ -647,8 +653,8 @@ namespace SDBees.DB
             else if (oldTable != null)
             {
                 // in case something went wrong, the table and the schema should match
-                var oldXmlSchema = oldTable.writeXml();
-                table.readXml(oldXmlSchema);
+                var xml =  Serializer.ToXml(oldTable);
+                table = Serializer.FromXml(xml);
             }
 
             Error.Display("Table '" + table.Name + "' modify", error);
@@ -694,15 +700,14 @@ namespace SDBees.DB
                 // Now create the schema information and make persistent
                 schema.Name = tableName;
                 schema.Database = database;
-                schema.XmlSchema = table.writeXml();
+                schema.XmlSchema = Serializer.ToXml(table);
 
                 schema.Save(ref error);
             }
             else
             {
                 // schema has been defined in database for this table, so read it...
-                table = new Table();
-                table.readXml(schema.XmlSchema);
+                table = Serializer.FromXml(schema.XmlSchema);
             }
 
             Error.Display("Table '" + tableName + "' modify", error);
@@ -773,8 +778,8 @@ namespace SDBees.DB
             column.Category = "Internal";
             column.Type = DbType.GuidString;
             column.Flags = (int)DbFlags.eAutoCreate;
-            column.Editable = false;
-            column.Browsable = false;
+            column.IsEditable = false;
+            column.IsBrowsable = false;
             reloadIdOnInsert = false;
 
             return column;
@@ -794,8 +799,8 @@ namespace SDBees.DB
             column.Category = "Internal";
             column.Type = DbType.GuidString;
             column.Flags = (int)DbFlags.eAutoCreate;
-            column.Editable = false;
-            column.Browsable = false;
+            column.IsEditable = false;
+            column.IsBrowsable = false;
             reloadIdOnInsert = false;
 
             return column;
@@ -807,7 +812,7 @@ namespace SDBees.DB
         /// <returns></returns>
         protected virtual Column idColumn()
         {
-            return mTable.Columns[mTable.PrimaryKey];
+            return mTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(mTable.PrimaryKey));
         }
 
         #endregion

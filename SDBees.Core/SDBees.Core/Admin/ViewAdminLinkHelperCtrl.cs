@@ -25,10 +25,9 @@ using System;
 using System.Collections;
 using System.Windows.Forms;
 using SDBees.DB;
-using SDBees.Plugs.TemplateBase;
 using SDBees.Plugs.TemplateTreeNode;
 
-namespace SDBees.ViewAdmin
+namespace SDBees.Core.Admin
 {
 	public partial class ViewAdminLinkHelperCtrl : UserControl
 	{
@@ -150,7 +149,7 @@ namespace SDBees.ViewAdmin
         private void FillListControl()
         {
             Error _error = null;
-            ViewAdmin.Current.MyDBManager.Database.Open(true, ref _error);
+            Core.Admin.ViewAdmin.Current.MyDBManager.Database.Open(true, ref _error);
 
             ListSibling.Enabled = true;
             ListChilds.Enabled = true;
@@ -158,7 +157,7 @@ namespace SDBees.ViewAdmin
             FillListControlSibling();
             FillListControlChildren();
 
-            ViewAdmin.Current.MyDBManager.Database.Close(ref _error);
+            Core.Admin.ViewAdmin.Current.MyDBManager.Database.Close(ref _error);
         }
 
         private void FillListControlChildren()

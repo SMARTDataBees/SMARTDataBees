@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using SDBees.Plugs.Properties;
 
 namespace SDBees.DB
@@ -58,9 +57,9 @@ namespace SDBees.DB
             mMapDisplayToDbName = new Hashtable();
 
             // Dieses ist nur zum testen und sollte aus dem "DB.Object" gefüllt werden.
-            foreach (var iterator in table.Columns)
+            foreach (var column in table.Columns)
             {
-                var column = iterator.Value;
+               
                 var columnType = column.GetTypeForColumn();
                 PropertySpec ps = null;
                 if ((column.SelectionList != null) && (typeof(string) == columnType))
@@ -73,11 +72,11 @@ namespace SDBees.DB
                 }
                 if (ps != null)
                 {
-                    if (!column.Editable)
+                    if (!column.IsEditable)
                     {
                         ps.ReadOnlyProperty = true;
                     }
-                    if(!column.Browsable)
+                    if(!column.IsBrowsable)
                     {
                         ps.BrowsableProperty = false;
                     }

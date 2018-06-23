@@ -23,6 +23,7 @@
 
 using System.Collections;
 using System.Data;
+using System.Linq;
 using System.Windows.Forms;
 using SDBees.DB;
 
@@ -116,7 +117,9 @@ namespace SDBees.Plugs.TemplateBase
         {
             var table = MyTable();
             ArrayList objectIds = null;
-            var attribute = new Attribute(table.Columns[table.PrimaryKey], objectId.ToString());
+
+            var column = table.Columns.FirstOrDefault(clmn => clmn.Name.Equals(table.PrimaryKey));
+            var attribute = new Attribute(column, objectId.ToString());
             var criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
             return (database.Select(table, table.PrimaryKey, criteria, ref objectIds, ref error) == 1);
         }
@@ -138,10 +141,12 @@ namespace SDBees.Plugs.TemplateBase
         {
             if (m_editSchemaAllowed)
             {
-                var tableEditor = new frmEditTable(MyDBManager);
+                var tableEditor = new frmEditTable(MyDBManager)
+                {
+                    Text = GetType().ToString(),
+                    Table = MyTable()
+                };
                 // TBD: besser wäre eine "lesbarer" Name...
-                tableEditor.Text = GetType().ToString();
-                tableEditor.Table = MyTable();
 
                 if (tableEditor.ShowDialog() == DialogResult.OK)
                 {

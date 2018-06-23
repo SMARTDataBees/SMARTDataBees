@@ -42,43 +42,28 @@ namespace Carbon.Common
 	/// </summary>
 	public sealed class VersionedFile
 	{
-		private Version _version;
-		private FileInfo _file;
-
-		/// <summary>
+	    /// <summary>
 		/// Initializes a new instance of the VersionedFile class.
 		/// </summary>
 		/// <param name="version">A version to associate with this file.</param>
 		/// <param name="file">File information that is the context of this object.</param>
 		public VersionedFile(Version version, FileInfo file)
 		{
-			_version = version;
-			_file = file;			
+			Version = version;
+			File = file;			
 		}
 
 		/// <summary>
 		/// Returns the version associated with the file.
 		/// </summary>
-		public Version Version
-		{
-			get
-			{
-				return _version;
-			}
-		}
+		public Version Version { get; }
 
-		/// <summary>
+	    /// <summary>
 		/// Returns the file that is ultimately the context of this entire class.
 		/// </summary>
-		public FileInfo File 
-		{
-			get	
-			{
-				return _file;
-			}
-		}
+		public FileInfo File { get; }
 
-		#region My Static Methods
+	   
 
 		/// <summary>
 		/// Sorts an array of versioned file objects.
@@ -171,16 +156,11 @@ namespace Carbon.Common
 		/// <returns></returns>
 		public static VersionedFile GetLatestVersion(VersionedFile[] versionedFiles)
 		{
-			if (versionedFiles != null)
-			{ 
-				if (versionedFiles.Length > 0)
-				{
-					return versionedFiles[0];
-				}
-			}
-			return null;
+		    if (versionedFiles?.Length > 0)
+		    {
+		        return versionedFiles[0];
+		    }
+		    return null;
 		}
-
-		#endregion
 	}
 }

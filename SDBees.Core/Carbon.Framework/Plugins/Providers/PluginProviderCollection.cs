@@ -78,12 +78,6 @@ namespace Carbon.Plugins.Providers
         /// <summary>
         /// Returns the provider from the collection with the specified name.
         /// </summary>
-		public new PluginProvider this[string name]
-		{
-			get
-			{
-				return (PluginProvider)base[name];
-			}
-		}
+		public new PluginProvider this[string name] => (PluginProvider)base[name];
 	}
 }

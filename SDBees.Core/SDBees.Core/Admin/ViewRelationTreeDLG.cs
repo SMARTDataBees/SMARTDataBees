@@ -29,7 +29,7 @@ using SDBees.Core.Utils;
 using SDBees.DB;
 using SDBees.Plugs.TemplateTreeNode;
 
-namespace SDBees.ViewAdmin
+namespace SDBees.Core.Admin
 {
     /// <summary>
     /// Form to display a view in a tree view

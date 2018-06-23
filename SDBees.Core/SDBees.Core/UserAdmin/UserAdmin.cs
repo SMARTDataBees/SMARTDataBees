@@ -164,11 +164,11 @@ namespace SDBees.UserAdmin
 
         void mnuChangePassword_Click(object sender, EventArgs e)
         {
-            var dlg = new ChangePasswordDLG();
+            var dlg = new ChangePasswordDialog();
 
             if (dlg.ShowDialog() == DialogResult.OK)
             {
-                var oldPassword = dlg.OldPassword;
+                var oldPassword = dlg.CurrentPassword;
                 var newPassword = dlg.NewPassword;
 
                 if (oldPassword != newPassword)

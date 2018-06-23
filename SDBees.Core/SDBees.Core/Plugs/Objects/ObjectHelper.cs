@@ -25,56 +25,35 @@ namespace SDBees.Plugs.Objects
 {
   public class ObjectHelper
   {
-    private string _sTypeOf;
-    private string _Name;
-    private string _TabPageLabel;
-    private object _Plugin;
-
-    /// <summary>
+      /// <summary>
     /// The Type of the HelperPlugin
     /// </summary>
-    public string PluginType
-    {
-      get { return _sTypeOf; }
-      set { _sTypeOf = value; }
-    }
+    public string PluginType { get; set; }
 
-    /// <summary>
+      /// <summary>
     /// The Name of the HelperPlugin
     /// </summary>
-    public string PluginName
-    {
-      get { return _Name; }
-      set { _Name = value; }
-    }
+    public string PluginName { get; set; }
 
-    /// <summary>
+      /// <summary>
     /// The Label of TabPage for the HelperPlugin, "" if not to be displayed
     /// </summary>
-    public string PluginTabPageLabel
-    {
-        get { return _TabPageLabel; }
-        set { _TabPageLabel = value; }
-    }
+    public string PluginTabPageLabel { get; set; }
 
-    /// <summary>
+      /// <summary>
     /// The Plugin instance for the HelperPlugin
     /// </summary>
-    public object Plugin
-    {
-        get { return _Plugin; }
-        set { _Plugin = value; }
-    }
+    public object Plugin { get; set; }
 
-    /// <summary>
+      /// <summary>
     /// The Constructor for the HelperPlugin
     /// </summary>
     public ObjectHelper()
     {
-      _sTypeOf = "";
-      _Name = "";
-      _TabPageLabel = "";
-      _Plugin = null;
+      PluginType = "";
+      PluginName = "";
+      PluginTabPageLabel = "";
+      Plugin = null;
   }
   }
 }

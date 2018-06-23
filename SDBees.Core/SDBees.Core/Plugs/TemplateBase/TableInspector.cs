@@ -22,6 +22,7 @@
 // #EndHeader# ================================================================
 
 using System.Collections.Generic;
+using System.Linq;
 using SDBees.DB;
 using SDBees.Plugs.TemplateTreeNode;
 
@@ -124,9 +125,8 @@ namespace SDBees.Plugs.TemplateBase
             //WriteMessage("\r\n");
 
             var columnsToFix = new List<string>();
-            foreach (var iterator in baseData.Table.Columns)
+            foreach (var column in baseData.Table.Columns)
             {
-                var column = iterator.Value;
                 var columnName = column.Name;
                 if (columnName != columnName.Trim())
                 {
@@ -166,7 +166,8 @@ namespace SDBees.Plugs.TemplateBase
             {
                 foreach (var columnName in columnNames)
                 {
-                    if (!baseData.Table.Columns.ContainsKey(columnName))
+                    var clm = baseData.Table.Columns.FirstOrDefault(clmn => clmn.Name.Equals(columnName));
+                    if (clm == null)
                     {
                         columnsMissingInXML.Add(columnName);
                         WriteMessage("FEHLER: Spalte '" + columnName + "' nicht in XML Schema enthalten!\r\n");

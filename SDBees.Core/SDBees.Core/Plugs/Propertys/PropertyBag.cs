@@ -58,15 +58,6 @@ namespace SDBees.Plugs.Properties
     /// </summary>
     public class PropertySpec
     {
-        private IList<Attribute> attributes;
-        private string category;
-        private object defaultValue;
-        private string description;
-        private string editor;
-        private string name;
-        private string type;
-        private string typeConverter;
-
         /// <summary>
         /// Initializes A new instance of the PropertySpec class.
         /// </summary>
@@ -137,17 +128,17 @@ namespace SDBees.Plugs.Properties
         /// no default value.</param>
         public PropertySpec(string name, string type, string category, string description, object defaultValue)
         {
-            this.name = name;
-            this.type = type;
-            this.category = category;
-            this.description = description;
-            this.defaultValue = defaultValue;
-            attributes = new List<Attribute>();
+            this.Name = name;
+            this.TypeName = type;
+            this.Category = category;
+            this.Description = description;
+            this.DefaultValue = defaultValue;
+            Attributes = new List<Attribute>();
         }
 
         public PropertySpec()
         {
-            attributes = new List<Attribute>();
+            Attributes = new List<Attribute>();
         }
 
         /// <summary>
@@ -180,7 +171,7 @@ namespace SDBees.Plugs.Properties
         public PropertySpec(string name, Type type, string category, string description, object defaultValue, string typeConverter)
             : this(name, type, category, description, defaultValue)
         {
-            this.typeConverter = typeConverter;
+            this.ConverterTypeName = typeConverter;
         }        
         
         /// <summary>
@@ -199,7 +190,7 @@ namespace SDBees.Plugs.Properties
         public PropertySpec(string name, string type, string category, string description, object defaultValue, Type typeConverter)
             : this(name, type, category, description, defaultValue)
         {
-            this.typeConverter = typeConverter.AssemblyQualifiedName;
+            this.ConverterTypeName = typeConverter.AssemblyQualifiedName;
         }        
 
         /// <summary>
@@ -221,8 +212,8 @@ namespace SDBees.Plugs.Properties
             string editor, string typeConverter)
             : this(name, type, category, description, defaultValue)
         {
-            this.editor = editor;
-            this.typeConverter = typeConverter;
+            this.EditorTypeName = editor;
+            this.ConverterTypeName = typeConverter;
         }
 
         /// <summary>
@@ -368,97 +359,55 @@ namespace SDBees.Plugs.Properties
         /// be used to specify attributes beyond those supported intrinsically by the
         /// PropertySpec class, such as ReadOnly and Browsable.
         /// </summary>
-        public IList<Attribute> Attributes
-        {
-            get { return attributes; }
-            set { attributes = value; }
-        }
+        public IList<Attribute> Attributes { get; set; }
 
         /// <summary>
         /// Gets or sets the category name of this property.
         /// </summary>
-        public string Category
-        {
-            get { return category; }
-            set { category = value; }
-        }
+        public string Category { get; set; }
 
         /// <summary>
         /// Gets or sets the fully qualified name of the type converter
         /// type for this property.
         /// </summary>
-        public string ConverterTypeName
-        {
-            get { return typeConverter; }
-            set { typeConverter = value; }
-        }
+        public string ConverterTypeName { get; set; }
 
         /// <summary>
         /// Gets or sets the default value of this property.
         /// </summary>
-        public object DefaultValue
-        {
-            get { return defaultValue; }
-            set { defaultValue = value; }
-        }
+        public object DefaultValue { get; set; }
 
         /// <summary>
         /// Gets or sets the help text description of this property.
         /// </summary>
-        public string Description
-        {
-            get { return description; }
-            set { description = value; }
-        }
+        public string Description { get; set; }
 
-        bool _readonly;
         /// <summary>
         /// Gets or sets the readonly Attribute for this property.
         /// </summary>
-        public bool ReadOnlyProperty
-        {
-            get { return _readonly; }
-            set { _readonly = value; }
-        }
+        public bool ReadOnlyProperty { get; set; }
 
-        bool _browsable = true;
         /// <summary>
         /// Gets or sets the browsable Attribute for this property.
         /// </summary>
-        public bool BrowsableProperty
-        {
-            get { return _browsable; }
-            set { _browsable = value; }
-        }
+        public bool BrowsableProperty { get; set; } = true;
 
         /// <summary>
         /// Gets or sets the fully qualified name of the editor type for
         /// this property.
         /// </summary>
-        public string EditorTypeName
-        {
-            get { return editor; }
-            set { editor = value; }
-        }
+        public string EditorTypeName { get; set; }
 
         /// <summary>
         /// Gets or sets the name of this property.
         /// </summary>
-        public string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the fully qualfied name of the type of this
         /// property.
         /// </summary>
-        public string TypeName
-        {
-            get { return type; }
-            set { type = value; }
-        }
+        public string TypeName { get; set; }
     }
 
     /// <summary>
@@ -466,10 +415,6 @@ namespace SDBees.Plugs.Properties
     /// </summary>
     public class PropertySpecEventArgs : EventArgs
     {
-        private PropertySpec property;
-        private object val;
-        private bool updateProperties;
-
         /// <summary>
         /// Initializes A new instance of the PropertySpecEventArgs class.
         /// </summary>
@@ -478,34 +423,23 @@ namespace SDBees.Plugs.Properties
         /// <param name="val">The current value of the property.</param>
         public PropertySpecEventArgs(PropertySpec property, object val, bool updateProperties = true)
         {
-            this.property = property;
-            this.val = val;
-            this.updateProperties = updateProperties;
+            this.Property = property;
+            this.Value = val;
+            this.UpdateProperties = updateProperties;
         }
 
         /// <summary>
         /// Gets the PropertySpec that represents the property whose value is being
         /// requested or set.
         /// </summary>
-        public PropertySpec Property
-        {
-            get { return property; }
-        }
+        public PropertySpec Property { get; }
 
         /// <summary>
         /// Gets or sets the current value of the property.
         /// </summary>
-        public object Value
-        {
-            get { return val; }
-            set { val = value; }
-        }
+        public object Value { get; set; }
 
-        public bool UpdateProperties
-        {
-            get { return updateProperties; }
-            set { updateProperties = value; }
-        }
+        public bool UpdateProperties { get; set; }
     }
 
     /// <summary>
@@ -1067,35 +1001,24 @@ namespace SDBees.Plugs.Properties
         }
         #endregion
 
-        private string defaultProperty;
-        private PropertySpecCollection properties;
-
         /// <summary>
         /// Initializes A new instance of the PropertyBag class.
         /// </summary>
         public PropertyBag()
         {
-            defaultProperty = null;
-            properties = new PropertySpecCollection();
+            DefaultProperty = null;
+            Properties = new PropertySpecCollection();
         }
 
         /// <summary>
         /// Gets or sets the name of the default property in the collection.
         /// </summary>
-        public string DefaultProperty
-        {
-            get { return defaultProperty; }
-            set { defaultProperty = value; }
-        }
+        public string DefaultProperty { get; set; }
 
         /// <summary>
         /// Gets the collection of properties contained within this PropertyBag.
         /// </summary>
-        public PropertySpecCollection Properties
-        {
-            get { return properties; }
-            set { properties = value; }
-        }
+        public PropertySpecCollection Properties { get; set; }
 
         /// <summary>
         /// Occurs when A PropertyGrid requests the value of A property.
@@ -1173,10 +1096,7 @@ namespace SDBees.Plugs.Properties
         {
             string result = null;
 
-            if (!String.IsNullOrEmpty(_classname))
-                result = ClassName;
-            else
-                result = TypeDescriptor.GetClassName(this, true);
+            result = !string.IsNullOrEmpty(_classname) ? ClassName : TypeDescriptor.GetClassName(this, true);
 
             return result;
         }
@@ -1185,10 +1105,7 @@ namespace SDBees.Plugs.Properties
         {
             string result = null;
 
-            if (!String.IsNullOrEmpty(_modulename))
-                result = ModuleName;
-            else
-                result = TypeDescriptor.GetClassName(this, true);
+            result = !string.IsNullOrEmpty(_modulename) ? ModuleName : TypeDescriptor.GetClassName(this, true);
 
             return result;
         }
@@ -1213,10 +1130,10 @@ namespace SDBees.Plugs.Properties
             // returned instead.
 
             PropertySpec propertySpec = null;
-            if (defaultProperty != null)
+            if (DefaultProperty != null)
             {
-                var index = properties.IndexOf(defaultProperty);
-                propertySpec = properties[index];
+                var index = Properties.IndexOf(DefaultProperty);
+                propertySpec = Properties[index];
             }
 
             if (propertySpec != null)
@@ -1253,7 +1170,7 @@ namespace SDBees.Plugs.Properties
 
             var props = new ArrayList();
 
-            foreach (PropertySpec property in properties)
+            foreach (PropertySpec property in Properties)
             {
                 var attrs = new ArrayList();
 
@@ -1311,13 +1228,7 @@ namespace SDBees.Plugs.Properties
     /// </summary>
     public class PropertyRow : PropertyBag
     {
-        private IDictionary<string, object> m_propValues;
-
-        public IDictionary<string, object> PropertyValues
-        {
-            get { return m_propValues; }
-            set { m_propValues = value; }
-        }
+        public IDictionary<string, object> PropertyValues { get; set; }
 
         public IList<PropertySpec> MyInnerPropertyList
         {
@@ -1330,7 +1241,7 @@ namespace SDBees.Plugs.Properties
         /// </summary>
         public PropertyRow()
         {
-            m_propValues = new Dictionary<string, object>();
+            PropertyValues = new Dictionary<string, object>();
         }
 
         /// <summary>
@@ -1339,8 +1250,8 @@ namespace SDBees.Plugs.Properties
         /// </summary>
         public object this[string key]
         {
-            get { return m_propValues[key]; }
-            set { m_propValues[key] = value; }
+            get { return PropertyValues[key]; }
+            set { PropertyValues[key] = value; }
         }
 
         /// <summary>
@@ -1348,7 +1259,7 @@ namespace SDBees.Plugs.Properties
         /// </summary>
         protected override void OnGetValue(PropertySpecEventArgs e)
         {
-            e.Value = m_propValues[e.Property.Name];
+            e.Value = PropertyValues[e.Property.Name];
             base.OnGetValue(e);
         }
 
@@ -1357,7 +1268,7 @@ namespace SDBees.Plugs.Properties
         /// </summary>
         protected override void OnSetValue(PropertySpecEventArgs e)
         {
-            m_propValues[e.Property.Name] = e.Value;
+            PropertyValues[e.Property.Name] = e.Value;
             base.OnSetValue(e);
         }
     }

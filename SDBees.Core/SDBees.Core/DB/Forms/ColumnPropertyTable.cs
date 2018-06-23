@@ -43,9 +43,11 @@ namespace SDBees.DB
 
         protected void UpdateProperties()
         {
-            PropertySpec ps = null;
-            ps = new PropertySpec("Name", typeof(string), "General", "Name der Eigenschaft in der Datenbank (sprachunabhängug)", null);
-            ps.Attributes = new System.Attribute[] { ReadOnlyAttribute.Yes };
+            var ps = new PropertySpec("Name", typeof(string), "General",
+                "Name der Eigenschaft in der Datenbank (sprachunabhängug)", null)
+            {
+                Attributes = new System.Attribute[] {ReadOnlyAttribute.Yes}
+            };
             if (mColumn.IsSelectionListPossible())
             {
                 Properties.Add(new PropertySpec("Liste", typeof(string), 
@@ -82,9 +84,9 @@ namespace SDBees.DB
             this["Auto Increment"] = ((mColumn.Flags & (int)DbFlags.eAutoIncrement) != 0);
 
             Properties.Add(new PropertySpec("Editierbar", typeof(bool), "UserInterface", "Schreibschutz für Eigenschaft", null));
-            this["Editierbar"] = mColumn.Editable;
+            this["Editierbar"] = mColumn.IsEditable;
             Properties.Add(new PropertySpec("Sichtbar", typeof(bool), "UserInterface", "Sichtbare Eigenschaft?", null));
-            this["Sichtbar"] = mColumn.Browsable;
+            this["Sichtbar"] = mColumn.IsBrowsable;
             Properties.Add(new PropertySpec("UITypeEditor", typeof(string), "UserInterface", "Der Editor für das Userinterface", null));
             this["UITypeEditor"] = mColumn.UITypeEditor;
 
@@ -166,11 +168,11 @@ namespace SDBees.DB
                     break;
 
                 case "Editierbar":
-                    mColumn.Editable = (bool)this[e.Property.Name];
+                    mColumn.IsEditable = (bool)this[e.Property.Name];
                     break;
 
                 case "Sichtbar":
-                    mColumn.Browsable = (bool)this[e.Property.Name];
+                    mColumn.IsBrowsable = (bool)this[e.Property.Name];
                     break;
 
                 case "Typ":
@@ -260,19 +262,16 @@ namespace SDBees.DB
             mDialog.updateProperties();
         }
         
-        private void SetStandardValue(DbType dbTyp, ref Column MyColumn)
+        private void SetStandardValue(DbType dbTyp, ref Column myColumn)
         {
-        	if(MyColumn.Default == "")
+        	if(myColumn.Default == "")
         	{
         		switch(dbTyp.ToString())
 	        	{
 	        		case "eDate":
-	        			MyColumn.Default = DateTime.Now.ToShortDateString();
+	        			myColumn.Default = DateTime.Now.ToShortDateString();
 	        			break;
-	        			
-	        		default:
-	        			break;
-	        	}
+		        }
         	}
         }
 

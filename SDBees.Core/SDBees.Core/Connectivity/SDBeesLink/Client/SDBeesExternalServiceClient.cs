@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.ServiceModel;
-using System.ServiceModel.Channels;
 using EXOE.CsharpHelper;
 using SDBees.Core.Connectivity.SDBeesLink.Service;
 using SDBees.Core.Model;

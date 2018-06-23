@@ -39,26 +39,18 @@ namespace Carbon.Plugins.Attributes
 	[AttributeUsage(AttributeTargets.Class)]
 	public sealed class PluginIdAttribute : Attribute
 	{
-		private readonly string _id;
-
-        /// <summary>
+	    /// <summary>
         /// Initializes a new instance of the PluginIdAttribute class.
         /// </summary>
         /// <param name="id">The unique id to assign to the plugin.</param>
 		public PluginIdAttribute(string id)
 		{
-			_id = id;
+			Id = id;
 		}
 
         /// <summary>
         /// Returns a unique id for the plugin.
         /// </summary>
-		public string Id
-		{
-			get
-			{
-				return _id;
-			}
-		}
+		public string Id { get; }
 	}
 }

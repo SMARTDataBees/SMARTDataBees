@@ -66,26 +66,28 @@ namespace SDBees.UserAdmin
 
         private void CreateUserList()
         {
-            lvUsers = new ListView();
-            lvUsers.Dock = DockStyle.Fill;
+            lvUsers = new ListView
+            {
+                Dock = DockStyle.Fill,
+                View = View.Details,
+                LabelEdit = false,
+                AllowColumnReorder = false,
+                FullRowSelect = true,
+                GridLines = false,
+                Sorting = SortOrder.Ascending,
+                HideSelection = false,
+                SmallImageList = new ImageList()
+            };
 
             // Set the view to show details.
-            lvUsers.View = View.Details;
             // Don't allow the user to edit item text.
-            lvUsers.LabelEdit = false;
             // Don't allow the user to rearrange columns.
-            lvUsers.AllowColumnReorder = false;
             // Select the item and sub items when selection is made.
-            lvUsers.FullRowSelect = true;
             // Don't display grid lines.
-            lvUsers.GridLines = false;
             // Sort the items in the list in ascending order.
-            lvUsers.Sorting = SortOrder.Ascending;
             // Show the selection, even when focus is lost
-            lvUsers.HideSelection = false;
 
             // Images...
-            lvUsers.SmallImageList = new ImageList();
             var assembly = Assembly.GetExecutingAssembly();
             Image image = new Bitmap(Resources.User);
             lvUsers.SmallImageList.Images.Add(image);
@@ -100,14 +102,9 @@ namespace SDBees.UserAdmin
 
             FillUserList();
 
-            if (lvUsers.Items.Count > 0)
-            {
-                lvUsers.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-            }
-            else
-            {
-                lvUsers.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-            }
+            lvUsers.AutoResizeColumns(lvUsers.Items.Count > 0
+                ? ColumnHeaderAutoResizeStyle.ColumnContent
+                : ColumnHeaderAutoResizeStyle.HeaderSize);
         }
 
         private void FillUserList()
@@ -138,8 +135,7 @@ namespace SDBees.UserAdmin
 
         private void CreateGroupTree()
         {
-            tvGroups = new GroupTreeView(Server.SecurityDatabase);
-            tvGroups.Dock = DockStyle.Fill;
+            tvGroups = new GroupTreeView(Server.SecurityDatabase) {Dock = DockStyle.Fill};
 
             Error error = null;
             tvGroups.Fill(ref error);
@@ -183,14 +179,9 @@ namespace SDBees.UserAdmin
             // Add event handlers
             lvSecurityRights.DoubleClick += lvSecurityRights_DoubleClick;
 
-            if (lvSecurityRights.Items.Count > 0)
-            {
-                lvSecurityRights.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-            }
-            else
-            {
-                lvSecurityRights.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-            }
+            lvSecurityRights.AutoResizeColumns(lvSecurityRights.Items.Count > 0
+                ? ColumnHeaderAutoResizeStyle.ColumnContent
+                : ColumnHeaderAutoResizeStyle.HeaderSize);
         }
 
         void lvSecurityRights_DoubleClick(object sender, EventArgs e)
@@ -228,14 +219,7 @@ namespace SDBees.UserAdmin
             var tabOnUsers = (tabUsersAndGroups.SelectedTab == tabPageUsers);
             var selectionCount = 0;
 
-            if (tabOnUsers)
-            {
-                selectionCount = lvUsers.SelectedItems.Count;
-            }
-            else
-            {
-                selectionCount = tvGroups.SelNodes.Count;
-            }
+            selectionCount = tabOnUsers ? lvUsers.SelectedItems.Count : tvGroups.SelNodes.Count;
 
             mnuAddSecurityRight.Enabled = tabOnUsers && (selectionCount == 1);
             mnuRemoveSecurityRight.Enabled = tabOnUsers && (selectionCount == 1) && (lvSecurityRights.SelectedItems.Count > 0);
@@ -281,9 +265,11 @@ namespace SDBees.UserAdmin
                 }
                 else
                 {
-                    newUser = new User(Server);
-                    newUser.LoginName = loginName;
-                    newUser.Name = loginName;
+                    newUser = new User(Server)
+                    {
+                        LoginName = loginName,
+                        Name = loginName
+                    };
 
                     newUser.Save(ref error);
 
@@ -364,14 +350,7 @@ namespace SDBees.UserAdmin
             if (selection.Count != 1)
             {
                 var message = "";
-                if (selection.Count == 0)
-                {
-                    message = "Kein Benutzer ausgewählt!";
-                }
-                else
-                {
-                    message = "Es darf nur ein Benutzer ausgewählt sein!";
-                }
+                message = selection.Count == 0 ? "Kein Benutzer ausgewählt!" : "Es darf nur ein Benutzer ausgewählt sein!";
                 MessageBox.Show(message, "Passwort festlegen", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
@@ -422,8 +401,7 @@ namespace SDBees.UserAdmin
             var user = User.FindUser(Server, lvUsers.SelectedItems[0].Text);
 
             var dlg = new SecurityRightDLG(Server);
-            var accessRights = new AccessRights(Server);
-            accessRights.UserId = user.Id.ToString();
+            var accessRights = new AccessRights(Server) {UserId = user.Id.ToString()};
             dlg.AccessRights = accessRights;
 
             var dlgResult = dlg.ShowDialog();

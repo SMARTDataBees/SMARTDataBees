@@ -25,7 +25,7 @@ using System;
 using System.Windows.Forms;
 using SDBees.DB;
 
-namespace SDBees.ViewAdmin
+namespace SDBees.Core.Admin
 {
     public partial class CheckDatabaseDLG : Form
     {

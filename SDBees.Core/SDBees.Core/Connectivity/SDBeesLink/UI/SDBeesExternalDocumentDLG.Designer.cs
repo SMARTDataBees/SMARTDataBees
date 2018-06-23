@@ -32,38 +32,38 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.m_dataGridViewExternalDocuments = new System.Windows.Forms.DataGridView();
+            this._dataGridView = new System.Windows.Forms.DataGridView();
             this.m_contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.m_modifyParentRelationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button1 = new System.Windows.Forms.Button();
             this.m_textBox = new System.Windows.Forms.TextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.m_dataGridViewExternalDocuments)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._dataGridView)).BeginInit();
             this.m_contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // m_dataGridViewExternalDocuments
             // 
-            this.m_dataGridViewExternalDocuments.AllowUserToAddRows = false;
-            this.m_dataGridViewExternalDocuments.AllowUserToDeleteRows = false;
-            this.m_dataGridViewExternalDocuments.AllowUserToResizeColumns = false;
-            this.m_dataGridViewExternalDocuments.AllowUserToResizeRows = false;
-            this.m_dataGridViewExternalDocuments.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this._dataGridView.AllowUserToAddRows = false;
+            this._dataGridView.AllowUserToDeleteRows = false;
+            this._dataGridView.AllowUserToResizeColumns = false;
+            this._dataGridView.AllowUserToResizeRows = false;
+            this._dataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.m_dataGridViewExternalDocuments.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
-            this.m_dataGridViewExternalDocuments.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
-            this.m_dataGridViewExternalDocuments.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.m_dataGridViewExternalDocuments.ContextMenuStrip = this.m_contextMenuStrip;
-            this.m_dataGridViewExternalDocuments.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.m_dataGridViewExternalDocuments.Location = new System.Drawing.Point(12, 12);
-            this.m_dataGridViewExternalDocuments.MultiSelect = false;
-            this.m_dataGridViewExternalDocuments.Name = "m_dataGridViewExternalDocuments";
-            this.m_dataGridViewExternalDocuments.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.m_dataGridViewExternalDocuments.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.m_dataGridViewExternalDocuments.Size = new System.Drawing.Size(470, 340);
-            this.m_dataGridViewExternalDocuments.TabIndex = 0;
-            this.m_dataGridViewExternalDocuments.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.m_dataGridViewExternalDocuments_CellDoubleClick);
-            this.m_dataGridViewExternalDocuments.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.m_dataGridViewExternalDocuments_RowHeaderMouseClick);
+            this._dataGridView.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this._dataGridView.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
+            this._dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this._dataGridView.ContextMenuStrip = this.m_contextMenuStrip;
+            this._dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this._dataGridView.Location = new System.Drawing.Point(12, 12);
+            this._dataGridView.MultiSelect = false;
+            this._dataGridView.Name = "_dataGridView";
+            this._dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this._dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this._dataGridView.Size = new System.Drawing.Size(470, 340);
+            this._dataGridView.TabIndex = 0;
+            this._dataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.m_dataGridViewExternalDocuments_CellDoubleClick);
+            this._dataGridView.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.m_dataGridViewExternalDocuments_RowHeaderMouseClick);
             // 
             // m_contextMenuStrip
             // 
@@ -109,12 +109,12 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
             this.ClientSize = new System.Drawing.Size(494, 399);
             this.Controls.Add(this.m_textBox);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.m_dataGridViewExternalDocuments);
+            this.Controls.Add(this._dataGridView);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "SDBeesExternalDocumentDLG";
             this.Text = "SDBeesExternalDocumentDLG";
             this.Load += new System.EventHandler(this.SDBeesExternalDocumentDLG_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.m_dataGridViewExternalDocuments)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._dataGridView)).EndInit();
             this.m_contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -123,7 +123,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
 
         #endregion
 
-        private DataGridView m_dataGridViewExternalDocuments;
+        private DataGridView _dataGridView;
         private Button button1;
         private TextBox m_textBox;
         private ContextMenuStrip m_contextMenuStrip;

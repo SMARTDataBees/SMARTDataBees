@@ -22,10 +22,10 @@
 // #EndHeader# ================================================================
 
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
+using SDBees.Core.Utils;
 
 namespace SDBees.DB
 {
@@ -75,18 +75,17 @@ namespace SDBees.DB
 
         private void SetFromObject()
         {
-            var xmlDefinition = mOrigTable.writeXml();
-            mTable = new Table();
-            mTable.readXml(xmlDefinition);
-
+            var xml = Serializer.ToXml(mOrigTable);
+            if (xml != null)
+                mTable = Serializer.FromXml(xml);
             updateControls();
         }
 
         private void SetToObject()
         {
             // Update the original table...
-            var xmlDefinition = mTable.writeXml();
-            mOrigTable.readXml(xmlDefinition);
+            var xml = Serializer.ToXml(mTable);
+            mOrigTable = Serializer.FromXml(xml);
         }
 
         private void EnableControls()
@@ -106,9 +105,8 @@ namespace SDBees.DB
         private void updateControls()
         {
             lbColumns.Items.Clear();
-            foreach (var iterator in mTable.Columns)
+            foreach (var column in mTable.Columns)
             {
-                var column = iterator.Value;
                 lbColumns.Items.Add(column.DisplayName);
             }
         }
@@ -121,9 +119,9 @@ namespace SDBees.DB
             if (index >= 0)
             {
                 var columnDisplayName = lbColumns.Items[index].ToString();
-                foreach (var iterator in mTable.Columns)
+                foreach (var column in mTable.Columns)
                 {
-                    var column = iterator.Value;
+                   
                     if (column.DisplayName == columnDisplayName)
                     {
                         result = column;
@@ -159,15 +157,15 @@ namespace SDBees.DB
 
         private void bnAddColumn_Click(object sender, EventArgs e)
         {
-            var columnName = "";
+            string columnName;
             var displayName = "";
-            var nameInUse = false;
+            bool nameInUse;
             var index = 1;
             do
             {
                 columnName = "Eigenschaft" + index;
-                nameInUse = mTable.Columns.ContainsKey(columnName);
-                index++;
+                var column = mTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(columnName));
+                nameInUse = column != null;    
             } while (nameInUse);
 
             var location = MousePosition;
@@ -186,8 +184,8 @@ namespace SDBees.DB
 
                     foreach (var iterator in mTable.Columns)
                     {
-                        var existingColumn = iterator.Value;
-                        if (string.Compare(existingColumn.Name, columnName, true) == 0)
+                      
+                        if (string.Compare(iterator.Name, columnName, true) == 0)
                         {
                             nameInUse = true;
                             break;
@@ -225,7 +223,7 @@ namespace SDBees.DB
                 {
                     var index = lbColumns.SelectedIndex;
 
-                    mTable.Columns.Remove(column.Name);
+                    mTable.Columns.Remove(column);
                     lbColumns.Items.RemoveAt(lbColumns.SelectedIndex);
 
                     // Auswahl auf einen sinnvollen Eintrag...
@@ -249,7 +247,7 @@ namespace SDBees.DB
 
         private void bnExport_Click(object sender, EventArgs e)
         {
-            var xmlSchema = mTable.writeXml();
+            var xml = Serializer.ToXml(mTable);
 
             var dlg = new SaveFileDialog();
             dlg.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
@@ -261,7 +259,7 @@ namespace SDBees.DB
                 using (var sw = new StreamWriter(dlg.FileName))
                 {
                     // write the XML to the file...
-                    sw.Write(xmlSchema);
+                    sw.Write(xml);
                 }
             }
         }
@@ -279,7 +277,7 @@ namespace SDBees.DB
                 {
                     // write the XML to the file...
                     var xmlSchema = sr.ReadToEnd();
-                    mTable.readXml(xmlSchema);
+                    mTable = Serializer.FromXml(xmlSchema);
 
                     updateControls();
                 }

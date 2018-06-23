@@ -22,25 +22,10 @@
 //
 // #EndHeader# ================================================================
 using System;
-using System.Collections.Generic;
-
-using System.Diagnostics;
-using System.Reflection;
-
-using System.Data;
-
-using System.Text;
 using System.Drawing;
-using System.Windows.Forms;
-
-using Carbon;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
-
-using SDBees.Plugs.Attributes;
-using SDBees.Main.Window;
 using SDBees.DB;
-using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Core.Model;
 
 namespace SDBees.Core.Plugins.AEC.Curtainwall
@@ -57,10 +42,10 @@ namespace SDBees.Core.Plugins.AEC.Curtainwall
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
     [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
-    [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
-    [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
+    [PluginDependency(typeof(SDBeesDBConnection))]
+    [PluginDependency(typeof(Global.GlobalManager))]
 
-    public class AECCurtainwall : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
+    public class AECCurtainwall : Plugs.TemplateTreeNode.TemplateTreenode
     {
         private static AECCurtainwall _theInstance;
 
@@ -98,7 +83,7 @@ namespace SDBees.Core.Plugins.AEC.Curtainwall
             {
                 Console.WriteLine("Curtainwall Plugin starts\n");
 
-                this.StartMe(context, e);
+                StartMe(context, e);
 
                 InitDatabase();
             }
@@ -134,7 +119,7 @@ namespace SDBees.Core.Plugins.AEC.Curtainwall
             return AECCurtainwallBaseData.gTable;
         }
 
-        public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
+        public override Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
         {
             return new AECCurtainwallBaseData();
         }
@@ -146,7 +131,7 @@ namespace SDBees.Core.Plugins.AEC.Curtainwall
 
         public override SDBeesEntityDefinition GetEntityDefinition()
         {
-            return base.GetEntityDefinition(this.GetType());
+            return base.GetEntityDefinition(GetType());
         }
 
         protected override void OnDatabaseChanged(object sender, EventArgs e)
@@ -161,12 +146,12 @@ namespace SDBees.Core.Plugins.AEC.Curtainwall
             {
                 // Verify that the required Tables are created/updated in the database
                 var database = MyDBManager.Database;
-                this.CreateDataObject().InitTableSchema(ref AECCurtainwallBaseData.gTable, database);
+                CreateDataObject().InitTableSchema(ref AECCurtainwallBaseData.gTable, database);
             }
         }
     }
 
-    public class AECCurtainwallBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
+    public class AECCurtainwallBaseData : Plugs.TemplateBase.TemplateDBBaseData
     {
         #region Private Data Members
 
@@ -187,7 +172,7 @@ namespace SDBees.Core.Plugins.AEC.Curtainwall
         public AECCurtainwallBaseData() :
             base("Curtainwallname", "Curtainwall", "General")
         {
-            base.Table = gTable;
+            Table = gTable;
         }
 
         #endregion

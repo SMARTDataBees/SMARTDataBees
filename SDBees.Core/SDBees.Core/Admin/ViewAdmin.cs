@@ -23,8 +23,8 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Windows.Forms;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
@@ -37,7 +37,7 @@ using SDBees.Plugs.TreenodeHelper;
 using Attribute = SDBees.DB.Attribute;
 using Object = SDBees.DB.Object;
 
-namespace SDBees.ViewAdmin
+namespace SDBees.Core.Admin
 {
     /// <summary>
     /// ViewAdmin
@@ -59,7 +59,7 @@ namespace SDBees.ViewAdmin
         private static ViewAdmin _theInstance;
         private readonly MenuItem _mnuItemViewAdmin;
         private readonly ToolStripComboBox _puViewSelector;
-        private ViewAdminDLG _dlgViewAdmin;
+        private AdminDialog _dlgViewAdmin;
         private Guid _curViewId;
         private ViewRelationTreeView _treeView;
         private ViewRelationTreeDLG _viewRelDLG;
@@ -152,7 +152,7 @@ namespace SDBees.ViewAdmin
                     var delegator = new ViewAdminDelegator(MyDBManager);
                 }
 
-                _dlgViewAdmin = new ViewAdminDLG(this);
+                _dlgViewAdmin = new AdminDialog(this);
 
                 //Setting up the menuitem
                 if (MyMainWindow != null)
@@ -428,7 +428,7 @@ namespace SDBees.ViewAdmin
             get { return _context; }
         }
 
-        public ViewAdminDLG MyDialog
+        public AdminDialog MyDialog
         {
             get { return _dlgViewAdmin; }
         }
@@ -619,7 +619,8 @@ namespace SDBees.ViewAdmin
             Error error = null;
 
             var viewprop = new ViewProperty();
-            var attViewProp = new Attribute(viewprop.Table.Columns["viewname"], nameOfViewProperty);
+            var column = viewprop.Table.Columns.FirstOrDefault(clmn => clmn.Name.Equals("viewname"));
+            var attViewProp = new Attribute(column, nameOfViewProperty);
             var criteria = MyDBManager.Database.FormatCriteria(attViewProp, DbBinaryOperator.eIsEqual, ref error);
 
             ArrayList objectIds = null;

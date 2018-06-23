@@ -22,7 +22,6 @@
 // #EndHeader# ================================================================
 
 using System;
-using System.Data;
 using System.IO;
 using System.Windows.Forms;
 using Carbon.Plugins;
@@ -90,10 +89,12 @@ namespace SDBees.Reporting
 
                 if (_dlgRes == DialogResult.OK)
                 {
-                    var _reportDLG = new ReportDLG();
-                    _reportDLG.Reportname = Path.Combine(sFullPath, _addReportDLG.ReportName);
-                    _reportDLG.NewReport = true;
-                    var _dlgResReport = _reportDLG.ShowDialog();
+                    var dialog = new ReportDLG
+                    {
+                        Reportname = Path.Combine(sFullPath, _addReportDLG.ReportName),
+                        NewReport = true
+                    };
+                    dialog.ShowDialog();
                 }
             }
             catch (Exception ex)

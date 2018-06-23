@@ -22,7 +22,6 @@
 // #EndHeader# ================================================================
 
 using System;
-using System.Drawing;
 using System.Windows.Forms;
 using SDBees.DB;
 using SDBees.GuiTools;

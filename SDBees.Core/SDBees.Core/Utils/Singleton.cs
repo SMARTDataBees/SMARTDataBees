@@ -18,13 +18,7 @@ namespace EXOE.CsharpHelper
         static Singleton()
         { }
 
-        public static T Instance
-        {
-            get
-            {
-                return (_instance != null) ? _instance : ResetAndGetInstance();
-            }
-        }
+        public static T Instance => _instance ?? ResetAndGetInstance();
 
         private static T ResetAndGetInstance()
         {

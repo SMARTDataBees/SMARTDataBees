@@ -59,7 +59,7 @@ namespace SDBees.Utils.ObjectXmlSerializer
     /// </summary>
     public static class ObjectXMLSerializer<T> where T : class // Specify that T must be A class.
     {
-        static XmlSerializerNamespaces xmlns;
+        private static XmlSerializerNamespaces xmlns;
         #region Load methods
 
         /// <summary>
@@ -81,11 +81,11 @@ namespace SDBees.Utils.ObjectXmlSerializer
         /// <summary>
         /// Loads A object from an XML Textstream
         /// </summary>
-        /// <param name="_textStreamReader">The input textstream object</param>
+        /// <param name="streamReader">The input textstream object</param>
         /// <returns>Object loaded from an XML stream</returns>
-        public static T Load(StreamReader _textStreamReader)
+        public static T Load(StreamReader streamReader)
         {
-            var serializableObject = LoadFromStreamReader(null, _textStreamReader);
+            var serializableObject = LoadFromStreamReader(null, streamReader);
             return serializableObject;
         }
 
@@ -369,14 +369,7 @@ namespace SDBees.Utils.ObjectXmlSerializer
 
         private static FileStream CreateFileStream(IsolatedStorageFile isolatedStorageFolder, string path)
         {
-            FileStream fileStream = null;
-
-            if (isolatedStorageFolder == null)
-                fileStream = new FileStream(path, FileMode.OpenOrCreate);
-            else
-                fileStream = new IsolatedStorageFileStream(path, FileMode.OpenOrCreate, isolatedStorageFolder);
-
-            return fileStream;
+            return isolatedStorageFolder == null ? new FileStream(path, FileMode.OpenOrCreate) : new IsolatedStorageFileStream(path, FileMode.OpenOrCreate, isolatedStorageFolder);
         }
 
         private static T LoadFromBinaryFormat(string path, IsolatedStorageFile isolatedStorageFolder)
@@ -435,10 +428,7 @@ namespace SDBees.Utils.ObjectXmlSerializer
         {
             TextReader textReader = null;
 
-            if (isolatedStorageFolder == null)
-                textReader = new StreamReader(path);
-            else
-                textReader = new StreamReader(new IsolatedStorageFileStream(path, FileMode.Open, isolatedStorageFolder));
+            textReader = isolatedStorageFolder == null ? new StreamReader(path) : new StreamReader(new IsolatedStorageFileStream(path, FileMode.Open, isolatedStorageFolder));
 
             return textReader;
         }
@@ -459,15 +449,9 @@ namespace SDBees.Utils.ObjectXmlSerializer
         {
             try
             {
-                var ObjectType = typeof(T);
-
+                var objectType = typeof(T);
                 XmlSerializer xmlSerializer = null;
-
-                if (extraTypes != null)
-                    xmlSerializer = new XmlSerializer(ObjectType, extraTypes);
-                else
-                    xmlSerializer = new XmlSerializer(ObjectType);
-
+                xmlSerializer = extraTypes != null ? new XmlSerializer(objectType, extraTypes) : new XmlSerializer(objectType);
                 return xmlSerializer;
 
             }

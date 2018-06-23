@@ -22,25 +22,10 @@
 //
 // #EndHeader# ================================================================
 using System;
-using System.Collections.Generic;
-
-using System.Diagnostics;
-using System.Reflection;
-
-using System.Data;
-
-using System.Text;
 using System.Drawing;
-using System.Windows.Forms;
-
-using Carbon;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
-
-using SDBees.Plugs.Attributes;
-using SDBees.Main.Window;
 using SDBees.DB;
-using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Core.Model;
 
 namespace SDBees.Core.Plugins.MEP.BuildingStatistics
@@ -57,12 +42,12 @@ namespace SDBees.Core.Plugins.MEP.BuildingStatistics
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
     [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
-    [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
-    [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
+    [PluginDependency(typeof(SDBeesDBConnection))]
+    [PluginDependency(typeof(Global.GlobalManager))]
 
     //[PluginTypeDef("Treenode")] //The SDBees PluginType
 
-    public class MEPBuildingsStats : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
+    public class MEPBuildingsStats : Plugs.TemplateTreeNode.TemplateTreenode
     {
         private static MEPBuildingsStats _theInstance;
 
@@ -100,7 +85,7 @@ namespace SDBees.Core.Plugins.MEP.BuildingStatistics
             {
                 Console.WriteLine("HVAC Buildingsstats Plugin starts\n");
 
-                this.StartMe(context, e);
+                StartMe(context, e);
 
                 InitDatabase();
             }
@@ -136,7 +121,7 @@ namespace SDBees.Core.Plugins.MEP.BuildingStatistics
             return MEPBuildingStatsBaseData.gTable;
         }
 
-        public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
+        public override Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
         {
             return new MEPBuildingStatsBaseData();
         }
@@ -148,7 +133,7 @@ namespace SDBees.Core.Plugins.MEP.BuildingStatistics
 
         public override SDBeesEntityDefinition GetEntityDefinition()
         {
-            return base.GetEntityDefinition(this.GetType());
+            return base.GetEntityDefinition(GetType());
         }
 
         protected override void OnDatabaseChanged(object sender, EventArgs e)
@@ -163,12 +148,12 @@ namespace SDBees.Core.Plugins.MEP.BuildingStatistics
             {
                 // Verify that the required Tables are created/updated in the database
                 var database = MyDBManager.Database;
-                this.CreateDataObject().InitTableSchema(ref MEPBuildingStatsBaseData.gTable, database);
+                CreateDataObject().InitTableSchema(ref MEPBuildingStatsBaseData.gTable, database);
             }
         }
     }
 
-    public class MEPBuildingStatsBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
+    public class MEPBuildingStatsBaseData : Plugs.TemplateBase.TemplateDBBaseData
     {
         #region Private Data Members
 
@@ -189,7 +174,7 @@ namespace SDBees.Core.Plugins.MEP.BuildingStatistics
         public MEPBuildingStatsBaseData() :
             base("Key data name", "MEP key data", "General")
         {
-            base.Table = gTable;
+            Table = gTable;
         }
 
         #endregion

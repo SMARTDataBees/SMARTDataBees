@@ -63,7 +63,7 @@ namespace SDBees.Core.Model
             }
             if (IsRectangle)
             {
-                return String.Format("{0}x{1}", m_width, m_height);
+                return $"{m_width}x{m_height}";
             }
             return "";
         }

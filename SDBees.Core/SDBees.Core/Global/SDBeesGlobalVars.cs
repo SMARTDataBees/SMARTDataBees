@@ -240,7 +240,7 @@ namespace SDBees.Core.Global
 			{
 				try
 				{
-					_dissallow.AddRange(GlobalManager.Current.Config.AppSettings.Settings[m_DisallowEditSchemaList].Value.Split(';'));
+					_dissallow.AddRange(GlobalManager.Current.Configuration.AppSettings.Settings[m_DisallowEditSchemaList].Value.Split(';'));
 				}
 				catch (Exception ex)
 				{
@@ -260,7 +260,7 @@ namespace SDBees.Core.Global
 			{
 				try
 				{
-					if(!Boolean.TryParse(GlobalManager.Current.Config.AppSettings.Settings[m_ViewAdminDisplayment].Value, out _showViewAdmin))
+					if(!Boolean.TryParse(GlobalManager.Current.Configuration.AppSettings.Settings[m_ViewAdminDisplayment].Value, out _showViewAdmin))
 						MessageBox.Show("Error while retriving displament setting for ViewAdmin!\nPlease check Configuration!");
 				}
 				catch (Exception ex)
@@ -279,7 +279,7 @@ namespace SDBees.Core.Global
 			{
 				try
 				{
-					if (!Boolean.TryParse(GlobalManager.Current.Config.AppSettings.Settings[m_ReportingManagerDisplayment].Value, out _showReportingManager))
+					if (!Boolean.TryParse(GlobalManager.Current.Configuration.AppSettings.Settings[m_ReportingManagerDisplayment].Value, out _showReportingManager))
 						MessageBox.Show("Error while retriving displament setting for ReportingManager!\nPlease check Configuration!");
 				}
 				catch (Exception ex)
@@ -299,7 +299,7 @@ namespace SDBees.Core.Global
 			{
 				try
 				{
-					if (!Boolean.TryParse(GlobalManager.Current.Config.AppSettings.Settings[m_EDMManagerDisplayment].Value, out _showEDMManager))
+					if (!Boolean.TryParse(GlobalManager.Current.Configuration.AppSettings.Settings[m_EDMManagerDisplayment].Value, out _showEDMManager))
 						MessageBox.Show("Error while retriving displament setting for EDMManager!\nPlease check Configuration!");
 				}
 				catch (Exception ex)
@@ -319,7 +319,7 @@ namespace SDBees.Core.Global
 			{
 				try
 				{
-					if (!Boolean.TryParse(GlobalManager.Current.Config.AppSettings.Settings[m_LoginDlgPropertiesEnabled].Value, out _enableLoginDlgProps))
+					if (!Boolean.TryParse(GlobalManager.Current.Configuration.AppSettings.Settings[m_LoginDlgPropertiesEnabled].Value, out _enableLoginDlgProps))
 						MessageBox.Show("Error while retriving enable setting for LoginDlg!\nPlease check Configuration!");
 				}
 				catch (Exception ex)

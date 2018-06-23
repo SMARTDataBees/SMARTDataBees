@@ -26,13 +26,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using SDBees.Core.Admin;
 using SDBees.Core.Connectivity;
 using SDBees.Core.Connectivity.SDBeesLink;
 using SDBees.Core.Model.Basic;
 using SDBees.Core.Model.Instances;
 using SDBees.DB;
+using SDBees.Plugs.TemplateBase;
 using SDBees.Plugs.TemplateTreeNode;
-using SDBees.ViewAdmin;
+using Object = SDBees.DB.Object;
 
 namespace SDBees.Core.Model
 {
@@ -200,13 +202,13 @@ namespace SDBees.Core.Model
                 var ids = new List<SDBeesDocumentId>();
                 var docdata = new ConnectivityManagerDocumentBaseData();
                 var _objLst = new ArrayList();
-                if (TemplateTreenodeBaseData.ObjectExistsInDbWithSDBeesId(docdata.Table, doc.DocumentId.Id, ref _error, ref _objLst))
+                if (TemplateDBBaseData.ObjectExistsInDbWithSDBeesId(docdata.Table, doc.DocumentId.Id, ref _error, ref _objLst))
                 {
                     if (docdata.Load(ConnectivityManager.Current.MyDBManager.Database, _objLst[0], ref _error))
                     {
                         var docid = new SDBeesDocumentId
                         {
-                            Id = docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_IdSDBeesColumnName).ToString()
+                            Id = docdata.GetPropertyByColumn(Object.m_IdSDBeesColumnName).ToString()
                         };
 
                         ids.Add(docid);

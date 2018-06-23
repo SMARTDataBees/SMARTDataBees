@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using SDBees.Core.Model;
 
 namespace SDBees.DB
@@ -237,9 +238,9 @@ namespace SDBees.DB
             {
                 var columnDefinitions = "";
 
-                foreach (var iterator in table.Columns)
+                foreach (var column in table.Columns)
                 {
-                    var column = iterator.Value;
+                    
                     var columnDefinition = GetColumnDefinition(column);
 
                     if (columnDefinitions != "")
@@ -279,13 +280,12 @@ namespace SDBees.DB
                 var specifications = "";
 
                 // First check for new and modified columns...
-                foreach (var iterator in table.Columns)
+                foreach (var column in table.Columns)
                 {
-                    var column = iterator.Value;
-
                     var columnDefinition = GetColumnDefinition(column);
 
-                    if (!oldTable.Columns.ContainsKey(column.Name))
+                    var clm = oldTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(column.Name));
+                    if (clm == null)
                     {
                         // This is a new column...
                         if (specifications != "")
@@ -313,11 +313,10 @@ namespace SDBees.DB
                 }
 
                 // second step columns to drop
-                foreach (var iterator in oldTable.Columns)
+                foreach (var column in oldTable.Columns)
                 {
-                    var column = iterator.Value;
-
-                    if (!table.Columns.ContainsKey(column.Name))
+                    var clm = table.Columns.FirstOrDefault(clmn => clmn.Name.Equals(column.Name));
+                    if (clm == null)
                     {
                         if (specifications != "")
                         {
@@ -535,7 +534,7 @@ namespace SDBees.DB
         /// <param name="attributes">Attributes with values for the row to create</param>
         /// <param name="error">Contains error information if this fails</param>
         /// <returns>id of the created row</returns>
-        public virtual object CreateRow(Table table, Column idColumn, Columns uniqueColumns, Attributes attributes, ref Error error)
+        public virtual object CreateRow(Table table, Column idColumn, List<Column> uniqueColumns, Attributes attributes, ref Error error)
         {
             object id = null;
 
@@ -550,10 +549,9 @@ namespace SDBees.DB
                     {
                         // Now get the id using the unique criteria
                         var criteria = "";
-                        foreach (var iterator in uniqueColumns)
+                        foreach (var column in uniqueColumns)
                         {
-                            var column = iterator.Value;
-
+                           
                             var attribute = attributes[column.Name];
 
                             var singleCriteria = "(" + FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error) + ")";
@@ -630,7 +628,9 @@ namespace SDBees.DB
             try
             {
                 var dataset = new DataSet();
-                var type = table.Columns[table.PrimaryKey].Type;
+
+                var pkColumn = table.Columns.FirstOrDefault(clmn => clmn.Name.Equals(table.PrimaryKey));
+                var type = pkColumn.Type;
                 var query = "SELECT * FROM " + table.Name + " WHERE " + table.PrimaryKey + " = " + GetQuotedValue(type, id);
 
                 if (FillDataSet(query,ref dataset, ref error, table.Name))
@@ -648,8 +648,7 @@ namespace SDBees.DB
                         {
                             var attributeName = dataColumn.ColumnName;
 
-                            var column = table.Columns[attributeName];
-
+                            var column = table.Columns.FirstOrDefault(clmn => clmn.Name.Equals(attributeName));
                             var value = column.ConvertValueFromDataRow(dataRow[attributeName]); // Convert raw value from the database to a value for the column!
 
                             var attribute = new Attribute(column, value);
@@ -717,7 +716,9 @@ namespace SDBees.DB
         {
             var criteria = "";
 
-            criteria = "[" + attribute.Column.Name + "]" + " " + SQL_Label(operation, ref error) + " " + GetQuotedValue(attribute.Column.Type, attribute.Value);
+            if (attribute.Column != null)
+                criteria = "[" + attribute.Column.Name + "]" + " " + SQL_Label(operation, ref error) + " " +
+                           GetQuotedValue(attribute.Column.Type, attribute.Value);
 
             //criteria = attribute.Column.Name + " " + SQL_Label(operation, ref error) + " " + GetQuotedValue(attribute.Column.Type, attribute.Value);
 

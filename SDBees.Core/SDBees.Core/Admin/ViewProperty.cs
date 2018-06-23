@@ -23,11 +23,12 @@
 
 using System;
 using System.Collections;
+using System.Linq;
 using SDBees.DB;
 using SDBees.Plugs.TemplateBase;
 using Attribute = SDBees.DB.Attribute;
 
-namespace SDBees.ViewAdmin
+namespace SDBees.Core.Admin
 {
     /// <summary>
     /// Database resident object representing the view properties. For each view there is
@@ -149,7 +150,8 @@ namespace SDBees.ViewAdmin
         {
             var result = Guid.Empty;
 
-            var attribute = new Attribute(gTable.Columns["viewname"], name);
+            var column = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals("viewname"));
+            var attribute = new Attribute(column, name);
             var criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
             ArrayList objectIds = null;
             if (database.Select(gTable, gTable.PrimaryKey, criteria, ref objectIds, ref error) > 0)

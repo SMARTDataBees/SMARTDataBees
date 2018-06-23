@@ -22,6 +22,7 @@
 // #EndHeader# ================================================================
 
 using System.Collections;
+using System.Linq;
 
 namespace SDBees.DB
 {
@@ -134,7 +135,9 @@ namespace SDBees.DB
             var database = server.SecurityDatabase;
 
             var baseData = new GroupBaseData();
-            var attribute = new Attribute(baseData.Table.Columns["name"], name);
+
+            var column = baseData.Table.Columns.FirstOrDefault(clmn => clmn.Name.Equals("name"));
+            var attribute = new Attribute(column, name);
             var criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
 
             var values = new ArrayList();

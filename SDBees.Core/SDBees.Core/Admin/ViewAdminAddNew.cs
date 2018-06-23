@@ -26,7 +26,7 @@ using System.Collections;
 using System.Windows.Forms;
 using SDBees.Plugs.Objects;
 
-namespace SDBees.ViewAdmin
+namespace SDBees.Core.Admin
 {
     public partial class ViewAdminAddNew : Form
     {
