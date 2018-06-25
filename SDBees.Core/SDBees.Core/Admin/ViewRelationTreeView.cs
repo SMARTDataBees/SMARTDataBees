@@ -124,10 +124,10 @@ namespace SDBees.Core.Admin
             // Events...
             KeyDown += ViewRelationTreeView_KeyDown;
 
-            Core.Admin.ViewAdmin.Current.ViewRelationCreated += Current_ViewRelationCreated;
-            Core.Admin.ViewAdmin.Current.ViewRelationModified += Current_ViewRelationModified;
-            Core.Admin.ViewAdmin.Current.ViewRelationRemoved += Current_ViewRelationRemoved;
-            Core.Admin.ViewAdmin.Current.OnViewSelectionChanged += Current_ViewSelectionChanged;
+            ViewAdmin.Current.ViewRelationCreated += Current_ViewRelationCreated;
+            ViewAdmin.Current.ViewRelationModified += Current_ViewRelationModified;
+            ViewAdmin.Current.ViewRelationRemoved += Current_ViewRelationRemoved;
+            ViewAdmin.Current.OnViewSelectionChanged += Current_ViewSelectionChanged;
 
             //this.MultiSelect = TreeViewMultiSelect.NoMulti;
         }
@@ -793,7 +793,7 @@ namespace SDBees.Core.Admin
                 Error error = null;
                 var baseData = plugin.CreateDataObject();
                 baseData.SetDefaults(Database);
-                if (String.IsNullOrEmpty(baseData.Name))
+                if (string.IsNullOrEmpty(baseData.Name))
                 {
                     baseData.Name = "Unnamed";
                 }
@@ -817,7 +817,7 @@ namespace SDBees.Core.Admin
                             break;
                         }
 
-                        if (!String.IsNullOrEmpty(name))
+                        if (!string.IsNullOrEmpty(name))
                         {
                             baseData.Name = name;
 
@@ -966,7 +966,7 @@ namespace SDBees.Core.Admin
             }
         }
 
-        private void Current_ViewRelationCreated(object sender, Core.Admin.ViewAdmin.ViewRelationEventArgs args)
+        private void Current_ViewRelationCreated(object sender, ViewAdmin.ViewRelationEventArgs args)
         {
             TreeNode parentTreeNode = null;
             TreeNodeCollection nodes = null;
@@ -1008,7 +1008,7 @@ namespace SDBees.Core.Admin
             }
         }
 
-        private void Current_ViewRelationModified(object sender, Core.Admin.ViewAdmin.ViewRelationEventArgs args)
+        private void Current_ViewRelationModified(object sender, ViewAdmin.ViewRelationEventArgs args)
         {
             var key = args.ViewRelation.ChildId.ToString();
 
@@ -1032,7 +1032,7 @@ namespace SDBees.Core.Admin
             }
         }
 
-        private void Current_ViewRelationRemoved(object sender, Core.Admin.ViewAdmin.ViewRelationEventArgs args)
+        private void Current_ViewRelationRemoved(object sender, ViewAdmin.ViewRelationEventArgs args)
         {
             var key = args.ViewRelation.ChildId.ToString();
 

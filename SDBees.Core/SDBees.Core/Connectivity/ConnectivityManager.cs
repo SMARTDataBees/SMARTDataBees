@@ -59,7 +59,7 @@ namespace SDBees.Core.Connectivity
     {
         private static ConnectivityManager _theInstance;
         private PluginContext m_context;
-        private Admin.ViewAdmin m_viewAdmin;
+        private ViewAdmin m_viewAdmin;
         private ProcessIcon _processIcon;
         private bool m_ready;
 
@@ -116,9 +116,9 @@ namespace SDBees.Core.Connectivity
                 InitDatabase();
 
                 //Das Viewadmin Plugin besorgen
-                if (context.PluginDescriptors.Contains(new PluginDescriptor(typeof(Admin.ViewAdmin))))
+                if (context.PluginDescriptors.Contains(new PluginDescriptor(typeof(ViewAdmin))))
                 {
-                    m_viewAdmin = (Admin.ViewAdmin)context.PluginDescriptors[typeof(Admin.ViewAdmin)].PluginInstance;
+                    m_viewAdmin = (ViewAdmin)context.PluginDescriptors[typeof(ViewAdmin)].PluginInstance;
                 }
 
                 //Das Viewadmin Plugin besorgen
@@ -477,7 +477,7 @@ namespace SDBees.Core.Connectivity
                             var plug = TemplateTreenode.GetPluginForType(elem.DefinitionId.Id);
                             if (plug != null)
                             {
-                                if (!String.IsNullOrEmpty(elem.Id.ToString()))
+                                if (!string.IsNullOrEmpty(elem.Id.ToString()))
                                 {
                                     //TBD : Object exists in db, we have to add a new alien id
                                     var dataObj = plug.CreateDataObject();
@@ -712,7 +712,7 @@ namespace SDBees.Core.Connectivity
 
         public static void SetObjectData(ref Error _error, SDBeesEntity elem, TemplateDBBaseData dataObj)
         {
-            if (!String.IsNullOrEmpty(elem.InstanceId.Id))
+            if (!string.IsNullOrEmpty(elem.InstanceId.Id))
                 dataObj.SetPropertyByColumn(Object.m_IdSDBeesColumnName, elem.InstanceId.Id);
 
             foreach (var prp in elem.Properties)
@@ -753,7 +753,7 @@ namespace SDBees.Core.Connectivity
                 SDBees.Profiler.Start("ConnectivityManager.RelationsAddChild.1");
 #endif
 
-                if ((relation.AlienSourceId != null) && !String.IsNullOrEmpty(relation.AlienSourceId.AlienInstanceId.ToString()))
+                if ((relation.AlienSourceId != null) && !string.IsNullOrEmpty(relation.AlienSourceId.AlienInstanceId.ToString()))
                 {
                     if (_newObjects.ContainsKey(relation.AlienSourceId.AlienInstanceId.ToString()))
                     {
@@ -1023,10 +1023,10 @@ namespace SDBees.Core.Connectivity
 
         private static bool GetDocumentRootAndTypeInteractive(ref TemplateDBBaseData rootDocData)
         {
-            if (Admin.ViewAdmin.Current.MyViewRelationWindow().ShowDialog() == DialogResult.OK)
+            if (ViewAdmin.Current.MyViewRelationWindow().ShowDialog() == DialogResult.OK)
             {
-                rootDocData.SetPropertyByColumn(m_DocumentRootColumnName, Admin.ViewAdmin.Current.MyViewRelationWindow().TagSelected.NodeGUID);
-                rootDocData.SetPropertyByColumn(m_DocumentRootTypeColumnName, Admin.ViewAdmin.Current.MyViewRelationWindow().TagSelected.NodeTypeOf);
+                rootDocData.SetPropertyByColumn(m_DocumentRootColumnName, ViewAdmin.Current.MyViewRelationWindow().TagSelected.NodeGUID);
+                rootDocData.SetPropertyByColumn(m_DocumentRootTypeColumnName, ViewAdmin.Current.MyViewRelationWindow().TagSelected.NodeTypeOf);
                 return true;
             }
             return false;

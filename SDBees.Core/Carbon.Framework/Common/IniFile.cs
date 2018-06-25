@@ -132,7 +132,7 @@ namespace Carbon.Common
 
 		public bool ReadBoolean(string section, string key, bool defVal) 
 		{
-			return Boolean.Parse(ReadString(section, key, defVal.ToString()));
+			return bool.Parse(ReadString(section, key, defVal.ToString()));
 		}
 
 		public bool ReadBoolean(string section, string key) 

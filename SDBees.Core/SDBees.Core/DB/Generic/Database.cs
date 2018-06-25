@@ -49,7 +49,6 @@ namespace SDBees.DB
         // Optional caching of table names for improved performance
         private Hashtable mTableNameCache;
         private bool mUseTableNameCaching;
-        private bool mUseGlobalCaching;
 
         #endregion
 
@@ -212,17 +211,7 @@ namespace SDBees.DB
         /// <summary>
         /// Get or Set the database to use global caching
         /// </summary>
-        public bool UseGlobalCaching
-        {
-            get { return mUseGlobalCaching; }
-            set
-            {
-                if (mUseGlobalCaching != value)
-                {
-                    mUseGlobalCaching = value;
-                }
-            }
-        }
+        public bool UseGlobalCaching { get; set; }
 
         #endregion
 
@@ -255,7 +244,7 @@ namespace SDBees.DB
 
             mTableNameCache = null;
             mUseTableNameCaching = true;
-            mUseGlobalCaching = false;
+            UseGlobalCaching = false;
         }
 
         #endregion

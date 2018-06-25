@@ -33,7 +33,6 @@ using SDBees.Core.Model.Basic;
 using SDBees.Core.Model.Instances;
 using SDBees.DB;
 using SDBees.Plugs.TemplateBase;
-using SDBees.Plugs.TemplateTreeNode;
 using Object = SDBees.DB.Object;
 
 namespace SDBees.Core.Model

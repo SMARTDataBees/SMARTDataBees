@@ -1020,7 +1020,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             }
         }
 
-        private void TimerTick(Object stateInfo)
+        private void TimerTick(object stateInfo)
         {
             if (m_mode == Mode.OnRequest)
             {

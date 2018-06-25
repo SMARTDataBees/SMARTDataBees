@@ -166,8 +166,8 @@ namespace SDBees.Plugs.Properties
         {
             if (definition == null) throw new
     ArgumentNullException(nameof(definition));
-            this.Bag = bag ?? throw new ArgumentNullException(nameof(bag));
-            this.Definition = definition;
+            Bag = bag ?? throw new ArgumentNullException(nameof(bag));
+            Definition = definition;
             Value = Definition.DefaultValue;
         }
         public T Value

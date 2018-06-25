@@ -58,7 +58,7 @@ namespace SDBees.DB.Generic
         {
             ServerConfigItem res = null;
 
-            if (!String.IsNullOrEmpty(SelectedItemGuid))
+            if (!string.IsNullOrEmpty(SelectedItemGuid))
             {
                 foreach (var item in mConfigItems)
                 {
@@ -126,7 +126,7 @@ namespace SDBees.DB.Generic
         {
             ServerConfigItem res = null;
 
-            if (!String.IsNullOrEmpty(SelectedItemGuid))
+            if (!string.IsNullOrEmpty(SelectedItemGuid))
             {
                 foreach (var item in mConfigItems)
                 {
@@ -225,16 +225,12 @@ namespace SDBees.DB.Generic
             var replace = false;
 
             var _title = ConfigurationManager.AppSettings["MainWindowTitle"];
-            if (!String.IsNullOrEmpty(_title))
+            if (!string.IsNullOrEmpty(_title))
             {
                 replace = true;
             }
 
-            FileInfo inf = null;
-            if(replace)
-                inf = new FileInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), _title + "\\DemoData\\DemoDb.s3db"));
-            else
-                inf = new FileInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SMARTDataBees\\DemoData\\DemoDb.s3db"));
+            var inf = replace ? new FileInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), _title + "\\DemoData\\DemoDb.s3db")) : new FileInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SMARTDataBees\\DemoData\\DemoDb.s3db"));
 
             return inf.FullName;
         }
@@ -324,7 +320,7 @@ namespace SDBees.DB.Generic
         {
             //Load expected window title
             var _title = ConfigurationManager.AppSettings["MainWindowTitle"];
-            if (!String.IsNullOrEmpty(_title))
+            if (!string.IsNullOrEmpty(_title))
             {
                 return _title;
             }

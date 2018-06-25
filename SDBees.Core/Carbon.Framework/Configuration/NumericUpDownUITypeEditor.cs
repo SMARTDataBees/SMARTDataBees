@@ -27,7 +27,7 @@ namespace Carbon.Configuration
 					editor.DecimalPlaces = 0;
 					var v = Convert.ToDecimal(value);
 					editor.Minimum = 0;
-					editor.Maximum = Decimal.MaxValue;
+					editor.Maximum = decimal.MaxValue;
 					editor.Value = v;
 					edSvc.DropDownControl(editor);
 					value = editor.Value;

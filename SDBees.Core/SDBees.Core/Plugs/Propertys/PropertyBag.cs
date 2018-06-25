@@ -128,11 +128,11 @@ namespace SDBees.Plugs.Properties
         /// no default value.</param>
         public PropertySpec(string name, string type, string category, string description, object defaultValue)
         {
-            this.Name = name;
-            this.TypeName = type;
-            this.Category = category;
-            this.Description = description;
-            this.DefaultValue = defaultValue;
+            Name = name;
+            TypeName = type;
+            Category = category;
+            Description = description;
+            DefaultValue = defaultValue;
             Attributes = new List<Attribute>();
         }
 
@@ -171,7 +171,7 @@ namespace SDBees.Plugs.Properties
         public PropertySpec(string name, Type type, string category, string description, object defaultValue, string typeConverter)
             : this(name, type, category, description, defaultValue)
         {
-            this.ConverterTypeName = typeConverter;
+            ConverterTypeName = typeConverter;
         }        
         
         /// <summary>
@@ -190,7 +190,7 @@ namespace SDBees.Plugs.Properties
         public PropertySpec(string name, string type, string category, string description, object defaultValue, Type typeConverter)
             : this(name, type, category, description, defaultValue)
         {
-            this.ConverterTypeName = typeConverter.AssemblyQualifiedName;
+            ConverterTypeName = typeConverter.AssemblyQualifiedName;
         }        
 
         /// <summary>
@@ -212,8 +212,8 @@ namespace SDBees.Plugs.Properties
             string editor, string typeConverter)
             : this(name, type, category, description, defaultValue)
         {
-            this.EditorTypeName = editor;
-            this.ConverterTypeName = typeConverter;
+            EditorTypeName = editor;
+            ConverterTypeName = typeConverter;
         }
 
         /// <summary>
@@ -423,9 +423,9 @@ namespace SDBees.Plugs.Properties
         /// <param name="val">The current value of the property.</param>
         public PropertySpecEventArgs(PropertySpec property, object val, bool updateProperties = true)
         {
-            this.Property = property;
-            this.Value = val;
-            this.UpdateProperties = updateProperties;
+            Property = property;
+            Value = val;
+            UpdateProperties = updateProperties;
         }
 
         /// <summary>
@@ -1067,7 +1067,7 @@ namespace SDBees.Plugs.Properties
             get { return _classname; }
             set
             {
-                if (!String.IsNullOrEmpty(value))
+                if (!string.IsNullOrEmpty(value))
                     _classname = value;
             }
         }
@@ -1078,14 +1078,14 @@ namespace SDBees.Plugs.Properties
             get { return _modulename; }
             set
             {
-                if (!String.IsNullOrEmpty(value))
+                if (!string.IsNullOrEmpty(value))
                     _modulename = value;
             }
         }
 
         public override string ToString()
         {
-            if (!String.IsNullOrEmpty(_classname))
+            if (!string.IsNullOrEmpty(_classname))
                 return _classname;
             return base.ToString();
         }

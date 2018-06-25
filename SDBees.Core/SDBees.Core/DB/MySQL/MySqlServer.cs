@@ -69,15 +69,13 @@ namespace SDBees.DB.MySQL
             if (accessMask == 0)
                 return true;
 
-            var success = false;
-
             var options = "";
             var privileges = FormatServerPrivileges(accessMask, true, ref options);
 
             var commandString = "GRANT " + privileges + " ON *.* TO '" + loginName + "' " + options;
 
             var mysqlDb = GetDatabase("mysql");
-            success = mysqlDb.ExecuteCommand(commandString, ref error);
+            var success = mysqlDb.ExecuteCommand(commandString, ref error);
 
             return success;
         }
@@ -95,15 +93,13 @@ namespace SDBees.DB.MySQL
             if (accessMask == 0)
                 return true;
 
-            var success = false;
-
             var options = "";
             var privileges = FormatServerPrivileges(accessMask, false, ref options);
 
             var commandString = "REVOKE " + privileges + " FROM '" + loginName + "' " + options;
 
             var mysqlDb = GetDatabase("mysql");
-            success = mysqlDb.ExecuteCommand(commandString, ref error);
+            var success = mysqlDb.ExecuteCommand(commandString, ref error);
 
             return success;
         }
@@ -122,15 +118,13 @@ namespace SDBees.DB.MySQL
             if (accessMask == 0)
                 return true;
 
-            var success = false;
-
             var options = "";
             var privileges = FormatDatabasePrivileges(accessMask, true, ref options);
 
             var commandString = "GRANT " + privileges + " ON " + databaseName + ".* TO '" + loginName + "' " + options;
 
             var mysqlDb = GetDatabase("mysql");
-            success = mysqlDb.ExecuteCommand(commandString, ref error);
+            var success = mysqlDb.ExecuteCommand(commandString, ref error);
 
             return success;
         }
@@ -161,15 +155,13 @@ namespace SDBees.DB.MySQL
             if (accessMask == 0)
                 return true;
 
-            var success = false;
-
             var options = "";
             var privileges = FormatDatabasePrivileges(accessMask, false, ref options);
 
             var commandString = "REVOKE " + privileges + " ON " + databaseName + ".* FROM '" + loginName + "' " + options;
 
             var mysqlDb = GetDatabase("mysql");
-            success = mysqlDb.ExecuteCommand(commandString, ref error);
+            var success = mysqlDb.ExecuteCommand(commandString, ref error);
 
             return success;
         }
@@ -223,12 +215,10 @@ namespace SDBees.DB.MySQL
         /// <returns></returns>
         public override bool CreateUser(User user, ref Error error)
         {
-            var success = false;
-
             var mysqlDb = GetDatabase("mysql");
 
             var sqlCommand = "CREATE USER '" + user.LoginName + "' IDENTIFIED BY 'password'";
-            success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
+            var success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
 
             return success;
         }
@@ -241,12 +231,10 @@ namespace SDBees.DB.MySQL
         /// <returns></returns>
         public override bool RemoveUser(string loginName, ref Error error)
         {
-            var success = false;
-
             var mysqlDb = GetDatabase("mysql");
 
             var sqlCommand = "DROP USER '" + loginName + "'";
-            success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
+            var success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
 
             return success;
         }
@@ -260,12 +248,10 @@ namespace SDBees.DB.MySQL
         /// <returns></returns>
         public override bool SetPassword(string loginName, string password, ref Error error)
         {
-            var success = false;
-
             var mysqlDb = GetDatabase("mysql");
 
             var sqlCommand = "SET PASSWORD FOR '" + loginName + "' = PASSWORD('" + password + "')";
-            success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
+            var success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
 
             return success;
         }
@@ -280,14 +266,12 @@ namespace SDBees.DB.MySQL
         /// <returns></returns>
         public override bool ChangePassword(string loginName, string oldPassword, string newPassword, ref Error error)
         {
-            var success = false;
-
             var mysqlDb = GetDatabase("mysql");
             // Use the old password to verify that it's correct
             mysqlDb.Password = oldPassword;
 
             var sqlCommand = "SET PASSWORD FOR '" + loginName + "' = PASSWORD('" + newPassword + "')";
-            success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
+            var success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
 
             return success;
         }

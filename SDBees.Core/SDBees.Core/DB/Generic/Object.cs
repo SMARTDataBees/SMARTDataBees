@@ -278,13 +278,11 @@ namespace SDBees.DB
         /// <returns>true if successful</returns>
         public virtual bool Load(ref Error error)
         {
-            var success = false;
-
             Attributes attributes = null;
             GetAttributes(ref attributes);
 
             // load attributes from database
-            success = mDatabase.LoadRow(mTable, idColumn(), mId, ref attributes, ref error);
+            var success = mDatabase.LoadRow(mTable, idColumn(), mId, ref attributes, ref error);
 
             if (success)
             {
@@ -672,7 +670,7 @@ namespace SDBees.DB
         /// <returns></returns>
         protected virtual Table CreateTableSchema(Database database)
         {
-            Table table = null;
+            Table table;
 
             Error error = null;
             var tableName = TableName();
@@ -771,15 +769,17 @@ namespace SDBees.DB
         /// <returns></returns>
         protected virtual Column CreateIdColumn(ref bool reloadIdOnInsert)
         {
-            var column = new Column();
-            column.Name = m_IdColumnName;
-            column.DisplayName = m_IdColumnDisplayName;
-            column.Description = "the unique id for the database";
-            column.Category = "Internal";
-            column.Type = DbType.GuidString;
-            column.Flags = (int)DbFlags.eAutoCreate;
-            column.IsEditable = false;
-            column.IsBrowsable = false;
+            var column = new Column
+            {
+                Name = m_IdColumnName,
+                DisplayName = m_IdColumnDisplayName,
+                Description = "the unique id for the database",
+                Category = "Internal",
+                Type = DbType.GuidString,
+                Flags = (int) DbFlags.eAutoCreate,
+                IsEditable = false,
+                IsBrowsable = false
+            };
             reloadIdOnInsert = false;
 
             return column;
@@ -792,15 +792,17 @@ namespace SDBees.DB
         /// <returns></returns>
         protected virtual Column CreateSDBeesIdColumn(ref bool reloadIdOnInsert)
         {
-            var column = new Column();
-            column.Name = m_IdSDBeesColumnName;
-            column.DisplayName = m_IdSDBeesColumnDisplayName;
-            column.Description = "the unique id for the smartdatabees internal use";
-            column.Category = "Internal";
-            column.Type = DbType.GuidString;
-            column.Flags = (int)DbFlags.eAutoCreate;
-            column.IsEditable = false;
-            column.IsBrowsable = false;
+            var column = new Column
+            {
+                Name = m_IdSDBeesColumnName,
+                DisplayName = m_IdSDBeesColumnDisplayName,
+                Description = "the unique id for the smartdatabees internal use",
+                Category = "Internal",
+                Type = DbType.GuidString,
+                Flags = (int) DbFlags.eAutoCreate,
+                IsEditable = false,
+                IsBrowsable = false
+            };
             reloadIdOnInsert = false;
 
             return column;

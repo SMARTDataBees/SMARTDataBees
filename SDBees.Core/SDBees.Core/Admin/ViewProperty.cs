@@ -50,13 +50,13 @@ namespace SDBees.Core.Admin
         public string ViewName
         {
             get { return (string)GetPropertyByColumn("viewname"); }
-            set { SetPropertyByColumn("viewname", value); }
+            set => SetPropertyByColumn("viewname", value);
         }
 
         public Guid ViewId
         {
-            get { return new Guid(Id.ToString());  }
-            set { Id = value.ToString(); }
+            get => new Guid(Id.ToString());
+            set => Id = value.ToString();
         }
 
         /// <summary>
@@ -64,15 +64,11 @@ namespace SDBees.Core.Admin
         /// </summary>
         public string ViewDescription
         {
-            get { return (string)GetPropertyByColumn("viewdescription"); }
-            set { SetPropertyByColumn("viewdescription", value); }
+            get => (string)GetPropertyByColumn("viewdescription");
+            set => SetPropertyByColumn("viewdescription", value);
         }
 
-        public override string GetTableName
-        {
-            get { return "usrViewProperties"; }
-        }
-
+        public override string GetTableName => "usrViewProperties";
 
         #endregion
 

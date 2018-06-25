@@ -86,7 +86,7 @@ namespace SDBees.Core.Global
 			opPrecision.DisplayName = m_UIDecimalPlaces;
 			opPrecision.ElementName = m_UIDecimalPlaces;
 			opPrecision.Category = m_UIUnitsCategory;
-			opPrecision.ValueAssemblyQualifiedName = typeof(Int16).AssemblyQualifiedName;
+			opPrecision.ValueAssemblyQualifiedName = typeof(short).AssemblyQualifiedName;
 			opPrecision.TypeConverterAssemblyQualifiedName = typeof(DecimalPlacesTypeConverter).AssemblyQualifiedName;
 			opPrecision.Value = 3;
 			opPrecision.Description = "Decimal places for rounding in ui";
@@ -162,11 +162,11 @@ namespace SDBees.Core.Global
 			return au;
 		}
 
-		public static Int16 GetDecimalPlaces()
+		public static short GetDecimalPlaces()
 		{
-			Int16 au = 2;
+			short au = 2;
 
-			if (!Int16.TryParse(SDBeesLocalUsersConfiguration().Options[m_UIDecimalPlaces, true].Value.ToString(), out au))
+			if (!short.TryParse(SDBeesLocalUsersConfiguration().Options[m_UIDecimalPlaces, true].Value.ToString(), out au))
 			{
 				MessageBox.Show("Error while retriving precision!\nPlease check Configuration!");
 			}
@@ -260,7 +260,7 @@ namespace SDBees.Core.Global
 			{
 				try
 				{
-					if(!Boolean.TryParse(GlobalManager.Current.Configuration.AppSettings.Settings[m_ViewAdminDisplayment].Value, out _showViewAdmin))
+					if(!bool.TryParse(GlobalManager.Current.Configuration.AppSettings.Settings[m_ViewAdminDisplayment].Value, out _showViewAdmin))
 						MessageBox.Show("Error while retriving displament setting for ViewAdmin!\nPlease check Configuration!");
 				}
 				catch (Exception ex)
@@ -279,7 +279,7 @@ namespace SDBees.Core.Global
 			{
 				try
 				{
-					if (!Boolean.TryParse(GlobalManager.Current.Configuration.AppSettings.Settings[m_ReportingManagerDisplayment].Value, out _showReportingManager))
+					if (!bool.TryParse(GlobalManager.Current.Configuration.AppSettings.Settings[m_ReportingManagerDisplayment].Value, out _showReportingManager))
 						MessageBox.Show("Error while retriving displament setting for ReportingManager!\nPlease check Configuration!");
 				}
 				catch (Exception ex)
@@ -299,7 +299,7 @@ namespace SDBees.Core.Global
 			{
 				try
 				{
-					if (!Boolean.TryParse(GlobalManager.Current.Configuration.AppSettings.Settings[m_EDMManagerDisplayment].Value, out _showEDMManager))
+					if (!bool.TryParse(GlobalManager.Current.Configuration.AppSettings.Settings[m_EDMManagerDisplayment].Value, out _showEDMManager))
 						MessageBox.Show("Error while retriving displament setting for EDMManager!\nPlease check Configuration!");
 				}
 				catch (Exception ex)
@@ -319,7 +319,7 @@ namespace SDBees.Core.Global
 			{
 				try
 				{
-					if (!Boolean.TryParse(GlobalManager.Current.Configuration.AppSettings.Settings[m_LoginDlgPropertiesEnabled].Value, out _enableLoginDlgProps))
+					if (!bool.TryParse(GlobalManager.Current.Configuration.AppSettings.Settings[m_LoginDlgPropertiesEnabled].Value, out _enableLoginDlgProps))
 						MessageBox.Show("Error while retriving enable setting for LoginDlg!\nPlease check Configuration!");
 				}
 				catch (Exception ex)

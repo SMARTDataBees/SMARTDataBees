@@ -123,11 +123,11 @@ namespace SDBees.Plugs.TemplateTreeNode
                         {
                             ps = new PropertySpecListbox(column.DisplayName, columnType, column.Category, column.Description, null, column.SelectionList);
                         }
-                        else if ((!String.IsNullOrEmpty(column.UITypeConverter)) && (!String.IsNullOrEmpty(column.UITypeEditor)))
+                        else if ((!string.IsNullOrEmpty(column.UITypeConverter)) && (!string.IsNullOrEmpty(column.UITypeEditor)))
                         {
                             ps = new PropertySpec(column.DisplayName, columnType, column.Category, column.Description, null, column.UITypeEditor, column.UITypeConverter);
                         }
-                        else if ((!String.IsNullOrEmpty(column.UITypeConverter)) && (String.IsNullOrEmpty(column.UITypeEditor)))
+                        else if ((!string.IsNullOrEmpty(column.UITypeConverter)) && (string.IsNullOrEmpty(column.UITypeEditor)))
                         {
                             ps = new PropertySpec(column.DisplayName, columnType, column.Category, column.Description, null, column.UITypeConverter);
                         }

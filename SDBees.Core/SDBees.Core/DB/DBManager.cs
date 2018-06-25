@@ -344,13 +344,13 @@ namespace SDBees.DB
 
                 if (dataObject.Load(Database, _dbObjects[0], ref error))
                 {
-                    if(!String.Equals(CurrentServerConfigItem.ProjectGuid, dataObject.GetPropertyByColumn(Object.m_IdColumnName).ToString()))
+                    if(!string.Equals(CurrentServerConfigItem.ProjectGuid, dataObject.GetPropertyByColumn(Object.m_IdColumnName).ToString()))
                         CurrentServerConfigItem.ProjectGuid = dataObject.GetPropertyByColumn(Object.m_IdColumnName).ToString();
 
-                    if (!String.Equals(CurrentServerConfigItem.ProjectName, dataObject.ProjectName))
+                    if (!string.Equals(CurrentServerConfigItem.ProjectName, dataObject.ProjectName))
                         dataObject.ProjectName = CurrentServerConfigItem.ProjectName;
 
-                    if (!String.Equals(CurrentServerConfigItem.ProjectDescription, dataObject.ProjectDescription))
+                    if (!string.Equals(CurrentServerConfigItem.ProjectDescription, dataObject.ProjectDescription))
                         dataObject.ProjectDescription = CurrentServerConfigItem.ProjectDescription;
 
                     dataObject.Save(ref error);
@@ -382,7 +382,7 @@ namespace SDBees.DB
                     dbCategory.Enabled = false;
 
 #if DEBUG
-                    if (Boolean.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out var m_logValue) && m_logValue)
+                    if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out var m_logValue) && m_logValue)
                         mLogfileWriter.Writeline("Info", "Database Plugin started", "DB.Details");
 #endif
 

@@ -160,7 +160,7 @@ namespace SDBees.Core.Admin
 
                 // select all viewrels with parentid == rootid
                 var firstDocid = docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_DocumentRootColumnName).ToString();
-                var _countWithoutAlienId = FindViewRelationByParentId(Core.Admin.ViewAdmin.Current.MyDBManager.Database, new Guid(firstDocid), ref _existingObjectsWithoutAlienId, ref _error);
+                var _countWithoutAlienId = FindViewRelationByParentId(ViewAdmin.Current.MyDBManager.Database, new Guid(firstDocid), ref _existingObjectsWithoutAlienId, ref _error);
                 if (_countWithoutAlienId > 0)
                     result = true;
             }
@@ -179,7 +179,7 @@ namespace SDBees.Core.Admin
         /// <returns></returns>
         public static int FindViewRelationForParentIdChildType(Database database,  Guid parentId, string childType, ref ArrayList objectIds, ref Error error)
         {
-            var result = 0; 
+            int result; 
 
 #if PROFILER
             SDBees.Profiler.Start("FindViewRelationForParentIdChildType");
@@ -203,7 +203,7 @@ namespace SDBees.Core.Admin
                     if (vObject != DBNull.Value)
                     {
                         var strValue = vObject.ToString();
-                        if (allowMultiple || (!objectIds.Contains(strValue)))
+                        if ((!objectIds.Contains(strValue)))
                         {
                             objectIds.Add(strValue);
                         }
@@ -417,7 +417,7 @@ namespace SDBees.Core.Admin
                             viewRel.Save(ref error);
 
                             // raise an event...
-                            Core.Admin.ViewAdmin.Current.RaiseViewRelationModified(viewRel, true);
+                            ViewAdmin.Current.RaiseViewRelationModified(viewRel, true);
                         }
                     }
                 }
@@ -450,7 +450,7 @@ namespace SDBees.Core.Admin
                 }
 
                 // raise an event...
-                Core.Admin.ViewAdmin.Current.RaiseViewRelationRemoved(this);
+                ViewAdmin.Current.RaiseViewRelationRemoved(this);
             }
 
         }
@@ -469,7 +469,7 @@ namespace SDBees.Core.Admin
             if (WasNewObject && success)
             {
                 // raise an event...
-                Core.Admin.ViewAdmin.Current.RaiseViewRelationCreated(this);
+                ViewAdmin.Current.RaiseViewRelationCreated(this);
             }
 
             return success;

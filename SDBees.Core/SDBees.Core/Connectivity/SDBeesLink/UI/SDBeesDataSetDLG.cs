@@ -105,7 +105,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
 
                     m_SDBeesDataSetEntControllers.Add(entControl);
                 }
-                m_labelNumberOfItems.Text = String.Format("Number of items : {0}", m_dataSet.Entities.Count);
+                m_labelNumberOfItems.Text = string.Format("Number of items : {0}", m_dataSet.Entities.Count);
             }
         }
 

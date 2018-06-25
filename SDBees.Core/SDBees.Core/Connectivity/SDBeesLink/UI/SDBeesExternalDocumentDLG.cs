@@ -74,7 +74,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
 
                     if (ConnectivityManagerAlienBaseData.GetAlienIdsByDocumentSDBeesId(val.ToString(), ref _error, ref _ids))
                     {
-                        m_textBox.Text = String.Format("{0} alienids found for this docid {1}", _ids.Count, val);
+                        m_textBox.Text = string.Format("{0} alienids found for this docid {1}", _ids.Count, val);
                     }
                 }
             }

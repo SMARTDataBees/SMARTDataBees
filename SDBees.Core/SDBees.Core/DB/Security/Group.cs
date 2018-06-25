@@ -162,46 +162,17 @@ namespace SDBees.DB
         /// <returns></returns>
         public static int GetAllGroups(Server server, ref ArrayList names)
         {
-            var count = 0;
-
             Error error = null;
             var baseData = new GroupBaseData();
 
-            count = server.SecurityDatabase.Select(baseData.Table, "name", ref names, ref error);
+            var count = server.SecurityDatabase.Select(baseData.Table, "name", ref names, ref error);
 
             Error.Display("GetAllGroups failed!", error);
 
             return count;
         }
 
-        /// <summary>
-        /// Update the database access for this user to the server
-        /// </summary>
-        /// <param name="error">Error description if this function fails</param>
-        /// <returns>true if successful</returns>
-        public bool UpdateAccessRightsOnServer(ref Error error)
-        {
-            var success = false;
-
-            // TBD: get all members (and derived...) and update their rights
-            //ArrayList objectIds = null;
-            //if (AccessRights.GetAccessRightsForUserId(server, Id.ToString(), ref objectIds) == 0)
-            //{
-            //    return true;
-            //}
-
-            //success = true;
-
-            //foreach (object objectId in objectIds)
-            //{
-            //    AccessRights accessRight = new AccessRights(server, objectId);
-
-            //    success = success && accessRight.UpdateAccessRightsOnServer(server, LoginName, ref error);
-            //}
-
-            return success;
-        }
-
+      
         /// <summary>
         /// Load a user from the database
         /// </summary>

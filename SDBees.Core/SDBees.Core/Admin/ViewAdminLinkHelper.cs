@@ -41,7 +41,7 @@ namespace SDBees.Core.Admin
 	[PluginVersion("1.0.0")]
 	[PluginDependency(typeof(MainWindowApplication))]
 	[PluginDependency(typeof(SDBeesDBConnection))]
-	[PluginDependency(typeof(Core.Admin.ViewAdmin))]
+	[PluginDependency(typeof(ViewAdmin))]
     [PluginDependency(typeof(GlobalManager))]
 
     public class ViewAdminLinkHelper : TemplateTreenodeHelper

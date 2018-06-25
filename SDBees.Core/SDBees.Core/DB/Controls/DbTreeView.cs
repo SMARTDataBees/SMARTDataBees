@@ -493,10 +493,10 @@ namespace SDBees.DB
             {
                 var criteriaLstViewDefs = new ArrayList();
 
-                if (String.IsNullOrEmpty(parentType))
+                if (string.IsNullOrEmpty(parentType))
                 {
-                    criteriaLstViewDefs.Add(String.Format("parent_type='{0}'", ViewRelation.m_StartNodeValue));
-                    if (String.IsNullOrEmpty(mFilter))
+                    criteriaLstViewDefs.Add(string.Format("parent_type='{0}'", ViewRelation.m_StartNodeValue));
+                    if (string.IsNullOrEmpty(mFilter))
                     {
                         criteriaViewDef = criteriaLstViewDefs[0].ToString();
                     }
@@ -508,8 +508,8 @@ namespace SDBees.DB
                 }
                 else
                 {
-                    criteriaLstViewDefs.Add(String.Format("parent_type='{0}'", parentType));
-                    if (String.IsNullOrEmpty(mFilter))
+                    criteriaLstViewDefs.Add(string.Format("parent_type='{0}'", parentType));
+                    if (string.IsNullOrEmpty(mFilter))
                     {
                         criteriaViewDef = criteriaLstViewDefs[0].ToString();
                     }

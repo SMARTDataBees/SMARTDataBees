@@ -632,7 +632,7 @@ namespace SDBees.Core.Admin
             // create a new viewprop
             viewprop.SetDefaults(MyDBManager.Database);
             viewprop.SetPropertyByColumn("viewname", nameOfViewProperty);
-            viewprop.SetPropertyByColumn("viewdescription", String.Format("view automatically created by plugin {0}", typeOfPlugin));
+            viewprop.SetPropertyByColumn("viewdescription", string.Format("view automatically created by plugin {0}", typeOfPlugin));
             viewprop.Save(ref error);
 
             // define the viewrelations from structure

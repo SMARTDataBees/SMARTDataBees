@@ -109,7 +109,7 @@ namespace Carbon.Common
 		public MULTIPLE_TRUSTEE_OPERATION  MultipleTrusteeOperation;
 		public TRUSTEE_FORM                TrusteeForm;
 		public TRUSTEE_TYPE                TrusteeType;
-		public String                      ptstrName;
+		public string                      ptstrName;
 	}
 
 	[StructLayout(LayoutKind.Sequential, Pack=1)]
@@ -426,18 +426,18 @@ namespace Carbon.Common
 		// This function retrieves the DACL from the file's security
 		// descriptor.
 		[DllImport("AdvAPI32.DLL", CharSet=CharSet.Auto, SetLastError=true )]
-		private static extern Boolean GetSecurityDescriptorDacl(
+		private static extern bool GetSecurityDescriptorDacl(
 			IntPtr pSecurityDescriptor,
-			ref Boolean lpbDaclPresent,
+			ref bool lpbDaclPresent,
 			out IntPtr pDacl,
-			ref Boolean lpbDaclDefaulted);
+			ref bool lpbDaclDefaulted);
 		
 		// This function retrieves a SID given a specific account name. The first form
 		// is for remote access. The second form is for local access and you set the
 		// lpSystemName value to IntPtr.Zero.
 		[DllImport("AdvAPI32.DLL", CharSet=CharSet.Auto, SetLastError=true )]
-		private static extern Boolean LookupAccountName(String lpSystemName,
-			String lpAccountName,
+		private static extern bool LookupAccountName(string lpSystemName,
+			string lpAccountName,
 			IntPtr Sid,
 			ref int cbSid,
 			StringBuilder DomainName,
@@ -445,8 +445,8 @@ namespace Carbon.Common
 			ref SID_NAME_USE peUse);
 
 		[DllImport("AdvAPI32.DLL", CharSet=CharSet.Auto, SetLastError=true )]
-		private static extern Boolean LookupAccountName(IntPtr NoSystemName,
-			String lpAccountName,
+		private static extern bool LookupAccountName(IntPtr NoSystemName,
+			string lpAccountName,
 			IntPtr Sid,
 			ref int cbSid,
 			StringBuilder DomainName,
@@ -462,12 +462,12 @@ namespace Carbon.Common
 		[DllImport("AdvAPI32.DLL", CharSet=CharSet.Auto, SetLastError=true )]
 		private static extern int GetEffectiveRightsFromAcl(IntPtr pacl,
 			ref TRUSTEE pTrustee,
-			ref UInt32 pAccessRights);
+			ref uint pAccessRights);
 
 		[DllImport("AdvAPI32.DLL", CharSet=CharSet.Auto, SetLastError=true )]
 		private static extern int GetEffectiveRightsFromAcl(IntPtr pacl,
 			ref TRUSTEE2 pTrustee,
-			ref UInt32 pAccessRights);			
+			ref uint pAccessRights);			
 
 		[DllImport("AdvAPI32.DLL", CharSet=CharSet.Auto, SetLastError=true )]
 		private static extern int GetAuditedPermissionsFromAcl(

@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Xml;
 using System.Xml.Serialization;
 using SDBees.Core.Model;
 
@@ -202,16 +201,16 @@ namespace SDBees.DB
                     break;
 
                 case DbType.Boolean:
-                    returnType = typeof(Boolean);
+                    returnType = typeof(bool);
                     break;
 
                 case DbType.Byte:
-                    returnType = typeof(Byte);
+                    returnType = typeof(byte);
                     break;
 
                 case DbType.Double:
                 case DbType.Currency:
-                    returnType = typeof(Double);
+                    returnType = typeof(double);
                     break;
 
                 case DbType.Date:
@@ -221,7 +220,7 @@ namespace SDBees.DB
 
                 case DbType.Int64:
                 case DbType.Decimal:
-                    returnType = typeof(Int64);
+                    returnType = typeof(long);
                     break;
 
                 case DbType.Guid:
@@ -229,15 +228,15 @@ namespace SDBees.DB
                     break;
 
                 case DbType.Int16:
-                    returnType = typeof(Int16);
+                    returnType = typeof(short);
                     break;
 
                 case DbType.Int32:
-                    returnType = typeof(Int32);
+                    returnType = typeof(int);
                     break;
 
                 case DbType.Single:
-                    returnType = typeof(Single);
+                    returnType = typeof(float);
                     break;
 
                 default:
@@ -460,7 +459,7 @@ namespace SDBees.DB
         /// <returns>The converted value</returns>
         public object ConvertValueFromDataRow(object value)
         {
-            object result = null;
+            object result;
 
             if (mType == DbType.CrossSize)
             {
@@ -468,7 +467,7 @@ namespace SDBees.DB
             }
             else if (mType == DbType.Boolean)
             {
-                result = value.ToString() != "0" ? true : false;
+                result = value.ToString() != "0";
             }
             else
             {
@@ -513,32 +512,32 @@ namespace SDBees.DB
                 }
                 else if (mType == DbType.Byte)
                 {
-                    var value = (Byte)Convert.ChangeType(defaultValue, typeof(Byte));
+                    var value = (byte)Convert.ChangeType(defaultValue, typeof(byte));
                     isValid = true;
                 }
                 else if (mType == DbType.Int16)
                 {
-                    var value = (Int16)Convert.ChangeType(defaultValue, typeof(Int16));
+                    var value = (short)Convert.ChangeType(defaultValue, typeof(short));
                     isValid = true;
                 }
                 else if (mType == DbType.Int32)
                 {
-                    var value = (Int32)Convert.ChangeType(defaultValue, typeof(Int32));
+                    var value = (int)Convert.ChangeType(defaultValue, typeof(int));
                     isValid = true;
                 }
                 else if (mType == DbType.Int64)
                 {
-                    var value = (Int64)Convert.ChangeType(defaultValue, typeof(Int64));
+                    var value = (long)Convert.ChangeType(defaultValue, typeof(long));
                     isValid = true;
                 }
                 else if ((mType == DbType.Double) || (mType == DbType.Decimal) || (mType == DbType.Currency))
                 {
-                    var value = (Double)Convert.ChangeType(defaultValue, typeof(Double));
+                    var value = (double)Convert.ChangeType(defaultValue, typeof(double));
                     isValid = true;
                 }
                 else if (mType == DbType.Single)
                 {
-                    var value = (Single)Convert.ChangeType(defaultValue, typeof(Single));
+                    var value = (float)Convert.ChangeType(defaultValue, typeof(float));
                     isValid = true;
                 }
                 else if (mType == DbType.Date)

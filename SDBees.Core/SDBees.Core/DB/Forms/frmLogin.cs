@@ -151,7 +151,7 @@ namespace SDBees.DB.Forms
 
 				//Load expected window title
 				var _title = MainWindowApplication.Current.GetApplicationTitle();
-				if (!String.IsNullOrEmpty(_title))
+				if (!string.IsNullOrEmpty(_title))
 				{
 					DialogTitle = _title;
 				}
@@ -160,7 +160,7 @@ namespace SDBees.DB.Forms
 				Icon = MainWindowApplication.Current.GetApplicationIcon();
 
 				var _icon = MainWindowApplication.Current.GetApplicationIconPath();
-				if (!String.IsNullOrEmpty(_icon))
+				if (!string.IsNullOrEmpty(_icon))
 				{
 					var path = Path.GetDirectoryName(GetType().Assembly.Location);
 					var full = path + _icon;
@@ -278,7 +278,7 @@ namespace SDBees.DB.Forms
 				lvi.ImageIndex = 0;
 				lvi.SubItems.Add(item.ServerDatabasePath);
 				lvi.SubItems.Add(item.ProjectDescription);
-				lvi.ToolTipText = String.Format("{0}", item.ServerDatabasePath);
+				lvi.ToolTipText = string.Format("{0}", item.ServerDatabasePath);
 
 				m_listViewItems.Items.Add(lvi);
 			}

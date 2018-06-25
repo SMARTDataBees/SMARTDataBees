@@ -146,8 +146,7 @@ namespace SDBees.DB.MySQL
             var connectionString = ConnectionString(database, bReadOnly);
 
 #if DEBUG
-            var m_logValue = false;
-            if (Boolean.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
+            if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out var m_logValue) && m_logValue)
                 SDBeesDBConnection.Current.LogfileWriter.Writeline("Open", connectionString, "DB.Details");
 #endif
 
@@ -178,7 +177,7 @@ namespace SDBees.DB.MySQL
                 msg = "Failed";
             }
 
-            if (Boolean.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
+            if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
                 SDBeesDBConnection.Current.LogfileWriter.Writeline("Open", msg, "DB.Details");
 #endif
 
@@ -196,8 +195,7 @@ namespace SDBees.DB.MySQL
             {
 
 #if DEBUG
-                var m_logValue = false;
-                if (Boolean.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
+                if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
                     SDBeesDBConnection.Current.LogfileWriter.Writeline("Close", "Closing MySQL connection", "DB.Details");
 #endif
                 try
@@ -239,8 +237,7 @@ namespace SDBees.DB.MySQL
             {
 
 #if DEBUG
-                var m_logValue = false;
-                if (Boolean.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
+                if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out var m_logValue) && m_logValue)
                     SDBeesDBConnection.Current.LogfileWriter.Writeline("ExecuteCommand", cmdString, "DB.Details");
 #endif
 
@@ -254,7 +251,7 @@ namespace SDBees.DB.MySQL
                     var rowsAffected = sqlCmd.ExecuteNonQuery();
 
 #if DEBUG
-                    if (Boolean.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
+                    if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
                         SDBeesDBConnection.Current.LogfileWriter.Writeline("ExecuteCommand", "Success " + rowsAffected + " rows were affected.", "DB.Details");
 #endif
                     success = true;
@@ -265,7 +262,7 @@ namespace SDBees.DB.MySQL
                     error = myError;
 
 #if DEBUG
-                    if (Boolean.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
+                    if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
                         SDBeesDBConnection.Current.LogfileWriter.Writeline("ExecuteCommand", "Failed: " + ex.Message, "DB.Details");
 #endif                
                 }
@@ -340,8 +337,7 @@ namespace SDBees.DB.MySQL
                 {
 
 #if DEBUG
-                    var m_logValue = false;
-                    if (Boolean.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
+                    if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out var m_logValue) && m_logValue)
                         SDBeesDBConnection.Current.LogfileWriter.Writeline("FillDataSet", "Query: '" + query + "'", "DB.Details");
 #endif
 
@@ -356,7 +352,7 @@ namespace SDBees.DB.MySQL
                     da.Fill(ds, sTablename);
 
 #if DEBUG
-                    if (Boolean.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
+                    if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
                         SDBeesDBConnection.Current.LogfileWriter.Writeline("FillDataSet", "Successful.", "DB.Details");
 #endif
 
@@ -473,10 +469,8 @@ namespace SDBees.DB.MySQL
         }
         protected override string GetColumnDefinition(Column column)
         {
-            var definition = "";
-
             Error error = null;
-            definition = column.Name + " " + SQL_Label(column.Type, ref error);
+            var definition = column.Name + " " + SQL_Label(column.Type, ref error);
 
             if (error != null)
             {

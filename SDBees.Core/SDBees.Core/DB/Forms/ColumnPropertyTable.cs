@@ -71,7 +71,7 @@ namespace SDBees.DB
             this["Typ"] = mColumn.Type;
             if (mColumn.HasCustomSize())
             {
-                Properties.Add(new PropertySpec("Größe", typeof(Int32), "Typ", "Größe des Datensatzes der Eigenschaft", null));
+                Properties.Add(new PropertySpec("Größe", typeof(int), "Typ", "Größe des Datensatzes der Eigenschaft", null));
                 this["Größe"] = mColumn.Size;
             }
             Properties.Add(new PropertySpec("NULL Zulassen", typeof(bool), "Flags", "Eigenschaft lässt den Wert NULL zu", null));
@@ -191,7 +191,7 @@ namespace SDBees.DB
                     break;
 
                 case "Größe":
-                    mColumn.Size = (Int32)this[e.Property.Name];
+                    mColumn.Size = (int)this[e.Property.Name];
                     break;
 
                 case "Liste":

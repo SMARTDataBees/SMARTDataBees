@@ -129,7 +129,7 @@ namespace SDBees.Core.Model.Instances
                                 // Set the hashes
                                 try
                                 {
-                                    if (!String.IsNullOrEmpty(ent.InstanceId.Id))
+                                    if (!string.IsNullOrEmpty(ent.InstanceId.Id))
                                     {
                                         entHashOldIdToSDBeesId.Add(ent.Id.Id, ent.InstanceId.Id);
                                         entHashSDBeesIdToNewId.Add(ent.InstanceId.Id, dbEntityObject.GetPropertyByColumn(Object.m_IdColumnName).ToString());

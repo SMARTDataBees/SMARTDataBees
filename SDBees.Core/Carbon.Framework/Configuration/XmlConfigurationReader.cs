@@ -440,37 +440,37 @@ namespace Carbon.Configuration
 							return option;
 						}
 						
-						if (t == typeof(String))
+						if (t == typeof(string))
 							option.Value = value;
-						if (t == typeof(Boolean))
+						if (t == typeof(bool))
 							option.Value = XmlConvert.ToBoolean(value);
-						if (t == typeof(Int32))
+						if (t == typeof(int))
 							option.Value = XmlConvert.ToInt32(value);
-						if (t == typeof(Int64))
+						if (t == typeof(long))
 							option.Value = XmlConvert.ToInt64(value);
-						if (t == typeof(Decimal))
+						if (t == typeof(decimal))
 							option.Value = XmlConvert.ToDecimal(value);
-						if (t == typeof(Double))
+						if (t == typeof(double))
 							option.Value = XmlConvert.ToDouble(value);
-						if (t == typeof(Byte))
+						if (t == typeof(byte))
 							option.Value = XmlConvert.ToByte(value);
-						if (t == typeof(Char))
+						if (t == typeof(char))
 							option.Value = XmlConvert.ToChar(value);
 						if (t == typeof(DateTime))
 							option.Value = XmlConvert.ToDateTime(value, XmlDateTimeSerializationMode.Unspecified);
 						if (t == typeof(Guid))
 							option.Value = XmlConvert.ToGuid(value);
-						if (t == typeof(Int16))
+						if (t == typeof(short))
 							option.Value = XmlConvert.ToInt16(value);
-						if (t == typeof(SByte))
+						if (t == typeof(sbyte))
 							option.Value = XmlConvert.ToSByte(value);
-						if (t == typeof(Single))
+						if (t == typeof(float))
 							option.Value = XmlConvert.ToSingle(value);
-						if (t == typeof(UInt16))
+						if (t == typeof(ushort))
 							option.Value = XmlConvert.ToUInt16(value);
-						if (t == typeof(UInt32))
+						if (t == typeof(uint))
 							option.Value = XmlConvert.ToUInt32(value);
-						if (t == typeof(UInt64))
+						if (t == typeof(ulong))
 							option.Value = XmlConvert.ToUInt64(value);						
 					}
 										

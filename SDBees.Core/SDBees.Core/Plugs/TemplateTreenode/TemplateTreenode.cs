@@ -135,7 +135,7 @@ namespace SDBees.Plugs.TemplateTreeNode
                 var mytype = GetType().ToString();
                 foreach (var t in SDBeesGlobalVars.GetEditSchemaDissallowList())
                 {
-                    if (!String.IsNullOrEmpty(t) && mytype.Contains(t))
+                    if (!string.IsNullOrEmpty(t) && mytype.Contains(t))
                     {
                         editingAllowed = false;
                         break;

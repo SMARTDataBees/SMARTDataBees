@@ -256,13 +256,13 @@ namespace SDBees.Core.Model
 
             m_height = 0.0;
 
-            if (!String.IsNullOrEmpty(encodedString))
+            if (!string.IsNullOrEmpty(encodedString))
             {
                 var dimensions = encodedString.Split('x');
 
                 if (dimensions.Length == 1)
                 {
-                    if (Double.TryParse(dimensions[0], out m_diameter))
+                    if (double.TryParse(dimensions[0], out m_diameter))
                     {
                         m_isRound = true;
 
@@ -271,7 +271,7 @@ namespace SDBees.Core.Model
                 }
                 else if (dimensions.Length == 2)
                 {
-                    if (Double.TryParse(dimensions[0], out m_width) && Double.TryParse(dimensions[1], out m_height))
+                    if (double.TryParse(dimensions[0], out m_width) && double.TryParse(dimensions[1], out m_height))
                     {
                         m_isRectangle = true;
 

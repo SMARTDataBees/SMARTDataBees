@@ -35,7 +35,7 @@ namespace SDBees.Core.Admin
 {
     public partial class AdminDialog : Form
     {
-        private readonly Core.Admin.ViewAdmin _refViewAdmin;
+        private readonly ViewAdmin _refViewAdmin;
         private readonly Hashtable _hashPlugins;
         private readonly Hashtable _hashHelper;
 
@@ -46,7 +46,7 @@ namespace SDBees.Core.Admin
 
         private bool _isConfigNodeSelected;
 
-        public AdminDialog(Core.Admin.ViewAdmin baseRef)
+        public AdminDialog(ViewAdmin baseRef)
         {
             try
             {

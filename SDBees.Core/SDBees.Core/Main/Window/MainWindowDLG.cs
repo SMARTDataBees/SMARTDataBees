@@ -163,15 +163,15 @@ namespace SDBees.Main.Window
             var version = Assembly.GetEntryAssembly().GetName().Version;
 
             var _title = MainWindowApplication.Current.GetApplicationTitle();
-            if (!String.IsNullOrEmpty(_title))
+            if (!string.IsNullOrEmpty(_title))
             {
                 if (version.Revision == 0)
                 {
-                    Text = String.Format("{0} {1}.{2}.{3} - {4}", _title, version.Major, version.Minor, version.Build, dbName);
+                    Text = string.Format("{0} {1}.{2}.{3} - {4}", _title, version.Major, version.Minor, version.Build, dbName);
                 }
                 else
                 {
-                    Text = String.Format("{0} {1}.{2}.{3}.{4} - {5}", _title, version.Major, version.Minor, version.Build, version.Revision, dbName);
+                    Text = string.Format("{0} {1}.{2}.{3}.{4} - {5}", _title, version.Major, version.Minor, version.Build, version.Revision, dbName);
                 }
             }
         }

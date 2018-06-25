@@ -343,9 +343,7 @@ namespace SDBees.DB
         /// <returns>Table with all the information about the schema</returns>
         public virtual Table ReadTable(string tableName, ref Error error)
         {
-            // This function is not complete yet and always returns null (Kira 29.11.2006)
-            Table table = null;
-
+            
             if (mDatabase != null)
             {
                 var criteria = "(TABLE_NAME = '" + tableName + "') AND (TABLE_SCHEMA = '" + mDatabase.Name + "')";
@@ -376,7 +374,7 @@ namespace SDBees.DB
                 }
             }
 
-            return table;
+            return null;
         }
 
         /// <summary>
@@ -389,7 +387,7 @@ namespace SDBees.DB
         /// <returns>True if successful</returns>
         public virtual bool RenameColumn(string tableName, string oldColumnName, string newColumnName, ref Error error)
         {
-            var success = false;
+            bool success;
 
             try
             {
@@ -420,7 +418,7 @@ namespace SDBees.DB
         /// <returns>True if successful</returns>
         public virtual bool EraseColumn(string tableName, string columnName, ref Error error)
         {
-            var success = false;
+            bool success;
 
             try
             {
@@ -510,8 +508,6 @@ namespace SDBees.DB
         /// <returns>true if it exists</returns>
         public virtual bool TableExists(string tableName, ref Error error)
         {
-            var success = false;
-
             if (mDatabase != null)
             {
                 var criteria = "(TABLE_NAME = '" + tableName + "') AND (TABLE_SCHEMA = '" + mDatabase.Name + "')";
@@ -522,7 +518,7 @@ namespace SDBees.DB
                 return numTables > 0;
             }
 
-            return success;
+            return false;
         }
 
         /// <summary>
@@ -591,7 +587,7 @@ namespace SDBees.DB
         /// <returns></returns>
         public virtual bool UpdateRow(Table table, Column idColumn, object id, Attributes attributes, ref Error error)
         {
-            var success = false;
+            bool success;
 
             try
             {
@@ -687,7 +683,7 @@ namespace SDBees.DB
         /// <returns></returns>
         public bool EraseRow(Table table, string criteria, ref Error error)
         {
-            var success = false;
+            bool success;
 
             try
             {
@@ -735,11 +731,7 @@ namespace SDBees.DB
         /// <returns></returns>
         public string FormatCriteria(string criteria1, string criteria2, DbBooleanOperator operation, ref Error error)
         {
-            var criteria = "";
-
-            criteria = "(" + criteria1 + ") " + SQL_Label(operation, ref error) + " (" + criteria2 + ")";
-
-            return criteria;
+           return $"({criteria1}) {SQL_Label(operation, ref error)} ({criteria2})";
         }
 
         /// <summary>
@@ -810,7 +802,7 @@ namespace SDBees.DB
         }
         protected virtual string GetQuotedValue(DbType type, object value)
         {
-            var quotedValue = "";
+            string quotedValue;
 
             if (value == null)
             {
@@ -832,7 +824,7 @@ namespace SDBees.DB
             else if (type == DbType.CrossSize)
             {
                 SDBeesOpeningSize dtValue;
-                if (value.GetType() == typeof(string))
+                if (value is string)
                 {
                     dtValue = new SDBeesOpeningSize((string)value);
                 }
@@ -873,7 +865,7 @@ namespace SDBees.DB
                 bool dtValue;
                 if (value.GetType() == typeof(string))
                 {
-                    dtValue = Boolean.Parse((string)value);
+                    dtValue = bool.Parse((string)value);
                 }
                 else
                 {
