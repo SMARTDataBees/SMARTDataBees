@@ -386,25 +386,6 @@ namespace SDBees.DB.SQLite
             return result;
         }
 
-        /// <summary>
-        /// Adds a string to a complete string and separates with commas if required
-        /// </summary>
-        /// <param name="string1"></param>
-        /// <param name="string2"></param>
-        /// <returns></returns>
-        protected string AddCommaSeparated(string string1, string string2)
-        {
-
-         
-            var result = string1;
-            if (result != "")
-            {
-                result += ", ";
-            }
-            result += string2;
-            return result;
-        }
-
         #endregion
     }
 }
