@@ -188,11 +188,11 @@ namespace SDBees.Core.Admin
 
             if (numNodesWithChildren > 0)
             {
-                MessageBox.Show(numNodesWithChildren + " objects have childs and can't be deleted!");
+                MessageBox.Show(numNodesWithChildren + @"Objects have childs and can't be deleted!");
                 return;
             }
 
-            var answerRemove = MessageBox.Show("Would you really like to remove the objects?", "Remove objects", MessageBoxButtons.YesNo);
+            var answerRemove = MessageBox.Show(@"Would you really like to remove the objects?", @"Remove objects", MessageBoxButtons.YesNo);
             if (answerRemove == DialogResult.No)
                 return;
 
@@ -200,7 +200,7 @@ namespace SDBees.Core.Admin
 
             if (numLastReferences > 0)
             {
-                var answerDelete = MessageBox.Show(numLastReferences + " objects no longer referenced, would you like to delete them??", "Remove objects", MessageBoxButtons.YesNo);
+                var answerDelete = MessageBox.Show(numLastReferences + @"Objects no longer referenced, would you like to delete them??", @"Remove objects", MessageBoxButtons.YesNo);
 
                 deleteUnreferenced = (answerDelete == DialogResult.Yes);
             }
@@ -344,8 +344,9 @@ namespace SDBees.Core.Admin
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
+                // ignored
             }
         }
 
@@ -377,7 +378,7 @@ namespace SDBees.Core.Admin
 
                 ArrayList viewDefs = null;
                 Error error = null;
-                m_ViewProperties.GetChildren(tnTag.NodeTypeOf, ref viewDefs, ref error);
+                m_ViewProperties?.GetChildren(tnTag.NodeTypeOf, ref viewDefs, ref error);
 
                 var allowedChildTypes = new Hashtable();
                 foreach (ViewDefinition viewDef in viewDefs)
@@ -608,7 +609,7 @@ namespace SDBees.Core.Admin
 
                 if (ViewRelation.ChildReferencedByView(Database, m_ViewId, viewrel.ChildId, ref error))
                 {
-                    MessageBox.Show("Object already referenced in view! No second relation created!");
+                    MessageBox.Show(@"Object already referenced in view! No second relation created!");
                     return;
                 }
 
@@ -664,7 +665,7 @@ namespace SDBees.Core.Admin
 
                     if (!ViewDefinition.ViewDefinitionExists(Database, m_ViewId, testParentType, viewrel.ChildType, ref error))
                     {
-                        MessageBox.Show("Can't insert object.");
+                        MessageBox.Show(@"Can't insert object.");
                         return;
                     }
 
@@ -672,7 +673,7 @@ namespace SDBees.Core.Admin
                 }
                 else
                 {
-                    MessageBox.Show("No suitable element for insertion found!");
+                    MessageBox.Show(@"No suitable element for insertion found!");
                 }
 
                 Error.Display("Error on creating relation", error);
@@ -710,7 +711,7 @@ namespace SDBees.Core.Admin
 
             if (treeNode.Nodes.Count > 0)
             {
-                MessageBox.Show("The object '" + objectName + "' has childs and can't be deleted!");
+                MessageBox.Show(@"The object '" + objectName + @"' has childs and can't be deleted!");
             }
             else
             {
@@ -753,11 +754,11 @@ namespace SDBees.Core.Admin
                 {
                     if (objectIds.Count > 1)
                     {
-                        MessageBox.Show("More than one Viewrelation found!");
+                        MessageBox.Show(@"More than one Viewrelation found!");
                     }
                     else if(objectIds.Count == 0)
                     {
-                        MessageBox.Show("No viewrelation found, very strange!");
+                        MessageBox.Show(@"No viewrelation found, very strange!");
                     }
                     else
                     {
@@ -859,8 +860,9 @@ namespace SDBees.Core.Admin
                                 //this.SelectedNode.Expand();
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
+                            // ignored
                         }
                     }
                 }
@@ -1024,8 +1026,9 @@ namespace SDBees.Core.Admin
                         {
                             treeNode.Text = args.ViewRelation.ChildName;
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
+                            // ignored
                         }
                     }
                 }

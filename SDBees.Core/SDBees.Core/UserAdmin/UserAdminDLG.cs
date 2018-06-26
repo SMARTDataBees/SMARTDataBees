@@ -384,11 +384,6 @@ namespace SDBees.UserAdmin
                     }
                 }
             }
-
-            if (listModified)
-            {
-                FillUserList();
-            }
         }
 
         private void mnuAddSecurityRight_Click(object sender, EventArgs e)
@@ -414,16 +409,13 @@ namespace SDBees.UserAdmin
 
                 Error.Display("Saving AccessRights failed!", error);
 
-                if (user != null)
-                {
-                    // Now update the server....
-                    error = null;
-                    user.UpdateAccessRightsOnServer(ref error);
+                // Now update the server....
+                error = null;
+                user.UpdateAccessRightsOnServer(ref error);
 
-                    Error.Display("Failed to update the user privileges on the server", error);
+                Error.Display("Failed to update the user privileges on the server", error);
 
-                    userId = user.Id.ToString();
-                }
+                userId = user.Id.ToString();
 
                 FillSecurityRightList(userId);
             }
@@ -440,7 +432,7 @@ namespace SDBees.UserAdmin
 
             var listModified = false;
 
-            var message = "";
+            string message;
             if (selection.Count == 1)
             {
                 message = "Soll die Berechtigung '" + selection[0].Text + "' gelöscht werden?";

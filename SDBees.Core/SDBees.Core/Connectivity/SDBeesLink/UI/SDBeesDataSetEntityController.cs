@@ -8,7 +8,6 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Instances
 {
     public class SDBeesDataSetEntityController : PropertyBag , IComparable<SDBeesDataSetEntityController>
     {
-        private PluginContext m_context;
         private SDBeesEntity m_ent;
         private SDBeesEntityDefinition m_entityDefinition;
         private SDBeesMappedEntityDefinition m_mappedEntityDefinition;
@@ -23,8 +22,6 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Instances
 
         public SDBeesDataSetEntityController(SDBeesEntity ent, SDBeesEntityDefinition entityDefinition, SDBeesMappedEntityDefinition mappedEntityDefinition)
         {
-            m_context = ConnectivityManager.Current.MyContext;
-
             m_ent = ent;
 
             m_entityDefinition = entityDefinition;

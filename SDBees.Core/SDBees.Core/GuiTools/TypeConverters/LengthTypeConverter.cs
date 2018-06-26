@@ -39,12 +39,9 @@ namespace SDBees.Core.GuiTools.TypeConverters
 
             try
             {
-                double doubleValue;
-                if (double.TryParse(value.ToString(), NumberStyles.Any, culture.NumberFormat, out doubleValue))
-                //if (Double.TryParse(value.ToString(), out doubleValue))
-                {
+                if (value != null && double.TryParse(value.ToString(), NumberStyles.Any, culture.NumberFormat, out var doubleValue))
                     result = ConvertUILengthUnitToDBLengthUnit(doubleValue);
-                }
+
                 result = result ?? base.ConvertFrom(context, culture, value);
             }
             catch (Exception ex)

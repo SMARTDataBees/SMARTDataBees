@@ -44,7 +44,7 @@ namespace SDBees.Core.Connectivity
             }
             catch (Exception)
             {
-                
+                // ignored
             }
         }
 

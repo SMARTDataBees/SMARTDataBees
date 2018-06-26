@@ -107,7 +107,8 @@ namespace SDBees.Core.Connectivity
         {
             try
             {
-                Console.WriteLine("ConnectivityManager starts\n");
+                Console.WriteLine(@"ConnectivityManager starts
+");
                 m_context = context;
 
                 //m_context.BeforePluginsStopped += _context_BeforePluginsStopped;
@@ -151,7 +152,7 @@ namespace SDBees.Core.Connectivity
         /// <param name="e"></param>
         protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
         {
-            Console.WriteLine("ConnectivityManager stops ...");
+            Console.WriteLine(@"ConnectivityManager stops ...");
         }
 
         public override Table MyTable()
