@@ -22,6 +22,8 @@
 // #EndHeader# ================================================================
 
 using System.Collections;
+using System.Collections.Generic;
+using SDBees.Core.DB.Tools;
 using SDBees.DB.Generic;
 
 namespace SDBees.DB.SQLite
@@ -31,14 +33,7 @@ namespace SDBees.DB.SQLite
     /// </summary>
     public class SQLiteServer : Server
     {
-        #region Private Data Members
         ServerConfigItem m_SrvConfig;
-
-        #endregion
-
-        #region Public Properties
-
-        #endregion
 
         #region Constructor/Destructor
 
@@ -70,17 +65,13 @@ namespace SDBees.DB.SQLite
             if (accessMask == 0)
                 return true;
 
-            var success = false;
-
             var options = "";
             var privileges = FormatServerPrivileges(accessMask, true, ref options);
 
             var commandString = "GRANT " + privileges + " ON *.* TO '" + loginName + "' " + options;
 
             var sqlightDb = GetDatabase("sqlight");
-            success = sqlightDb.ExecuteCommand(commandString, ref error);
-
-            return success;
+            return sqlightDb.ExecuteCommand(commandString, ref error);
         }
 
         /// <summary>
@@ -96,15 +87,13 @@ namespace SDBees.DB.SQLite
             if (accessMask == 0)
                 return true;
 
-            var success = false;
-
             var options = "";
             var privileges = FormatServerPrivileges(accessMask, false, ref options);
 
             var commandString = "REVOKE " + privileges + " FROM '" + loginName + "' " + options;
 
             var mysqlDb = GetDatabase("sqlight");
-            success = mysqlDb.ExecuteCommand(commandString, ref error);
+            var success = mysqlDb.ExecuteCommand(commandString, ref error);
 
             return success;
         }
@@ -123,17 +112,13 @@ namespace SDBees.DB.SQLite
             if (accessMask == 0)
                 return true;
 
-            var success = false;
-
             var options = "";
             var privileges = FormatDatabasePrivileges(accessMask, true, ref options);
 
             var commandString = "GRANT " + privileges + " ON " + databaseName + ".* TO '" + loginName + "' " + options;
 
             var mysqlDb = GetDatabase("sqlight");
-            success = mysqlDb.ExecuteCommand(commandString, ref error);
-
-            return success;
+            return  mysqlDb.ExecuteCommand(commandString, ref error);
         }
 
         /// <summary>
@@ -162,17 +147,13 @@ namespace SDBees.DB.SQLite
             if (accessMask == 0)
                 return true;
 
-            var success = false;
-
             var options = "";
             var privileges = FormatDatabasePrivileges(accessMask, false, ref options);
 
             var commandString = "REVOKE " + privileges + " ON " + databaseName + ".* FROM '" + loginName + "' " + options;
 
             var mysqlDb = GetDatabase("sqlight");
-            success = mysqlDb.ExecuteCommand(commandString, ref error);
-
-            return success;
+            return  mysqlDb.ExecuteCommand(commandString, ref error);
         }
 
         /// <summary>
@@ -224,14 +205,10 @@ namespace SDBees.DB.SQLite
         /// <returns></returns>
         public override bool CreateUser(User user, ref Error error)
         {
-            var success = false;
-
             var mysqlDb = GetDatabase("sqlight");
 
             var sqlCommand = "CREATE USER '" + user.LoginName + "' IDENTIFIED BY 'password'";
-            success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
-
-            return success;
+           return mysqlDb.ExecuteCommand(sqlCommand, ref error);
         }
 
         /// <summary>
@@ -242,14 +219,9 @@ namespace SDBees.DB.SQLite
         /// <returns></returns>
         public override bool RemoveUser(string loginName, ref Error error)
         {
-            var success = false;
-
             var mysqlDb = GetDatabase("sqlight");
-
             var sqlCommand = "DROP USER '" + loginName + "'";
-            success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
-
-            return success;
+            return mysqlDb.ExecuteCommand(sqlCommand, ref error);
         }
 
         /// <summary>
@@ -261,14 +233,9 @@ namespace SDBees.DB.SQLite
         /// <returns></returns>
         public override bool SetPassword(string loginName, string password, ref Error error)
         {
-            var success = false;
-
             var mysqlDb = GetDatabase("sqlight");
-
             var sqlCommand = "SET PASSWORD FOR '" + loginName + "' = PASSWORD('" + password + "')";
-            success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
-
-            return success;
+            return mysqlDb.ExecuteCommand(sqlCommand, ref error);
         }
 
         /// <summary>
@@ -281,14 +248,12 @@ namespace SDBees.DB.SQLite
         /// <returns></returns>
         public override bool ChangePassword(string loginName, string oldPassword, string newPassword, ref Error error)
         {
-            var success = false;
-
             var mysqlDb = GetDatabase("sqlight");
             // Use the old password to verify that it's correct
             mysqlDb.Password = oldPassword;
 
             var sqlCommand = "SET PASSWORD FOR '" + loginName + "' = PASSWORD('" + newPassword + "')";
-            success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
+            var success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
 
             return success;
         }
@@ -319,6 +284,7 @@ namespace SDBees.DB.SQLite
         /// <returns></returns>
         protected string FormatServerPrivileges(int flags, bool useGrantSyntax, ref string options)
         {
+            const string separator = ",";
             var result = "";
             options = "";
 
@@ -330,23 +296,14 @@ namespace SDBees.DB.SQLite
             {
                 // Tabellen Rechte
                 if ((flags & AccessFlags.CreateDatabase) != 0)
-                {
-                    result = AddCommaSeparated(result, "CREATE");
-                }
+                    result = Formater.Concat(separator, new List<string> {result, "CREATE"});
                 if ((flags & AccessFlags.EditDatabase) != 0)
-                {
-                    result = AddCommaSeparated(result, "ALTER");
-                }
+                    result = Formater.Concat(separator, new List<string> {result, "ALTER"});
                 if ((flags & AccessFlags.DeleteDatabase) != 0)
-                {
-                    result = AddCommaSeparated(result, "DROP");
-                }
+                    result = Formater.Concat(separator, new List<string> {result, "DROP"});
 
-                // Benutzer Rechte
                 if ((flags & (AccessFlags.CreateUser | AccessFlags.EditUser | AccessFlags.DeleteUser)) != 0)
-                {
-                    result = AddCommaSeparated(result, "CREATE USER");
-                }
+                    result = Formater.Concat(separator, new List<string> {result, "CREATE USER"});
             }
 
             if ((flags & (AccessFlags.EditUser | AccessFlags.EditGroup)) != 0)
@@ -354,11 +311,11 @@ namespace SDBees.DB.SQLite
                 // TBD: Check this users rights????
                 if (useGrantSyntax)
                 {
-                    options = AddCommaSeparated(options, "GRANT OPTION");
+                    options = Formater.Concat(separator, new List<string> { options, "GRANT OPTION" }); 
                 }
                 else
                 {
-                    result = AddCommaSeparated(result, "GRANT OPTION");
+                    result = Formater.Concat(separator, new List<string> { result, "GRANT OPTION" }); 
                 }
             }
 
@@ -379,6 +336,7 @@ namespace SDBees.DB.SQLite
         /// <returns></returns>
         protected string FormatDatabasePrivileges(int flags, bool useGrantSyntax, ref string options)
         {
+            const string separator = ",";
             var result = "";
             options = "";
 
@@ -390,54 +348,34 @@ namespace SDBees.DB.SQLite
             {
                 // Tabellen Rechte
                 if ((flags & AccessFlags.CreateTable) != 0)
-                {
-                    result = AddCommaSeparated(result, "CREATE");
-                }
+                    result = Formater.Concat(separator, new List<string> {result, "CREATE"});
                 if ((flags & AccessFlags.EditTable) != 0)
-                {
-                    result = AddCommaSeparated(result, "ALTER");
-                }
+                    result = Formater.Concat(separator, new List<string> {result, "ALTER"});
                 if ((flags & AccessFlags.DeleteTable) != 0)
-                {
-                    result = AddCommaSeparated(result, "DROP");
-                }
+                    result = Formater.Concat(separator, new List<string> {result, "DROP"});
 
                 // Benutzer Rechte
                 if ((flags & (AccessFlags.CreateDbUser | AccessFlags.EditDbUser | AccessFlags.DeleteDbUser)) != 0)
-                {
-                    result = AddCommaSeparated(result, "CREATE USER");
-                }
+                    result = Formater.Concat(separator, new List<string> { result, "CREATE USER" });  
 
                 // Zeilen Rechte
                 if ((flags & AccessFlags.SelectRows) != 0)
-                {
-                    result = AddCommaSeparated(result, "SELECT");
-                }
+                    result = Formater.Concat(separator, new List<string> {result, "SELECT"});
                 if ((flags & AccessFlags.CreateRows) != 0)
-                {
-                    result = AddCommaSeparated(result, "INSERT");
-                }
+                    result = Formater.Concat(separator, new List<string> {result, "INSERT"});
                 if ((flags & AccessFlags.EditRows) != 0)
-                {
-                    result = AddCommaSeparated(result, "UPDATE");
-                }
+                    result = Formater.Concat(separator, new List<string> {result, "UPDATE"});
                 if ((flags & AccessFlags.DeleteRows) != 0)
-                {
-                    result = AddCommaSeparated(result, "DELETE");
-                }
+                    result = Formater.Concat(separator, new List<string> {result, "DELETE"});
             }
 
             if ((flags & (AccessFlags.EditDbUser | AccessFlags.EditDbGroup)) != 0)
             {
                 // TBD: Check this users rights????
                 if (useGrantSyntax)
-                {
-                    options = AddCommaSeparated(options, "GRANT OPTION");
-                }
+                    options = Formater.Concat(separator, new List<string> {options, "GRANT OPTION"});
                 else
-                {
-                    result = AddCommaSeparated(result, "GRANT OPTION");
-                }
+                    result = Formater.Concat(separator, new List<string> {result, "GRANT OPTION"});
             }
 
             if (options != "")
@@ -456,13 +394,14 @@ namespace SDBees.DB.SQLite
         /// <returns></returns>
         protected string AddCommaSeparated(string string1, string string2)
         {
+
+         
             var result = string1;
             if (result != "")
             {
                 result += ", ";
             }
             result += string2;
-
             return result;
         }
 

@@ -104,6 +104,7 @@
     </Compile>
     <Compile Include="DB\Generic\DbType.cs" />
     <Compile Include="DB\SQLite\SQLiteFilenameEditor.cs" />
+    <Compile Include="DB\Tools\Formater.cs" />
     <Compile Include="Global\GlobalManager.cs" />
     <Compile Include="Global\SDBeesGlobalVars.cs" />
     <Compile Include="GuiTools\Controls\SDBees_DataGridView.cs">

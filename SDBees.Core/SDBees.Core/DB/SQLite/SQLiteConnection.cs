@@ -164,8 +164,7 @@ namespace SDBees.DB.SQLite
             var connectionString = ConnectionString(database, bReadOnly);
 
 #if DEBUG
-            var m_logValue = false;
-            if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
+            if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out var logValue) && logValue)
                 SDBeesDBConnection.Current.LogfileWriter.Writeline("Open", connectionString, "DB.Details");
 #endif
 
@@ -193,7 +192,7 @@ namespace SDBees.DB.SQLite
             {
                 msg = "Failed";
             }
-            if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
+            if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out logValue) && logValue)
                 SDBeesDBConnection.Current.LogfileWriter.Writeline("Open", msg, "DB.Details");
 #endif
 
@@ -211,8 +210,7 @@ namespace SDBees.DB.SQLite
             {
 
 #if DEBUG
-                var m_logValue = false;
-                if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
+                if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out var logValue) && logValue)
                     SDBeesDBConnection.Current.LogfileWriter.Writeline("Close", "Closing SQLight connection", "DB.Details");
 #endif
                 try
@@ -260,8 +258,7 @@ namespace SDBees.DB.SQLite
             {
 
 #if DEBUG
-                var m_logValue = false;
-                if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
+                if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out var logValue) && logValue)
                     SDBeesDBConnection.Current.LogfileWriter.Writeline("ExecuteCommand", cmdString, "DB.Details");
 #endif
 
@@ -275,7 +272,7 @@ namespace SDBees.DB.SQLite
                     var rowsAffected = sqlCmd.ExecuteNonQuery();
 
 #if DEBUG
-                    if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
+                    if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out logValue) && logValue)
                         SDBeesDBConnection.Current.LogfileWriter.Writeline("ExecuteCommand", "Success " + rowsAffected + " rows were affected.", "DB.Details");
 #endif
                     success = true;
@@ -347,8 +344,6 @@ namespace SDBees.DB.SQLite
         /// <returns>true if it exists</returns>
         public override bool TableExists(string tableName, ref Error error)
         {
-            var success = false;
-
             if (mDbConnection != null)
             {
                 var criteria = "(type = '" + "table" + "') AND (name = '" + tableName + "')";
@@ -358,7 +353,7 @@ namespace SDBees.DB.SQLite
                 return numTables > 0;
             }
 
-            return success;
+            return false;
         }
 
         /// <summary>
@@ -491,12 +486,11 @@ namespace SDBees.DB.SQLite
         protected virtual string ConnectionString(Database database, bool bReadOnly)
         {
             //string connectionString = "Server=" + database.Server.Name + ";Port=" + mPort + ";Database=" + database.Name + ";Uid=" + database.User + ";Pwd=" + database.Password + ";";
-            var connectionString = "";
+            string connectionString;
 
             if (!string.IsNullOrEmpty(database.Server.GetServerConfigItem().ServerDatabasePath))
             {
-                var m_logValue = false;
-                if (bool.TryParse(SDBeesSQLiteLocalConfiguration().Options[m_SQLiteWAL, true].Value.ToString(), out m_logValue) && m_logValue)
+                if (bool.TryParse(SDBeesSQLiteLocalConfiguration().Options[m_SQLiteWAL, true].Value.ToString(), out var logValue) && logValue)
                     connectionString = "Data Source=" + database.Server.GetServerConfigItem().ServerDatabasePath + ";Uid=" + database.User + ";Pwd=" + database.Password + ";" + "PRAGMA journal_mode=WAL;";
                 else
                     connectionString = "Data Source=" + database.Server.GetServerConfigItem().ServerDatabasePath + ";Uid=" + database.User + ";Pwd=" + database.Password + ";";
@@ -654,10 +648,8 @@ namespace SDBees.DB.SQLite
 
         protected override string GetColumnDefinition(Column column)
         {
-            var definition = "";
-
             Error error = null;
-            definition = column.Name + " " + SQL_Label(column.Type, ref error);
+            var definition = column.Name + " " + SQL_Label(column.Type, ref error);
 
             if (error != null)
             {

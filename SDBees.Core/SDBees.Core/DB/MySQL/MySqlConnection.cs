@@ -195,7 +195,7 @@ namespace SDBees.DB.MySQL
             {
 
 #if DEBUG
-                if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
+                if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out var m_logValue) && m_logValue)
                     SDBeesDBConnection.Current.LogfileWriter.Writeline("Close", "Closing MySQL connection", "DB.Details");
 #endif
                 try
