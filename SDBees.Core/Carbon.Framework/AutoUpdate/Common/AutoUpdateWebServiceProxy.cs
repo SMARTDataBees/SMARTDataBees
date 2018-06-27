@@ -30,13 +30,13 @@
 //	============================================================================
 
 using System;
-using System.Diagnostics;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Net;
 using System.Web.Services;
+using System.Web.Services.Description;
 using System.Web.Services.Protocols;
-using System.Xml.Serialization;
-
+using System.Xml;
 using Carbon.Common;
 
 namespace Carbon.AutoUpdate.Common
@@ -44,9 +44,9 @@ namespace Carbon.AutoUpdate.Common
 	/// <summary>
 	/// Defines a web service proxy that is responsible for querying the Carbon Framework AutoUpdateWebService
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
-	[System.Web.Services.WebServiceBindingAttribute(Name="AutoUpdateServiceSoap", Namespace="http://tempuri.org/")]
+	[DebuggerStepThrough]
+	[DesignerCategory("code")]
+	[WebServiceBinding(Name="AutoUpdateServiceSoap", Namespace="http://tempuri.org/")]
 	public class AutoUpdateWebServiceProxy : SoapHttpClientProtocol
 	{				
 		/// <summary>
@@ -54,7 +54,7 @@ namespace Carbon.AutoUpdate.Common
 		/// </summary>
 		public AutoUpdateWebServiceProxy() 
 		{
-			this.Url = CarbonConfig.AutoUpdateWebServiceUrl;
+			Url = CarbonConfig.AutoUpdateWebServiceUrl;
 		}
         
 		/// <summary>
@@ -62,7 +62,7 @@ namespace Carbon.AutoUpdate.Common
 		/// </summary>
 		/// <param name="url">The url of the Xml web service to connect to.</param>
 		public AutoUpdateWebServiceProxy(string url) :
-			this(url, (ICredentials)CredentialCache.DefaultCredentials)
+			this(url, CredentialCache.DefaultCredentials)
 		{
 			
 		}
@@ -74,9 +74,9 @@ namespace Carbon.AutoUpdate.Common
 		/// <param name="credentials">The credentials to use to authenticate with the web service.</param>
 		public AutoUpdateWebServiceProxy(string url, ICredentials credentials)
 		{
-			this.Url = url;
-			this.PreAuthenticate = true;
-			this.Credentials = credentials;
+			Url = url;
+			PreAuthenticate = true;
+			Credentials = credentials;
 		}
 
 		#region Version 1.0.0
@@ -113,28 +113,28 @@ namespace Carbon.AutoUpdate.Common
 		/// <param name="currentVersion">The version of the product that is checking.</param>
 		/// <param name="productId">The id of the product that is checking.</param>
 		/// <returns></returns>
-		[System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/QueryLatestVersion", RequestNamespace = "http://tempuri.org/", ResponseNamespace = "http://tempuri.org/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-		public System.Xml.XmlNode QueryLatestVersion(string productName, string currentVersion, string productId)
+		[SoapDocumentMethod("http://tempuri.org/QueryLatestVersion", RequestNamespace = "http://tempuri.org/", ResponseNamespace = "http://tempuri.org/", Use = SoapBindingUse.Literal, ParameterStyle = SoapParameterStyle.Wrapped)]
+		public XmlNode QueryLatestVersion(string productName, string currentVersion, string productId)
 		{
-			object[] results = this.Invoke("QueryLatestVersion", new object[] {
+			var results = Invoke("QueryLatestVersion", new object[] {
 				productName,
 				currentVersion,
 				productId});
-			return ((System.Xml.XmlNode)(results[0]));
+			return ((XmlNode)(results[0]));
 		}
 		
-		public System.IAsyncResult BeginQueryLatestVersion(string productName, string currentVersion, string productId, System.AsyncCallback callback, object asyncState)
+		public IAsyncResult BeginQueryLatestVersion(string productName, string currentVersion, string productId, AsyncCallback callback, object asyncState)
 		{
-			return this.BeginInvoke("QueryLatestVersion", new object[] {
+			return BeginInvoke("QueryLatestVersion", new object[] {
 				 productName,
 				 currentVersion,
 				 productId}, callback, asyncState);
 		}
 		
-		public System.Xml.XmlNode EndQueryLatestVersion(System.IAsyncResult asyncResult)
+		public XmlNode EndQueryLatestVersion(IAsyncResult asyncResult)
 		{
-			object[] results = this.EndInvoke(asyncResult);
-			return ((System.Xml.XmlNode)(results[0]));
+			var results = EndInvoke(asyncResult);
+			return ((XmlNode)(results[0]));
 		}
 
 		#endregion

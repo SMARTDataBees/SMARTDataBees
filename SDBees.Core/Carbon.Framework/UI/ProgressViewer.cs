@@ -28,12 +28,12 @@
 //	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 //	============================================================================
- 
+
 
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-
 using Carbon.Common;
 
 namespace Carbon.UI
@@ -42,7 +42,7 @@ namespace Carbon.UI
 	/// Defines helper methods for working with any class or control that implements the IProgressViewer interface.
 	/// Methods are ui-thread safe (ie. calls will be marshalled to the control's thread if the implementor inherits from control)
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public sealed class ProgressViewer : DisposableObject, IProgressViewer
 	{
 		private delegate void SetTextEventHandler(IProgressViewer viewer, string text);
@@ -56,27 +56,27 @@ namespace Carbon.UI
 		
 		#region IProgressViewer Members
 
-		void Carbon.UI.IProgressViewer.SetTitle(string text)
+		void IProgressViewer.SetTitle(string text)
 		{
 			Log.WriteLine(text);
 		}
 
-		void Carbon.UI.IProgressViewer.SetHeading(string text)
+		void IProgressViewer.SetHeading(string text)
 		{
 			Log.WriteLine(text);
 		}
 
-		void Carbon.UI.IProgressViewer.SetDescription(string text)
+		void IProgressViewer.SetDescription(string text)
 		{
 			Log.WriteLine(text);
 		}
 
-		void Carbon.UI.IProgressViewer.SetExtendedDescription(string text)
+		void IProgressViewer.SetExtendedDescription(string text)
 		{
 			Log.WriteLine(text);
 		}
 
-		void Carbon.UI.IProgressViewer.SetImage(Image image)
+		void IProgressViewer.SetImage(Image image)
 		{
 			// TODO:  Add ProgressViewer.Carbon.UI.IProgressViewer.SetImage implementation
 		}
@@ -101,12 +101,12 @@ namespace Carbon.UI
 			{
 				if (viewer != null)
 				{
-					Control control = viewer as Control;
+					var control = viewer as Control;
 					if (control != null)
 					{
 						if (control.InvokeRequired)
 						{
-							control.Invoke(new SetTextEventHandler(SetTitle), new object[] {viewer, text});
+							control.Invoke(new SetTextEventHandler(SetTitle), viewer, text);
 							return;
 						}
 					}
@@ -130,12 +130,12 @@ namespace Carbon.UI
 			{
 				if (viewer != null)
 				{
-					Control control = viewer as Control;
+					var control = viewer as Control;
 					if (control != null)
 					{
 						if (control.InvokeRequired)
 						{
-							control.Invoke(new SetTextEventHandler(SetHeading), new object[] {viewer, text});
+							control.Invoke(new SetTextEventHandler(SetHeading), viewer, text);
 							return;
 						}
 					}
@@ -159,12 +159,12 @@ namespace Carbon.UI
 			{
 				if (viewer != null)
 				{
-					Control control = viewer as Control;
+					var control = viewer as Control;
 					if (control != null)
 					{
 						if (control.InvokeRequired)
 						{
-							control.Invoke(new SetTextEventHandler(SetDescription), new object[] {viewer, text});
+							control.Invoke(new SetTextEventHandler(SetDescription), viewer, text);
 							return;
 						}
 					}
@@ -188,12 +188,12 @@ namespace Carbon.UI
 			{
 				if (viewer != null)
 				{
-					Control control = viewer as Control;
+					var control = viewer as Control;
 					if (control != null)
 					{
 						if (control.InvokeRequired)
 						{
-							control.Invoke(new SetTextEventHandler(SetExtendedDescription), new object[] {viewer, text});
+							control.Invoke(new SetTextEventHandler(SetExtendedDescription), viewer, text);
 							return;
 						}
 					}
@@ -217,12 +217,12 @@ namespace Carbon.UI
 			{
 				if (viewer != null)
 				{
-					Control control = viewer as Control;
+					var control = viewer as Control;
 					if (control != null)
 					{
 						if (control.InvokeRequired)
 						{
-							control.Invoke(new SetImageEventHandler(SetImage), new object[] {viewer, image});
+							control.Invoke(new SetImageEventHandler(SetImage), viewer, image);
 							return;
 						}
 					}
@@ -247,12 +247,12 @@ namespace Carbon.UI
 			{
 				if (viewer != null)
 				{
-					Control control = viewer as Control;
+					var control = viewer as Control;
 					if (control != null)
 					{
 						if (control.InvokeRequired)
 						{
-							control.Invoke(new SetMarqueeMovingEventHandler(SetMarqueeMoving), new object[] {viewer, moving, reset});
+							control.Invoke(new SetMarqueeMovingEventHandler(SetMarqueeMoving), viewer, moving, reset);
 							return;
 						}
 					}					

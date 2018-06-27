@@ -31,11 +31,8 @@
 
 using System;
 using System.Configuration;
-using System.Reflection;
 using System.Xml;
-
 using Carbon.Common;
-using Carbon.Configuration;
 
 namespace Carbon.Configuration.SectionHandlers
 {
@@ -44,15 +41,7 @@ namespace Carbon.Configuration.SectionHandlers
 	/// </summary>
 	public abstract class ProviderConfigurationSectionHandler : IConfigurationSectionHandler
 	{
-        /// <summary>
-        /// Initializes a new instance of the ProviderConfigurationSectionHandler class.
-        /// </summary>
-        protected ProviderConfigurationSectionHandler()
-        {
-
-        }
-
-		#region IConfigurationSectionHandler Members
+	    #region IConfigurationSectionHandler Members
 
 		/// <summary>
 		/// Creates an object from the XmlNode passed to this ProviderConfigurationSectionHandler by the Configuration Runtime.
@@ -60,24 +49,24 @@ namespace Carbon.Configuration.SectionHandlers
 		/// language specifications. We'll use interface hiding to hide it unless explicitly cast to the IConfigurationSectionHandler interface.
 		/// </summary>
 		/// <returns></returns>
-		object IConfigurationSectionHandler.Create(object parent, object configContext, System.Xml.XmlNode section)
+		object IConfigurationSectionHandler.Create(object parent, object configContext, XmlNode section)
 		{
 			// create a collection for the providers defined in this config section
-			ProviderCollection providers = this.GetProviderCollection();
+			var providers = GetProviderCollection();
 						
 			// grab all of the providers defined 
-			XmlNodeList nodes = section.SelectNodes("Provider");
+			var nodes = section.SelectNodes("Provider");
 			
 			foreach (XmlNode node in nodes)
 			{
 				// grab the required 'Type' attribute
-				XmlAttribute typeAttribute = XmlUtilities.GetAttribute(node, "Type", true);
+				var typeAttribute = XmlUtilities.GetAttribute(node, "Type", true);
 				
 				// load the type from the attribute's value
-				Type type = TypeUtilities.GetTypeFromFullyQualifiedName(typeAttribute.Value, true, true);
+				var type = TypeUtilities.GetTypeFromFullyQualifiedName(typeAttribute.Value, true, true);
 
 				// create the provider from the type and any additional info stored in the node
-				providers.Add(this.CreateProvider(node, type));
+				providers.Add(CreateProvider(node, type));
 			}
 			
 			// return the collection of providers
@@ -101,13 +90,13 @@ namespace Carbon.Configuration.SectionHandlers
 		protected virtual Provider CreateProvider(XmlNode node, Type type)
 		{
 			// grab the required 'Name' attribute
-			XmlAttribute nameAttribute = XmlUtilities.GetAttribute(node, "Name", true);
+			var nameAttribute = XmlUtilities.GetAttribute(node, "Name", true);
 			
 			// assert that the type derives from the required base class	
 			TypeUtilities.AssertTypeIsSubclassOfBaseType(type, typeof(Provider));
 
 			// create an instance of the specified type
-			return (Provider)TypeUtilities.CreateInstanceOfType(type, new Type[] {typeof(string)}, new object[] {nameAttribute.Value});			
+			return (Provider)TypeUtilities.CreateInstanceOfType(type, new[] {typeof(string)}, new object[] {nameAttribute.Value});			
 		}
 
 	}

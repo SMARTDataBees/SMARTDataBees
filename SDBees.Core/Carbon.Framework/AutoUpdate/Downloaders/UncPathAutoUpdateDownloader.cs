@@ -31,11 +31,8 @@
 
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Threading;
 using System.Xml;
-
-using Carbon;
 using Carbon.AutoUpdate.Common;
 using Carbon.AutoUpdate.Common.Xml;
 using Carbon.UI;
@@ -50,16 +47,7 @@ namespace Carbon.AutoUpdate
 	{		
 		private const string MY_TRACE_CATEGORY = @"'UncPathAutoUpdateDownloader'";
 
-		/// <summary>
-		/// Initializes a new instance of the FileCopyAutoUpdateManager class
-		/// </summary>
-		public UncPathAutoUpdateDownloader() 
-			: base()
-		{
-			
-		}
-
-		/// <summary>
+	    /// <summary>
 		/// Instructs the AutoUpdateDownloader to query for the latest version available 
 		/// </summary>
 		/// <param name="progressViewer">The progress viewer by which progress should be displayed</param>
@@ -74,22 +62,24 @@ namespace Carbon.AutoUpdate
 			try
 			{
 				// use the web service to query for updates
-				Debug.WriteLine(string.Format("Querying the 'Alternate Download Path' for the latest version of '{0}'.\n\tThe current product's version is '{1}'.\n\tThe current product's id is '{2}'.\n\tThe path is '{3}'.", productToUpdate.Name, productToUpdate.Version.ToString(), productToUpdate.Id, options.AlternatePath), MY_TRACE_CATEGORY);			
+				Debug.WriteLine(
+				    $"Querying the 'Alternate Download Path' for the latest version of '{productToUpdate.Name}'.\n\tThe current product's version is '{productToUpdate.Version}'.\n\tThe current product's id is '{productToUpdate.Id}'.\n\tThe path is '{options.AlternatePath}'.", MY_TRACE_CATEGORY);			
 				XmlNode node = ManifestQueryEngine.QueryLatestVersion(options.AlternatePath, productToUpdate.Name, productToUpdate.Version.ToString(), productToUpdate.Id);
 				
 				// if the service returned no results, then there is no update availabe
 				if (node == null)
 				{
 					// bail out 
-					Debug.WriteLine(string.Format("No updates are available from the 'Alternate Download Path' at '{0}' for this product.", options.AlternatePath), MY_TRACE_CATEGORY);
+					Debug.WriteLine(
+					    $"No updates are available from the 'Alternate Download Path' at '{options.AlternatePath}' for this product.", MY_TRACE_CATEGORY);
 					return false;
 				}
 
 				// otherwise create a reader and try and read the xml from the xml node returned from the web service
-				XmlAutoUpdateManifestReader reader = new XmlAutoUpdateManifestReader(node);
+				var reader = new XmlAutoUpdateManifestReader(node);
 
 				// using the reader we can recreate the manifeset from the xml
-				AutoUpdateManifest manifest = reader.Read();	
+				var manifest = reader.Read();	
 				
 				/*
 				* now create a download descriptor that says, yes we have found an update.
@@ -99,7 +89,8 @@ namespace Carbon.AutoUpdate
 				updateAvailable = new AutoUpdateDownloadDescriptor(manifest, this, options);		
 
 				// just to let everyone know that there is a version available
-				Debug.WriteLine(string.Format("Version '{0}' of '{1}' is available for download.\n\tThe download url is '{2}'.\n\tThe size of the download is {3}.", updateAvailable.Manifest.Product.Version.ToString(), updateAvailable.Manifest.Product.Name, updateAvailable.Manifest.UrlOfUpdate, this.FormatFileLengthForDisplay(updateAvailable.Manifest.SizeOfUpdate)), MY_TRACE_CATEGORY);
+				Debug.WriteLine(
+				    $"Version '{updateAvailable.Manifest.Product.Version}' of '{updateAvailable.Manifest.Product.Name}' is available for download.\n\tThe download url is '{updateAvailable.Manifest.UrlOfUpdate}'.\n\tThe size of the download is {FormatFileLengthForDisplay(updateAvailable.Manifest.SizeOfUpdate)}.", MY_TRACE_CATEGORY);
 
 				return true;
 			}	

@@ -20,18 +20,14 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
+using System;
+using System.Configuration;
+using System.Reflection;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
 using SDBees.DB;
 using SDBees.Plugs.TemplateBase;
-using System.Configuration;
-using System.Reflection;
 
 namespace SDBees.Core.Global
 {
@@ -42,67 +38,49 @@ namespace SDBees.Core.Global
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
 
-    public class GlobalManager : SDBees.Plugs.TemplateBase.TemplatePlugin
+    public class GlobalManager : TemplatePlugin
     {
-        private static GlobalManager m_theInstance;
-        private Configuration m_config = null;
+        private static GlobalManager _instance;
+        private Configuration _configuration;
 
-        public GlobalManager():base()
+        public GlobalManager()
         {
-            m_theInstance = this;
+            _instance = this;
         }
 
         /// <summary>
         /// Returns the one and only DataBaseManagerPlugin instance.
         /// </summary>
-        public static GlobalManager Current
+        public static GlobalManager Current => _instance;
+
+        public Configuration Configuration
         {
-            get
-            {
-                return m_theInstance;
-            }
+            get => _configuration;
+            set => _configuration = value;
         }
 
-        public Configuration Config
-        {
-            get
-            {
-                return m_config;
-            }
+        /// <inheritdoc />
+        public override TemplateDBBaseData CreateDataObject() => null;
 
-            set
-            {
-                m_config = value;
-            }
+        /// <inheritdoc />
+        public override TemplatePlugin GetPlugin() => _instance;
+
+        /// <inheritdoc />
+        public override Table MyTable() => null;
+
+        /// <inheritdoc />
+        protected override void OnDatabaseChanged(object sender, EventArgs eventArgs)
+        {           
         }
 
-        public override TemplateDBBaseData CreateDataObject()
-        {
-            return null;
-        }
-
-        public override TemplatePlugin GetPlugin()
-        {
-            return m_theInstance;
-        }
-
-        public override Table MyTable()
-        {
-            return null;
-        }
-
-        protected override void OnDatabaseChanged(object sender, EventArgs e)
-        {
-            //
-        }
-
-        protected override void Start(PluginContext context, PluginDescriptorEventArgs e)
+        /// <inheritdoc />
+        protected override void Start(PluginContext context, PluginDescriptorEventArgs eventArgs)
         {
             //
             try
             {
-                Assembly assem = Assembly.GetEntryAssembly();
-                Config = ConfigurationManager.OpenExeConfiguration(assem.Location);
+                var assem = Assembly.GetEntryAssembly();
+                Configuration = ConfigurationManager.OpenExeConfiguration(assem.Location);
             }
             catch (Exception ex)
             {
@@ -110,9 +88,9 @@ namespace SDBees.Core.Global
             }
         }
 
-        protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
+        /// <inheritdoc />
+        protected override void Stop(PluginContext context, PluginDescriptorEventArgs eventArgs)
         {
-            //
         }
     }
 }

@@ -32,6 +32,7 @@
 using System;
 using System.ComponentModel;
 using System.ComponentModel.Design.Serialization;
+using System.Globalization;
 
 namespace Carbon.Configuration
 {
@@ -48,12 +49,12 @@ namespace Carbon.Configuration
 			return base.CanConvertTo (context, destinationType);
 		}
 	
-		public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+		public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
 		{
 			if (destinationType == typeof(InstanceDescriptor) && value is XmlConfigurationElement)
 			{
 				//				XmlConfigurationCategory category = (XmlConfigurationCategory)value;
-				System.Reflection.ConstructorInfo ci = typeof(XmlConfigurationElement).GetConstructor(new Type[] {});
+				var ci = typeof(XmlConfigurationElement).GetConstructor(new Type[] {});
 				if (ci != null)
 					return new InstanceDescriptor(ci, null, false);
 			}

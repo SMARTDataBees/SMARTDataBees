@@ -29,8 +29,6 @@
 //
 //	============================================================================
 
-using System;
-
 using Carbon.Common;
 using Carbon.UI;
 
@@ -54,7 +52,7 @@ namespace Carbon.Plugins.Providers
 		/// <summary>
 		/// Returns a collection of Types that are defined as Carbon Plugins.
 		/// </summary>
-		/// <param name="progressViewer">The callback object implementing IProgressViewer that will be used to monitor progress.</param></param>
+		/// <param name="progressViewer">The callback object implementing IProgressViewer that will be used to monitor progress.</param>
 		/// <returns></returns>
 		public abstract TypeCollection LoadPluginTypes(IProgressViewer progressViewer);
 	}

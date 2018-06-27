@@ -29,8 +29,6 @@
 //
 //	============================================================================
 
-using System;
-
 namespace Carbon.MultiThreading
 {
 	/// <summary>

@@ -30,22 +30,18 @@
 //	============================================================================
 
 using System;
-using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Xml;
-using System.Xml.XPath;
-
 using Carbon.Common;
-using Carbon.AutoUpdate;
 
 namespace Carbon.AutoUpdate.Common.Xml
 {
 	/// <summary>
 	/// Provides a class that is capable of writing an AutoUpdateManifest to an Xml file.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public sealed class XmlAutoUpdateManifestWriter : DisposableObject
 	{
 		private XmlTextWriter _writer;
@@ -122,13 +118,13 @@ namespace Carbon.AutoUpdate.Common.Xml
 				);
 
 				// write the product
-				this.WriteProductDescriptor(manifest.Product);
+				WriteProductDescriptor(manifest.Product);
 
 				// write the more info href
-				this.WriteHref(manifest.MoreInfo);
+				WriteHref(manifest.MoreInfo);
 
 				// write the change summaries
-				this.WriteChangeSummaries(manifest.ChangeSummaries);
+				WriteChangeSummaries(manifest.ChangeSummaries);
 
 			// end the manifest element
 			_writer.WriteEndElement();
@@ -203,7 +199,7 @@ namespace Carbon.AutoUpdate.Common.Xml
 			_writer.WriteStartElement(changeSummaries.GetType().Name);
 
 			foreach(AutoUpdateChangeSummary changeSummary in changeSummaries)
-				this.WriteChangeSummary(changeSummary);
+				WriteChangeSummary(changeSummary);
 
 			// end the element
 			_writer.WriteEndElement();
@@ -255,10 +251,10 @@ namespace Carbon.AutoUpdate.Common.Xml
 				throw new ArgumentNullException("encoding");
 	
 			// create a new manifest writer
-			using (FileStream stream = new FileStream(path, FileMode.Create))
+			using (var stream = new FileStream(path, FileMode.Create))
 			{
 				// create a writer to write the test
-				XmlAutoUpdateManifestWriter writer = new XmlAutoUpdateManifestWriter(stream, encoding);
+				var writer = new XmlAutoUpdateManifestWriter(stream, encoding);
 
 				// write the test
 				writer.Write(manifest);
@@ -275,9 +271,9 @@ namespace Carbon.AutoUpdate.Common.Xml
 			if (encoding == null)
 				throw new ArgumentNullException("encoding");
 
-			using (MemoryStream stream = new MemoryStream())
+			using (var stream = new MemoryStream())
 			{
-				XmlAutoUpdateManifestWriter writer = new XmlAutoUpdateManifestWriter(stream, encoding);
+				var writer = new XmlAutoUpdateManifestWriter(stream, encoding);
 
 				writer.Write(manifest);
 

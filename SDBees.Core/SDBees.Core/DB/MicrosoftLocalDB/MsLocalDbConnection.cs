@@ -20,12 +20,9 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using System.Data;
-using System.Configuration;
 
 namespace SDBees.DB.MicrosoftLocalDB
 {
@@ -35,20 +32,20 @@ namespace SDBees.DB.MicrosoftLocalDB
     public class MsLocalDbConnection : OleConnection
     {
         #region Public Methods
-        public override System.Data.DataSet GetReadOnlyDataSet()
+        public override DataSet GetReadOnlyDataSet()
         {
             throw new NotImplementedException();
         }
 
-        public override System.Data.DataTable GetReadOnlyDataTable(string sTablename)
+        public override DataTable GetReadOnlyDataTable(string sTablename)
         {
-            System.Data.DataTable _dtTable = new DataTable();
-            System.Data.DataSet _dtSet = new DataSet();
+            var _dtTable = new DataTable();
+            var _dtSet = new DataSet();
             Error _error = null;
 
-            string sSelect = "SELECT * FROM `" + this.Database.Name + "`.`" + sTablename + "`";
+            var sSelect = "SELECT * FROM `" + Database.Name + "`.`" + sTablename + "`";
 
-            this.FillDataSet(sSelect, ref _dtSet, ref _error, sTablename);
+            FillDataSet(sSelect, ref _dtSet, ref _error, sTablename);
 
             foreach (DataTable tbl in _dtSet.Tables)
             {
@@ -78,8 +75,8 @@ namespace SDBees.DB.MicrosoftLocalDB
         protected override string ConnectionString(Database database, bool bReadOnly)
         {
             //ConfigurationManager.AppSettings["DefaultSQLDatabase"];
-            string tempCon = @"Server=(localdb)\v11.0;Integrated Security=true;AttachDbFileName=C:\MyFolder\MyData.mdf;Database=";
-            string connectionString = "Provider=SQLOLEDB;Data Source=" + database.Server.Name + ";Initial Catalog=" + database.Name + ";User ID=" + database.User + ";password=" + database.Password + "";
+            var tempCon = @"Server=(localdb)\v11.0;Integrated Security=true;AttachDbFileName=C:\MyFolder\MyData.mdf;Database=";
+            var connectionString = "Provider=SQLOLEDB;Data Source=" + database.Server.Name + ";Initial Catalog=" + database.Name + ";User ID=" + database.User + ";password=" + database.Password + "";
 
             return connectionString;
         }

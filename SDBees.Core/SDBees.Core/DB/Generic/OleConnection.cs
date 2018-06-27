@@ -20,10 +20,8 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using System.Data;
 using System.Data.OleDb;
 using SDBees.DB.Forms;
@@ -59,7 +57,7 @@ namespace SDBees.DB
                 "NCHAR",            // eGuidString
                 "NTEXT",            // eText
                 "NTEXT",            // eLongText
-                "NVARCHAR",         // eCrossSize
+                "NVARCHAR"         // eCrossSize
             };
 
         private static string[] SQLBinaryOperatorLabels =
@@ -81,7 +79,7 @@ namespace SDBees.DB
             {
                 "Unknown",  // eUnknown
                 "AND",      // eAnd
-                "OR",       // eOr
+                "OR"       // eOr
             };
 
         #endregion
@@ -120,7 +118,7 @@ namespace SDBees.DB
         // Open the connection here...
         public override bool Open(Database database, bool bReadOnly, ref Error error)
         {
-            string connectionString = ConnectionString(database, bReadOnly);
+            var connectionString = ConnectionString(database, bReadOnly);
 
             try
             {
@@ -129,13 +127,13 @@ namespace SDBees.DB
             }
             catch (OleDbException ex)
             {
-                Error myError = new Error(ex.Message, 9999, this.GetType(), error);
+                var myError = new Error(ex.Message, 9999, GetType(), error);
                 error = myError;
                 mDbConnection = null;
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                Error myError = new Error(ex.Message, 9999, this.GetType(), error);
+                var myError = new Error(ex.Message, 9999, GetType(), error);
                 error = myError;
                 mDbConnection = null;
             }
@@ -156,13 +154,13 @@ namespace SDBees.DB
                 }
                 catch (OleDbException ex)
                 {
-                    Error myError = new Error(ex.Message, 9999, this.GetType(), error);
+                    var myError = new Error(ex.Message, 9999, GetType(), error);
                     error = myError;
                     mDbConnection = null;
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
-                    Error myError = new Error(ex.Message, 9999, this.GetType(), error);
+                    var myError = new Error(ex.Message, 9999, GetType(), error);
                     error = myError;
                     mDbConnection = null;
                 }
@@ -176,23 +174,23 @@ namespace SDBees.DB
         // execute an SQL command
         public override bool ExecuteCommand(string cmdString, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if (mDbConnection != null)
             {
                 // Execute the query
-                OleDbCommand sqlCmd = new OleDbCommand(cmdString, mDbConnection);
+                var sqlCmd = new OleDbCommand(cmdString, mDbConnection);
                 sqlCmd.CommandTimeout = 30;
 
                 try
                 {
-                    int rowsAffected = sqlCmd.ExecuteNonQuery();
+                    var rowsAffected = sqlCmd.ExecuteNonQuery();
 
                     success = true;
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
-                    Error myError = new Error(ex.Message, 9999, this.GetType(), error);
+                    var myError = new Error(ex.Message, 9999, GetType(), error);
                     error = myError;
                 }
             }
@@ -209,16 +207,16 @@ namespace SDBees.DB
 
         protected override bool FillDataSet(string query,ref DataSet ds, ref Error error, string sTablename)
         {
-            bool success = false;
+            var success = false;
 
             if (mDbConnection != null)
             {
                 // Execute the query
-                OleDbCommand selectCmd = new OleDbCommand(query, mDbConnection);
+                var selectCmd = new OleDbCommand(query, mDbConnection);
                 selectCmd.CommandTimeout = 30;
 
                 // collect the results using an adapter
-                OleDbDataAdapter da = new OleDbDataAdapter();
+                var da = new OleDbDataAdapter();
                 da.SelectCommand = selectCmd;
 
                 // Fill the data set
@@ -228,7 +226,7 @@ namespace SDBees.DB
             }
             else
             {
-                Error myError = new Error("DataSet could not be filled, no connection available.", 9999, this.GetType(), error);
+                var myError = new Error("DataSet could not be filled, no connection available.", 9999, GetType(), error);
                 error = myError;
             }
 
@@ -236,20 +234,20 @@ namespace SDBees.DB
         }
         protected override string SQL_Label(DbType type, ref Error error)
         {
-            string label = "";
+            var label = "";
 
             switch(type)
             {
-                case DbType.eUnknown:
+                case DbType.Unknown:
                     {
-                        Error newError = new Error("Cannot determine SQL Label for unknown type", 9999, this.GetType(), error);
+                        var newError = new Error("Cannot determine SQL Label for unknown type", 9999, GetType(), error);
                         error = newError;
                     }
                     break;
 
                 default:
                     {
-                        int index = (int) type;
+                        var index = (int) type;
                         label = SQLTypeLabels[index];
                     }
                     break;
@@ -259,20 +257,20 @@ namespace SDBees.DB
         }
         protected override string SQL_Label(DbBinaryOperator operation, ref Error error)
         {
-            string label = "";
+            var label = "";
 
             switch (operation)
             {
                 case DbBinaryOperator.eUnknown:
                     {
-                        Error newError = new Error("Cannot determine SQL Label for unknown operation", 9999, this.GetType(), error);
+                        var newError = new Error("Cannot determine SQL Label for unknown operation", 9999, GetType(), error);
                         error = newError;
                     }
                     break;
 
                 default:
                     {
-                        int index = (int)operation;
+                        var index = (int)operation;
                         label = SQLBinaryOperatorLabels[index];
                     }
                     break;
@@ -282,20 +280,20 @@ namespace SDBees.DB
         }
         protected override string SQL_Label(DbBooleanOperator operation, ref Error error)
         {
-            string label = "";
+            var label = "";
 
             switch (operation)
             {
                 case DbBooleanOperator.eUnknown:
                     {
-                        Error newError = new Error("Cannot determine SQL Label for unknown operation", 9999, this.GetType(), error);
+                        var newError = new Error("Cannot determine SQL Label for unknown operation", 9999, GetType(), error);
                         error = newError;
                     }
                     break;
 
                 default:
                     {
-                        int index = (int)operation;
+                        var index = (int)operation;
                         label = SQLBooleanOperatorLabels[index];
                     }
                     break;
@@ -306,7 +304,7 @@ namespace SDBees.DB
         protected override string MakeSelectQuery(string tableName, string columnName, string criteria, int topCount)
         {
             // build the query...
-            string query = "";
+            string query;
             if (topCount <= 0)
             {
                 query = "SELECT " + columnName + " FROM " + tableName;
@@ -325,15 +323,13 @@ namespace SDBees.DB
         }
         protected override string GetColumnDefinition(Column column)
         {
-            string definition = "";
-
             Error error = null;
-            definition = "[" + column.Name + "] " + SQL_Label(column.Type, ref error);
+            var definition = "[" + column.Name + "] " + SQL_Label(column.Type, ref error);
 
             if (error != null)
             {
                 // login failed... display error message...
-                frmError dlg = new frmError(Connection._errorMsgWrongColumnDefinition, Connection._errorMsgWrongColumnDefinitionTitle, error);
+                var dlg = new frmError(_errorMsgWrongColumnDefinition, _errorMsgWrongColumnDefinitionTitle, error);
                 dlg.ShowDialog();
 
                 dlg.Dispose();

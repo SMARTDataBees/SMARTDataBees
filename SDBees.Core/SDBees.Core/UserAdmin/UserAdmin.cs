@@ -28,18 +28,16 @@
  * 
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
-using System;
-using System.Collections.Generic;
-using System.Collections;
-using System.Windows.Forms;
 
-using Carbon;
+using System;
+using System.Windows.Forms;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
-
+using SDBees.Core.Global;
 using SDBees.DB;
-using SDBees.Main.Window;
 using SDBees.GuiTools;
+using SDBees.Main.Window;
+using SDBees.Plugs.TemplateMenue;
 
 namespace SDBees.UserAdmin
 {
@@ -49,17 +47,15 @@ namespace SDBees.UserAdmin
     [PluginId("BD505C5A-9F30-4205-8D3E-1D0CBFB14EA8")]
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
-    [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
-    [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
-    [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
+    [PluginDependency(typeof(SDBeesDBConnection))]
+    [PluginDependency(typeof(MainWindowApplication))]
+    [PluginDependency(typeof(GlobalManager))]
 
-    /// <summary>
-    /// Klasse für die Userverwaltung
-    /// </summary>
-    public class UserAdmin : SDBees.Plugs.TemplateMenue.TemplateMenue
+
+    public class UserAdmin : TemplateMenue
     {
         private static UserAdmin _theInstance;
-        private MenuItem _mnuItem;
+        private readonly MenuItem _mnuItem;
         private PluginContext _context;
 
 
@@ -78,11 +74,10 @@ namespace SDBees.UserAdmin
         /// Standard constructor
         /// </summary>
         public UserAdmin()
-            : base()
         {
             _theInstance = this;
             _mnuItem = new MenuItem("User Admin ...");
-            this._mnuItem.Click += new EventHandler(_mnuItemUserManager_Click);
+            _mnuItem.Click += _mnuItemUserManager_Click;
         }
 
         /// <summary>
@@ -105,8 +100,8 @@ namespace SDBees.UserAdmin
                 //Setting up the menuitem
                 if (MyMainWindow != null)
                 {
-                    MenuItem mnuChangePassword = new MenuItem("Change Password ...");
-                    mnuChangePassword.Click += new EventHandler(mnuChangePassword_Click);
+                    var mnuChangePassword = new MenuItem("Change Password ...");
+                    mnuChangePassword.Click += mnuChangePassword_Click;
 
                     MyMainWindow.TheDialog.MenueAdmin().MenuItems.Add(mnuChangePassword);
                     MyMainWindow.TheDialog.MenueAdmin().MenuItems.Add(_mnuItem);
@@ -141,7 +136,7 @@ namespace SDBees.UserAdmin
             if (MyDBManager != null)
             {
                 // Create the required database tables...
-                Database database = MyDBManager.Database;
+                var database = MyDBManager.Database;
                 RoleDefinitions.InitTableSchema(database);
             }
         }
@@ -151,9 +146,9 @@ namespace SDBees.UserAdmin
         {
             // Prüfen, ob der Anwender genügend Rechte hat...
             Error error = null;
-            string loginName = UserAdmin.Current.MyDBManager.Database.User;
-            Server server = UserAdmin.Current.MyDBManager.Database.Server;
-            bool hasGrantPrivilege = server.UserHasGrantPrivileges(loginName, ref error);
+            var loginName = Current.MyDBManager.Database.User;
+            var server = Current.MyDBManager.Database.Server;
+            var hasGrantPrivilege = server.UserHasGrantPrivileges(loginName, ref error);
 
             if (!hasGrantPrivilege)
             {
@@ -161,7 +156,7 @@ namespace SDBees.UserAdmin
             }
             else
             {
-                UserAdminDLG dlg = new UserAdminDLG(this);
+                var dlg = new UserAdminDLG(this);
                 dlg.ShowDialog();
             }
 
@@ -169,17 +164,17 @@ namespace SDBees.UserAdmin
 
         void mnuChangePassword_Click(object sender, EventArgs e)
         {
-            ChangePasswordDLG dlg = new ChangePasswordDLG();
+            var dlg = new ChangePasswordDialog();
 
             if (dlg.ShowDialog() == DialogResult.OK)
             {
-                string oldPassword = dlg.OldPassword;
-                string newPassword = dlg.NewPassword;
+                var oldPassword = dlg.CurrentPassword;
+                var newPassword = dlg.NewPassword;
 
                 if (oldPassword != newPassword)
                 {
-                    Database database = UserAdmin.Current.MyDBManager.Database;
-                    Server server = database.Server;
+                    var database = Current.MyDBManager.Database;
+                    var server = database.Server;
 
                     Error error = null;
                     if (server.ChangePassword(database.User, oldPassword, newPassword, ref error))

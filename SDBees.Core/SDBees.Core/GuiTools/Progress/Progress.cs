@@ -1,5 +1,6 @@
 
 using System;
+using AdnRme;
 
 namespace SDBees.GuiTools
 {
@@ -7,7 +8,7 @@ namespace SDBees.GuiTools
     {
         public static iProgress GetProgress(IntPtr windowHandle)
         {
-            return new AdnRme.ProgressForm(windowHandle);
+            return new ProgressForm(windowHandle);
         }
     }
 }

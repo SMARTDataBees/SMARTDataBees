@@ -20,41 +20,38 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SDBees.Plugs.TemplateTreeNode
 {
   public class TemplateTreenodeTag
   {
-    private string _sGuid = null;
-    private string _sName = null;
-    private string _sTypeOf = null;
+    private string _sGuid;
+    private string _sName;
+    private string _sTypeOf;
 
     public string NodeGUID
     {
-      get { return this._sGuid; }
-      set { this._sGuid = value; }
+      get { return _sGuid; }
+      set { _sGuid = value; }
     }
 
     public string NodeName
     {
-      get { return this._sName; }
-      set { this._sName = value; }
+      get { return _sName; }
+      set { _sName = value; }
     }
 
     public string NodeTypeOf
     {
-      get { return this._sTypeOf; }
-      set { this._sTypeOf = value; }
+      get { return _sTypeOf; }
+      set { _sTypeOf = value; }
     }
 
     public TemplateTreenodeTag()
     {
-      this._sGuid = "";
-      this._sName = "";
-      this._sTypeOf = "";
+      _sGuid = "";
+      _sName = "";
+      _sTypeOf = "";
     }
   }
 }

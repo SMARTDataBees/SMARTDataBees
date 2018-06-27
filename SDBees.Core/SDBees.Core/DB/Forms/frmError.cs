@@ -20,12 +20,8 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace SDBees.DB.Forms
@@ -88,7 +84,7 @@ namespace SDBees.DB.Forms
 
         private void frmError_Load(object sender, EventArgs e)
         {
-            this.Text = mTitle;
+            Text = mTitle;
             lbMessage.Text = mMessage;
             if (mError != null)
             {
@@ -98,7 +94,7 @@ namespace SDBees.DB.Forms
 
         private void bnOk_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
+﻿using System.Runtime.Serialization;
 
 namespace SDBees.Core.Model
 {
@@ -42,7 +38,7 @@ namespace SDBees.Core.Model
 
         public static string Serialize(SDBeesDocumentCADInfo info)
         {
-            string result = "";
+            var result = "";
 
             if (info != null)
             {

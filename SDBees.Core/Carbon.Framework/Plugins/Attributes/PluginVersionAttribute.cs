@@ -36,29 +36,21 @@ namespace Carbon.Plugins.Attributes
 	/// <summary>
 	/// Defines a plugin attribute for specifying the version for a plugin.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple=false)]
+	[AttributeUsage(AttributeTargets.Class)]
 	public sealed class PluginVersionAttribute : Attribute
 	{
-		private readonly Version _version;
-
-        /// <summary>
+	    /// <summary>
         /// Initializes a new instance of the PluginVersionAttribute class.
         /// </summary>
         /// <param name="version">The version of the plugin.</param>
 		public PluginVersionAttribute(string version)
 		{
-			_version = new Version(version);
+			Version = new Version(version);
 		}
 
         /// <summary>
         /// Returns the plugin's version.
         /// </summary>
-		public Version Version
-		{
-			get
-			{
-				return _version;
-			}
-		}
+		public Version Version { get; }
 	}
 }

@@ -155,6 +155,10 @@
     <Compile Include="Common\ObjectBaseEventArgs.cs" />
     <Compile Include="Common\ObjectCancelEventArgs.cs" />
     <Compile Include="Common\ObjectEventArgs.cs" />
+    <Compile Include="Common\SecurityAccessRights.cs" />
+    <Compile Include="Common\SecurityInformation.cs" />
+    <Compile Include="Common\SE_OBJECT_TYPE.cs" />
+    <Compile Include="Common\TrusteeType.cs" />
     <Compile Include="Common\TypeCollectionEventArgs.cs" />
     <Compile Include="Common\VersionedDirectory.cs" />
     <Compile Include="Common\VersionedFile.cs" />

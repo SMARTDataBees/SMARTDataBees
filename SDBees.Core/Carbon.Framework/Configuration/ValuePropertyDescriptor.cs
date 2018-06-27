@@ -30,9 +30,7 @@
 //	============================================================================
 
 using System;
-using System.Reflection;
 using System.ComponentModel;
-using System.ComponentModel.Design;
 
 namespace Carbon.Configuration
 {
@@ -85,7 +83,7 @@ namespace Carbon.Configuration
 		{
 			get
 			{
-                Type t = XmlConfigurationOptionTypeUtilities.GetType(_option);
+                var t = XmlConfigurationOptionTypeUtilities.GetType(_option);
 				if (t != null)
 					return t;
 			

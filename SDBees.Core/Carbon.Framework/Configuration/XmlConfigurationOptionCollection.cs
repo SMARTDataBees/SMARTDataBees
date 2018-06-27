@@ -30,32 +30,25 @@
 //	============================================================================
 
 using System;
-using System.Diagnostics;
+using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Carbon.Configuration 
 {
 	/// <summary>
 	/// Summary description for XmlConfigurationOptionCollection.
 	/// </summary>
-	public class XmlConfigurationOptionCollection : System.Collections.CollectionBase, ICloneable, ISupportsEditing, IXmlConfigurationElementEvents, ISupportInitialize
+	public class XmlConfigurationOptionCollection : CollectionBase, ICloneable, ISupportsEditing, IXmlConfigurationElementEvents, ISupportInitialize
 	{
 		private XmlConfigurationCategory _parent;
 		private bool _hasChanges;
-		protected bool _isBeingEdited = false;	
+		protected bool _isBeingEdited;	
 		private bool _isBeingInitialized;
 		
 		#region Instance Constructors
 
-		/// <summary>
-		/// Initializes a new instance of the XmlConfigurationOptionCollection
-		/// </summary>
-		public XmlConfigurationOptionCollection() 
-		{
-		
-		}
-
-		#endregion
+	    #endregion
 
 		#region Public Methods
 
@@ -66,16 +59,16 @@ namespace Carbon.Configuration
 		/// <returns></returns>
 		public int Add(XmlConfigurationOption option) 
 		{				
-			if (this.Contains(option))
+			if (Contains(option))
 				throw new ArgumentException("ElementName already exists. ElementName in collection: " + option.ElementName + " ElementName being added: " + option.ElementName);
 			
 			option.Parent = this;
-			option.BeforeEdit += new XmlConfigurationElementCancelEventHandler(this.OnBeforeEdit);
-			option.Changed += new XmlConfigurationElementEventHandler(this.OnChanged);
-			option.AfterEdit += new XmlConfigurationElementEventHandler(this.OnAfterEdit);
-			option.EditCancelled += new XmlConfigurationElementEventHandler(this.OnEditCancelled);
-			int index = base.InnerList.Add(option);
-			this.OnChanged(this, new XmlConfigurationOptionEventArgs(option, XmlConfigurationElementActions.Added));			
+			option.BeforeEdit += OnBeforeEdit;
+			option.Changed += OnChanged;
+			option.AfterEdit += OnAfterEdit;
+			option.EditCancelled += OnEditCancelled;
+			var index = InnerList.Add(option);
+			OnChanged(this, new XmlConfigurationOptionEventArgs(option, XmlConfigurationElementActions.Added));			
 			return index;
 		}
 
@@ -88,11 +81,11 @@ namespace Carbon.Configuration
 			if (options == null)
 				throw new ArgumentNullException("options");			
 
-			foreach(XmlConfigurationOption opt in options) 
+			foreach(var opt in options) 
 			{
 				try 
 				{
-					this.Add(opt);
+					Add(opt);
 				}
 				catch(Exception ex) 
 				{
@@ -107,14 +100,14 @@ namespace Carbon.Configuration
 		/// <param name="option"></param>
 		public void Remove(XmlConfigurationOption option) 
 		{
-			if (this.Contains(option))
+			if (Contains(option))
 			{											
-				option.BeforeEdit -= new XmlConfigurationElementCancelEventHandler(this.OnBeforeEdit);
-				option.Changed -= new XmlConfigurationElementEventHandler(this.OnChanged);
-				option.AfterEdit -= new XmlConfigurationElementEventHandler(this.OnAfterEdit);
-				option.EditCancelled -= new XmlConfigurationElementEventHandler(this.OnEditCancelled);
-				base.InnerList.Remove(option);
-				this.OnChanged(this, new XmlConfigurationOptionEventArgs(option, XmlConfigurationElementActions.Removed));
+				option.BeforeEdit -= OnBeforeEdit;
+				option.Changed -= OnChanged;
+				option.AfterEdit -= OnAfterEdit;
+				option.EditCancelled -= OnEditCancelled;
+				InnerList.Remove(option);
+				OnChanged(this, new XmlConfigurationOptionEventArgs(option, XmlConfigurationElementActions.Removed));
 			}
 		}
 
@@ -125,7 +118,7 @@ namespace Carbon.Configuration
 		/// <returns></returns>
 		public bool Contains(XmlConfigurationOption option) 
 		{
-			foreach(XmlConfigurationOption opt in base.InnerList)
+			foreach(XmlConfigurationOption opt in InnerList)
 				if (opt.ElementName == option.ElementName)
 					return true;
 			return false;
@@ -143,11 +136,11 @@ namespace Carbon.Configuration
 		{
 			get 
 			{
-				return base.InnerList[index] as XmlConfigurationOption;
+				return InnerList[index] as XmlConfigurationOption;
 			}
 			set 
 			{
-				base.InnerList[index] = value;
+				InnerList[index] = value;
 			}
 		}
 
@@ -159,7 +152,7 @@ namespace Carbon.Configuration
 		{
 			get
 			{
-				foreach(XmlConfigurationOption opt in base.InnerList)
+				foreach(XmlConfigurationOption opt in InnerList)
 					if (opt.ElementName == elementName)
 						return opt;
 				return null;
@@ -174,13 +167,13 @@ namespace Carbon.Configuration
 		{
 			get
 			{	
-				XmlConfigurationOption option = this[elementName];				
+				var option = this[elementName];				
 				
 				if (option == null)
 					if (createIfNotFound)
 					{
 						option = new XmlConfigurationOption(elementName, null);
-						this.Add(option);
+						Add(option);
 						option = this[elementName];
 					}
 				return option;			
@@ -195,13 +188,13 @@ namespace Carbon.Configuration
 		{
 			get
 			{
-				XmlConfigurationOption option = this[elementName];				
+				var option = this[elementName];				
 				
 				if (option == null)
 					if (createIfNotFound)
 					{
 						option = new XmlConfigurationOption(elementName, defaultValue);
-						this.Add(option);
+						Add(option);
 						option = this[elementName];
 					}
 				return option;			
@@ -232,10 +225,9 @@ namespace Carbon.Configuration
 		{
 			get
 			{
-				if (_parent == null)
+			    if (_parent == null)
 					return null;
-				else
-					return _parent.Fullpath;				
+			    return _parent.Fullpath;
 			}
 		}
 		
@@ -256,15 +248,15 @@ namespace Carbon.Configuration
 
 		public object Clone()
 		{
-			XmlConfigurationOptionCollection clone = new XmlConfigurationOptionCollection();
+			var clone = new XmlConfigurationOptionCollection();
 			clone.ResetBeforeEdit();
 			clone.ResetChanged();
 			clone.ResetAfterEdit();
 			clone.ResetEditCancelled();
 
-			foreach(XmlConfigurationOption option in base.InnerList)
+			foreach(XmlConfigurationOption option in InnerList)
 			{
-				XmlConfigurationOption clonedOption = (XmlConfigurationOption)option.Clone();
+				var clonedOption = (XmlConfigurationOption)option.Clone();
 				clonedOption.Parent = clone;
 				clone.Add(clonedOption);
 			} 
@@ -292,10 +284,10 @@ namespace Carbon.Configuration
 		{
 			try
 			{
-				/// place the element in edit mode and clone ourself so that future changes will be redirected to the clone and not to ourself
+				// place the element in edit mode and clone ourself so that future changes will be redirected to the clone and not to ourself
 				_isBeingEdited = true;
 
-				foreach(XmlConfigurationOption option in base.InnerList)
+				foreach(XmlConfigurationOption option in InnerList)
 				{
 					try
 					{
@@ -321,10 +313,10 @@ namespace Carbon.Configuration
 			{
 				if (_isBeingEdited)
 				{									
-					/// place the element in edit mode and clone ourself so that future changes will be redirected to the clone and not to ourself
+					// place the element in edit mode and clone ourself so that future changes will be redirected to the clone and not to ourself
 					_isBeingEdited = false;
 					
-					foreach(XmlConfigurationOption option in base.InnerList)
+					foreach(XmlConfigurationOption option in InnerList)
 					{
 						try
 						{
@@ -353,7 +345,7 @@ namespace Carbon.Configuration
 				{
 					_isBeingEdited = false;
 
-					foreach(XmlConfigurationOption option in base.InnerList)
+					foreach(XmlConfigurationOption option in InnerList)
 					{
 						try
 						{
@@ -378,10 +370,8 @@ namespace Carbon.Configuration
 		{
 			try
 			{
-				//EventTracing.TraceMethodAndDelegate(this, this.BeforeEdit);
-
-				if (this.BeforeEdit != null)
-					this.BeforeEdit(sender, e);
+				if (BeforeEdit != null)
+					BeforeEdit(sender, e);
 			}
 			catch(Exception ex)
 			{
@@ -393,10 +383,8 @@ namespace Carbon.Configuration
 		{
 			try
 			{
-				//EventTracing.TraceMethodAndDelegate(this, this.AfterEdit);
-
-				if (this.AfterEdit != null)
-					this.AfterEdit(sender, e);
+				if (AfterEdit != null)
+					AfterEdit(sender, e);
 			}
 			catch(Exception ex)
 			{
@@ -408,10 +396,8 @@ namespace Carbon.Configuration
 		{
 			try
 			{
-				//EventTracing.TraceMethodAndDelegate(this, this.EditCancelled);
-
-				if (this.EditCancelled != null)
-					this.EditCancelled(sender, e);
+				if (EditCancelled != null)
+					EditCancelled(sender, e);
 			}
 			catch(Exception ex)
 			{
@@ -423,13 +409,13 @@ namespace Carbon.Configuration
 		{
 			lock(this)
 			{
-				if (this.BeforeEdit != null)
+				if (BeforeEdit != null)
 				{
-					System.Delegate[] invocationList = this.BeforeEdit.GetInvocationList();
+					var invocationList = BeforeEdit.GetInvocationList();
 					if (invocationList != null)
 					{
-						foreach(System.Delegate subscriber in invocationList)
-							this.BeforeEdit -= (XmlConfigurationElementCancelEventHandler)subscriber;
+						foreach(var subscriber in invocationList)
+							BeforeEdit -= (XmlConfigurationElementCancelEventHandler)subscriber;
 					}
 				}
 			}
@@ -439,13 +425,13 @@ namespace Carbon.Configuration
 		{
 			lock(this)
 			{
-				if (this.AfterEdit != null)
+				if (AfterEdit != null)
 				{
-					System.Delegate[] invocationList = this.AfterEdit.GetInvocationList();
+					var invocationList = AfterEdit.GetInvocationList();
 					if (invocationList != null)
 					{
-						foreach(System.Delegate subscriber in invocationList)
-							this.AfterEdit -= (XmlConfigurationElementEventHandler)subscriber;
+						foreach(var subscriber in invocationList)
+							AfterEdit -= (XmlConfigurationElementEventHandler)subscriber;
 					}
 				}
 			}
@@ -455,14 +441,11 @@ namespace Carbon.Configuration
 		{
 			lock(this)
 			{
-				if (this.EditCancelled != null)
+				if (EditCancelled != null)
 				{
-					System.Delegate[] invocationList = this.EditCancelled.GetInvocationList();
-					if (invocationList != null)
-					{
-						foreach(System.Delegate subscriber in invocationList)
-							this.EditCancelled -= (XmlConfigurationElementEventHandler)subscriber;
-					}
+					var invocationList = EditCancelled.GetInvocationList();
+				    foreach(var subscriber in invocationList)
+				        EditCancelled -= (XmlConfigurationElementEventHandler)subscriber;
 				}
 			}
 		}
@@ -471,8 +454,8 @@ namespace Carbon.Configuration
 		{
 			get
 			{
-				bool anyOption = false;
-				foreach(XmlConfigurationOption option in base.InnerList)
+				var anyOption = false;
+				foreach(XmlConfigurationOption option in InnerList)
 					if (option.HasChanges)
 						anyOption = true;
 				return _hasChanges || anyOption;
@@ -485,24 +468,24 @@ namespace Carbon.Configuration
 
 		public void AcceptChanges()
 		{
-			foreach(XmlConfigurationOption option in base.InnerList)
+			foreach(XmlConfigurationOption option in InnerList)
 				option.AcceptChanges();
 			_hasChanges = false;
 		}
 
-		public bool ApplyChanges(ISupportsEditing editableObject, Carbon.Configuration.SupportedEditingActions actions)
+		public bool ApplyChanges(ISupportsEditing editableObject, SupportedEditingActions actions)
 		{
-			XmlConfigurationOptionCollection options = editableObject as XmlConfigurationOptionCollection;
+			var options = editableObject as XmlConfigurationOptionCollection;
 			if (options != null)
 			{	
 				foreach(XmlConfigurationOption option in options)
 				{					
-					XmlConfigurationOption myOption = this[option.ElementName];
+					var myOption = this[option.ElementName];
 					if (myOption != null)
 					{
 						try
 						{
-							myOption.ApplyChanges((ISupportsEditing)option, actions);
+							myOption.ApplyChanges(option, actions);
 						}
 						catch(Exception ex)
 						{
@@ -517,17 +500,17 @@ namespace Carbon.Configuration
 
 		public bool ApplyToSelf(ISupportsEditing editableObject, SupportedEditingActions actions)
 		{
-			XmlConfigurationOptionCollection options = editableObject as XmlConfigurationOptionCollection;
+			var options = editableObject as XmlConfigurationOptionCollection;
 			if (options != null)
 			{	
 				foreach(XmlConfigurationOption option in options)
 				{					
-					XmlConfigurationOption myOption = this[option.ElementName];
+					var myOption = this[option.ElementName];
 					if (myOption != null)
 					{
 						try
 						{
-							myOption.ApplyToSelf((ISupportsEditing)option, actions);
+							myOption.ApplyToSelf(option, actions);
 						}
 						catch(Exception ex)
 						{
@@ -556,8 +539,8 @@ namespace Carbon.Configuration
 				
 				//EventTracing.TraceMethodAndDelegate(this, this.Changed);
 
-				if (this.Changed != null)
-					this.Changed(sender, e);
+				if (Changed != null)
+					Changed(sender, e);
 			}
 			catch(Exception ex)
 			{
@@ -569,13 +552,13 @@ namespace Carbon.Configuration
 		{
 			lock(this)
 			{
-				if (this.Changed != null)
+				if (Changed != null)
 				{
-					System.Delegate[] invocationList = this.Changed.GetInvocationList();
+					var invocationList = Changed.GetInvocationList();
 					if (invocationList != null)
 					{
-						foreach(System.Delegate subscriber in invocationList)
-							this.Changed -= (XmlConfigurationElementEventHandler)subscriber;
+						foreach(var subscriber in invocationList)
+							Changed -= (XmlConfigurationElementEventHandler)subscriber;
 					}
 				}
 			}
@@ -589,7 +572,7 @@ namespace Carbon.Configuration
 		{
 			_isBeingInitialized = true;
 
-			foreach(XmlConfigurationOption option in base.InnerList)
+			foreach(XmlConfigurationOption option in InnerList)
 				option.BeginInit();
 		}
 
@@ -597,7 +580,7 @@ namespace Carbon.Configuration
 		{
 			_isBeingInitialized = false;
 
-			foreach(XmlConfigurationOption option in base.InnerList)
+			foreach(XmlConfigurationOption option in InnerList)
 				option.EndInit();
 		}
 

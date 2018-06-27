@@ -1,6 +1,5 @@
 using System;
 using System.Windows.Forms;
-
 using Carbon.Common;
 
 namespace Carbon.UI
@@ -29,7 +28,7 @@ namespace Carbon.UI
 		/// <param name="hWnd">A handle to the window to watch for menu messages</param>
 		public MenuLoopListener(IntPtr hWnd)
 		{			
-			base.AssignHandle(hWnd);	
+			AssignHandle(hWnd);	
 		}
 	
 		#region My Overrides
@@ -39,10 +38,10 @@ namespace Carbon.UI
 			switch(m.Msg)
 			{
 			case WM_ENTERMENULOOP:
-				EventManager.Raise<WindowMessageEventArgs>(this.EnterMenuLoop, this, new WindowMessageEventArgs(ref m));
+				EventManager.Raise(EnterMenuLoop, this, new WindowMessageEventArgs(ref m));
 				break;
 			case WM_EXITMENULOOP:
-				EventManager.Raise<WindowMessageEventArgs>(this.ExitMenuLoop, this, new WindowMessageEventArgs(ref m));
+				EventManager.Raise(ExitMenuLoop, this, new WindowMessageEventArgs(ref m));
 				break;
 			};
 

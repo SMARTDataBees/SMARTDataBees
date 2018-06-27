@@ -20,13 +20,12 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel;
+using System.Drawing.Design;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
-using System.Drawing.Design;
-using System.ComponentModel;
 
 namespace SDBees.Plugs.Properties
 {
@@ -37,21 +36,21 @@ namespace SDBees.Plugs.Properties
         public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
         {
 
-            ListBox listBox = new ListBox();
+            var listBox = new ListBox();
 
-            PropertyBag propertyBag = (PropertyBag)context.Instance;
-            int index = propertyBag.Properties.IndexOf(context.PropertyDescriptor.Name);
-            PropertySpecListbox propertySpec = (PropertySpecListbox)propertyBag.Properties[index];
+            var propertyBag = (PropertyBag)context.Instance;
+            var index = propertyBag.Properties.IndexOf(context.PropertyDescriptor.Name);
+            var propertySpec = (PropertySpecListbox)propertyBag.Properties[index];
 
             if (propertySpec.SelectionList != null)
             {
-                foreach (string strValue in propertySpec.SelectionList)
+                foreach (var strValue in propertySpec.SelectionList)
                 {
                     listBox.Items.Add(strValue);
                 }
             }
 
-            listBox.SelectedIndexChanged += new EventHandler(listBox_SelectedIndexChanged);
+            listBox.SelectedIndexChanged += listBox_SelectedIndexChanged;
 
             mEditorService = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
             mEditorService.DropDownControl(listBox);
@@ -66,7 +65,7 @@ namespace SDBees.Plugs.Properties
 
         void listBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.mEditorService.CloseDropDown();
+            mEditorService.CloseDropDown();
         }
     }
 }

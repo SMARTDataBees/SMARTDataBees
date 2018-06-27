@@ -30,15 +30,9 @@
 //	============================================================================
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
-
 using Carbon.Common;
-using Carbon.Configuration;
-using Carbon.Configuration.Providers;
-using Carbon.Configuration.SectionHandlers;
 using Carbon.UI;
 
 namespace Carbon.Configuration.Providers
@@ -67,7 +61,7 @@ namespace Carbon.Configuration.Providers
             if (configurations == null)
                 configurations = new XmlConfiguration[] { };
 
-            XmlConfigurationManagerEventArgs e = new XmlConfigurationManagerEventArgs(configurations);
+            var e = new XmlConfigurationManagerEventArgs(configurations);
             OnEnumeratingConfigurations(null, e);
 
             return e.Configurations.ToArray();
@@ -98,16 +92,16 @@ namespace Carbon.Configuration.Providers
         /// <returns></returns>
         public static DialogResult ShowConfigurationWindow(IWin32Window owner)
         {
-            DialogResult result = DialogResult.Cancel;
+            var result = DialogResult.Cancel;
 
             // create a new xml configuration properties window
-            XmlConfigurationPropertiesWindow window = new XmlConfigurationPropertiesWindow();
+            var window = new XmlConfigurationPropertiesWindow();
 
             // ask the window manager if we can show the window
-            if (WindowManager.Current.CanShow(window, new object[] { }))
+            if (WindowManager.Current.CanShow(window))
             {
                 // it can be shown, so now let us enumerate the available configurations
-                XmlConfiguration[] configurations = EnumConfigurations(new XmlConfiguration[] { });
+                var configurations = EnumConfigurations();
 
                 // ask the window manager to track this window for us
                 WindowManager.Current.BeginTrackingLifetime(window, ConfigurationWindowKey);
@@ -132,13 +126,13 @@ namespace Carbon.Configuration.Providers
         /// <returns></returns>
         public static DialogResult ShowConfigurationWindow(IWin32Window owner, XmlConfigurationPropertiesWindow window)
         {
-            DialogResult result = DialogResult.Cancel;
+            var result = DialogResult.Cancel;
 
             // ask the window manager if we can show the window
-            if (WindowManager.Current.CanShow(window, new object[] { }))
+            if (WindowManager.Current.CanShow(window))
             {
                 // it can be shown, so now let us enumerate the available configurations
-                XmlConfiguration[] configurations = EnumConfigurations(new XmlConfiguration[] { });
+                var configurations = EnumConfigurations();
 
                 // ask the window manager to track this window for us
                 WindowManager.Current.BeginTrackingLifetime(window, ConfigurationWindowKey);
@@ -217,7 +211,7 @@ namespace Carbon.Configuration.Providers
                     {
                         configuration.AcceptChanges();
                         stream = (encryptionEngine != null ? encryptionEngine.CreateEncryptorStream(path) : new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None));
-                        XmlConfigurationWriter writer = new XmlConfigurationWriter();
+                        var writer = new XmlConfigurationWriter();
                         writer.Write(configuration, stream, false);
                         configuration.SetHasUnpersistedChanges(false);
                     }
@@ -253,7 +247,7 @@ namespace Carbon.Configuration.Providers
             {
                 configuration = new XmlConfiguration();
                 stream = (encryptionEngine != null ? encryptionEngine.CreateDecryptorStream(path) : new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None));
-                XmlConfigurationReader reader = new XmlConfigurationReader();
+                var reader = new XmlConfigurationReader();
                 configuration = reader.Read(stream);
                 configuration.Path = path;
                 configuration.SetHasUnpersistedChanges(false);
@@ -287,17 +281,17 @@ namespace Carbon.Configuration.Providers
             {
                 Log.WriteLineIf(verbose, "Checking to see if the path '" + path + "' exists.");
 
-                /// if the file exists, we need to try and read it
-                if (System.IO.File.Exists(path))
+                // if the file exists, we need to try and read it
+                if (File.Exists(path))
                 {
                     Log.WriteLineIf(verbose, "The path '" + path + "' exists.");
 
-                    /// but first see if we have permissions to read it
-                    using (SecurityAccessRight right = new SecurityAccessRight(path))
+                    // but first see if we have permissions to read it
+                    using (var right = new SecurityAccessRight(path))
                     {
                         Log.WriteLineIf(verbose, "Checking to see if the path '" + path + "' has write access.");
 
-                        /// if we don't have rights to the file						
+                        // if we don't have rights to the file						
                         if (!right.AssertWriteAccess())
                         {
                             Log.WriteLineIf(verbose, "The path '" + path + "' does not have write access.");
@@ -305,8 +299,8 @@ namespace Carbon.Configuration.Providers
 
                             if (verbose)
                             {
-                                /// prompt to see what we should do about this
-                                DialogResult result = ExceptionUtilities.DisplayException(
+                                // prompt to see what we should do about this
+                                var result = ExceptionUtilities.DisplayException(
                                     null,
                                     "Write access denied - Unable to write to file",
                                     MessageBoxIcon.Error,
@@ -333,7 +327,7 @@ namespace Carbon.Configuration.Providers
                             }
                             else
                             {
-                                /// it failed, but we're not in verbose mode so who cares?
+                                // it failed, but we're not in verbose mode so who cares?
                                 return true;
                             }
                         }
@@ -341,15 +335,15 @@ namespace Carbon.Configuration.Providers
                         {
                             Log.WriteLineIf(verbose, "The path '" + path + "' has write access, preparing to write the configuration.");
 
-                            /// rights to write to the file
-                            /// ask the configuration engine to write our configuration file for us into our configuration 
+                            // rights to write to the file
+                            // ask the configuration engine to write our configuration file for us into our configuration 
                             if (!WriteConfiguration(encryptionEngine, configuration, path))
                             {
                                 Log.WriteLineIf(verbose, "Failed to write the configuration, throwing exception from the last operation.");
                                 throw _lastException;
                             }
 
-                            /// ensure that the configuration has no changes visible
+                            // ensure that the configuration has no changes visible
                             if (configuration != null)
                             {
                                 Log.WriteLineIf(verbose, "Succeeded in writing the configuration, accepting changes .");
@@ -364,14 +358,14 @@ namespace Carbon.Configuration.Providers
                 {
                     Log.WriteLineIf(verbose, "The path '" + path + "' does not exist, preparing to write the configuration for the first time.");
 
-                    /// ask the configuration engine to write our configuration file for us into our configuration 
+                    // ask the configuration engine to write our configuration file for us into our configuration 
                     if (!WriteConfiguration(encryptionEngine, configuration, path))
                     {
                         Log.WriteLineIf(verbose, "Failed to write the configuration, throwing exception from the last operation.");
                         throw _lastException;
                     }
 
-                    /// ensure that the configuration has no changes visible
+                    // ensure that the configuration has no changes visible
                     if (configuration != null)
                     {
                         Log.WriteLineIf(verbose, "Succeeded in writing the configuration, accepting changes .");
@@ -389,9 +383,9 @@ namespace Carbon.Configuration.Providers
 
                 if (verbose)
                 {
-                    /// failed for some reason writing the file
-                    /// prompt to see what we should do about this
-                    DialogResult result = ExceptionUtilities.DisplayException(
+                    // failed for some reason writing the file
+                    // prompt to see what we should do about this
+                    var result = ExceptionUtilities.DisplayException(
                         null,
                         "Exception encountered - Unable to write to file",
                         MessageBoxIcon.Error,
@@ -440,26 +434,26 @@ namespace Carbon.Configuration.Providers
 
             Log.WriteLineIf(verbose, "Checking to see if the path '" + path + "' exists.");
 
-            /// if the file exists, we need to try and read it
-            if (System.IO.File.Exists(path))
+            // if the file exists, we need to try and read it
+            if (File.Exists(path))
             {
                 Log.WriteLineIf(verbose, "The path '" + path + "' exists.");
 
                 try
                 {
-                    /// but first see if we have permissions to read it
-                    using (SecurityAccessRight right = new SecurityAccessRight(path))
+                    // but first see if we have permissions to read it
+                    using (var right = new SecurityAccessRight(path))
                     {
                         Log.WriteLineIf(verbose, "Checking to see if the path '" + path + "' has read access.");
 
-                        /// if we don't have rights to the file
+                        // if we don't have rights to the file
                         if (!right.AssertReadAccess())
                         {
                             Log.WriteLineIf(verbose, "The path '" + path + "' does not have write access.");
                             Log.WriteLineIf(verbose, "Prompting for user intervention for the path '" + path + "'.");
 
-                            /// prompt to see what we should do about this
-                            DialogResult result = ExceptionUtilities.DisplayException(
+                            // prompt to see what we should do about this
+                            var result = ExceptionUtilities.DisplayException(
                                 null,
                                 "Read access denied - Unable to read from file",
                                 MessageBoxIcon.Error,
@@ -490,18 +484,15 @@ namespace Carbon.Configuration.Providers
                         {
                             Log.WriteLineIf(verbose, "The path '" + path + "' has read access, preparing to read the configuration.");
 
-                            /// rights to read the file
-                            /// ask the configuration engine to read our configuration file for us into our configuration 
+                            // rights to read the file
+                            // ask the configuration engine to read our configuration file for us into our configuration 
                             if (!ReadConfiguration(encryptionEngine, out configuration, path))
                             {
                                 Log.WriteLineIf(verbose, "Failed to write the configuration, throwing exception from the last operation.");
                                 throw _lastException;
                             }
 
-                            /// let the configuration know where it lives							
-                            //							configuration.Path = path;
-
-                            /// ensure that the configuration has no changes visible
+                            // ensure that the configuration has no changes visible
                             if (configuration != null)
                             {
                                 Log.WriteLineIf(verbose, "Succeeded in reading the configuration, accepting changes .");
@@ -518,9 +509,9 @@ namespace Carbon.Configuration.Providers
                     Log.WriteLine(ex);
                     Log.WriteLineIf(verbose, "Prompting for user intervention for the path '" + path + "'.");
 
-                    /// failed for some reason reading the file
-                    /// prompt to see what we should do about this
-                    DialogResult result = ExceptionUtilities.DisplayException(
+                    // failed for some reason reading the file
+                    // prompt to see what we should do about this
+                    var result = ExceptionUtilities.DisplayException(
                         null,
                         "Exception encountered - Unable to read from file",
                         MessageBoxIcon.Error,
@@ -552,7 +543,7 @@ namespace Carbon.Configuration.Providers
                 Log.WriteLineIf(verbose, "The path '" + path + "' does not exist.");
             }
 
-            /// if for some reason the configuration hasn't been loaded yet
+            // if for some reason the configuration hasn't been loaded yet
             if (configuration == null)
             {
                 Log.WriteLineIf(verbose, "Creating new configuration named '" + name + "'.");
@@ -566,7 +557,7 @@ namespace Carbon.Configuration.Providers
                     Log.WriteLineIf(verbose, "Formatting callback found for the configuration named '" + name + "', calling formatting callback to apply structure to the configuration.");
                     try
                     {
-                        XmlConfigurationEventArgs e = new XmlConfigurationEventArgs(configuration, XmlConfigurationElementActions.None);
+                        var e = new XmlConfigurationEventArgs(configuration, XmlConfigurationElementActions.None);
                         handler(null, e);
                         configuration = e.Element;
                     }
@@ -580,10 +571,10 @@ namespace Carbon.Configuration.Providers
 
             Log.WriteLineIf(verbose, "Setting the path for the configuration named '" + name + "' and accepting changes to the configuration.");
 
-            /// let the configuration know where it lives
+            // let the configuration know where it lives
             configuration.Path = path;
 
-            /// ensure that the configuration has no changes visible
+            // ensure that the configuration has no changes visible
             configuration.AcceptChanges();
 
             return true;

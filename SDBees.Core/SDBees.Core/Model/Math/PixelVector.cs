@@ -19,8 +19,6 @@
  *
  */
 
-using System;
-
 namespace SDBees.Core.Model.Math
 {
     /// <summary>
@@ -43,7 +41,7 @@ namespace SDBees.Core.Model.Math
         {
             get
             {
-                return (float)System.Math.Sqrt((double)(X * X + Y * Y));
+                return (float)System.Math.Sqrt(X * X + Y * Y);
             }
         }
     }

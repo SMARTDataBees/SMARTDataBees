@@ -30,14 +30,10 @@
 //	============================================================================
 
 using System;
-using System.Collections;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-
 using Carbon.Common;
-using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
 using Carbon.UI;
 
@@ -54,13 +50,8 @@ namespace Carbon.Plugins.Providers.Custom
 		/// Provides a class that can load Types from assemblies in the application's startup path.
 		/// </summary>
 		internal sealed class TypeLoader : MarshalByRefObject
-		{	
-			/// <summary>
-			/// 
-			/// </summary>
-			public TypeLoader() {}
-
-			/// <summary>
+		{
+		    /// <summary>
 			/// Searches for plugins in the application's startup path
 			/// </summary>
 			/// <param name="viewer"></param>
@@ -72,22 +63,23 @@ namespace Carbon.Plugins.Providers.Custom
                 try
                 {
                     // starting in the startup path
-                    DirectoryInfo directoryInfo = new DirectoryInfo(Application.StartupPath);
+                    var directoryInfo = new DirectoryInfo(Application.StartupPath);
 
                     // look for all the dlls
-                    FileInfo[] files = directoryInfo.GetFiles("*.dll", SearchOption.AllDirectories);
+                    var files = directoryInfo.GetFiles("*.dll", SearchOption.AllDirectories);
 
                     // see if we can find any plugins defined in each assembly
-                    foreach (FileInfo file in files)
+                    foreach (var file in files)
                     {
                         // try and load the assembly
-                        Assembly assembly = this.LoadAssembly(file.FullName);
+                        var assembly = LoadAssembly(file.FullName);
                         if (assembly != null)
                         {
-                            ProgressViewer.SetExtendedDescription(progressViewer, string.Format("Searching for plugins. Searching '{0}'...", assembly.GetName().Name));
+                            ProgressViewer.SetExtendedDescription(progressViewer,
+                                $"Searching for plugins. Searching '{assembly.GetName().Name}'...");
 
                             // see if the assembly has any plugins defined in it
-                            TypeCollection typesInAssembly = this.LoadPluginTypesFromAssembly(assembly);
+                            var typesInAssembly = LoadPluginTypesFromAssembly(assembly);
                             if (typesInAssembly != null)
                             {
                                 if (types == null)
@@ -158,13 +150,13 @@ namespace Carbon.Plugins.Providers.Custom
                 
                 try
                 {
-                    object[] value = assembly.GetCustomAttributes(typeof(PluginDefinitionAttribute), false);
+                    var value = assembly.GetCustomAttributes(typeof(PluginDefinitionAttribute), false);
     				
                     if (value != null)
                     {
-                        PluginDefinitionAttribute[] attributes = (PluginDefinitionAttribute[])value;
+                        var attributes = (PluginDefinitionAttribute[])value;
     					
-                        foreach (PluginDefinitionAttribute attribute in attributes)
+                        foreach (var attribute in attributes)
                         {
                             if (types == null)
                                 types = new TypeCollection();
@@ -193,10 +185,10 @@ namespace Carbon.Plugins.Providers.Custom
                 try
                 {
                     // create a new appdomain where we'll try and load the plugins
-                    AppDomain domain = AppDomain.CreateDomain(Guid.NewGuid().ToString());
+                    var domain = AppDomain.CreateDomain(Guid.NewGuid().ToString());
 
                     // create an instance of the plugin loader in the new appdomain
-                    TypeLoader loader = (TypeLoader)domain.CreateInstanceFromAndUnwrap(
+                    var loader = (TypeLoader)domain.CreateInstanceFromAndUnwrap(
                         Assembly.GetExecutingAssembly().Location,
                         typeof(TypeLoader).FullName);
 

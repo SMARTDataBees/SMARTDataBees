@@ -30,8 +30,8 @@
 //	============================================================================
 
 using System;
+using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -40,7 +40,7 @@ namespace Carbon.Common
 	/// <summary>
 	/// The EncodingEngine class provides methods for Base64 and UUEncoding encoding/decoding data.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public static class Base64SerializationUtilities
 	{
 		/// <summary>
@@ -50,7 +50,7 @@ namespace Carbon.Common
 		/// <returns></returns>
 		public static bool SupportsISerializableInterface(Type t)
 		{
-			return (t.GetInterface(typeof(System.Runtime.Serialization.ISerializable).FullName) != null);
+			return (t.GetInterface(typeof(ISerializable).FullName) != null);
 		}
 
 		/// <summary>
@@ -64,18 +64,15 @@ namespace Carbon.Common
 		{
 			base64String = null;
 
-			/// if the type supports serialization
+			// if the type supports serialization
 			if (SupportsISerializableInterface(t) || t.IsSerializable)
 			{								
-				BinaryFormatter bf = new BinaryFormatter();
-				using(MemoryStream ms = new MemoryStream())
+				var bf = new BinaryFormatter();
+				using(var ms = new MemoryStream())
 				{
-					/// serialize the object graph
 					bf.Serialize(ms, instance);
-					/// retrieve the raw bytes from the serialization
-					byte[] bytes = ms.GetBuffer();
-					/// encode them to a base64 string
-					return ((base64String = System.Convert.ToBase64String(bytes)) != null);
+					var bytes = ms.GetBuffer();
+					return ((base64String = Convert.ToBase64String(bytes)) != null);
 				}
 			}			
 			return false;
@@ -90,12 +87,12 @@ namespace Carbon.Common
 		public static bool Deserialize(string base64String, out object instance)
 		{
 			instance = null;
-			BinaryFormatter bf = new BinaryFormatter();
-			/// decode the string
-			byte[] bytes = System.Convert.FromBase64String(base64String);
-			using(MemoryStream ms = new MemoryStream(bytes))
+			var bf = new BinaryFormatter();
+			// decode the string
+			var bytes = Convert.FromBase64String(base64String);
+			using(var ms = new MemoryStream(bytes))
 			{
-				/// deserialize the object graph
+				// deserialize the object graph
 				return ((instance = bf.Deserialize(ms)) != null);
 			}	
 		}

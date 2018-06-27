@@ -30,8 +30,8 @@
 //	============================================================================
 
 using System;
-using System.Diagnostics;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Carbon.Configuration
 {
@@ -59,7 +59,7 @@ namespace Carbon.Configuration
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		protected System.ComponentModel.Container components = null;
+		protected Container components;
 		
 		/// <summary> 
 		/// Clean up any resources being used.
@@ -90,7 +90,7 @@ namespace Carbon.Configuration
 
 		private void SetDefaultValues()
 		{
-			_elementName = System.Guid.NewGuid().ToString();
+			_elementName = Guid.NewGuid().ToString();
 			//			_description = null;
 			//			_category = null;
 			//			_displayName = null;
@@ -110,14 +110,11 @@ namespace Carbon.Configuration
 		/// Initializes a new instance of the XmlConfigurationElement class
 		/// </summary>
 		/// <param name="container"></param>
-		public XmlConfigurationElement(System.ComponentModel.IContainer container)
+		public XmlConfigurationElement(IContainer container)
 		{
-			///
-			/// Required for Windows.Forms Class Composition Designer support
-			///
 			container.Add(this);
-			this.InitializeComponent();
-			this.SetDefaultValues();
+			InitializeComponent();
+			SetDefaultValues();
 		}
 
 		/// <summary>
@@ -125,11 +122,8 @@ namespace Carbon.Configuration
 		/// </summary>
 		public XmlConfigurationElement()
 		{
-			///
-			/// Required for Windows.Forms Class Composition Designer support
-			///
-			this.InitializeComponent();	
-			this.SetDefaultValues();
+			InitializeComponent();	
+			SetDefaultValues();
 		}
 
 
@@ -205,7 +199,7 @@ namespace Carbon.Configuration
 
 //				_hasChanges = true;
 				_elementName = value;
-				this.OnChanged(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.Changed));				
+				OnChanged(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.Changed));				
 			}
 		}
 
@@ -241,7 +235,7 @@ namespace Carbon.Configuration
 
 //				_hasChanges = true;
 				_description = value;
-				this.OnChanged(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.Changed));				
+				OnChanged(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.Changed));				
 			}
 		}
 
@@ -275,7 +269,7 @@ namespace Carbon.Configuration
 
 //				_hasChanges = true;
 				_category = value;				
-				this.OnChanged(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.Changed));				
+				OnChanged(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.Changed));				
 			}
 		}
 
@@ -313,7 +307,7 @@ namespace Carbon.Configuration
 
 //				_hasChanges = true;
 				_displayName = value;
-				this.OnChanged(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.Changed));				
+				OnChanged(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.Changed));				
 			}
 		}
 
@@ -348,7 +342,7 @@ namespace Carbon.Configuration
 
 //				_hasChanges = true;
 				_hidden = value;
-				this.OnChanged(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.Changed));				
+				OnChanged(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.Changed));				
 			}
 		}
 
@@ -383,7 +377,7 @@ namespace Carbon.Configuration
 
 //				_hasChanges = true;
 				_readonly = value;
-				this.OnChanged(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.Changed));				
+				OnChanged(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.Changed));				
 			}
 		}
 
@@ -418,7 +412,7 @@ namespace Carbon.Configuration
 
 //				_hasChanges = true;
 				_persistent = value;
-				this.OnChanged(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.Changed));				
+				OnChanged(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.Changed));				
 			}
 		}
 
@@ -459,7 +453,7 @@ namespace Carbon.Configuration
 		/// <returns></returns>
 		public XmlConfigurationElementTypes GetElementType()
 		{
-			Type thisType = this.GetType();
+			var thisType = GetType();
 			if (thisType != null)
 			{
 				if (thisType == typeof(XmlConfigurationElement))
@@ -479,7 +473,7 @@ namespace Carbon.Configuration
 
 		protected virtual XmlConfigurationElement GetElementToEdit()
 		{
-			return (XmlConfigurationElement)this.Clone();
+			return (XmlConfigurationElement)Clone();
 		}
 
 		#endregion
@@ -505,7 +499,7 @@ namespace Carbon.Configuration
 		
 		public virtual object Clone()
 		{
-			object clone = CloningEngine.Clone(this, CloningEngine.DefaultBindingFlags);
+			var clone = CloningEngine.Clone(this, CloningEngine.DefaultBindingFlags);
 			return clone;
 		}
 
@@ -545,17 +539,17 @@ namespace Carbon.Configuration
 			{
 				if (!_isBeingEdited)
 				{
-					/// Raise BeforeEdit event and provide a means of cancellation
-					XmlConfigurationElementCancelEventArgs e = new XmlConfigurationElementCancelEventArgs(this, false);
-					this.OnBeforeEdit(this, e);
+					// Raise BeforeEdit event and provide a means of cancellation
+					var e = new XmlConfigurationElementCancelEventArgs(this, false);
+					OnBeforeEdit(this, e);
 					if (e.Cancel)
 						return false;
 					
-					/// place the element in edit mode and clone ourself so that future changes will be redirected to the clone and not to ourself					
-					_editableProxy = this.GetElementToEdit();		
+					// place the element in edit mode and clone ourself so that future changes will be redirected to the clone and not to ourself					
+					_editableProxy = GetElementToEdit();		
 					if (_editableProxy != null)
 					{
-						_editableProxy.Changed += new XmlConfigurationElementEventHandler(this.OnChanged);
+						_editableProxy.Changed += OnChanged;
 						_editableProxy._isEditableProxy = true;
 						_isBeingEdited = true;
 						return true;
@@ -571,40 +565,40 @@ namespace Carbon.Configuration
 
 		public virtual bool EndEdit()
 		{
-			bool success = false;
+			var success = false;
 			try
 			{
 				if (_isBeingEdited)
 				{		
 					_isBeingEdited = false;
 
-					this.BeginInit();
+					BeginInit();
 
 					// apply the changes
-					this.ApplyChanges((ISupportsEditing)_editableProxy, SupportedEditingActions.Synchronize);
+					ApplyChanges(_editableProxy, SupportedEditingActions.Synchronize);
 
-					this.EndInit();
+					EndInit();
 
 					// destroy clone's event handler
 					if (_editableProxy != null)
 					{
-						_editableProxy.Changed -= new XmlConfigurationElementEventHandler(this.OnChanged);
+						_editableProxy.Changed -= OnChanged;
 						_editableProxy = null;
 					}
 
 					try
 					{
-						/// make sure to kick this off so that no we are getting all events out
-						if (this.HasChanges)
-							this.OnChanged(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.Changed));
+						// make sure to kick this off so that no we are getting all events out
+						if (HasChanges)
+							OnChanged(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.Changed));
 					}
 					catch (Exception ex)
 					{
 						Debug.WriteLine(ex);
 					}
 						
-					/// reset the haschanges flag and accept the current changes
-					this.AcceptChanges();
+					// reset the haschanges flag and accept the current changes
+					AcceptChanges();
 				}
 				success = true;
 			}
@@ -614,8 +608,8 @@ namespace Carbon.Configuration
 			}
 			finally
 			{
-				/// raise the AfterEdit event
-				this.OnAfterEdit(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.None));										
+				// raise the AfterEdit event
+				OnAfterEdit(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.None));										
 			}
 			return success;			
 		}
@@ -631,14 +625,14 @@ namespace Carbon.Configuration
 					// destroy clone's event handler
 					if (_editableProxy != null)
 					{
-						_editableProxy.Changed -= new XmlConfigurationElementEventHandler(this.OnChanged);
+						_editableProxy.Changed -= OnChanged;
 						_editableProxy = null;
 					}
 
 					// should not this accept changes? just like end edit?
 					
-					/// raise the AfterEdit event
-					this.OnEditCancelled(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.None));										
+					// raise the AfterEdit event
+					OnEditCancelled(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.None));										
 				}
 				return true;
 			}
@@ -655,8 +649,8 @@ namespace Carbon.Configuration
 			{
 				//EventTracing.TraceMethodAndDelegate(this, this.BeforeEdit);
 
-				if (this.BeforeEdit != null)
-					this.BeforeEdit(sender, e);
+				if (BeforeEdit != null)
+					BeforeEdit(sender, e);
 			}
 			catch(Exception ex)
 			{
@@ -668,10 +662,8 @@ namespace Carbon.Configuration
 		{
 			try
 			{
-				//EventTracing.TraceMethodAndDelegate(this, this.AfterEdit);
-
-				if (this.AfterEdit != null)
-					this.AfterEdit(sender, e);
+				if (AfterEdit != null)
+					AfterEdit(sender, e);
 			}
 			catch(Exception ex)
 			{
@@ -683,10 +675,8 @@ namespace Carbon.Configuration
 		{
 			try
 			{
-				//EventTracing.TraceMethodAndDelegate(this, this.EditCancelled);
-
-				if (this.EditCancelled != null)
-					this.EditCancelled(sender, e);
+				if (EditCancelled != null)
+					EditCancelled(sender, e);
 			}
 			catch(Exception ex)
 			{
@@ -698,14 +688,11 @@ namespace Carbon.Configuration
 		{
 			lock(this)
 			{
-				if (this.BeforeEdit != null)
+				if (BeforeEdit != null)
 				{
-					System.Delegate[] invocationList = this.BeforeEdit.GetInvocationList();
-					if (invocationList != null)
-					{
-						foreach(System.Delegate subscriber in invocationList)
-							this.BeforeEdit -= (XmlConfigurationElementCancelEventHandler)subscriber;
-					}
+					var invocationList = BeforeEdit.GetInvocationList();
+				    foreach(var subscriber in invocationList)
+				        BeforeEdit -= (XmlConfigurationElementCancelEventHandler)subscriber;
 				}
 			}
 		}
@@ -714,14 +701,11 @@ namespace Carbon.Configuration
 		{
 			lock(this)
 			{
-				if (this.AfterEdit != null)
+				if (AfterEdit != null)
 				{
-					System.Delegate[] invocationList = this.AfterEdit.GetInvocationList();
-					if (invocationList != null)
-					{
-						foreach(System.Delegate subscriber in invocationList)
-							this.AfterEdit -= (XmlConfigurationElementEventHandler)subscriber;
-					}
+					var invocationList = AfterEdit.GetInvocationList();
+				    foreach(var subscriber in invocationList)
+				        AfterEdit -= (XmlConfigurationElementEventHandler)subscriber;
 				}
 			}
 		}
@@ -730,14 +714,11 @@ namespace Carbon.Configuration
 		{
 			lock(this)
 			{
-				if (this.EditCancelled != null)
+				if (EditCancelled != null)
 				{
-					System.Delegate[] invocationList = this.EditCancelled.GetInvocationList();
-					if (invocationList != null)
-					{
-						foreach(System.Delegate subscriber in invocationList)
-							this.EditCancelled -= (XmlConfigurationElementEventHandler)subscriber;
-					}
+					var invocationList = EditCancelled.GetInvocationList();
+				    foreach(var subscriber in invocationList)
+				        EditCancelled -= (XmlConfigurationElementEventHandler)subscriber;
 				}
 			}
 		}
@@ -754,33 +735,30 @@ namespace Carbon.Configuration
 			}
 		}
 
-		public virtual void AcceptChanges()
-		{
-			this.HasChanges = false;
-		}
+		public virtual void AcceptChanges() => HasChanges = false;
 
-		public virtual bool ApplyChanges(ISupportsEditing editableObject, Carbon.Configuration.SupportedEditingActions actions)
+	    public virtual bool ApplyChanges(ISupportsEditing editableObject, SupportedEditingActions actions)
 		{
 			if (actions == SupportedEditingActions.None)
 				return true;
 
-			XmlConfigurationElement element = editableObject as XmlConfigurationElement;			
+			var element = editableObject as XmlConfigurationElement;			
 			if (element != null)
 			{
-				/// do we match in full paths?
-				if (string.Compare(this.Fullpath, element.Fullpath, true) == 0)
+				// do we match in full paths?
+				if (string.Compare(Fullpath, element.Fullpath, true) == 0)
 				{
-					/// does the element have changes, if not we don't need to bother
+					// does the element have changes, if not we don't need to bother
 					if (element.HasChanges)
 					{				
-						/// yes so apply it's changed features
-						this.ElementName = element.ElementName;
-						this.Description = element.Description;
-						this.Category = element.Category;
-						this.DisplayName = element.DisplayName;
-						this.Hidden = element.Hidden;
-						this.Readonly = element.Readonly;
-						this.Persistent = element.Persistent;
+						// yes so apply it's changed features
+						ElementName = element.ElementName;
+						Description = element.Description;
+						Category = element.Category;
+						DisplayName = element.DisplayName;
+						Hidden = element.Hidden;
+						Readonly = element.Readonly;
+						Persistent = element.Persistent;
 					}
 					return true;
 				}
@@ -792,21 +770,21 @@ namespace Carbon.Configuration
 
 		public virtual bool ApplyToSelf(ISupportsEditing editableObject, SupportedEditingActions actions)
 		{
-			XmlConfigurationElement element = editableObject as XmlConfigurationElement;			
+			var element = editableObject as XmlConfigurationElement;			
 			if (element != null)
 			{
 				// if this fullpath matches the element's full path, then these may apply to each other
-				if (string.Compare(this.Fullpath, element.Fullpath, true) == 0)
+				if (string.Compare(Fullpath, element.Fullpath, true) == 0)
 				{
 					if (element.HasChanges)
 					{
-						this.ElementName = element.ElementName;
-						this.Description = element.Description;
-						this.Category = element.Category;
-						this.DisplayName = element.DisplayName;
-						this.Hidden = element.Hidden;
-						this.Readonly = element.Readonly;
-						this.Persistent = element.Persistent;
+						ElementName = element.ElementName;
+						Description = element.Description;
+						Category = element.Category;
+						DisplayName = element.DisplayName;
+						Hidden = element.Hidden;
+						Readonly = element.Readonly;
+						Persistent = element.Persistent;
 					}
 					return true;
 				}
@@ -828,15 +806,15 @@ namespace Carbon.Configuration
 				if (_isBeingInitialized/*|| _isBeingEdited */) return;	
 
 				// are we ourselves changing? if not then our sub options and sub categories don't change us!!!
-				if (string.Compare(this.Fullpath, e.Element.Fullpath, true) == 0)
+				if (string.Compare(Fullpath, e.Element.Fullpath, true) == 0)
 				{					
 					_hasChanges = true;
 				}											
 
 				//EventTracing.TraceMethodAndDelegate(this, this.Changed);
 
-				if (this.Changed != null)
-					this.Changed(sender, e);
+				if (Changed != null)
+					Changed(sender, e);
 
 			}
 			catch(Exception ex)
@@ -849,13 +827,13 @@ namespace Carbon.Configuration
 		{
 			lock(this)
 			{
-				if (this.Changed != null)
+				if (Changed != null)
 				{
-					System.Delegate[] invocationList = this.Changed.GetInvocationList();
+					var invocationList = Changed.GetInvocationList();
 					if (invocationList != null)
 					{
-						foreach(System.Delegate subscriber in invocationList)
-							this.Changed -= (XmlConfigurationElementEventHandler)subscriber;
+						foreach(var subscriber in invocationList)
+							Changed -= (XmlConfigurationElementEventHandler)subscriber;
 					}
 				}
 			}
@@ -865,7 +843,7 @@ namespace Carbon.Configuration
 
 		public virtual void TriggerChange()
 		{
-			this.OnChanged(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.Changed));
+			OnChanged(this, new XmlConfigurationElementEventArgs(this, XmlConfigurationElementActions.Changed));
 		}
 	}
 }

@@ -35,7 +35,7 @@ using System.Diagnostics;
 namespace Carbon.Common
 {
 	/// <summary>
-	/// Provides a generic method that can raise any event that uses an EventHandler<> based delegate.
+	/// Provides a generic method that can raise any event that uses an EventHandler based delegate.
 	/// </summary>
 	public static class EventManager
 	{

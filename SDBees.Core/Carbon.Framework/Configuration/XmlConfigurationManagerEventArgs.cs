@@ -36,11 +36,11 @@ namespace Carbon.Configuration
 	/// <summary>
 	/// Summary description for XmlConfigurationManagerEventArgs.
 	/// </summary>
-	public class XmlConfigurationManagerEventArgs : System.EventArgs 
+	public class XmlConfigurationManagerEventArgs : EventArgs 
 	{
 		private XmlConfigurationCollection _configurations;
 
-		public XmlConfigurationManagerEventArgs(params XmlConfiguration[] configurations) : base()
+		public XmlConfigurationManagerEventArgs(params XmlConfiguration[] configurations)
 		{
 			_configurations = new XmlConfigurationCollection(configurations);
 		}

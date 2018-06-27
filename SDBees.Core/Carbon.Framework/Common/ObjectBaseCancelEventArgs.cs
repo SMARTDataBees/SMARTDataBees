@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 
 namespace Carbon.Common
 {
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public class ObjectBaseCancelEventArgs : ObjectCancelEventArgs
 	{
 		public ObjectBaseCancelEventArgs(ObjectBase context, ObjectActions action, bool cancel)

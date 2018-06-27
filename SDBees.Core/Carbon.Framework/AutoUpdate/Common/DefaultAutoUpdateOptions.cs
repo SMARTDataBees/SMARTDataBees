@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using Carbon.Common;
 
 namespace Carbon.AutoUpdate.Common
@@ -15,7 +11,6 @@ namespace Carbon.AutoUpdate.Common
 		/// Initializes a new instance of the DefaultAutoUpdateOptions class
 		/// </summary>
 		public DefaultAutoUpdateOptions()
-			: base()
 		{
 			/*
 			 * The default options provide the following behaviors unless modified
@@ -25,17 +20,17 @@ namespace Carbon.AutoUpdate.Common
 			 * 2. Once downloaded, do not automatically switch to the new version, continue to allow the user to run the current version.
 			 * 3. Once downloaded, if the alternate path is set, copy the update to the specified location. By default the path is not set.			
 			 * */
-			base.BeginInit();
+			BeginInit();
 
-			base.AutomaticallyCheckForUpdates = true;
-			base.AutomaticallyDownloadUpdates = false;
-			base.AutomaticallyInstallUpdates = true;
-			base.AutomaticallySwitchToNewVersion = false;
-			base.AutomaticallyUpdateAlternatePath = true;
-			base.AlternatePath = string.Empty;
-			base.WebServiceUrl = CarbonConfig.AutoUpdateWebServiceUrl;
+			AutomaticallyCheckForUpdates = true;
+			AutomaticallyDownloadUpdates = false;
+			AutomaticallyInstallUpdates = true;
+			AutomaticallySwitchToNewVersion = false;
+			AutomaticallyUpdateAlternatePath = true;
+			AlternatePath = string.Empty;
+			WebServiceUrl = CarbonConfig.AutoUpdateWebServiceUrl;
 
-			base.EndInit();
+			EndInit();
 		}
 	}
 }

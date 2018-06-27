@@ -29,8 +29,6 @@
 //
 //	============================================================================
 
-using System;
-
 namespace Carbon.AutoUpdate.Common
 {
 	/// <summary>
@@ -140,15 +138,15 @@ namespace Carbon.AutoUpdate.Common
 		public static AutoUpdateDownloadDescriptor[] Sort(AutoUpdateDownloadDescriptor[] updates)
 		{
 			// front to back - 1 
-			for(int i = 0; i < updates.Length - 1; i++)
+			for(var i = 0; i < updates.Length - 1; i++)
 			{
 				// front + 1 to back
-				for(int j = i + 1; j < updates.Length; j++)
+				for(var j = i + 1; j < updates.Length; j++)
 				{			
 					if (updates[i].Manifest.Product.Version < updates[j].Manifest.Product.Version)
 					{											 
 						// swap i with j, where i=1 and j=2
-						AutoUpdateDownloadDescriptor update = updates[j];
+						var update = updates[j];
 						updates[j] = updates[i];
 						updates[i] = update;
 					}													

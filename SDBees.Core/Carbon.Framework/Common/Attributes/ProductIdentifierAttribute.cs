@@ -39,7 +39,7 @@ namespace Carbon.Common.Attributes
 	/// Defines an Assembly level attribute that contains a unique identifier that should be
 	/// applied to all plugin host executables.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Assembly, AllowMultiple=false)]
+	[AttributeUsage(AttributeTargets.Assembly)]
 	public sealed class ProductIdentifierAttribute : Attribute
 	{
 		private readonly string _id;
@@ -49,7 +49,6 @@ namespace Carbon.Common.Attributes
 		/// </summary>
 		/// <param name="id">A string that uniquely identifies an application.</param>
 		public ProductIdentifierAttribute(string id)
-			: base()
 		{
 			_id = id;
 		}
@@ -74,7 +73,7 @@ namespace Carbon.Common.Attributes
 		{			
 			try
 			{
-				object[] attributes = assembly.GetCustomAttributes(typeof(ProductIdentifierAttribute), false);
+				var attributes = assembly.GetCustomAttributes(typeof(ProductIdentifierAttribute), false);
 				if (attributes != null)
 					if (attributes.Length > 0)
 						return attributes[0] as ProductIdentifierAttribute;

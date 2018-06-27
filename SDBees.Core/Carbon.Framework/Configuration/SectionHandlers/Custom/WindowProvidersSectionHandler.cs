@@ -29,10 +29,6 @@
 //
 //	============================================================================
 
-using System;
-using System.Configuration;
-using System.Xml;
-
 using Carbon.Common;
 using Carbon.UI.Providers;
 
@@ -43,16 +39,7 @@ namespace Carbon.Configuration.SectionHandlers.Custom
 	/// </summary>
 	public sealed class WindowProvidersSectionHandler : ProviderConfigurationSectionHandler
 	{
-        /// <summary>
-        /// Initializes a new instance of the WindowProvidersSectionHandler class.
-        /// </summary>
-		public WindowProvidersSectionHandler() : 
-            base()
-		{
-			
-		}
-
-		/// <summary>
+	    /// <summary>
 		/// Returns a new WindowProviderCollection.
 		/// </summary>
 		/// <returns></returns>

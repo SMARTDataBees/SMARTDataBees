@@ -1,5 +1,6 @@
 ﻿namespace SDBees.Plugins.TreeviewHelper
 {
+    /// <inheritdoc />
     partial class ListViewHelperUserControl
     {
         /// <summary> 
@@ -28,33 +29,33 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.m_dataGridViewChildElements = new System.Windows.Forms.DataGridView();
-            ((System.ComponentModel.ISupportInitialize)(this.m_dataGridViewChildElements)).BeginInit();
+            this._dataGridView = new System.Windows.Forms.DataGridView();
+            ((System.ComponentModel.ISupportInitialize)(this._dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // m_dataGridViewChildElements
             // 
-            this.m_dataGridViewChildElements.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.m_dataGridViewChildElements.Location = new System.Drawing.Point(12, 27);
-            this.m_dataGridViewChildElements.Name = "m_dataGridViewChildElements";
-            this.m_dataGridViewChildElements.Size = new System.Drawing.Size(240, 150);
-            this.m_dataGridViewChildElements.TabIndex = 0;
+            this._dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this._dataGridView.Location = new System.Drawing.Point(12, 27);
+            this._dataGridView.Name = "_dataGridView";
+            this._dataGridView.Size = new System.Drawing.Size(240, 150);
+            this._dataGridView.TabIndex = 0;
             // 
             // ListViewHelperUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.m_dataGridViewChildElements);
+            this.Controls.Add(this._dataGridView);
             this.Name = "ListViewHelperUserControl";
             this.Size = new System.Drawing.Size(422, 319);
-            ((System.ComponentModel.ISupportInitialize)(this.m_dataGridViewChildElements)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._dataGridView)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.DataGridView m_dataGridViewChildElements;
+        private System.Windows.Forms.DataGridView _dataGridView;
 
     }
 }

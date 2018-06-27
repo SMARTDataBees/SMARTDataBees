@@ -20,10 +20,10 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Drawing;
-using System.Collections;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace SDBees.DB
@@ -31,24 +31,24 @@ namespace SDBees.DB
 	/// <summary>
 	/// Summary description for InputBoxForm.
 	/// </summary>
-	internal class frmInputBox : System.Windows.Forms.Form
+	internal class frmInputBox : Form
 	{
-		private System.Windows.Forms.Button btnOK;
-		private System.Windows.Forms.Button btnCancel;
-		private System.Windows.Forms.Label lblText;
-		private System.Windows.Forms.TextBox txtResult;
+		private Button btnOK;
+		private Button btnCancel;
+		private Label lblText;
+		private TextBox txtResult;
 		private string strReturnValue;
 		private Point pntStartLocation;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		private System.ComponentModel.Container components = null;
+		private Container components = null;
 
 		public frmInputBox()
 		{
 			// Required for Windows Form Designer support
 			InitializeComponent();
-			this.strReturnValue = "";
+			strReturnValue = "";
 		}
 
 		/// <summary>
@@ -138,31 +138,31 @@ namespace SDBees.DB
 		}
 		#endregion
 
-		private void InputBoxForm_Load(object sender, System.EventArgs e)
+		private void InputBoxForm_Load(object sender, EventArgs e)
 		{
-			if (!this.pntStartLocation.IsEmpty) 
+			if (!pntStartLocation.IsEmpty) 
 			{
-				this.Top = this.pntStartLocation.X;
-				this.Left = this.pntStartLocation.Y;
+				Top = pntStartLocation.X;
+				Left = pntStartLocation.Y;
 			}
 		}
 
-		private void btnOK_Click(object sender, System.EventArgs e)
+		private void btnOK_Click(object sender, EventArgs e)
 		{
-			this.strReturnValue = this.txtResult.Text;
-			this.Close();
+			strReturnValue = txtResult.Text;
+			Close();
 		}
 
-		private void btnCancel_Click(object sender, System.EventArgs e)
+		private void btnCancel_Click(object sender, EventArgs e)
 		{
-			this.Close();
+			Close();
 		}
 
 		public string Title
 		{
 			set
 			{
-				this.Text = value;
+				Text = value;
 			}
 		}
 
@@ -170,7 +170,7 @@ namespace SDBees.DB
 		{
 			set
 			{
-				this.lblText.Text = value;
+				lblText.Text = value;
 			}
 		}
 
@@ -186,8 +186,8 @@ namespace SDBees.DB
 		{
 			set
 			{
-				this.txtResult.Text = value;
-				this.txtResult.SelectAll();
+				txtResult.Text = value;
+				txtResult.SelectAll();
 			}
 		}
 
@@ -195,7 +195,7 @@ namespace SDBees.DB
 		{
 			set
 			{
-				this.pntStartLocation = value;
+				pntStartLocation = value;
 			}
 		}
 	}

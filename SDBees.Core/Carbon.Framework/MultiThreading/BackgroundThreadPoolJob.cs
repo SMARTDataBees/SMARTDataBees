@@ -30,13 +30,14 @@
 //	============================================================================
 
 using System;
+using System.Diagnostics;
 
 namespace Carbon.MultiThreading
 {
 	/// <summary>
 	/// Defines a Job that will be executed by the BackgroundThreadPool
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public sealed class BackgroundThreadPoolJob
 	{		
 		internal Guid _id;

@@ -29,7 +29,6 @@
 //
 //	============================================================================
 
-using System;
 using System.Collections;
 using System.Windows.Forms;
 
@@ -58,7 +57,7 @@ namespace Carbon.Configuration
 		/// <returns></returns>
 		public bool BindToCategory(XmlConfigurationCategory category)
 		{
-			if (!this.IsBoundToCategory(category))
+			if (!IsBoundToCategory(category))
 			{
 				_table.Add(category.Fullpath, category);
 				return true;

@@ -20,14 +20,18 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-namespace SDBees.ViewAdmin
+
+using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace SDBees.Core.Admin
 {
     partial class CheckDatabaseDLG
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -62,48 +66,53 @@ namespace SDBees.ViewAdmin
             // cbAutomaticFix
             // 
             this.cbAutomaticFix.AutoSize = true;
-            this.cbAutomaticFix.Location = new System.Drawing.Point(12, 12);
+            this.cbAutomaticFix.Location = new System.Drawing.Point(16, 15);
+            this.cbAutomaticFix.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cbAutomaticFix.Name = "cbAutomaticFix";
-            this.cbAutomaticFix.Size = new System.Drawing.Size(87, 17);
+            this.cbAutomaticFix.Size = new System.Drawing.Size(114, 21);
             this.cbAutomaticFix.TabIndex = 0;
-            this.cbAutomaticFix.Text = "Repair &Errors";
+            this.cbAutomaticFix.Text = "Repair &errors";
             this.cbAutomaticFix.UseVisualStyleBackColor = true;
             // 
             // cbAutomaticDelete
             // 
             this.cbAutomaticDelete.AutoSize = true;
-            this.cbAutomaticDelete.Location = new System.Drawing.Point(12, 35);
+            this.cbAutomaticDelete.Location = new System.Drawing.Point(16, 43);
+            this.cbAutomaticDelete.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cbAutomaticDelete.Name = "cbAutomaticDelete";
-            this.cbAutomaticDelete.Size = new System.Drawing.Size(162, 17);
+            this.cbAutomaticDelete.Size = new System.Drawing.Size(221, 21);
             this.cbAutomaticDelete.TabIndex = 1;
-            this.cbAutomaticDelete.Text = "&Delete unreferenced Objects";
+            this.cbAutomaticDelete.Text = "&Delete unreferenced elements";
             this.cbAutomaticDelete.UseVisualStyleBackColor = true;
             // 
             // bnStart
             // 
             this.bnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.bnStart.Location = new System.Drawing.Point(377, 8);
+            this.bnStart.Location = new System.Drawing.Point(573, 10);
+            this.bnStart.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.bnStart.Name = "bnStart";
-            this.bnStart.Size = new System.Drawing.Size(106, 23);
+            this.bnStart.Size = new System.Drawing.Size(71, 28);
             this.bnStart.TabIndex = 3;
-            this.bnStart.Text = "Start &Check";
+            this.bnStart.Text = "&Check";
             this.bnStart.UseVisualStyleBackColor = true;
             this.bnStart.Click += new System.EventHandler(this.bnStart_Click);
             // 
             // statusStrip1
             // 
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.progressBar});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 258);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 323);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(495, 22);
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
+            this.statusStrip1.Size = new System.Drawing.Size(660, 22);
             this.statusStrip1.TabIndex = 4;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // progressBar
             // 
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(200, 16);
+            this.progressBar.Size = new System.Drawing.Size(267, 20);
             this.progressBar.Visible = false;
             // 
             // ebOutput
@@ -111,25 +120,27 @@ namespace SDBees.ViewAdmin
             this.ebOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ebOutput.Location = new System.Drawing.Point(12, 67);
+            this.ebOutput.Location = new System.Drawing.Point(16, 82);
+            this.ebOutput.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.ebOutput.Multiline = true;
             this.ebOutput.Name = "ebOutput";
             this.ebOutput.ReadOnly = true;
             this.ebOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.ebOutput.Size = new System.Drawing.Size(471, 188);
+            this.ebOutput.Size = new System.Drawing.Size(627, 230);
             this.ebOutput.TabIndex = 5;
             // 
             // CheckDatabaseDLG
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(495, 280);
+            this.ClientSize = new System.Drawing.Size(660, 345);
             this.Controls.Add(this.ebOutput);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.bnStart);
             this.Controls.Add(this.cbAutomaticDelete);
             this.Controls.Add(this.cbAutomaticFix);
-            this.MinimumSize = new System.Drawing.Size(430, 280);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.MinimumSize = new System.Drawing.Size(567, 334);
             this.Name = "CheckDatabaseDLG";
             this.Text = "Check database";
             this.statusStrip1.ResumeLayout(false);
@@ -141,11 +152,11 @@ namespace SDBees.ViewAdmin
 
         #endregion
 
-        private System.Windows.Forms.CheckBox cbAutomaticFix;
-        private System.Windows.Forms.CheckBox cbAutomaticDelete;
-        private System.Windows.Forms.Button bnStart;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripProgressBar progressBar;
-        private System.Windows.Forms.TextBox ebOutput;
+        private CheckBox cbAutomaticFix;
+        private CheckBox cbAutomaticDelete;
+        private Button bnStart;
+        private StatusStrip statusStrip1;
+        private ToolStripProgressBar progressBar;
+        private TextBox ebOutput;
     }
 }

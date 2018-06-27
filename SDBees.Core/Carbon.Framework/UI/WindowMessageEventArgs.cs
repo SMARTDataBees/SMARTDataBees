@@ -15,7 +15,6 @@ namespace Carbon.UI
 		/// </summary>
 		/// <param name="m">A reference to the window message being processed.</param>
 		public WindowMessageEventArgs(ref Message m)
-			: base()
 		{
 			_message = m;
 		}

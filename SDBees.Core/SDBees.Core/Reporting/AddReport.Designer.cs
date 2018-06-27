@@ -20,6 +20,10 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.ComponentModel;
+using System.Windows.Forms;
+
 namespace SDBees.Reporting
 {
     partial class AddReport
@@ -27,7 +31,7 @@ namespace SDBees.Reporting
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -102,8 +106,8 @@ namespace SDBees.Reporting
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.TextBox textBoxReportName;
+        private Button button1;
+        private Button button2;
+        private TextBox textBoxReportName;
     }
 }

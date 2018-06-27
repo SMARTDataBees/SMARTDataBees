@@ -20,24 +20,21 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-
 using System.Windows.Forms;
-
-using SDBees.Plugs;
+using SDBees.Plugs.TemplateBase;
 
 namespace SDBees.EDM
 {
-	public abstract class EDMTreeNodeHelper : SDBees.Plugs.TemplateBase.TemplateBase
+	public abstract class EDMTreeNodeHelper : TemplateBase
 	{
 		public abstract string PluginSectionText();
         private static Hashtable _hashPlugins;
 
         public EDMTreeNodeHelper()
-            : base()
         {
             try
             {
@@ -45,7 +42,7 @@ namespace SDBees.EDM
                 {
                     _hashPlugins = new Hashtable();
                 }
-                string treenodeType = this.GetType().ToString();
+                var treenodeType = GetType().ToString();
                 _hashPlugins.Add(treenodeType, this);
             }
             catch (Exception ex)
@@ -78,7 +75,7 @@ namespace SDBees.EDM
 
         internal static List<EDMTreeNodeHelper> GetAllPlugins()
         {
-            List<EDMTreeNodeHelper> result = new List<EDMTreeNodeHelper>();
+            var result = new List<EDMTreeNodeHelper>();
 
             foreach (DictionaryEntry plugin in _hashPlugins)
             {

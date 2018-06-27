@@ -20,18 +20,16 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
-using System.Collections;
-using System.Text;
+
+using System.Linq;
 
 namespace SDBees.DB
 {
-    internal class UserBaseData : SDBees.DB.Object
+    internal class UserBaseData : Object
     {
         #region Private Data Members
 
-        private static Table gTable = null;
+        private static Table gTable;
 
         #endregion
 
@@ -82,7 +80,7 @@ namespace SDBees.DB
         /// </summary>
         public UserBaseData()
         {
-            base.Table = gTable;
+            Table = gTable;
         }
 
         #endregion
@@ -91,17 +89,19 @@ namespace SDBees.DB
 
         internal static void InitTableSchema(Database database)
         {
-            UserBaseData baseData = new UserBaseData();
+            var baseData = new UserBaseData();
             baseData.InitTableSchema(ref gTable, database);
 
             // Now add the name column
-            int loginFlags = (int)SDBees.DB.DbFlags.eUnique;
+            var loginFlags = (int)DbFlags.eUnique;
 //            baseData.AddColumn(new Column("loginname", DbType.eString, "Login Name", "Login Name", "General", 50, "Unknown", loginFlags), database);
-            baseData.AddColumn(new Column("loginname", DbType.eString, "Login Name", "Login Name", "General", 50, "Unknown", 0), database);
-            baseData.AddColumn(new Column("name", DbType.eString, "Name", "Full name of the user", "General", 100, "", 0), database);
-            baseData.AddColumn(new Column("description", DbType.eString, "Description", "Description of the user", "General", 255, "", 0), database);
-            baseData.AddColumn(new Column("email", DbType.eString, "Email Address", "Email Address for communication", "General", 255, "", 0), database);
-            baseData.Table.Columns["loginname"].Editable = false;
+            baseData.AddColumn(new Column("loginname", DbType.String, "Login Name", "Login Name", "General", 50, "Unknown", 0), database);
+            baseData.AddColumn(new Column("name", DbType.String, "Name", "Full name of the user", "General", 100, "", 0), database);
+            baseData.AddColumn(new Column("description", DbType.String, "Description", "Description of the user", "General", 255, "", 0), database);
+            baseData.AddColumn(new Column("email", DbType.String, "Email Address", "Email Address for communication", "General", 255, "", 0), database);
+
+            var column = baseData.Table.Columns.FirstOrDefault(clmn => clmn.Name.Equals("loginname"));
+            column.IsEditable = false;
         }
 
         /// <summary>
@@ -112,22 +112,6 @@ namespace SDBees.DB
         {
             base.SetDefaults(database);
         }
-
-        #endregion
-
-        #region Protected Methods
-
-        /// <summary>
-        /// Returns the table name
-        /// </summary>
-        /// <returns></returns>
-        ///
-        /*
-        protected override string TableName()
-        {
-            return "sdbUsers";
-        }
-         * */
 
         #endregion
 

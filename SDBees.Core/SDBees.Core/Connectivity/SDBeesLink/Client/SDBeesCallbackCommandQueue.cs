@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SDBees.Core.Connectivity.SDBeesLink
 {
     public class SDBeesCallbackCommandQueue
     {
-        private readonly object m_locker = null;
+        private readonly object m_locker;
 
-        private Queue<SDBeesCallbackCommand> m_commandQueue = null;
+        private Queue<SDBeesCallbackCommand> m_commandQueue;
 
         /// <summary>
         /// full constructor

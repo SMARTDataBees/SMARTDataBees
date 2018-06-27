@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Carbon.AutoUpdate.Common
 {
@@ -18,7 +16,6 @@ namespace Carbon.AutoUpdate.Common
 		/// <param name="options">The options that contain the changes.</param>
 		/// <param name="optionThatChanged">The name of the option that changed.</param>
 		public AutoUpdateOptionsEventArgs(AutoUpdateOptions options, AutoUpdateOptionNames optionThatChanged)
-			: base()
 		{
 			_options = options;
 			_optionThatChanged = optionThatChanged;

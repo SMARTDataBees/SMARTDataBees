@@ -1,10 +1,12 @@
-﻿using Carbon.Plugins;
-using Carbon.Plugins.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Windows.Forms;
+using Carbon.Plugins;
+using Carbon.Plugins.Attributes;
+using SDBees.Core.Connectivity.SDBeesLink.UI;
+using SDBees.Core.Global;
+using SDBees.DB;
+using SDBees.Main.Window;
+using SDBees.Plugs.TemplateMenue;
 
 namespace SDBees.Core.Connectivity.SDBeesLink
 {
@@ -14,50 +16,46 @@ namespace SDBees.Core.Connectivity.SDBeesLink
     [PluginId("8266690D-0257-4881-9822-980202779D23")]
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
-    [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
-    [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
-    [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
+    [PluginDependency(typeof(SDBeesDBConnection))]
+    [PluginDependency(typeof(MainWindowApplication))]
+    [PluginDependency(typeof(GlobalManager))]
 
-    class SDBeesExternalDocumentAdmin : SDBees.Plugs.TemplateMenue.TemplateMenue
+    class SDBeesExternalDocumentAdmin : TemplateMenue
     {
-        private static SDBeesExternalDocumentAdmin _theInstance;
-        private MenuItem _mnuItem;
+        private readonly MenuItem _mnuItem;
         private PluginContext _context;
 
-        public SDBeesExternalDocumentAdmin() : base()
+        public SDBeesExternalDocumentAdmin()
         {
-            _theInstance = this;
+            Current = this;
             _mnuItem = new MenuItem("External document manager ...");
-            this._mnuItem.Click += _mnuItem_Click;
+            _mnuItem.Click += _mnuItem_Click;
         }
 
         /// <summary>
         /// Returns the one and only ViewAdminManager Plugin instance.
         /// </summary>
-        public static SDBeesExternalDocumentAdmin Current
-        {
-            get { return _theInstance; }
-        }
+        public static SDBeesExternalDocumentAdmin Current { get; private set; }
 
         /// <summary>
         /// The Context for the loaded Plugin
         /// </summary>
         public PluginContext MyContext
         {
-            get { return this._context; }
+            get { return _context; }
         }
 
         void _mnuItem_Click(object sender, EventArgs e)
         {
-            UI.SDBeesExternalDocumentDLG dlg = new UI.SDBeesExternalDocumentDLG();
-            DialogResult dialogResult = dlg.ShowDialog();
+            var dlg = new SDBeesExternalDocumentDLG();
+            var dialogResult = dlg.ShowDialog();
             if (dialogResult == DialogResult.OK)
             {
                 MyDBManager.OnUpdate(null);
             }
         }
 
-        protected override void Start(Carbon.Plugins.PluginContext context, Carbon.Plugins.PluginDescriptorEventArgs e)
+        protected override void Start(PluginContext context, PluginDescriptorEventArgs e)
         {
             try
             {
@@ -66,11 +64,6 @@ namespace SDBees.Core.Connectivity.SDBeesLink
                 _context = context;
 
                 StartMe(context, e);
-
-                if (MyDBManager != null)
-                {
-                }
-
                 //Setting up the menuitem
                 if (MyMainWindow != null)
                 {
@@ -83,14 +76,14 @@ namespace SDBees.Core.Connectivity.SDBeesLink
             }
         }
 
-        protected override void Stop(Carbon.Plugins.PluginContext context, Carbon.Plugins.PluginDescriptorEventArgs e)
+        protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
         {
-            //throw new NotImplementedException();
+            
         }
 
         protected override void OnDatabaseChanged(object sender, EventArgs e)
         {
-            // empty
+            
         }
     }
 }

@@ -1,8 +1,7 @@
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -11,27 +10,27 @@ namespace Carbon.UI
 	/// <summary>
 	/// Summary description for CancellableProgressWindow.
 	/// </summary>
-	public class CancellableProgressWindow : System.Windows.Forms.Form, IProgressViewer
+	public class CancellableProgressWindow : Form, IProgressViewer
 	{
 		private delegate void SetTextEventHandler(string text);
 		private delegate void SetImageEventHandler(Image image);
 		private delegate void SetMarqueeMovingEventHandler(bool moving, bool reset);
 
-		private System.Windows.Forms.Label _labelText;
+		private Label _labelText;
 		private InformationPanel _informationPanel;
-		private System.Windows.Forms.Button buttonCancel;
+		private Button buttonCancel;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		private System.ComponentModel.Container components = null;
+		private Container components = null;
 
 		public event EventHandler Cancelled;
 
 		public CancellableProgressWindow()
 		{
-			this.InitializeComponent();
-			this.SetMarqueeMoving(true, true);
-			this.buttonCancel.Click += new EventHandler(OnCancelButtonClicked);
+			InitializeComponent();
+			SetMarqueeMoving(true, true);
+			buttonCancel.Click += OnCancelButtonClicked;
 		}
 		/// <summary>
 		/// Clean up any resources being used.
@@ -42,11 +41,11 @@ namespace Carbon.UI
 			{
 				try
 				{
-					this._informationPanel.Marquee.IsScrolling = false;
+					_informationPanel.Marquee.IsScrolling = false;
 				}
-				catch(System.Exception systemException)
+				catch(Exception systemException)
 				{
-					System.Diagnostics.Trace.WriteLine(systemException);
+					Trace.WriteLine(systemException);
 				}
 
 				if(components != null)
@@ -125,17 +124,17 @@ namespace Carbon.UI
 		{		
 			if (_informationPanel.InvokeRequired)
 			{
-				this.Invoke(new SetTextEventHandler(this.SetTitle), new object[] {text});
+				Invoke(new SetTextEventHandler(SetTitle), text);
 				return;
 			}	
 						
 			try
 			{
-				this.Text = text;
+				Text = text;
 			}
-			catch(System.Exception systemException)
+			catch(Exception systemException)
 			{
-				System.Diagnostics.Trace.WriteLine(systemException);
+				Trace.WriteLine(systemException);
 			}
 		}
 
@@ -147,7 +146,7 @@ namespace Carbon.UI
 		{			
 			if (_informationPanel.InvokeRequired)
 			{
-				this.Invoke(new SetTextEventHandler(this.SetHeading), new object[] {text});
+				Invoke(new SetTextEventHandler(SetHeading), text);
 				return;
 			}	
 				
@@ -155,9 +154,9 @@ namespace Carbon.UI
 			{
 				_informationPanel.Title = text;	
 			}
-			catch(System.Exception systemException)
+			catch(Exception systemException)
 			{
-				System.Diagnostics.Trace.WriteLine(systemException);
+				Trace.WriteLine(systemException);
 			}
 		}		
 
@@ -169,7 +168,7 @@ namespace Carbon.UI
 		{
 			if (_informationPanel.InvokeRequired)
 			{
-				this.Invoke(new SetTextEventHandler(this.SetDescription), new object[] {text});
+				Invoke(new SetTextEventHandler(SetDescription), text);
 				return;
 			}
 			
@@ -177,9 +176,9 @@ namespace Carbon.UI
 			{
 				_informationPanel.Description = text;		
 			}
-			catch(System.Exception systemException)
+			catch(Exception systemException)
 			{
-				System.Diagnostics.Trace.WriteLine(systemException);
+				Trace.WriteLine(systemException);
 			}
 		}
 
@@ -191,7 +190,7 @@ namespace Carbon.UI
 		{
 			if (_labelText.InvokeRequired)
 			{
-				this.Invoke(new SetTextEventHandler(this.SetExtendedDescription), new object[] {text});
+				Invoke(new SetTextEventHandler(SetExtendedDescription), text);
 				return;
 			}
 
@@ -199,9 +198,9 @@ namespace Carbon.UI
 			{
 				_labelText.Text = text;				
 			}
-			catch(System.Exception systemException)
+			catch(Exception systemException)
 			{
-				System.Diagnostics.Trace.WriteLine(systemException);
+				Trace.WriteLine(systemException);
 			}
 		}		
 
@@ -213,16 +212,16 @@ namespace Carbon.UI
 		{
 			if (_informationPanel.InvokeRequired)
 			{
-				this.Invoke(new SetImageEventHandler(this.SetImage), new object[] {image});
+				Invoke(new SetImageEventHandler(SetImage), image);
 				return;
 			}
 			try
 			{
 				_informationPanel.Image = image;			
 			}
-			catch(System.Exception systemException)
+			catch(Exception systemException)
 			{
-				System.Diagnostics.Trace.WriteLine(systemException);
+				Trace.WriteLine(systemException);
 			}
 		}
 
@@ -235,7 +234,7 @@ namespace Carbon.UI
 		{
 			if (_informationPanel.InvokeRequired)
 			{
-				this.Invoke(new SetMarqueeMovingEventHandler(this.SetMarqueeMoving), new object[] {moving, reset});
+				Invoke(new SetMarqueeMovingEventHandler(SetMarqueeMoving), moving, reset);
 				return;
 			}	
 
@@ -254,9 +253,9 @@ namespace Carbon.UI
 					if (reset)
 						_informationPanel.Marquee.Reset();			
 			}
-			catch(System.Exception systemException)
+			catch(Exception systemException)
 			{
-				System.Diagnostics.Trace.WriteLine(systemException);
+				Trace.WriteLine(systemException);
 			}
 		}
 
@@ -266,8 +265,8 @@ namespace Carbon.UI
 		{
 			try
 			{
-				if (this.Cancelled != null)
-					this.Cancelled(sender, e);
+				if (Cancelled != null)
+					Cancelled(sender, e);
 			}
 			catch(ThreadAbortException)
 			{

@@ -29,12 +29,9 @@
 //
 //	============================================================================
 
-using System;
-using System.IO;
-using System.Drawing;
 using System.Collections;
+using System.IO;
 using System.Windows.Forms;
-
 using Carbon.Common;
 
 namespace Carbon.UI
@@ -68,7 +65,7 @@ namespace Carbon.UI
 		/// <returns></returns>
 		public int GetIconIndex(ImageList imageList, string path)
 		{
-			return this.GetIconIndex(imageList, path, false);
+			return GetIconIndex(imageList, path, false);
 		}
 
 		/// <summary>
@@ -81,23 +78,23 @@ namespace Carbon.UI
 		public int GetIconIndex(ImageList imageList, string path, bool extractNew)
 		{
 			string extension;
-			bool useNormalAttribs = false;
-			System.IO.FileAttributes attributes = System.IO.FileAttributes.Normal;
+			var useNormalAttribs = false;
+			var attributes = FileAttributes.Normal;
 
 			try
 			{
 				attributes = File.GetAttributes(path);
 
-				if ((attributes & System.IO.FileAttributes.Directory) == System.IO.FileAttributes.Directory)
+				if ((attributes & FileAttributes.Directory) == FileAttributes.Directory)
 				{
-					DirectoryInfo directory = new DirectoryInfo(path);
+					var directory = new DirectoryInfo(path);
 					extension = directory.Extension;
 					if (extension == null || extension == string.Empty)
 						extension = @"Folder";
 				}
 				else
 				{
-					FileInfo file = new FileInfo(path);
+					var file = new FileInfo(path);
 
 					// be carefull on these certain extensions! they will prolly contain different icons
 					// if we wanted to be more elegant, these should be loaded from the config for extensibility reasons
@@ -124,9 +121,9 @@ namespace Carbon.UI
 				if (_extensions.ContainsKey(extension))
 					return (int)_extensions[extension];
 
-			int index = imageList.Images.Count;
+			var index = imageList.Images.Count;
 
-			FileAttributes attribs = FileAttributes.Normal;
+			var attribs = FileAttributes.Normal;
 			if (!useNormalAttribs)
 				attribs = ((attributes & FileAttributes.Directory) == FileAttributes.Directory ? FileAttributes.Directory : FileAttributes.Normal);
 
@@ -183,9 +180,9 @@ namespace Carbon.UI
 		/// <summary>
 		/// Initializes a new instance of the XXX class
 		/// </summary>
-		public SmallShellImageListManager() : base()
+		public SmallShellImageListManager()
 		{
-			base.Size = IconSizes.SmallIconSize;
+			Size = IconSizes.SmallIconSize;
 		}		
 	}
 
@@ -197,9 +194,9 @@ namespace Carbon.UI
 		/// <summary>
 		/// Initializes a new instance of the XXX class
 		/// </summary>
-		public LargeShellImageListManager() : base()
+		public LargeShellImageListManager()
 		{
-			base.Size = IconSizes.LargeIconSize;			
+			Size = IconSizes.LargeIconSize;			
 		}	
 	}
 }

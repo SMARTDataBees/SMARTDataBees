@@ -20,9 +20,9 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SDBees.Plugs.TemplateTreeNode
 {
@@ -41,14 +41,6 @@ namespace SDBees.Plugs.TemplateTreeNode
         #endregion
 
         #region Constructor/Destructor
-
-        /// <summary>
-        /// Standard constructor
-        /// </summary>
-        public ViewAdminDelegatorBase()
-        {
-            // Nothing to do at this level
-        }
 
         #endregion
 

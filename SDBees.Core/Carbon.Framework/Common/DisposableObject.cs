@@ -31,14 +31,15 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Carbon.Common
 {
 	/// <summary>
 	/// Defines a class that is disposable.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
-	[Serializable()]
+	[DebuggerStepThrough]
+	[Serializable]
 	public abstract class DisposableObject : IDisposable
 	{
 		private bool _disposed;
@@ -51,7 +52,7 @@ namespace Carbon.Common
 		/// </summary>
 		public void Dispose()
 		{
-			this.Dispose(true);
+			Dispose(true);
             GC.SuppressFinalize(this);
 		}
 
@@ -103,18 +104,18 @@ namespace Carbon.Common
 		/// <param name="disposing"></param>
 		private void Dispose(bool disposing)
 		{			
-			lock (this.SyncRoot)
+			lock (SyncRoot)
 			{
 				if (!_disposed)
 				{
 					if (disposing)
 					{
 						// dispose of managed resources here
-						this.DisposeOfManagedResources();
+						DisposeOfManagedResources();
 					}
 
 					// dispose of unmanaged resources
-					this.DisposeOfUnManagedResources();
+					DisposeOfUnManagedResources();
 					
 					_disposed = true;
 				}				

@@ -31,20 +31,21 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
-
 using Carbon.Common;
 using Carbon.MultiThreading;
+using Carbon.Properties;
 
 namespace Carbon.UI
 {
 	/// <summary>
 	/// Provides a UserControl that can scroll an Image for visualizing progress.
 	/// </summary>	
-	[System.Diagnostics.DebuggerStepThrough()]
-	public sealed class MarqueeControl : System.Windows.Forms.UserControl
+	[DebuggerStepThrough]
+	public sealed class MarqueeControl : UserControl
 	{			
 		private Image _image;
 		private int _offset;
@@ -58,16 +59,16 @@ namespace Carbon.UI
 		/// </summary>
 		public MarqueeControl()
 		{
-			this.InitializeComponent();
-			this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-			this.SetStyle(ControlStyles.UserPaint, true);
-			this.SetStyle(ControlStyles.DoubleBuffer, true);
-			this.SetStyle(ControlStyles.ResizeRedraw, true);			
-			this.LoadDefaultImage();								
-			this.StepSize = 10;
-			this.FrameRate = 33;	
+			InitializeComponent();
+			SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+			SetStyle(ControlStyles.UserPaint, true);
+			SetStyle(ControlStyles.DoubleBuffer, true);
+			SetStyle(ControlStyles.ResizeRedraw, true);			
+			LoadDefaultImage();								
+			StepSize = 10;
+			FrameRate = 33;	
 			_thread = new BackgroundThread();
-			_thread.Run += new BackgroundThreadStartEventHandler(HandleThreadRun);
+			_thread.Run += HandleThreadRun;
 		}
 		
 		/// <summary> 
@@ -77,7 +78,7 @@ namespace Carbon.UI
 		{			
 			if (disposing)
 			{
-				this.IsScrolling = false;
+				IsScrolling = false;
 
 				if (_thread != null)
 				{
@@ -119,7 +120,7 @@ namespace Carbon.UI
 		protected override void OnPaint(PaintEventArgs e)
 		{
 			// clear the background using our backcolor first
-			e.Graphics.Clear(this.BackColor);
+			e.Graphics.Clear(BackColor);
 
 			lock (this)
 			{
@@ -127,24 +128,24 @@ namespace Carbon.UI
 				if (_image != null)
 				{
 					// if it's not in design mode
-					if (this.DesignMode)
+					if (DesignMode)
 					{
-						e.Graphics.DrawImage(_image, 0, 0, this.Width, this.Height);
+						e.Graphics.DrawImage(_image, 0, 0, Width, Height);
 					}
 					else
 					{
 						// get the image bounds
-						GraphicsUnit gu = GraphicsUnit.Pixel;
-						RectangleF rcImage = _image.GetBounds(ref gu);
+						var gu = GraphicsUnit.Pixel;
+						var rcImage = _image.GetBounds(ref gu);
 
 						// calculate the width ratio
-						float ratio = ((float)rcImage.Width / (float)this.Width);
+						var ratio = (rcImage.Width / Width);
 												
-						RectangleF rcDstRight = new RectangleF(_offset, 0, this.Width - _offset, this.Height);
-						RectangleF rcSrcRight = new RectangleF(0, 0, rcDstRight.Width * ratio, rcImage.Height);
+						var rcDstRight = new RectangleF(_offset, 0, Width - _offset, Height);
+						var rcSrcRight = new RectangleF(0, 0, rcDstRight.Width * ratio, rcImage.Height);
 
-						RectangleF rcDstLeft  = new RectangleF(0, 0, _offset, this.Height);
-						RectangleF rcSrcLeft  = new RectangleF(rcImage.Width - _offset * ratio, 0, _offset * ratio, rcImage.Height);
+						var rcDstLeft  = new RectangleF(0, 0, _offset, Height);
+						var rcSrcLeft  = new RectangleF(rcImage.Width - _offset * ratio, 0, _offset * ratio, rcImage.Height);
 
 						e.Graphics.DrawImage(_image, rcDstRight, rcSrcRight, GraphicsUnit.Pixel);
 						e.Graphics.DrawImage(_image, rcDstLeft, rcSrcLeft, GraphicsUnit.Pixel);
@@ -182,7 +183,7 @@ namespace Carbon.UI
 									
 						_image = value;
 
-						this.Invalidate();
+						Invalidate();
 					}
 					catch(Exception ex)
 					{
@@ -262,7 +263,7 @@ namespace Carbon.UI
 		public void Reset()
 		{
 			_offset = 0;
-			this.Invalidate();
+			Invalidate();
 		}
 
 		#endregion
@@ -274,8 +275,8 @@ namespace Carbon.UI
 		/// </summary>
 		private void LoadDefaultImage()
 		{
-			_image = (Image)Properties.Resources.ResourceManager.GetObject("MarqueeControl");
-			this.Invalidate();
+			_image = (Image)Resources.ResourceManager.GetObject("MarqueeControl");
+			Invalidate();
 		}
 
 		/// <summary>
@@ -289,7 +290,7 @@ namespace Carbon.UI
 			{
 				while (true)
 				{
-					if (this.DesignMode)
+					if (DesignMode)
 					{
 						Thread.Sleep(500);
 					}
@@ -299,18 +300,18 @@ namespace Carbon.UI
 						_offset += _step;
 						
 						// reset the offset if we hit the edge
-						if (_offset >= this.Width)
+						if (_offset >= Width)
 							_offset = 0;					
 	
 						// repaint
-						this.Invalidate();
+						Invalidate();
 
 						// snooze a bit
 						Thread.Sleep(_frameRate);																						
 					}					
 				}
 			}
-			catch(System.Threading.ThreadAbortException)
+			catch(ThreadAbortException)
 			{
 				// watch out for this little guy. :P
 				// some days i still feel like this is not right that an exception is thrown

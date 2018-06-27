@@ -20,14 +20,14 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using SDBees.Plugs.TemplateTreeNode;
 using SDBees.DB;
+using SDBees.Plugs.TemplateTreeNode;
 
-namespace SDBees.ViewAdmin
+namespace SDBees.Core.Admin
 {
     /// <summary>
     /// Class to delegate view specific requests to the view administrator
@@ -37,7 +37,7 @@ namespace SDBees.ViewAdmin
     {
         #region Private Data Members
 
-        SDBees.DB.SDBeesDBConnection m_dbManager;
+        SDBeesDBConnection m_dbManager;
 
         #endregion
 
@@ -50,7 +50,7 @@ namespace SDBees.ViewAdmin
         /// <summary>
         /// Standard constructor
         /// </summary>
-        public ViewAdminDelegator(SDBees.DB.SDBeesDBConnection dbManager)
+        public ViewAdminDelegator(SDBeesDBConnection dbManager)
         {
             m_dbManager = dbManager;
 
@@ -79,16 +79,16 @@ namespace SDBees.ViewAdmin
         /// <returns>true if successful, false if input is not valid</returns>
         public override bool GetChildTypes(Guid viewId, string parentType, out List<string> childTypes)
         {
-            bool success = false;
+            var success = false;
             childTypes = new List<string>();
 
             ArrayList objectIds = null;
             Error error = null;
             if (ViewDefinition.FindViewDefinitionsByParentType(Database, ref objectIds, viewId, parentType, ref error) > 0)
             {
-                foreach (object objectId in objectIds)
+                foreach (var objectId in objectIds)
                 {
-                    ViewDefinition viewDef = new ViewDefinition();
+                    var viewDef = new ViewDefinition();
                     if (viewDef.Load(Database, objectId, ref error))
                     {
                         childTypes.Add(viewDef.ChildType);
@@ -112,22 +112,22 @@ namespace SDBees.ViewAdmin
         /// <returns></returns>
         public override bool GetParentType(Guid viewId, string childType, out string parentType)
         {
-            bool success = false;
+            var success = false;
             parentType = "";
 
             ArrayList objectIds = null;
             Error error = null;
-            int viewDefCount = ViewDefinition.FindViewDefinitionByChildType(Database, ref objectIds, viewId, childType, ref error);
+            var viewDefCount = ViewDefinition.FindViewDefinitionByChildType(Database, ref objectIds, viewId, childType, ref error);
             if (viewDefCount == 1)
             {
-                ViewDefinition viewDef = new ViewDefinition();
+                var viewDef = new ViewDefinition();
                 if (viewDef.Load(Database, objectIds[0], ref error))
                 {
                     parentType = viewDef.ParentType;
                 }
                 else
                 {
-                    error = new Error("Konnte ViewDefinition nicht laden", 9999, this.GetType(), error);
+                    error = new Error("Konnte ViewDefinition nicht laden", 9999, GetType(), error);
                 }
             }
 

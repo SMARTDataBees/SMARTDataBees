@@ -22,25 +22,10 @@
 //
 // #EndHeader# ================================================================
 using System;
-using System.Collections.Generic;
-
-using System.Diagnostics;
-using System.Reflection;
-
-using System.Data;
-
-using System.Text;
 using System.Drawing;
-using System.Windows.Forms;
-
-using Carbon;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
-
-using SDBees.Plugs.Attributes;
-using SDBees.Main.Window;
 using SDBees.DB;
-using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Core.Model;
 
 namespace SDBees.Core.Plugins.AEC.Wall
@@ -57,10 +42,10 @@ namespace SDBees.Core.Plugins.AEC.Wall
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
     [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
-    [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
-    [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
+    [PluginDependency(typeof(SDBeesDBConnection))]
+    [PluginDependency(typeof(Global.GlobalManager))]
 
-    public class AECWall : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
+    public class AECWall : Plugs.TemplateTreeNode.TemplateTreenode
     {
         private static AECWall _theInstance;
 
@@ -98,7 +83,7 @@ namespace SDBees.Core.Plugins.AEC.Wall
             {
                 Console.WriteLine("WallPlugin starts\n");
 
-                this.StartMe(context, e);
+                StartMe(context, e);
 
                 InitDatabase();
             }
@@ -134,7 +119,7 @@ namespace SDBees.Core.Plugins.AEC.Wall
             return AECWallBaseData.gTable;
         }
 
-        public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
+        public override Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
         {
             return new AECWallBaseData();
         }
@@ -146,7 +131,7 @@ namespace SDBees.Core.Plugins.AEC.Wall
 
         public override SDBeesEntityDefinition GetEntityDefinition()
         {
-            return base.GetEntityDefinition(this.GetType());
+            return base.GetEntityDefinition(GetType());
         }
 
         protected override void OnDatabaseChanged(object sender, EventArgs e)
@@ -160,13 +145,13 @@ namespace SDBees.Core.Plugins.AEC.Wall
             if (MyDBManager != null)
             {
                 // Verify that the required Tables are created/updated in the database
-                Database database = MyDBManager.Database;
-                this.CreateDataObject().InitTableSchema(ref AECWallBaseData.gTable, database);
+                var database = MyDBManager.Database;
+                CreateDataObject().InitTableSchema(ref AECWallBaseData.gTable, database);
             }
         }
     }
 
-    public class AECWallBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
+    public class AECWallBaseData : Plugs.TemplateBase.TemplateDBBaseData
     {
         #region Private Data Members
 
@@ -187,7 +172,7 @@ namespace SDBees.Core.Plugins.AEC.Wall
         public AECWallBaseData() :
             base("Wallname", "Wall", "General")
         {
-            base.Table = gTable;
+            Table = gTable;
         }
 
         #endregion

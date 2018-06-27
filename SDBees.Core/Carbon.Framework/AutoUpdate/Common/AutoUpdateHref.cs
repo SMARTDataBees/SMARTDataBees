@@ -29,8 +29,6 @@
 //
 //	============================================================================
 
-using System;
-
 namespace Carbon.AutoUpdate.Common
 {
 	/// <summary>

@@ -20,10 +20,9 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
+
 using System.Collections;
-using System.Text;
+using System.Linq;
 
 namespace SDBees.DB
 {
@@ -87,7 +86,7 @@ namespace SDBees.DB
         /// <summary>
         /// Returns the base data for this object
         /// </summary>
-        public SDBees.DB.Object BaseData
+        public Object BaseData
         {
             get { return mBaseData; }
         }
@@ -142,14 +141,16 @@ namespace SDBees.DB
 
             Error error = null;
 
-            Database database = server.SecurityDatabase;
+            var database = server.SecurityDatabase;
 
-            UserBaseData baseData = new UserBaseData();
-            Attribute attribute = new Attribute(baseData.Table.Columns["loginname"], loginName);
-            string criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
+            var baseData = new UserBaseData();
 
-            ArrayList values = new ArrayList();
-            int numFound = database.Select(baseData.Table, baseData.Table.PrimaryKey, criteria, ref values, ref error);
+            var column = baseData.Table.Columns.FirstOrDefault(clmn => clmn.Name.Equals("loginname"));
+            var attribute = new Attribute(column, loginName);
+            var criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
+
+            var values = new ArrayList();
+            var numFound = database.Select(baseData.Table, baseData.Table.PrimaryKey, criteria, ref values, ref error);
 
             if (numFound == 1)
             {
@@ -170,12 +171,10 @@ namespace SDBees.DB
         /// <returns></returns>
         public static int GetAllLogins(Server server, ref ArrayList loginNames)
         {
-            int loginCount = 0;
-
             Error error = null;
-            UserBaseData baseData = new UserBaseData();
+            var baseData = new UserBaseData();
 
-            loginCount = server.SecurityDatabase.Select(baseData.Table, "loginname", ref loginNames, ref error);
+            var loginCount = server.SecurityDatabase.Select(baseData.Table, "loginname", ref loginNames, ref error);
 
             Error.Display("GetAllLogins failed!", error);
 
@@ -191,13 +190,8 @@ namespace SDBees.DB
         /// <returns></returns>
         public static int GetAllLogins(Server server, ref ArrayList loginNames, ref Error error)
         {
-            int loginCount = 0;
-
-            UserBaseData baseData = new UserBaseData();
-
-            loginCount = server.SecurityDatabase.Select(baseData.Table, "loginname", ref loginNames, ref error);
-
-            return loginCount;
+            var baseData = new UserBaseData();
+            return server.SecurityDatabase.Select(baseData.Table, "loginname", ref loginNames, ref error);
         }
 
         /// <summary>
@@ -207,9 +201,7 @@ namespace SDBees.DB
         /// <returns>true if successful</returns>
         public bool UpdateAccessRightsOnServer(ref Error error)
         {
-            bool success = false;
-
-            Server server = mBaseData.Database.Server;
+            var server = mBaseData.Database.Server;
 
             if (!server.RemoveAllPrivileges(LoginName, ref error))
                 return false;
@@ -226,11 +218,10 @@ namespace SDBees.DB
                 return true;
             }
 
-            success = true;
-
-            foreach (object objectId in objectIds)
+            var success = true;
+            foreach (var objectId in objectIds)
             {
-                AccessRights accessRight = new AccessRights(server, objectId);
+                var accessRight = new AccessRights(server, objectId);
 
                 success = success && accessRight.UpdateAccessRightsOnServer(server, LoginName, ref error);
             }
@@ -245,11 +236,11 @@ namespace SDBees.DB
         /// <returns></returns>
         public bool Save(ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if ((error == null) && (mBaseData.Database != null))
             {
-                Server server = mBaseData.Database.Server;
+                var server = mBaseData.Database.Server;
                 if (!server.UserExists(LoginName, ref error))
                 {
                     server.CreateUser(this, ref error);
@@ -271,11 +262,11 @@ namespace SDBees.DB
         /// <returns></returns>
         public bool Remove(ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if ((error == null) && (mBaseData.Database != null))
             {
-                Server server = mBaseData.Database.Server;
+                var server = mBaseData.Database.Server;
                 if (server.UserExists(LoginName, ref error))
                 {
                     server.RemoveUser(LoginName, ref error);
@@ -297,7 +288,7 @@ namespace SDBees.DB
         /// <param name="error"></param>
         public bool SetPassword(string password, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if ((error == null) && (mBaseData != null) && (mBaseData.Database != null))
             {

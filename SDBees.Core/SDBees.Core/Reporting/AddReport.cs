@@ -20,12 +20,8 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace SDBees.Reporting
@@ -39,17 +35,17 @@ namespace SDBees.Reporting
 
         private void button2_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         public string ReportName
         {
-            get { return this.textBoxReportName.Text; }
+            get { return textBoxReportName.Text; }
         }
 
     }

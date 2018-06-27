@@ -36,7 +36,7 @@ namespace Carbon.Configuration
 	/// <summary>
 	/// EventArgs class for the XmlConfigurationElementEventHandler delegate
 	/// </summary>
-	public class XmlConfigurationElementEventArgs : System.EventArgs 
+	public class XmlConfigurationElementEventArgs : EventArgs 
 	{
 		private XmlConfigurationElement _element;
 		private XmlConfigurationElementActions _action;

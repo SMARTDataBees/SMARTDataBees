@@ -39,7 +39,7 @@ namespace SDBees.Plugins.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SDBees.Plugins.Properties.Resources", typeof(Resources).Assembly);
+                    var temp = new global::System.Resources.ResourceManager("SDBees.Plugins.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -65,7 +65,7 @@ namespace SDBees.Plugins.Properties {
         /// </summary>
         public static System.Drawing.Icon SDBees_AEC_Building_AECBuilding {
             get {
-                object obj = ResourceManager.GetObject("SDBees_AEC_Building_AECBuilding", resourceCulture);
+                var obj = ResourceManager.GetObject("SDBees_AEC_Building_AECBuilding", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -75,7 +75,7 @@ namespace SDBees.Plugins.Properties {
         /// </summary>
         public static System.Drawing.Icon SDBees_AEC_Curtainwall_AECCurtainwall {
             get {
-                object obj = ResourceManager.GetObject("SDBees_AEC_Curtainwall_AECCurtainwall", resourceCulture);
+                var obj = ResourceManager.GetObject("SDBees_AEC_Curtainwall_AECCurtainwall", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -85,7 +85,7 @@ namespace SDBees.Plugins.Properties {
         /// </summary>
         public static System.Drawing.Icon SDBees_AEC_Curtainwall_AECCurtainwallArea {
             get {
-                object obj = ResourceManager.GetObject("SDBees_AEC_Curtainwall_AECCurtainwallArea", resourceCulture);
+                var obj = ResourceManager.GetObject("SDBees_AEC_Curtainwall_AECCurtainwallArea", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -95,7 +95,7 @@ namespace SDBees.Plugins.Properties {
         /// </summary>
         public static System.Drawing.Icon SDBees_AEC_Door_AECDoor {
             get {
-                object obj = ResourceManager.GetObject("SDBees_AEC_Door_AECDoor", resourceCulture);
+                var obj = ResourceManager.GetObject("SDBees_AEC_Door_AECDoor", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -105,7 +105,7 @@ namespace SDBees.Plugins.Properties {
         /// </summary>
         public static System.Drawing.Icon SDBees_AEC_Room_AECRoom {
             get {
-                object obj = ResourceManager.GetObject("SDBees_AEC_Room_AECRoom", resourceCulture);
+                var obj = ResourceManager.GetObject("SDBees_AEC_Room_AECRoom", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -115,7 +115,7 @@ namespace SDBees.Plugins.Properties {
         /// </summary>
         public static System.Drawing.Icon SDBees_AEC_Storey_AECStorey {
             get {
-                object obj = ResourceManager.GetObject("SDBees_AEC_Storey_AECStorey", resourceCulture);
+                var obj = ResourceManager.GetObject("SDBees_AEC_Storey_AECStorey", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -125,7 +125,7 @@ namespace SDBees.Plugins.Properties {
         /// </summary>
         public static System.Drawing.Icon SDBees_AEC_Storey_AECSubLevel {
             get {
-                object obj = ResourceManager.GetObject("SDBees_AEC_Storey_AECSubLevel", resourceCulture);
+                var obj = ResourceManager.GetObject("SDBees_AEC_Storey_AECSubLevel", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -135,7 +135,7 @@ namespace SDBees.Plugins.Properties {
         /// </summary>
         public static System.Drawing.Icon SDBees_AEC_Wall_AECWall {
             get {
-                object obj = ResourceManager.GetObject("SDBees_AEC_Wall_AECWall", resourceCulture);
+                var obj = ResourceManager.GetObject("SDBees_AEC_Wall_AECWall", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -145,7 +145,7 @@ namespace SDBees.Plugins.Properties {
         /// </summary>
         public static System.Drawing.Icon SDBees_AEC_Window_AECWindow {
             get {
-                object obj = ResourceManager.GetObject("SDBees_AEC_Window_AECWindow", resourceCulture);
+                var obj = ResourceManager.GetObject("SDBees_AEC_Window_AECWindow", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -155,7 +155,7 @@ namespace SDBees.Plugins.Properties {
         /// </summary>
         public static System.Drawing.Icon SDBees_AEC_Zone_AECZone {
             get {
-                object obj = ResourceManager.GetObject("SDBees_AEC_Zone_AECZone", resourceCulture);
+                var obj = ResourceManager.GetObject("SDBees_AEC_Zone_AECZone", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -165,7 +165,7 @@ namespace SDBees.Plugins.Properties {
         /// </summary>
         public static System.Drawing.Icon SDBees_MEP_BuildingStatistics_MEPBuildingsStats {
             get {
-                object obj = ResourceManager.GetObject("SDBees_MEP_BuildingStatistics_MEPBuildingsStats", resourceCulture);
+                var obj = ResourceManager.GetObject("SDBees_MEP_BuildingStatistics_MEPBuildingsStats", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -175,7 +175,7 @@ namespace SDBees.Plugins.Properties {
         /// </summary>
         public static System.Drawing.Icon SDBees_MEP_ContractData_MEPContractData {
             get {
-                object obj = ResourceManager.GetObject("SDBees_MEP_ContractData_MEPContractData", resourceCulture);
+                var obj = ResourceManager.GetObject("SDBees_MEP_ContractData_MEPContractData", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -185,7 +185,7 @@ namespace SDBees.Plugins.Properties {
         /// </summary>
         public static System.Drawing.Icon SDBees_MEP_Element_MEPElement {
             get {
-                object obj = ResourceManager.GetObject("SDBees_MEP_Element_MEPElement", resourceCulture);
+                var obj = ResourceManager.GetObject("SDBees_MEP_Element_MEPElement", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -195,7 +195,7 @@ namespace SDBees.Plugins.Properties {
         /// </summary>
         public static System.Drawing.Icon SDBees_MEP_System_MEPCutOut {
             get {
-                object obj = ResourceManager.GetObject("SDBees_MEP_System_MEPCutOut", resourceCulture);
+                var obj = ResourceManager.GetObject("SDBees_MEP_System_MEPCutOut", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -205,7 +205,7 @@ namespace SDBees.Plugins.Properties {
         /// </summary>
         public static System.Drawing.Icon SDBees_MEP_System_MEPSystem {
             get {
-                object obj = ResourceManager.GetObject("SDBees_MEP_System_MEPSystem", resourceCulture);
+                var obj = ResourceManager.GetObject("SDBees_MEP_System_MEPSystem", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

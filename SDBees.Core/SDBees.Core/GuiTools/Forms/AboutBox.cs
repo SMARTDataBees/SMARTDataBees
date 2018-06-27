@@ -20,16 +20,14 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using System.Reflection;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
+using System.Reflection;
+using System.Windows.Forms;
 using SDBees.Main.Window;
 
 namespace SDBees.GuiTools
@@ -82,18 +80,18 @@ namespace SDBees.GuiTools
 
         private void FillLicensesInformation()
         {
-            DirectoryInfo sourceFolder = new DirectoryInfo(Path.GetDirectoryName(this.GetType().Assembly.Location));
+            var sourceFolder = new DirectoryInfo(Path.GetDirectoryName(GetType().Assembly.Location));
             if(sourceFolder != null)
             {
-                FileInfo[] licensefiles = sourceFolder.GetFiles("License*.txt");
+                var licensefiles = sourceFolder.GetFiles("License*.txt");
                 if(licensefiles != null)
                 {
-                    List<Control> coll = new List<Control>();
-                    int topmargin = 10;
+                    var coll = new List<Control>();
+                    var topmargin = 10;
 
-                    foreach (FileInfo file in licensefiles)
+                    foreach (var file in licensefiles)
                     {
-                        LinkLabel ll = CreateLinkLabel(file, topmargin);
+                        var ll = CreateLinkLabel(file, topmargin);
                         ll.AutoSize = true;
                         coll.Add(ll);
                         topmargin += 30;
@@ -115,13 +113,13 @@ namespace SDBees.GuiTools
 
         private LinkLabel CreateLinkLabel(FileInfo file, int toplocation)
         {
-            string name = Path.GetFileNameWithoutExtension(file.Name).Replace('-', ' ');
-            LinkLabel newLink = new LinkLabel();
+            var name = Path.GetFileNameWithoutExtension(file.Name).Replace('-', ' ');
+            var newLink = new LinkLabel();
             newLink.Text = name;
 
 
-            string encoded = System.Net.WebUtility.UrlEncode(string.Format("file://{0}", file.FullName));
-            LinkLabel.Link lk = new LinkLabel.Link();
+            var encoded = WebUtility.UrlEncode(string.Format("file://{0}", file.FullName));
+            var lk = new LinkLabel.Link();
             lk.LinkData = encoded;
             lk.Name = name;
             lk.Length = name.Length;
@@ -129,7 +127,7 @@ namespace SDBees.GuiTools
             newLink.Links.Add(lk);
 
             //position in parent control
-            Point p = newLink.Location;
+            var p = newLink.Location;
             p.X = 15;
             p.Y = toplocation;
             newLink.Location = p;
@@ -142,10 +140,10 @@ namespace SDBees.GuiTools
 
         private void NewLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string link = e.Link.LinkData.ToString();
-            link = System.Net.WebUtility.UrlDecode(link);
-            string temp = link.Replace("file://", "");
-            Process p = System.Diagnostics.Process.Start("notepad.exe", temp);
+            var link = e.Link.LinkData.ToString();
+            link = WebUtility.UrlDecode(link);
+            var temp = link.Replace("file://", "");
+            var p = Process.Start("notepad.exe", temp);
         }
 
         #endregion
@@ -157,11 +155,11 @@ namespace SDBees.GuiTools
             lbApplicationName.Text = m_assembly.FullName;
             lbApplicationLocation.Text = m_assembly.CodeBase;
 
-            string assemblyInfo = m_assembly.FullName;
+            var assemblyInfo = m_assembly.FullName;
 
             assemblyInfo += "\r\nLoaded Assemblies:";
 
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 assemblyInfo += "\r\n" + assembly.FullName;
             }
@@ -174,7 +172,7 @@ namespace SDBees.GuiTools
         #region Events
         private void _licensesRichTextBox_LinkClicked(object sender, LinkClickedEventArgs e)
         {
-            Process p = System.Diagnostics.Process.Start("notepad.exe", e.LinkText.Replace("file://", ""));
+            var p = Process.Start("notepad.exe", e.LinkText.Replace("file://", ""));
         }
 
         private void AboutBox_Load(object sender, EventArgs e)
@@ -185,7 +183,7 @@ namespace SDBees.GuiTools
 
         private void bnClose_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
         #endregion
     }

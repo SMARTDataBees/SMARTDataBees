@@ -31,10 +31,7 @@
 
 using System;
 using System.Drawing;
-using System.ComponentModel;
 using System.IO;
-using System.Reflection;
-
 using Carbon.Common;
 using Carbon.Plugins.Attributes;
 
@@ -62,7 +59,7 @@ namespace Carbon.Plugins
 			if (type == null)
 				throw new ArgumentNullException("type");
 			_type = type;
-			_dependencies = this.ExtractTypesThatThisTypeDependsOn(_type);
+			_dependencies = ExtractTypesThatThisTypeDependsOn(_type);
 		}
 
 		#region My Private Methods
@@ -76,10 +73,10 @@ namespace Carbon.Plugins
 		{
 			try
 			{
-				object[] value = _type.GetCustomAttributes(typeof(PluginDependencyAttribute), false);
+				var value = _type.GetCustomAttributes(typeof(PluginDependencyAttribute), false);
 				if (value != null)
 				{
-					TypeCollection types = new TypeCollection();
+					var types = new TypeCollection();
 					foreach (PluginDependencyAttribute attribute in value)
 					{
 						types.Add(attribute.Type);
@@ -92,9 +89,9 @@ namespace Carbon.Plugins
                 // if this fails, we know that there is a type listed in this assembly's
                 // attributes, who's containing assembly couldn't be found, so this is therefore
                 // missing a dependency. 
-                this.IsMissingDependency = true;
+                IsMissingDependency = true;
 
-				Log.WriteLine("Plugin: '{0}' is missing a dependency. Additional Info: '{1}'", this.PluginName, ex.Message);
+				Log.WriteLine("Plugin: '{0}' is missing a dependency. Additional Info: '{1}'", PluginName, ex.Message);
 			}
 			return new Type[] {};
 		}
@@ -132,12 +129,12 @@ namespace Carbon.Plugins
 		{
 			get
 			{
-				object[] value = _type.GetCustomAttributes(typeof(PluginAuthorsAttribute), false);
+				var value = _type.GetCustomAttributes(typeof(PluginAuthorsAttribute), false);
 				if (value != null)
 				{
 					return ((PluginAuthorsAttribute)value[0]).Authors;
 				}
-				return new string[] {string.Empty};
+				return new[] {string.Empty};
 			}
 		}
 
@@ -159,7 +156,7 @@ namespace Carbon.Plugins
 		{
 			get
 			{
-				object[] value = _type.GetCustomAttributes(typeof(PluginDescriptionAttribute), false);
+				var value = _type.GetCustomAttributes(typeof(PluginDescriptionAttribute), false);
 				if (value != null)
 				{
 					return ((PluginDescriptionAttribute)value[0]).Description;
@@ -175,7 +172,7 @@ namespace Carbon.Plugins
 		{
 			get
 			{
-				object[] value = _type.GetCustomAttributes(typeof(PluginIdAttribute), false);
+				var value = _type.GetCustomAttributes(typeof(PluginIdAttribute), false);
 				if (value != null)
 				{
 					return ((PluginIdAttribute)value[0]).Id;
@@ -191,7 +188,7 @@ namespace Carbon.Plugins
 		{
 			get
 			{
-				object[] value = _type.GetCustomAttributes(typeof(PluginImageAttribute), false);
+				var value = _type.GetCustomAttributes(typeof(PluginImageAttribute), false);
 				if (value != null)
 				{
 					return ((PluginImageAttribute)value[0]).GetImage(_type);
@@ -207,7 +204,7 @@ namespace Carbon.Plugins
 		{
 			get
 			{
-				object[] value = _type.GetCustomAttributes(typeof(PluginManufacturerAttribute), false);
+				var value = _type.GetCustomAttributes(typeof(PluginManufacturerAttribute), false);
 				if (value != null)
 				{
 					return ((PluginManufacturerAttribute)value[0]).Manufacturer;
@@ -223,7 +220,7 @@ namespace Carbon.Plugins
 		{
 			get
 			{
-				object[] value = _type.GetCustomAttributes(typeof(PluginNameAttribute), false);
+				var value = _type.GetCustomAttributes(typeof(PluginNameAttribute), false);
 				if (value != null)
 				{
 					return ((PluginNameAttribute)value[0]).Name;
@@ -239,7 +236,7 @@ namespace Carbon.Plugins
 		{
 			get
 			{
-				object[] value = _type.GetCustomAttributes(typeof(PluginVersionAttribute), false);
+				var value = _type.GetCustomAttributes(typeof(PluginVersionAttribute), false);
 				if (value != null)
 				{
 					return ((PluginVersionAttribute)value[0]).Version;
@@ -250,7 +247,7 @@ namespace Carbon.Plugins
 
         public override string ToString()
         {
-            return this.PluginName;
+            return PluginName;
         }
 
 		#endregion
@@ -273,8 +270,8 @@ namespace Carbon.Plugins
 		/// <returns>true if this descriptor depends on the specified descriptor's Type</returns>
 		internal bool DependsOn(PluginDescriptor descriptor)
 		{			
-			foreach(Type type in this.PluginDependencies)
-				if ((object)type != Type.Missing && type == descriptor.PluginType)
+			foreach(var type in PluginDependencies)
+				if (type != Type.Missing && type == descriptor.PluginType)
 					return true;
 			return false;
 		}
@@ -369,16 +366,16 @@ namespace Carbon.Plugins
 			try
 			{
 				// front to back - 1 
-				for (int i = 0; i < descriptors.Length - 1; i++)
+				for (var i = 0; i < descriptors.Length - 1; i++)
 				{
 					// front + 1 to back
-					for (int j = i + 1; j < descriptors.Length; j++)
+					for (var j = i + 1; j < descriptors.Length; j++)
 					{
-						bool dependsOn = descriptors[i].DependsOn(descriptors[j]);
+						var dependsOn = descriptors[i].DependsOn(descriptors[j]);
 						if ((leastDependentFirst ? dependsOn : !dependsOn))
 						{
 							// swap i with j, where i=1 and j=2
-							PluginDescriptor descriptor = descriptors[j];
+							var descriptor = descriptors[j];
 							descriptors[j] = descriptors[i];
 							descriptors[i] = descriptor;
 						}

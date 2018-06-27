@@ -20,11 +20,11 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
-using System.Text;
+using System.Data.SQLite;
 
 namespace SDBees.DB.SQLite
 {
@@ -50,7 +50,7 @@ namespace SDBees.DB.SQLite
         /// <returns></returns>
         protected override Connection CreateConnection(bool bReadOnly, ref Error error)
         {
-            SQLiteConnection connection = new SQLiteConnection(this);
+            var connection = new SQLiteConnection(this);
             if (!connection.Open(this, bReadOnly, ref error))
             {
                 // somehow failed...
@@ -65,16 +65,15 @@ namespace SDBees.DB.SQLite
         #region Overrides
         public override int TableNames(ref ArrayList names, ref Error error)
         {
-            int num = 0;
             Error _error = null;
 
-            string select = "SELECT * FROM sqlite_master;";
+            var select = "SELECT * FROM sqlite_master;";
 
             names = GetTables(ref _error);
 
             Error.Display("Error while fetching table names", _error);
 
-            return num = names.Count;
+            return names.Count;
         }
 
         #endregion
@@ -82,16 +81,16 @@ namespace SDBees.DB.SQLite
 
         private ArrayList GetTables(ref Error _error)
         {
-            ArrayList list = new ArrayList();
+            var list = new ArrayList();
 
             // executes query that select names of all tables in master table of the database
-            String query = "SELECT name FROM sqlite_master " +
+            var query = "SELECT name FROM sqlite_master " +
                     "WHERE type = 'table'" +
                     "ORDER BY 1";
             try
             {
 
-                DataTable table = GetDataTable(query, ref _error);
+                var table = GetDataTable(query, ref _error);
 
                 // Return all table names in the ArrayList
                 if (table != null)
@@ -111,15 +110,14 @@ namespace SDBees.DB.SQLite
 
         private DataTable GetDataTable(string sql, ref Error _error)
         {
-            DataTable dt = null;
             try
             {
-                dt = new DataTable();
+                var dt = new DataTable();
                 SDBeesDBConnection.Current.Database.Open(true, ref _error);
 
-                using (System.Data.SQLite.SQLiteCommand cmd = new System.Data.SQLite.SQLiteCommand(sql, SDBeesDBConnection.Current.Database.Connection.GetNativeConnection() as System.Data.SQLite.SQLiteConnection))
+                using (var cmd = new SQLiteCommand(sql, SDBeesDBConnection.Current.Database.Connection.GetNativeConnection() as System.Data.SQLite.SQLiteConnection))
                 {
-                    using (System.Data.SQLite.SQLiteDataReader rdr = cmd.ExecuteReader())
+                    using (var rdr = cmd.ExecuteReader())
                     {
                         dt.Load(rdr);
                     }

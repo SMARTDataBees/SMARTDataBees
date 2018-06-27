@@ -30,22 +30,18 @@
 //	============================================================================
 
 using System;
-using System.Collections;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
-
 using Carbon.Common;
-using Carbon.AutoUpdate;
 
 namespace Carbon.AutoUpdate.Common.Xml
 {
 	/// <summary>
 	/// Provides a class that is capable of reading an AutoUpdateManifest from an Xml file.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public sealed class XmlAutoUpdateManifestReader : DisposableObject
 	{
 		private XmlDocument _document;
@@ -104,7 +100,7 @@ namespace Carbon.AutoUpdate.Common.Xml
 		public AutoUpdateManifest Read()
 		{
 			// create an xpath navigator so that we can traverse the elements inside the xml
-			XPathNavigator navigator = _document.CreateNavigator();
+			var navigator = _document.CreateNavigator();
 
 			// move to the version element
 			navigator.MoveToFirstChild();
@@ -115,10 +111,10 @@ namespace Carbon.AutoUpdate.Common.Xml
 //			// move to the shout outs element
 //			navigator.MoveToNext();
 
-			AutoUpdateManifest manifest = new AutoUpdateManifest();
+			var manifest = new AutoUpdateManifest();
             
 			// read the manifest
-			this.Read(navigator, manifest);
+			Read(navigator, manifest);
 
 			return manifest;
 		}
@@ -138,7 +134,7 @@ namespace Carbon.AutoUpdate.Common.Xml
 			if (navigator.HasAttributes)
 			{
 				// clone the current navigator so we can save our position
-				XPathNavigator attributesNavigator = navigator.Clone();
+				var attributesNavigator = navigator.Clone();
 
 				// move to the first attribute
 				if (attributesNavigator.MoveToFirstAttribute())
@@ -175,7 +171,7 @@ namespace Carbon.AutoUpdate.Common.Xml
 						case @"AutoUpdateProductDescriptor":						
 						{
 							AutoUpdateProductDescriptor product;
-							this.ReadProductDescriptor(navigator, out product);
+							ReadProductDescriptor(navigator, out product);
 							manifest.Product = product;
 							navigator.MoveToParent();
 							break;
@@ -184,7 +180,7 @@ namespace Carbon.AutoUpdate.Common.Xml
 						case @"AutoUpdateHref":											
 						{
 							AutoUpdateHref moreInfo;
-							this.ReadHref(navigator, out moreInfo);
+							ReadHref(navigator, out moreInfo);
 							manifest.MoreInfo = moreInfo;
 							navigator.MoveToParent();
 							break;
@@ -193,7 +189,7 @@ namespace Carbon.AutoUpdate.Common.Xml
 						case @"AutoUpdateChangeSummaryList":												
 						{
 							AutoUpdateChangeSummaryList changeSummaryList;
-							this.ReadChangeSummaries(navigator, out changeSummaryList);
+							ReadChangeSummaries(navigator, out changeSummaryList);
 							manifest.ChangeSummaries = changeSummaryList;
 							navigator.MoveToParent();
 							break;
@@ -214,7 +210,7 @@ namespace Carbon.AutoUpdate.Common.Xml
 			if (navigator.HasAttributes)
 			{
 				// clone the current navigator so we can save our position
-				XPathNavigator attributesNavigator = navigator.Clone();
+				var attributesNavigator = navigator.Clone();
 
 				// move to the first attribute
 				if (attributesNavigator.MoveToFirstAttribute())
@@ -261,7 +257,7 @@ namespace Carbon.AutoUpdate.Common.Xml
 			if (navigator.HasAttributes)
 			{
 				// clone the current navigator so we can save our position
-				XPathNavigator attributesNavigator = navigator.Clone();
+				var attributesNavigator = navigator.Clone();
 
 				// move to the first attribute
 				if (attributesNavigator.MoveToFirstAttribute())
@@ -310,7 +306,7 @@ namespace Carbon.AutoUpdate.Common.Xml
 						case @"AutoUpdateChangeSummary":	
 						{							
 							AutoUpdateChangeSummary changeSummary;
-							this.ReadChangeSummary(navigator, out changeSummary);
+							ReadChangeSummary(navigator, out changeSummary);
 							changeSummaryList.Add(changeSummary);
 							navigator.MoveToParent();
 							break;
@@ -330,7 +326,7 @@ namespace Carbon.AutoUpdate.Common.Xml
 			if (navigator.HasAttributes)
 			{
 				// clone the current navigator so we can save our position
-				XPathNavigator attributesNavigator = navigator.Clone();
+				var attributesNavigator = navigator.Clone();
 
 				// move to the first attribute
 				if (attributesNavigator.MoveToFirstAttribute())
@@ -395,10 +391,10 @@ namespace Carbon.AutoUpdate.Common.Xml
 			AutoUpdateManifest manifest = null;
 
 			// create a new test writer
-			using (FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+			using (var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read))
 			{
 				// create a reader to read the manifest
-				XmlAutoUpdateManifestReader reader = new XmlAutoUpdateManifestReader(stream);
+				var reader = new XmlAutoUpdateManifestReader(stream);
 
 				// read the manifest
 				manifest = reader.Read();

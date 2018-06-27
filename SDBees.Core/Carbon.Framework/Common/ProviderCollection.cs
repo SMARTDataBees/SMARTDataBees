@@ -30,7 +30,7 @@
 //	============================================================================
 
 using System;
-using System.Collections;
+using System.Diagnostics;
 
 namespace Carbon.Common
 {
@@ -38,7 +38,7 @@ namespace Carbon.Common
 	/// Defines a strongly-typed collection of Provider instances.
 	/// This class is thread-safe.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public abstract class ProviderCollection : DisposableCollection
 	{
 		#region ProviderAlreadyExistsException
@@ -57,7 +57,7 @@ namespace Carbon.Common
 			/// </summary>
 			/// <param name="name">The name of the Provider that already exists in the collection</param>
 			internal ProviderAlreadyExistsException(string name) : 
-				base(string.Format("A Provider with the name '{0}' already exists in the collection.", name))
+				base($"A Provider with the name '{name}' already exists in the collection.")
 			{
 				_name = name;
 			}
@@ -80,11 +80,11 @@ namespace Carbon.Common
 		{
 			base.DisposeOfManagedResources();
 
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
-				foreach (Provider provider in base.InnerList)
+				foreach (Provider provider in InnerList)
 					provider.Dispose();
-				base.InnerList.Clear();
+				InnerList.Clear();
 			}
 		}
 
@@ -94,12 +94,12 @@ namespace Carbon.Common
 		/// <param name="provider">The provider to add</param>
 		internal void Add(Provider provider)
 		{
-			if (this.Contains(provider))
+			if (Contains(provider))
 				throw new ProviderAlreadyExistsException(provider.Name);
 
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
-				base.InnerList.Add(provider);
+				InnerList.Add(provider);
 			}
 		}
 
@@ -109,10 +109,10 @@ namespace Carbon.Common
 		/// <param name="provider"></param>
 		protected void Remove(Provider provider)
 		{
-			if (this.Contains(provider))
-				lock (base.SyncRoot)
+			if (Contains(provider))
+				lock (SyncRoot)
 				{
-					base.InnerList.Remove(provider);
+					InnerList.Remove(provider);
 				}
 		}
 
@@ -135,9 +135,9 @@ namespace Carbon.Common
 		{
 			get
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
-					foreach (Provider provider in base.InnerList)
+					foreach (Provider provider in InnerList)
 						if (string.Compare(provider.Name, name, true) == 0)
 							return provider;
 					return null;

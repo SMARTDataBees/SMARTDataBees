@@ -20,11 +20,10 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.Text;
-using System.Configuration;
+using SDBees.DB.Generic;
 
 namespace SDBees.DB
 {
@@ -43,7 +42,7 @@ namespace SDBees.DB
         private string mPort;
         private Database mSecurityDatabase;
 
-        private DB.Generic.ServerConfigItem mSrvConfig;
+        private ServerConfigItem mSrvConfig;
 
         #endregion
 
@@ -56,7 +55,7 @@ namespace SDBees.DB
         /// <param name="systemSchemaName">Name of the schema table for this SQL Server</param>
         /// <param name="userName">Username for login</param>
         /// <param name="password">Password for login</param>
-        public Server(string vendor, string systemSchemaName, DB.Generic.ServerConfigItem srvConfig, string password)
+        public Server(string vendor, string systemSchemaName, ServerConfigItem srvConfig, string password)
         {
             mSrvConfig = srvConfig;
             mVendor = vendor;
@@ -171,7 +170,7 @@ namespace SDBees.DB
         /// Each server instance must report the own serverconfigitem
         /// </summary>
         /// <returns></returns>
-        public abstract SDBees.DB.Generic.ServerConfigItem GetServerConfigItem();
+        public abstract ServerConfigItem GetServerConfigItem();
 
         /// <summary>
         /// Get the list of databases on this server
@@ -182,9 +181,9 @@ namespace SDBees.DB
         /// <returns>number of databases found</returns>
         public int GetDatabases(ref ArrayList databaseNames, bool includeSystem, ref Error error)
         {
-            int numDatabases = 0;
-            Database schemaDb = GetSystemSchemaDB();
-            Connection conn = schemaDb.Open(true, ref error);
+            var numDatabases = 0;
+            var schemaDb = GetSystemSchemaDB();
+            var conn = schemaDb.Open(true, ref error);
             if (conn != null)
             {
                 // TBD: consider includeSystem
@@ -203,7 +202,7 @@ namespace SDBees.DB
         /// <returns></returns>
         public Database GetDatabase(string dbName)
         {
-            Database database = NewDatabase();
+            var database = NewDatabase();
             database.Server = this;
             database.Name = dbName;
             database.Port = Port;
@@ -223,14 +222,14 @@ namespace SDBees.DB
         /// <returns></returns>
         public bool DatabaseExists(string databaseName, ref Error error)
         {
-            bool foundSchema = false;
-            Database schemaDb = GetSystemSchemaDB();
-            Connection conn = schemaDb.Open(true, ref error);
+            var foundSchema = false;
+            var schemaDb = GetSystemSchemaDB();
+            var conn = schemaDb.Open(true, ref error);
             if (conn != null)
             {
-                string criteria = "SCHEMA_NAME = '" + databaseName + "'";
+                var criteria = "SCHEMA_NAME = '" + databaseName + "'";
                 ArrayList names = null;
-                int numDatabases = schemaDb.Select("INFORMATION_SCHEMA.SCHEMATA", "SCHEMA_NAME", criteria, ref names, ref error);
+                var numDatabases = schemaDb.Select("INFORMATION_SCHEMA.SCHEMATA", "SCHEMA_NAME", criteria, ref names, ref error);
 
                 foundSchema = (numDatabases == 1);
 
@@ -248,13 +247,13 @@ namespace SDBees.DB
         /// <returns></returns>
         public bool CreateDatabase(string databaseName, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
-            Database schemaDb = GetSystemSchemaDB();
-            Connection conn = schemaDb.Open(false, ref error);
+            var schemaDb = GetSystemSchemaDB();
+            var conn = schemaDb.Open(false, ref error);
             if (conn != null)
             {
-                string commandString = "CREATE DATABASE " + databaseName;
+                var commandString = "CREATE DATABASE " + databaseName;
 
                 success = conn.ExecuteCommand(commandString, ref error);
 
@@ -388,7 +387,7 @@ namespace SDBees.DB
         {
             if (mSecurityDatabase == null)
             {
-                throw new Exception("SecurityDatabase should be initialized in " + this.GetType().ToString() + "!");
+                throw new Exception("SecurityDatabase should be initialized in " + GetType() + "!");
             }
 
             Error error = null;

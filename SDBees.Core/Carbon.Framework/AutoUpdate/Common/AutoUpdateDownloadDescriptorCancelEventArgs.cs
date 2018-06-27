@@ -29,8 +29,6 @@
 //
 //	============================================================================
 
-using System;
-
 namespace Carbon.AutoUpdate.Common
 {
 	/// <summary>
@@ -38,33 +36,21 @@ namespace Carbon.AutoUpdate.Common
 	/// </summary>
 	public sealed class AutoUpdateDownloadDescriptorCancelEventArgs : AutoUpdateDownloadDescriptorEventArgs
 	{
-		private bool _cancel;
-
-		/// <summary>
-		/// Initializes a new instance of the AutoUpdateDownloadDescriptorCancelEventArgs class.
-		/// </summary>
-		/// <param name="cancel">A flag that indicates whether the event should be cancelled.</param>
-		/// <param name="updateDescriptor">The AutoUpdateDownloadDescriptor that is the context of the event.</param>
-		public AutoUpdateDownloadDescriptorCancelEventArgs(bool cancel, AutoUpdateDownloadDescriptor downloadDescriptor) 
+	    /// <summary>
+        /// Initializes a new instance of the AutoUpdateDownloadDescriptorCancelEventArgs class.
+        /// </summary>
+        /// <param name="cancel">A flag that indicates whether the event should be cancelled.</param>
+        /// <param name="downloadDescriptor">The AutoUpdateDownloadDescriptor that is the context of the event.</param>
+        public AutoUpdateDownloadDescriptorCancelEventArgs(bool cancel, AutoUpdateDownloadDescriptor downloadDescriptor) 
 			: base(downloadDescriptor)
 		{
-			_cancel = cancel;
+			Cancel = cancel;
 		}
 
 		/// <summary>
 		/// Gets or sets a flag that indicates whether the event should be cancelled or not.
 		/// </summary>
-		public bool Cancel
-		{
-			get
-			{
-				return _cancel;
-			}
-			set
-			{
-				_cancel = value;
-			}
-		}
+		public bool Cancel { get; set; }
 	}
 
 	public delegate void AutoUpdateDownloadDescriptorCancelEventHandler(object sender, AutoUpdateDownloadDescriptorCancelEventArgs e);

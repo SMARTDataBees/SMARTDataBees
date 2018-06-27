@@ -20,15 +20,11 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.Runtime.Serialization;
+
 namespace SDBees.Core.Model
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// Wrapper für einen Varianten Objekttyp
     /// </summary>
@@ -70,7 +66,7 @@ namespace SDBees.Core.Model
 
         public void SetObjectValueAutomatic(object automaticValue, bool force = false)
         {
-            if (force == true)
+            if (force)
             {
                 m_state = 1;
 

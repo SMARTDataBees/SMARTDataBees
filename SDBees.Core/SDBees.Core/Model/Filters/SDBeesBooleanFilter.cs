@@ -20,22 +20,19 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
 namespace SDBees.Core.Model
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// Boolean AND oder OR Verknüpfung aller Child Filter 
     /// </summary>
     [DataContract]
     public class SDBeesBooleanFilter : SDBeesEntityFilter
     {
-        private bool m_inverted = false;
+        private bool m_inverted;
         /// <summary>
         /// invertiere die gefilterte Menge
         /// </summary>

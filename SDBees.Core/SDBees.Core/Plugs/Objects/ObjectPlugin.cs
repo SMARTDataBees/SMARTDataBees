@@ -20,60 +20,31 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SDBees.Plugs.Objects
 {
   public class ObjectPlugin
   {
-    private string _sTypeOf = null;
-    private string _Name = null;
-    private string _ViewID = null;
-    private string _ID = null;
-    private object _Plugin = null;
-
-    public ObjectPlugin()
+      public ObjectPlugin()
     {
-      _sTypeOf = "";
-      _Name = "";
-      _ViewID = "";
-      _ID = "";
-      _Plugin = null;
+      PluginType = "";
+      PluginName = "";
+      ViewID = "";
+      ID = "";
+      Plugin = null;
     }
 
-    public string ID
-    {
-      get { return this._ID; }
-      set { this._ID = value; }
-    }
+    public string ID { get; set; }
 
-    public string PluginType
-    {
-      get { return this._sTypeOf; }
-      set { this._sTypeOf = value; }
-    }
+      public string PluginType { get; set; }
 
-    public string PluginName
-    {
-      get { return this._Name; }
-      set { this._Name = value; }
-    }
+      public string PluginName { get; set; }
 
-    public object Plugin
-    {
-        get { return this._Plugin; }
-        set { this._Plugin = value; }
-    }
+      public object Plugin { get; set; }
 
-    /// <summary>
+      /// <summary>
     /// Die ID der aktuellen View
     /// </summary>
-    public string ViewID
-    {
-      get { return this._ViewID; }
-      set { this._ViewID = value; }
-    }
+    public string ViewID { get; set; }
   }
 }

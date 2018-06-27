@@ -33,8 +33,6 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Xml;
 
 namespace Carbon.AutoUpdate.Common.Xml
@@ -56,13 +54,13 @@ namespace Carbon.AutoUpdate.Common.Xml
 			Debug.Assert(writer != null);
 
 			// if the element will have data
-			if (XmlWriterUtils.IsNeeded(text))
+			if (IsNeeded(text))
 			{
 				// start the element
 				writer.WriteStartElement(name);
 
 				// write the attributes
-				XmlWriterUtils.WriteAttributes(writer, attributes);
+				WriteAttributes(writer, attributes);
 
 				// write the text value
 				writer.WriteString(text);
@@ -84,13 +82,13 @@ namespace Carbon.AutoUpdate.Common.Xml
 			Debug.Assert(writer != null);
 			
 			// if the element will have data
-			if (XmlWriterUtils.IsNeeded(cdataText))
+			if (IsNeeded(cdataText))
 			{
 				// start the element
 				writer.WriteStartElement(name);
 
 				// write the attributes
-				XmlWriterUtils.WriteAttributes(writer, attributes);
+				WriteAttributes(writer, attributes);
 
 				// write the cdata text value
 				writer.WriteCData(cdataText);
@@ -99,60 +97,6 @@ namespace Carbon.AutoUpdate.Common.Xml
 				writer.WriteEndElement();
 			}
 		}
-
-		//		/// <summary>
-		//		/// Writes an XmlElement using the image bytes encoded using Base64 encoding
-		//		/// </summary>
-		//		/// <param name="writer">The writer to use</param>
-		//		/// <param name="name">The name of the element</param>
-		//		/// <param name="image">The image to encode</param>
-		//		public static void WriteImageElement(XmlWriter writer, string name, Image image)
-		//		{
-		//			Debug.Assert(writer != null);
-		//			
-		//			if (XmlWriterUtils.IsNeeded(image))
-		//			{								
-		//				string base64;
-		//				if (EncodingEngine.Base64Encode(image, image.GetType(), out base64))
-		//				{
-		//					// start the element
-		//					writer.WriteStartElement(name);	
-		//
-		//					// write the base64 encoded image
-		//					writer.WriteString(base64);
-		//
-		//					// end the element
-		//					writer.WriteEndElement();								
-		//				}							
-		//			}			
-		//		}
-		
-		/// <summary>
-		/// Writes an XmlElement using the image bytes encoded using Base64 encoding
-		/// </summary>
-		/// <param name="writer">The writer to use</param>
-		/// <param name="name">The name of the element</param>
-		/// <param name="image">The image to encode</param>
-//		public static void WriteImageElement(XmlWriter writer, string name, Image image)
-//		{
-//			Debug.Assert(writer != null);
-//			
-//			if (XmlWriterUtils.IsNeeded(image))
-//			{								
-//				string base64;
-//				if (EncodingEngine.Base64EncodeImage(image, out base64))
-//				{
-//					// start the element
-//					writer.WriteStartElement(name);	
-//
-//					// write the base64 encoded image
-//					writer.WriteString(base64);
-//
-//					// end the element
-//					writer.WriteEndElement();								
-//				}							
-//			}			
-//		}
 
 		/// <summary>
 		/// Writes the string pairs as attributes of the writer's current element
@@ -164,9 +108,9 @@ namespace Carbon.AutoUpdate.Common.Xml
 			// if we have any string pairs to write as attributes
 			if (attributes != null)
 				// enumerate them
-				foreach(XmlStringPair attribute in attributes)
+				foreach(var attribute in attributes)
 					// if the attribute value is needed
-					if (XmlWriterUtils.IsNeeded(attribute.Value))
+					if (IsNeeded(attribute.Value))
 						// then write the attribute
 						writer.WriteAttributeString(attribute.Name, attribute.Value);
 		}
@@ -177,25 +121,18 @@ namespace Carbon.AutoUpdate.Common.Xml
 
 			if (items != null)
 			{
-				// start the element
 				writer.WriteStartElement(listName);
 				
 				// write the type of the items in the list
 				writer.WriteAttributeString("Type", itemType.Name);
 
-				foreach(object item in items)
+				foreach(var item in items)
 				{
-					// start the element
 					writer.WriteStartElement(itemType.Name);
-
-					// attribute the value of the item
 					writer.WriteAttributeString("Value", item.ToString());
-
-					// end the element
 					writer.WriteEndElement();
 				}	
 
-				// end the element
 				writer.WriteEndElement();
 			}
 		}
@@ -212,7 +149,7 @@ namespace Carbon.AutoUpdate.Common.Xml
 				// write the type of the items in the list
 				writer.WriteAttributeString("Type", itemType.Name);
 				
-				foreach(object item in items)
+				foreach(var item in items)
 				{
 					// start the element
 					writer.WriteStartElement(itemType.Name);

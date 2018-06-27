@@ -86,12 +86,15 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\ViewCacheImplementation.cs" />
+    <Compile Include="Admin\ViewCacheImplementationOne.cs" />
     <Compile Include="Connectivity\ConnectivityHost.cs" />
     <Compile Include="Connectivity\ConnectivityManager.cs" />
     <Compile Include="Connectivity\SDBeesLink\Client\SDBeesCallbackCommand.cs" />
     <Compile Include="Connectivity\SDBeesLink\Client\SDBeesCallbackCommandQueue.cs" />
     <Compile Include="Connectivity\SDBeesLink\Client\SDBeesExternalServiceClient.cs" />
     <Compile Include="Connectivity\SDBeesLink\SDBeesExternalDocumentAdmin.cs" />
+    <Compile Include="Connectivity\SDBeesLink\SDBeesExternalDocumentManager.cs" />
     <Compile Include="Connectivity\SDBeesLink\UI\SDBeesDataSetEntityController.cs" />
     <Compile Include="Connectivity\SDBeesLink\UI\SDBeesExternalDocumentDLG.cs">
       <SubType>Form</SubType>
@@ -99,7 +102,9 @@
     <Compile Include="Connectivity\SDBeesLink\UI\SDBeesExternalDocumentDLG.Designer.cs">
       <DependentUpon>SDBeesExternalDocumentDLG.cs</DependentUpon>
     </Compile>
+    <Compile Include="DB\Generic\DbType.cs" />
     <Compile Include="DB\SQLite\SQLiteFilenameEditor.cs" />
+    <Compile Include="DB\Tools\Formater.cs" />
     <Compile Include="Global\GlobalManager.cs" />
     <Compile Include="Global\SDBeesGlobalVars.cs" />
     <Compile Include="GuiTools\Controls\SDBees_DataGridView.cs">
@@ -265,11 +270,11 @@
     <Compile Include="GuiTools\Forms\AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="GuiTools\Forms\ChangePasswordDLG.cs">
+    <Compile Include="GuiTools\Forms\ChangePasswordDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GuiTools\Forms\ChangePasswordDLG.Designer.cs">
-      <DependentUpon>ChangePasswordDLG.cs</DependentUpon>
+    <Compile Include="GuiTools\Forms\ChangePasswordDialog.Designer.cs">
+      <DependentUpon>ChangePasswordDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="GuiTools\Logfile\LogfileCategory.cs" />
     <Compile Include="GuiTools\Logfile\LogfileWriter.cs" />
@@ -355,47 +360,48 @@
     <Compile Include="Utils\DirectoryTools.cs" />
     <Compile Include="Utils\SearchTools.cs" />
     <Compile Include="Utils\SerializableDictionary.cs" />
+    <Compile Include="Utils\Serializer.cs" />
     <Compile Include="Utils\Singleton.cs" />
     <Compile Include="Utils\User_32.cs" />
-    <Compile Include="ViewAdmin\CheckDatabaseDLG.cs">
+    <Compile Include="Admin\CheckDatabaseDLG.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ViewAdmin\CheckDatabaseDLG.Designer.cs">
+    <Compile Include="Admin\CheckDatabaseDLG.Designer.cs">
       <DependentUpon>CheckDatabaseDLG.cs</DependentUpon>
     </Compile>
-    <Compile Include="ViewAdmin\ViewAdmin.cs" />
-    <Compile Include="ViewAdmin\ViewAdminAddNew.cs">
+    <Compile Include="Admin\ViewAdmin.cs" />
+    <Compile Include="Admin\ViewAdminAddNew.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ViewAdmin\ViewAdminAddNew.Designer.cs">
+    <Compile Include="Admin\ViewAdminAddNew.Designer.cs">
       <DependentUpon>ViewAdminAddNew.cs</DependentUpon>
     </Compile>
-    <Compile Include="ViewAdmin\ViewAdminDelegator.cs" />
-    <Compile Include="ViewAdmin\ViewAdminDLG.cs">
+    <Compile Include="Admin\ViewAdminDelegator.cs" />
+    <Compile Include="Admin\AdminDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ViewAdmin\ViewAdminDLG.Designer.cs">
-      <DependentUpon>ViewAdminDLG.cs</DependentUpon>
+    <Compile Include="Admin\AdminDialog.Designer.cs">
+      <DependentUpon>AdminDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="ViewAdmin\ViewAdminLinkHelper.cs" />
-    <Compile Include="ViewAdmin\ViewAdminLinkHelperCtrl.cs">
+    <Compile Include="Admin\ViewAdminLinkHelper.cs" />
+    <Compile Include="Admin\ViewAdminLinkHelperCtrl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ViewAdmin\ViewAdminLinkHelperCtrl.Designer.cs">
+    <Compile Include="Admin\ViewAdminLinkHelperCtrl.Designer.cs">
       <DependentUpon>ViewAdminLinkHelperCtrl.cs</DependentUpon>
     </Compile>
-    <Compile Include="ViewAdmin\ViewCache.cs" />
-    <Compile Include="ViewAdmin\ViewDefinition.cs" />
-    <Compile Include="ViewAdmin\ViewProperty.cs" />
-    <Compile Include="ViewAdmin\ViewRelation.cs" />
-    <Compile Include="ViewAdmin\ViewRelationsInspector.cs" />
-    <Compile Include="ViewAdmin\ViewRelationTreeView.cs">
+    <Compile Include="Admin\ViewCache.cs" />
+    <Compile Include="Admin\ViewDefinition.cs" />
+    <Compile Include="Admin\ViewProperty.cs" />
+    <Compile Include="Admin\ViewRelation.cs" />
+    <Compile Include="Admin\ViewRelationsInspector.cs" />
+    <Compile Include="Admin\ViewRelationTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ViewAdmin\ViewRelationTreeDLG.cs">
+    <Compile Include="Admin\ViewRelationTreeDLG.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ViewAdmin\ViewRelationTreeDLG.Designer.cs">
+    <Compile Include="Admin\ViewRelationTreeDLG.Designer.cs">
       <DependentUpon>ViewRelationTreeDLG.cs</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -435,8 +441,8 @@
       <DependentUpon>AboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="GuiTools\Forms\ChangePasswordDLG.resx">
-      <DependentUpon>ChangePasswordDLG.cs</DependentUpon>
+    <EmbeddedResource Include="GuiTools\Forms\ChangePasswordDialog.resx">
+      <DependentUpon>ChangePasswordDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="GuiTools\Forms\ProgressForm.resx">
@@ -478,23 +484,23 @@
       <DependentUpon>UserAdminDLG.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="ViewAdmin\CheckDatabaseDLG.resx">
+    <EmbeddedResource Include="Admin\CheckDatabaseDLG.resx">
       <DependentUpon>CheckDatabaseDLG.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="ViewAdmin\ViewAdminAddNew.resx">
+    <EmbeddedResource Include="Admin\ViewAdminAddNew.resx">
       <DependentUpon>ViewAdminAddNew.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="ViewAdmin\ViewAdminDLG.resx">
-      <DependentUpon>ViewAdminDLG.cs</DependentUpon>
+    <EmbeddedResource Include="Admin\AdminDialog.resx">
+      <DependentUpon>AdminDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="ViewAdmin\ViewAdminLinkHelperCtrl.resx">
+    <EmbeddedResource Include="Admin\ViewAdminLinkHelperCtrl.resx">
       <DependentUpon>ViewAdminLinkHelperCtrl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="ViewAdmin\ViewRelationTreeDLG.resx">
+    <EmbeddedResource Include="Admin\ViewRelationTreeDLG.resx">
       <DependentUpon>ViewRelationTreeDLG.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -503,6 +509,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="GNU LESSER GENERAL PUBLIC LICENSE.rtf" />
     <None Include="Resources\SDBees.png" />
   </ItemGroup>
   <ItemGroup>

@@ -29,9 +29,6 @@
 //
 //	============================================================================
 
-using System;
-using System.Collections;
-
 using Carbon.Common;
 
 namespace Carbon.Configuration.Providers

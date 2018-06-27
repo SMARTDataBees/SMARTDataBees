@@ -31,25 +31,18 @@
 
 using System;
 using System.Diagnostics;
-using System.Reflection;
 using System.IO;
+using System.Reflection;
 
 namespace Carbon.Configuration
 {
 	/// <summary>
 	/// Summary description for XmlConfigurationOptionTypeUtilities.
 	/// </summary>
-	[Serializable()]
+	[Serializable]
 	internal sealed class XmlConfigurationOptionTypeUtilities
 	{
-		public XmlConfigurationOptionTypeUtilities()
-		{
-			//
-			// TODO: Add constructor logic here
-			//
-		}
-
-		/// <summary>
+	    /// <summary>
 		/// Loads a Type specified by it's name, using the specified assembly name as the source
 		/// </summary>
 		/// <param name="typename">The name of the type (may be full or partial)</param>
@@ -60,7 +53,7 @@ namespace Carbon.Configuration
 			try
 			{
 				Type t = null;
-				Assembly a = this.LoadAssembly(assemblyname);
+				var a = LoadAssembly(assemblyname);
 				if (a != null)
 				{
 					t = a.GetType(typename, false, true);					
@@ -85,7 +78,7 @@ namespace Carbon.Configuration
 			Assembly assembly = null;
 			try
 			{
-				FileInfo file = new FileInfo(assemblyname);
+				var file = new FileInfo(assemblyname);
                 //if (!file.Exists)
                 //    assembly = Assembly.LoadWithPartialName(assemblyname);				
                 //else
@@ -102,14 +95,14 @@ namespace Carbon.Configuration
 		{
 			try
 			{
-				/// first try loading the type the easy way
-				Type t = Type.GetType(typename, false, true);
+				// first try loading the type the easy way
+				var t = Type.GetType(typename, false, true);
 				if (t == null)
 				{
-					/// it didn't load, so try loading the reference and then finding it
-					/// but do it in a separate app domain so that we don't incur the wrath of the overhead monkey
-					AppDomain domain = AppDomain.CreateDomain(Guid.NewGuid().ToString());
-					XmlConfigurationOptionTypeUtilities loader = (XmlConfigurationOptionTypeUtilities)domain.CreateInstanceFromAndUnwrap(System.Reflection.Assembly.GetExecutingAssembly().Location, typeof(XmlConfigurationOptionTypeUtilities).FullName);
+					// it didn't load, so try loading the reference and then finding it
+					// but do it in a separate app domain so that we don't incur the wrath of the overhead monkey
+					var domain = AppDomain.CreateDomain(Guid.NewGuid().ToString());
+					var loader = (XmlConfigurationOptionTypeUtilities)domain.CreateInstanceFromAndUnwrap(Assembly.GetExecutingAssembly().Location, typeof(XmlConfigurationOptionTypeUtilities).FullName);
 					t = loader.LoadType(typename, assemblyname);
 					AppDomain.Unload(domain);					
 				}
@@ -134,7 +127,7 @@ namespace Carbon.Configuration
 						return t;					
 				}
 
-				object value = option.Value;
+				var value = option.Value;
 				if ((value != null) && (((string)value) != string.Empty))
 				{
 					t = value.GetType();

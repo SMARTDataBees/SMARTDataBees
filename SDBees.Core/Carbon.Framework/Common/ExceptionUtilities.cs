@@ -30,6 +30,7 @@
 //	============================================================================
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -39,7 +40,7 @@ namespace Carbon.Common
 	/// <summary>
 	/// Provides methods for displaying exceptions that the application encounters in a standard format.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public static class ExceptionUtilities
 	{
 		/// <summary>
@@ -54,29 +55,30 @@ namespace Carbon.Common
 		/// <returns>The result of the dialog</returns>
 		public static DialogResult DisplayException(IWin32Window owner, string caption, MessageBoxIcon icon, MessageBoxButtons buttons, Exception ex, params string[] infoLines)
 		{
-			bool hasAdditionalInfo = false;
-			System.Text.StringBuilder sb = new System.Text.StringBuilder();
+			var hasAdditionalInfo = false;
+			var sb = new StringBuilder();
 			
-			/// begin with the application information that generated the exception
-			sb.Append(string.Format("The application '{0}' has encountered the following exception or condition.\n\n", Path.GetFileName(System.Windows.Forms.Application.ExecutablePath)));
+			// begin with the application information that generated the exception
+			sb.Append(
+			    $"The application '{Path.GetFileName(Application.ExecutablePath)}' has encountered the following exception or condition.\n\n");
 			
-			/// append the additional information if any was supplied
+			// append the additional information if any was supplied
 			if (infoLines != null)
 			{
 				hasAdditionalInfo = true;
 				sb.Append("Additional Information:\n\n");
-				foreach(string line in infoLines)
-					sb.Append(string.Format("{0}\n", line));
+				foreach(var line in infoLines)
+					sb.Append($"{line}\n");
 			}
 						
 			if (ex != null)
 			{
-				/// append the information contained in the exception
-				sb.Append(string.Format("{0}Exception Information:\n\n", (hasAdditionalInfo ? "\n" : null)));
-				sb.Append(ex.ToString());
+				// append the information contained in the exception
+				sb.Append($"{(hasAdditionalInfo ? "\n" : null)}Exception Information:\n\n");
+				sb.Append(ex);
 			}
 
-			/// display a message and return the result
+			// display a message and return the result
 			return MessageBox.Show(owner, sb.ToString(), caption, buttons, icon);
 		}
 	}

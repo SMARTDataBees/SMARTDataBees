@@ -20,44 +20,32 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace SDBees.GuiTools
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public partial class ChangePasswordDLG : Form
+    /// <inheritdoc />
+    public partial class ChangePasswordDialog : Form
     {
-        private string mOldPassword;
-        private string mNewPassword;
+        private string _currentPassword;
+        private string _newPassword;
 
         /// <summary>
-        /// Returns the old password that the user typed in
+        /// Returns the current password
         /// </summary>
-        public string OldPassword
-        {
-            get { return mOldPassword; }
-        }
+        public string CurrentPassword => _currentPassword;
 
         /// <summary>
-        /// Returns the new password the user typed in and confirmed
+        /// Returns the new password
         /// </summary>
-        public string NewPassword
-        {
-            get { return mNewPassword; }
-        }
+        public string NewPassword => _newPassword;
 
         /// <summary>
         /// Standard constructor
         /// </summary>
-        public ChangePasswordDLG()
+        public ChangePasswordDialog()
         {
             InitializeComponent();
         }
@@ -65,22 +53,21 @@ namespace SDBees.GuiTools
         /// <summary>
         /// Triggered when OK is clicked
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void bnOk_Click(object sender, EventArgs e)
+        /// <param name="sender">Dialog</param>
+        /// <param name="eventArgs">Standard event arguments</param>
+        private void OnOkay(object sender, EventArgs eventArgs)
         {
-            if (ebNewPassword.Text == ebConfirmPassword.Text)
+            if (NewPasswordBox.Text == ConfirmationPasswordBox.Text)
             {
-                mOldPassword = ebOldPassword.Text;
-                mNewPassword = ebNewPassword.Text;
+                _currentPassword = CurrentPasswordBox.Text;
+                _newPassword = NewPasswordBox.Text;
+                DialogResult = DialogResult.OK;
 
-                this.DialogResult = DialogResult.OK;
-
-                this.Close();
+                Close();
             }
             else
             {
-                MessageBox.Show("Das neue Passwort stimmt nicht mit der Bestätigung überein!");
+                MessageBox.Show(@"The password confirmation does not match.");
             }
         }
     }

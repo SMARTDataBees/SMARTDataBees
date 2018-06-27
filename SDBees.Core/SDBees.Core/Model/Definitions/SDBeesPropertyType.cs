@@ -21,15 +21,12 @@
 //
 // #EndHeader# ================================================================
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.Serialization;
 
 namespace SDBees.Core.Model
 {
-    public enum SDBeesPropertyValueType : int
+    public enum SDBeesPropertyValueType
     {
 		Text,
 		Double,
@@ -40,7 +37,7 @@ namespace SDBees.Core.Model
         Custom
     }
 
-    public enum SDBeesPropertyMeasureType : int
+    public enum SDBeesPropertyMeasureType
     {
         None,
         Length,
@@ -72,7 +69,7 @@ namespace SDBees.Core.Model
         public SDBeesPropertyType(SDBeesPropertyMeasureType measureType)
         {
             ValueType = SDBeesPropertyValueType.Double;
-            m_measureType = measureType;
+            MeasureType = measureType;
         }
 
         public SDBeesPropertyType (HashSet<string> enumerationValues)
@@ -92,28 +89,16 @@ namespace SDBees.Core.Model
                 if (value != m_valueType)
                 {
                     m_valueType = value;
-                    if (m_valueType == SDBeesPropertyValueType.Enumeration)
-                    {
-                        m_enumerationValues = new HashSet<string>();
-                    }
-                    else
-                    {
-                        m_enumerationValues = null;
-                    }
+                    m_enumerationValues = m_valueType == SDBeesPropertyValueType.Enumeration ? new HashSet<string>() : null;
                 }
             }
         }
 
-        private SDBeesPropertyMeasureType m_measureType = SDBeesPropertyMeasureType.None;
-        [DataMember]
-        public SDBeesPropertyMeasureType MeasureType
-        {
-            get { return m_measureType; }
-            set { m_measureType = value; }
-        }
+	    [DataMember]
+        public SDBeesPropertyMeasureType MeasureType { get; set; } = SDBeesPropertyMeasureType.None;
 
 
-        private HashSet<string> m_enumerationValues = null;
+	    private HashSet<string> m_enumerationValues;
         [DataMember]
         public HashSet<string> EnumerationValues
         {
@@ -129,15 +114,12 @@ namespace SDBees.Core.Model
 
         public void addEnumerationValue(string value)
         {
-            if (m_enumerationValues != null)
-            {
-                m_enumerationValues.Add(value);
-            }
+            m_enumerationValues?.Add(value);
         }
 
         public static implicit operator SDBeesPropertyType(SDBeesPropertyValueType valueType)
         {
-            SDBeesPropertyType propType = new SDBeesPropertyType(valueType);
+            var propType = new SDBeesPropertyType(valueType);
             return propType;
         }
 	}

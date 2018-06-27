@@ -30,13 +30,14 @@
 //	============================================================================
 
 using System;
+using System.Diagnostics;
 
 namespace Carbon.MultiThreading
 {
 	/// <summary>
 	/// Defines a BackgroundThread used in a BackgroundThreadPool.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public sealed class BackgroundThreadPoolThread : BackgroundThread 
 	{
 		private readonly BackgroundThreadPoolJob _job;
@@ -45,8 +46,7 @@ namespace Carbon.MultiThreading
 		/// Initializes a new instance of the BackgroundThreadPoolThread class
 		/// </summary>
 		/// <param name="job"></param>
-		internal BackgroundThreadPoolThread(BackgroundThreadPoolJob job) : 
-			base()
+		internal BackgroundThreadPoolThread(BackgroundThreadPoolJob job)
 		{
 			if (job == null)
 				throw new ArgumentNullException("job");
@@ -54,16 +54,16 @@ namespace Carbon.MultiThreading
 			_job = job;
 					
 			// wire the job's start info to the thread events
-			base.Run += _job.StartInfo.Run;	
+			Run += _job.StartInfo.Run;	
 		
 			if (_job.StartInfo.Finished != null)
-				base.Finished += _job.StartInfo.Finished;
+				Finished += _job.StartInfo.Finished;
 
 			// determine if the thread will allow ThreadAbortExceptions to be throw
             //base.AllowThreadAbortException = _job.StartInfo.AllowThreadAbortExceptions;
 
 			// start the thread automatically
-			base.Start(true, _job.StartInfo.Args);								
+			Start(true, _job.StartInfo.Args);								
 		}
 
 		#region My Overrides

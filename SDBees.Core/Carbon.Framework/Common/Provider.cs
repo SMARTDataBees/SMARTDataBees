@@ -29,14 +29,14 @@
 //
 //	============================================================================
 
-using System;
+using System.Diagnostics;
 
 namespace Carbon.Common
 {
 	/// <summary>
 	/// Defines the base class from which all configuration based Provider classes should inherit.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public abstract class Provider : DisposableObject
 	{
 		private readonly string _name;

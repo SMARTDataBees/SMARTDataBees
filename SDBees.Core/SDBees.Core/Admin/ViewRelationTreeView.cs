@@ -20,20 +20,21 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.Text;
-using System.Drawing;
-using System.Windows.Forms;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Windows.Forms;
 using SDBees.DB;
 using SDBees.GuiTools;
+using SDBees.Main.Window;
 using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Plugs.TreenodeHelper;
-using SDBees.Main.Window;
+using Attribute = SDBees.DB.Attribute;
 
-namespace SDBees.ViewAdmin
+namespace SDBees.Core.Admin
 {
     internal class ViewRelationTreeView : DbTreeView
     {
@@ -63,12 +64,13 @@ namespace SDBees.ViewAdmin
                     else
                     {
                         // update the filter...
-                        Table table = this.Table;
+                        var table = Table;
                         Error error = null;
 
                         //Filter only the current view?
-                        SDBees.DB.Attribute attribute = new SDBees.DB.Attribute(table.Columns["view"], m_ViewId.ToString());
-                        this.Filter = Database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
+                        var column = table.Columns.FirstOrDefault(clmn => clmn.Name.Equals("view"));
+                        var attribute = new Attribute(column, m_ViewId.ToString());
+                        Filter = Database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
 
                         m_ViewProperties = new ViewProperty();
                         m_ViewProperties.Load(Database, m_ViewId, ref error);
@@ -87,7 +89,7 @@ namespace SDBees.ViewAdmin
         {
             get
             {
-                string name = "";
+                var name = "";
 
                 if (m_ViewProperties != null)
                 {
@@ -102,37 +104,37 @@ namespace SDBees.ViewAdmin
 
         #region Constructor/Destructor
 
-        internal ViewRelationTreeView(SDBees.DB.SDBeesDBConnection dbManager) : base(dbManager)
+        internal ViewRelationTreeView(SDBeesDBConnection dbManager) : base(dbManager)
         {
-            ViewRelation baseData = new ViewRelation();
+            var baseData = new ViewRelation();
             baseData.SetDefaults(dbManager.Database);
 
             m_HashObjectIdToTreeNode = new Hashtable();
 
-            this.Table = baseData.Table;
-            this.NodeColumnName = "child";
-            this.ParentNodeColumnName = "parent";
-            this.DisplayColumnName = "child_name";
-            this.ParentNullId = Guid.Empty;
-            this.ImageList = new ImageList();
+            Table = baseData.Table;
+            NodeColumnName = "child";
+            ParentNodeColumnName = "parent";
+            DisplayColumnName = "child_name";
+            ParentNullId = Guid.Empty;
+            ImageList = new ImageList();
 
             m_ViewId = Guid.Empty;
             m_ViewProperties = null;
 
             // Events...
-            this.KeyDown += new KeyEventHandler(ViewRelationTreeView_KeyDown);
+            KeyDown += ViewRelationTreeView_KeyDown;
 
-            ViewAdmin.Current.ViewRelationCreated += new ViewAdmin.ViewRelationEventHandler(Current_ViewRelationCreated);
-            ViewAdmin.Current.ViewRelationModified += new ViewAdmin.ViewRelationEventHandler(Current_ViewRelationModified);
-            ViewAdmin.Current.ViewRelationRemoved += new ViewAdmin.ViewRelationEventHandler(Current_ViewRelationRemoved);
+            ViewAdmin.Current.ViewRelationCreated += Current_ViewRelationCreated;
+            ViewAdmin.Current.ViewRelationModified += Current_ViewRelationModified;
+            ViewAdmin.Current.ViewRelationRemoved += Current_ViewRelationRemoved;
             ViewAdmin.Current.OnViewSelectionChanged += Current_ViewSelectionChanged;
 
             //this.MultiSelect = TreeViewMultiSelect.NoMulti;
         }
 
-        internal ViewRelationTreeView() : base()
+        internal ViewRelationTreeView()
         {
-            this.HideSelection = false;
+            HideSelection = false;
         }
 
         #endregion
@@ -144,18 +146,18 @@ namespace SDBees.ViewAdmin
         /// </summary>
         public void DeleteSelectedNodes()
         {
-            List<TreeNode> selectedTreeNodes = new List<TreeNode>();
+            var selectedTreeNodes = new List<TreeNode>();
 
-            if (this.SelNodes.Count > 1)
+            if (SelNodes.Count > 1)
             {
-                foreach (MWTreeNodeWrapper tnWrapper in this.SelNodes.Values)
+                foreach (MWTreeNodeWrapper tnWrapper in SelNodes.Values)
                 {
                     selectedTreeNodes.Add(tnWrapper.Node);
                 }
             }
-            else if (this.SelNodes.Count == 1)
+            else if (SelNodes.Count == 1)
             {
-                TreeNode treeNode = this.SingleSelectedNode();
+                var treeNode = SingleSelectedNode();
 
                 if (treeNode != null)
                 {
@@ -163,12 +165,12 @@ namespace SDBees.ViewAdmin
                 }
             }
 
-            int numLastReferences = 0;
-            int numNodesWithChildren = 0;
-            List<TreeNode> treeNodesToDelete = new List<TreeNode>();
-            foreach (TreeNode treeNode in selectedTreeNodes)
+            var numLastReferences = 0;
+            var numNodesWithChildren = 0;
+            var treeNodesToDelete = new List<TreeNode>();
+            foreach (var treeNode in selectedTreeNodes)
             {
-                bool isLastReference = false;
+                var isLastReference = false;
                 if (CanRemoveViewRelation(treeNode, ref isLastReference))
                 {
                     treeNodesToDelete.Add(treeNode);
@@ -186,19 +188,19 @@ namespace SDBees.ViewAdmin
 
             if (numNodesWithChildren > 0)
             {
-                MessageBox.Show(numNodesWithChildren + " objects have childs and can't be deleted!");
+                MessageBox.Show(numNodesWithChildren + @"Objects have childs and can't be deleted!");
                 return;
             }
 
-            DialogResult answerRemove = MessageBox.Show("Would you really like to remove the objects?", "Remove objects", MessageBoxButtons.YesNo);
+            var answerRemove = MessageBox.Show(@"Would you really like to remove the objects?", @"Remove objects", MessageBoxButtons.YesNo);
             if (answerRemove == DialogResult.No)
                 return;
 
-            bool deleteUnreferenced = false;
+            var deleteUnreferenced = false;
 
             if (numLastReferences > 0)
             {
-                DialogResult answerDelete = MessageBox.Show(numLastReferences + " objects no longer referenced, would you like to delete them??", "Remove objects", MessageBoxButtons.YesNo);
+                var answerDelete = MessageBox.Show(numLastReferences + @"Objects no longer referenced, would you like to delete them??", @"Remove objects", MessageBoxButtons.YesNo);
 
                 deleteUnreferenced = (answerDelete == DialogResult.Yes);
             }
@@ -211,14 +213,14 @@ namespace SDBees.ViewAdmin
             }
             else
             {
-                if (0 < this.Nodes.Count)
+                if (0 < Nodes.Count)
                 {
-                    toBeSelectedNode = this.Nodes[0];
+                    toBeSelectedNode = Nodes[0];
                 }
             }
 
             // This might be a length process, so entertain the user meanwhile :-)
-            ProgressTool progressTool = new ProgressTool();
+            var progressTool = new ProgressTool();
             progressTool.StartActiveProcess(true, true);
 
             progressTool.WriteStatus("Objects will be deleted...");
@@ -226,7 +228,7 @@ namespace SDBees.ViewAdmin
             progressTool.ProgressBar.Maximum = treeNodesToDelete.Count;
             progressTool.ProgressBar.Value = 0;
 
-            foreach (TreeNode treeNode in treeNodesToDelete)
+            foreach (var treeNode in treeNodesToDelete)
             {
                 ViewRelationRemove(treeNode, deleteUnreferenced);
 
@@ -277,13 +279,13 @@ namespace SDBees.ViewAdmin
 
             if (viewRel != null)
             {
-                int imageIndex = TemplateTreenode.getImageIndexForPluginType(viewRel.ChildType, this.ImageList);
+                var imageIndex = TemplateTreenode.getImageIndexForPluginType(viewRel.ChildType, ImageList);
 
                 treeNode = new TreeNode(viewRel.ChildName);
                 treeNode.ImageIndex = imageIndex;
                 treeNode.SelectedImageIndex = imageIndex;
 
-                TemplateTreenodeTag tagRel = new TemplateTreenodeTag();
+                var tagRel = new TemplateTreenodeTag();
                 tagRel.NodeGUID = viewRel.ChildId.ToString();
                 tagRel.NodeName = viewRel.ChildName;
                 tagRel.NodeTypeOf = viewRel.ChildType;
@@ -302,7 +304,7 @@ namespace SDBees.ViewAdmin
         /// <returns></returns>
         protected override object CreateTreeNodeTag(object nodeId)
         {
-            throw new System.Exception("CreateTreeNodeTag should not be called...");
+            throw new Exception("CreateTreeNodeTag should not be called...");
         }
 
         /// <summary>
@@ -331,7 +333,7 @@ namespace SDBees.ViewAdmin
         /// <param name="treenode"></param>
         protected override void NodeAdded(TreeNode treenode)
         {
-            TemplateTreenodeTag tnTag = (TemplateTreenodeTag)treenode.Tag;
+            var tnTag = (TemplateTreenodeTag)treenode.Tag;
             try
             {
                 if (tnTag != null)
@@ -342,8 +344,9 @@ namespace SDBees.ViewAdmin
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
+                // ignored
             }
         }
 
@@ -359,7 +362,7 @@ namespace SDBees.ViewAdmin
         /// <returns></returns>
         protected override DragDropEffects GetDragOverEffect(object sender, DragEventArgs e, TreeNode treeNodeToDrop, DbDragData dragData)
         {
-            DragDropEffects result = base.GetDragOverEffect(sender, e, treeNodeToDrop, dragData);
+            var result = base.GetDragOverEffect(sender, e, treeNodeToDrop, dragData);
 
             if (m_ViewProperties == null)
             {
@@ -371,24 +374,24 @@ namespace SDBees.ViewAdmin
                 // The base class would allow this operation, now add our limitations...
 
                 // 1. Check that this matches the view specification
-                TemplateTreenodeTag tnTag = (TemplateTreenodeTag)treeNodeToDrop.Tag;
+                var tnTag = (TemplateTreenodeTag)treeNodeToDrop.Tag;
 
                 ArrayList viewDefs = null;
                 Error error = null;
-                m_ViewProperties.GetChildren(tnTag.NodeTypeOf, ref viewDefs, ref error);
+                m_ViewProperties?.GetChildren(tnTag.NodeTypeOf, ref viewDefs, ref error);
 
-                Hashtable allowedChildTypes = new Hashtable();
+                var allowedChildTypes = new Hashtable();
                 foreach (ViewDefinition viewDef in viewDefs)
                 {
                     allowedChildTypes.Add(viewDef.ChildType, null);
                 }
 
-                foreach (object dragItem in dragData.DragItems)
+                foreach (var dragItem in dragData.DragItems)
                 {
                     if (typeof(TreeNode).IsInstanceOfType(dragItem))
                     {
-                        TreeNode treeNode = (TreeNode)dragItem;
-                        TemplateTreenodeTag tnDragTag = (TemplateTreenodeTag)treeNode.Tag;
+                        var treeNode = (TreeNode)dragItem;
+                        var tnDragTag = (TemplateTreenodeTag)treeNode.Tag;
 
                         if (!allowedChildTypes.ContainsKey(tnDragTag.NodeTypeOf))
                         {
@@ -400,14 +403,14 @@ namespace SDBees.ViewAdmin
 
                 // 2. If the dragging is between different tree views, but these tree views show the same
                 //    view, then the operation should only be a move...
-                object senderControl = dragData.SenderControl();
+                var senderControl = dragData.SenderControl();
                 if ((senderControl != this) && (result == DragDropEffects.Copy))
                 {
                     if (typeof(ViewRelationTreeView).IsInstanceOfType(senderControl))
                     {
-                        ViewRelationTreeView viewRelTreeView = (ViewRelationTreeView)senderControl;
+                        var viewRelTreeView = (ViewRelationTreeView)senderControl;
 
-                        if ((viewRelTreeView.ViewId == this.ViewId) && ((e.AllowedEffect & DragDropEffects.Move) == DragDropEffects.Move))
+                        if ((viewRelTreeView.ViewId == ViewId) && ((e.AllowedEffect & DragDropEffects.Move) == DragDropEffects.Move))
                         {
                             result = DragDropEffects.Move;
                         }
@@ -429,17 +432,17 @@ namespace SDBees.ViewAdmin
             base.CreateContextMenu();
 
             Error error = null;
-            bool multipleSelection = (this.SelNodes.Count > 1);
-            bool singleSelection = (this.SelNodes.Count == 1);
-            bool noSelection = (this.SelNodes.Count == 0);
-            string curViewName = ViewName;
+            var multipleSelection = (SelNodes.Count > 1);
+            var singleSelection = (SelNodes.Count == 1);
+            var noSelection = (SelNodes.Count == 0);
+            var curViewName = ViewName;
 
             AddFunctionalPluginMenuItems();
 
             if (singleSelection)
             {
-                TreeNode tn = this.SingleSelectedNode();
-                TemplateTreenodeTag tagRel = (TemplateTreenodeTag)tn.Tag;
+                var tn = SingleSelectedNode();
+                var tagRel = (TemplateTreenodeTag)tn.Tag;
 
                 if (m_ViewProperties != null)
                 {
@@ -447,7 +450,7 @@ namespace SDBees.ViewAdmin
                     AddCreateChildMenuItems(tagRel.NodeTypeOf, ref error);
 
                     // Create Menu entries for this node
-                    TemplateTreenode plugin = TemplateTreenode.GetPluginForType(tagRel.NodeTypeOf);
+                    var plugin = TemplateTreenode.GetPluginForType(tagRel.NodeTypeOf);
                     if (plugin != null)
                     {
                         AddDeleteMenuItem(plugin);
@@ -464,40 +467,40 @@ namespace SDBees.ViewAdmin
                 //AddDeleteMenuItem(null);
             }
 
-            this.ContextMenu.MenuItems.Add(new MenuItem("-"));
+            ContextMenu.MenuItems.Add(new MenuItem("-"));
 
-            MenuItem menuViewRefresh = new MenuItem("Update view");
+            var menuViewRefresh = new MenuItem("Update view");
             // Add a separator
             // menuViewRefresh.Break = true;
             menuViewRefresh.Enabled = (curViewName != "");
-            menuViewRefresh.Click += new EventHandler(menuViewRefresh_Click);
+            menuViewRefresh.Click += menuViewRefresh_Click;
 
-            this.ContextMenu.MenuItems.Add(menuViewRefresh);
+            ContextMenu.MenuItems.Add(menuViewRefresh);
 
-            MenuItem menuViewFlyout = new MenuItem("Change view");
+            var menuViewFlyout = new MenuItem("Change view");
             // Add a separator
             // menuViewFlyout.Break = true;
 
-            this.ContextMenu.MenuItems.Add(menuViewFlyout);
+            ContextMenu.MenuItems.Add(menuViewFlyout);
 
             ArrayList viewNames = null;
-            int numViews = ViewProperty.GetAllViewNames(Database, ref viewNames, ref error);
+            var numViews = ViewProperty.GetAllViewNames(Database, ref viewNames, ref error);
 
             if (numViews > 0)
             {
                 foreach (string viewName in viewNames)
                 {
-                    MenuItem menuView = new MenuItem(viewName);
+                    var menuView = new MenuItem(viewName);
                     menuView.Enabled = (curViewName != viewName);
                     menuView.Checked = (curViewName == viewName);
-                    menuView.Click += new EventHandler(menuView_Click);
+                    menuView.Click += menuView_Click;
 
                     menuViewFlyout.MenuItems.Add(menuView);
                 }
             }
             else
             {
-                MenuItem menuView = new MenuItem("No views definied");
+                var menuView = new MenuItem("No views definied");
                 menuView.Enabled = false;
 
                 menuViewFlyout.MenuItems.Add(menuView);
@@ -508,9 +511,9 @@ namespace SDBees.ViewAdmin
         {
             if (plugin.AllowEditingOfSchema())
             {
-                MenuItem menuEditSchema = new MenuItem(plugin.EditSchemaMenuItem);
-                menuEditSchema.Click += new EventHandler(menuEditSchema_Click);
-                this.ContextMenu.MenuItems.Add(menuEditSchema);
+                var menuEditSchema = new MenuItem(plugin.EditSchemaMenuItem);
+                menuEditSchema.Click += menuEditSchema_Click;
+                ContextMenu.MenuItems.Add(menuEditSchema);
             }
         }
 
@@ -523,43 +526,43 @@ namespace SDBees.ViewAdmin
             else
                 menuDeleteNode = new MenuItem(plugin.DeleteMenuItem);
 
-            menuDeleteNode.Click += new EventHandler(menuDeleteNode_Click);
-            this.ContextMenu.MenuItems.Add(menuDeleteNode);
+            menuDeleteNode.Click += menuDeleteNode_Click;
+            ContextMenu.MenuItems.Add(menuDeleteNode);
 
-            menuDeleteNode.Click += new EventHandler(menuDeleteNode_Click);
-            this.ContextMenu.MenuItems.Add(menuDeleteNode);
+            menuDeleteNode.Click += menuDeleteNode_Click;
+            ContextMenu.MenuItems.Add(menuDeleteNode);
         }
 
         protected void AddFunctionalPluginMenuItems()
         {
             //Funktionale MenuItems hinzufügen
-            if (this.SelNodes.Count > 0)
+            if (SelNodes.Count > 0)
             {
-                List<TemplateTreenodeTag> tagList = new List<TemplateTreenodeTag>();
-                foreach (MWTreeNodeWrapper tnWrapper in this.SelNodes.Values)
+                var tagList = new List<TemplateTreenodeTag>();
+                foreach (MWTreeNodeWrapper tnWrapper in SelNodes.Values)
                 {
                     tagList.Add((TemplateTreenodeTag) tnWrapper.Node.Tag);
                 }
 
-                List<TemplateTreenodeHelper> helperList = TemplateTreenodeHelper.GetAllHelperPlugins();
+                var helperList = TemplateTreenodeHelper.GetAllHelperPlugins();
                 if (helperList.Count > 0)
                 {
-                    bool createSeperator = false;
-                    foreach (TemplateTreenodeHelper helper in helperList)
+                    var createSeperator = false;
+                    foreach (var helper in helperList)
                     {
                         List<MenuItem> menuItemsToAdd = null;
                         if (helper.GetPopupMenuItems(tagList, out menuItemsToAdd))
                         {
-                            foreach (MenuItem menuItem in menuItemsToAdd)
+                            foreach (var menuItem in menuItemsToAdd)
                             {
-                                this.ContextMenu.MenuItems.Add(menuItem);
+                                ContextMenu.MenuItems.Add(menuItem);
                             }
                             createSeperator = true;
                         }
                     }
 
                     if(createSeperator)
-                        this.ContextMenu.MenuItems.Add(new MenuItem("-"));                    
+                        ContextMenu.MenuItems.Add(new MenuItem("-"));                    
                 }
             }
         }
@@ -571,14 +574,14 @@ namespace SDBees.ViewAdmin
             {
                 foreach (ViewDefinition viewDef in viewDefs)
                 {
-                    TemplateTreenode pluginChild = TemplateTreenode.GetPluginForType(viewDef.ChildType);
+                    var pluginChild = TemplateTreenode.GetPluginForType(viewDef.ChildType);
                     if (pluginChild != null)
                     {
-                        MenuItem menuCreateChild = new MenuItem(pluginChild.CreateMenuItem);
-                        menuCreateChild.Click += new EventHandler(menuCreateChild_Click);
+                        var menuCreateChild = new MenuItem(pluginChild.CreateMenuItem);
+                        menuCreateChild.Click += menuCreateChild_Click;
                         menuCreateChild.Tag = viewDef.ChildType;
 
-                        this.ContextMenu.MenuItems.Add(menuCreateChild);
+                        ContextMenu.MenuItems.Add(menuCreateChild);
                     }
                 }
             }
@@ -596,7 +599,7 @@ namespace SDBees.ViewAdmin
             {
                 //Die Relation einfügen
                 Error error = null;
-                ViewRelation viewrel = new ViewRelation();
+                var viewrel = new ViewRelation();
                 viewrel.SetDefaults(Database);
                 viewrel.ChildId = new Guid(theTag.NodeGUID);
                 //viewrel.
@@ -606,7 +609,7 @@ namespace SDBees.ViewAdmin
 
                 if (ViewRelation.ChildReferencedByView(Database, m_ViewId, viewrel.ChildId, ref error))
                 {
-                    MessageBox.Show("Object already referenced in view! No second relation created!");
+                    MessageBox.Show(@"Object already referenced in view! No second relation created!");
                     return;
                 }
 
@@ -616,21 +619,21 @@ namespace SDBees.ViewAdmin
                 if (treeNode == null) // Einen obersten Knoten einfügen
                 {
                     viewrel.ParentType = null;
-                    nodes = this.Nodes;
+                    nodes = Nodes;
 
                     //Parentid ist automatisch 000
                 }
                 else //Es gibt bereits Knoten im Treeview
                 {
                     //Den Tag des Parent besorgen. Parent ist der Selektierte Knoten
-                    TemplateTreenodeTag tagSelected = (TemplateTreenodeTag)treeNode.Tag;
+                    var tagSelected = (TemplateTreenodeTag)treeNode.Tag;
                     if (tagSelected.NodeTypeOf == viewrel.ChildType) //Es wird der gleiche Typ eingefügt, also auf dem gleichen Niveau
                     {
-                        TreeNode parentTreeNode = treeNode.Parent;
+                        var parentTreeNode = treeNode.Parent;
                         if (parentTreeNode == null)
                         {
                             // oberster Knoten...
-                            nodes = this.Nodes;
+                            nodes = Nodes;
                             viewrel.ParentType = null;
                         }
                         else
@@ -639,7 +642,7 @@ namespace SDBees.ViewAdmin
                             nodes = parentTreeNode.Nodes;
 
                             // ParentType bestimmen...
-                            TemplateTreenodeTag tagParent = (TemplateTreenodeTag)parentTreeNode.Tag;
+                            var tagParent = (TemplateTreenodeTag)parentTreeNode.Tag;
                             viewrel.ParentId = new Guid(tagParent.NodeGUID);
                             viewrel.ParentType = tagParent.NodeTypeOf;
                         }
@@ -656,13 +659,13 @@ namespace SDBees.ViewAdmin
 
                 if (nodes != null)
                 {
-                    string testParentType = viewrel.ParentType;
+                    var testParentType = viewrel.ParentType;
                     if (viewrel.ParentType == null)
                         testParentType = ViewRelation.m_StartNodeValue;
 
                     if (!ViewDefinition.ViewDefinitionExists(Database, m_ViewId, testParentType, viewrel.ChildType, ref error))
                     {
-                        MessageBox.Show("Can't insert object.");
+                        MessageBox.Show(@"Can't insert object.");
                         return;
                     }
 
@@ -670,7 +673,7 @@ namespace SDBees.ViewAdmin
                 }
                 else
                 {
-                    MessageBox.Show("No suitable element for insertion found!");
+                    MessageBox.Show(@"No suitable element for insertion found!");
                 }
 
                 Error.Display("Error on creating relation", error);
@@ -684,14 +687,14 @@ namespace SDBees.ViewAdmin
 
         protected bool CanRemoveViewRelation(TreeNode treeNode, ref bool isLastReference)
         {
-            bool result = false;
+            var result = false;
 
             if (treeNode.Nodes.Count == 0)
             {
-                TemplateTreenodeTag selectedTag = (TemplateTreenodeTag)treeNode.Tag;
+                var selectedTag = (TemplateTreenodeTag)treeNode.Tag;
 
                 Error error = null;
-                ArrayList objectIds = new ArrayList();
+                var objectIds = new ArrayList();
                 isLastReference = (ViewRelation.FindViewRelationByChildId(Database, new Guid(selectedTag.NodeGUID), ref objectIds, ref error) <= 1);
 
                 result = true;
@@ -702,17 +705,17 @@ namespace SDBees.ViewAdmin
 
         protected void ViewRelationRemove(TreeNode treeNode, bool deleteUnreferenced)
         {
-            string objectName = treeNode.Text;
-            TemplateTreenodeTag selectedTag = (TemplateTreenodeTag)treeNode.Tag;
-            Database database = Database;
+            var objectName = treeNode.Text;
+            var selectedTag = (TemplateTreenodeTag)treeNode.Tag;
+            var database = Database;
 
             if (treeNode.Nodes.Count > 0)
             {
-                MessageBox.Show("The object '" + objectName + "' has childs and can't be deleted!");
+                MessageBox.Show(@"The object '" + objectName + @"' has childs and can't be deleted!");
             }
             else
             {
-                ViewRelation viewRel = GetViewRelationFromNode(treeNode);
+                var viewRel = GetViewRelationFromNode(treeNode);
 
                 if (viewRel != null)
                 {
@@ -731,19 +734,19 @@ namespace SDBees.ViewAdmin
 
             try
             {
-                string objectName = currentNode.Text;
-                TemplateTreenodeTag selectedTag = (TemplateTreenodeTag)currentNode.Tag;
+                var objectName = currentNode.Text;
+                var selectedTag = (TemplateTreenodeTag)currentNode.Tag;
 
-                Guid parentId = new Guid();
-                Guid childId = new Guid(selectedTag.NodeGUID);
+                var parentId = new Guid();
+                var childId = new Guid(selectedTag.NodeGUID);
 
-                TreeNode parentNode = currentNode.Parent;
+                var parentNode = currentNode.Parent;
                 if (parentNode != null)
                 {
-                    TemplateTreenodeTag parentTag = (TemplateTreenodeTag)parentNode.Tag;
+                    var parentTag = (TemplateTreenodeTag)parentNode.Tag;
                     parentId = new Guid(parentTag.NodeGUID);
                 }
-                ArrayList objectIds = new ArrayList();
+                var objectIds = new ArrayList();
                 Error error = null;
                 ViewRelation.FindViewRelationByParentIdAndChildId(Database, parentId, childId, ref objectIds, ref error);
 
@@ -751,11 +754,11 @@ namespace SDBees.ViewAdmin
                 {
                     if (objectIds.Count > 1)
                     {
-                        MessageBox.Show("More than one Viewrelation found!");
+                        MessageBox.Show(@"More than one Viewrelation found!");
                     }
                     else if(objectIds.Count == 0)
                     {
-                        MessageBox.Show("No viewrelation found, very strange!");
+                        MessageBox.Show(@"No viewrelation found, very strange!");
                     }
                     else
                     {
@@ -779,33 +782,33 @@ namespace SDBees.ViewAdmin
             return result;
         }
 
-        internal TemplateTreenodeTag m_selTag = null;
+        internal TemplateTreenodeTag m_selTag;
 
         protected void menuCreateChild_Click(object sender, EventArgs e)
         {
-            MenuItem menuItem = (MenuItem)sender;
+            var menuItem = (MenuItem)sender;
 
-            TemplateTreenode plugin = TemplateTreenode.GetPluginForType((string)menuItem.Tag);
+            var plugin = TemplateTreenode.GetPluginForType((string)menuItem.Tag);
             if (plugin != null)
             {
                 Error error = null;
-                SDBees.Plugs.TemplateBase.TemplateDBBaseData baseData = plugin.CreateDataObject();
+                var baseData = plugin.CreateDataObject();
                 baseData.SetDefaults(Database);
-                if (String.IsNullOrEmpty(baseData.Name))
+                if (string.IsNullOrEmpty(baseData.Name))
                 {
                     baseData.Name = "Unnamed";
                 }
 
-                TreeNode currentTreeNode = this.SingleSelectedNode();
+                var currentTreeNode = SingleSelectedNode();
                 if (plugin.IsNewChildInstanceAllowed(currentTreeNode, menuItem.Tag.ToString()))
                 {
-                    System.Drawing.Point location = Control.MousePosition;
+                    var location = MousePosition;
                     string name;
-                    bool proceed = false;
+                    var proceed = false;
 
                     do
                     {
-                        System.Windows.Forms.DialogResult dlgres = DialogResult.Abort;
+                        var dlgres = DialogResult.Abort;
 
                         name = InputBox.Show("Naming", "Name for the new object", baseData.Name, location.X, location.Y, ref dlgres);
 
@@ -815,7 +818,7 @@ namespace SDBees.ViewAdmin
                             break;
                         }
 
-                        if (!String.IsNullOrEmpty(name))
+                        if (!string.IsNullOrEmpty(name))
                         {
                             baseData.Name = name;
 
@@ -836,7 +839,7 @@ namespace SDBees.ViewAdmin
                     {
                         baseData.Save(ref error);
 
-                        TemplateTreenodeTag newTag = plugin.MyTag();
+                        var newTag = plugin.MyTag();
                         newTag.NodeGUID = baseData.Id.ToString();
                         newTag.NodeName = baseData.Name;
 
@@ -844,21 +847,22 @@ namespace SDBees.ViewAdmin
 
                         plugin.DoCreateSubTasks(newTag, currentTreeNode);
 
-                        this.m_selTag = newTag;
+                        m_selTag = newTag;
 
                         RefreshView();
 
                         try
                         {
-                            if (this.m_lastNode != null)
+                            if (m_lastNode != null)
                             {
-                                SelectNode(this.m_lastNode, true);
+                                SelectNode(m_lastNode, true);
 
                                 //this.SelectedNode.Expand();
                             }
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
+                            // ignored
                         }
                     }
                 }
@@ -871,9 +875,9 @@ namespace SDBees.ViewAdmin
 
             ReselectLastNode();
             //this.ExpandAll();
-            if(this.Nodes != null)
+            if(Nodes != null)
             {
-                foreach (TreeNode item in this.Nodes)
+                foreach (TreeNode item in Nodes)
                 {
                     item.Expand();
                 }
@@ -884,14 +888,11 @@ namespace SDBees.ViewAdmin
         {
             if(m_selTag != null)
             {
-                foreach (TreeNode item in this.Nodes)
+                foreach (TreeNode item in Nodes)
                 {
                     if (CheckTag(item))
                         break;
-                    else
-                    {
-                        ParseSubNodes(item);
-                    }
+                    ParseSubNodes(item);
                 }
             }
         }
@@ -902,38 +903,32 @@ namespace SDBees.ViewAdmin
             {
                 if (CheckTag(subitems))
                     break;
-                else
-                {
-                    ParseSubNodes(subitems);
-                }
+                ParseSubNodes(subitems);
             }
         }
 
-        TreeNode m_lastNode = null;
+        TreeNode m_lastNode;
 
         private bool CheckTag(TreeNode item)
         {
-            TemplateTreenodeTag curTag = item.Tag as TemplateTreenodeTag;
+            var curTag = item.Tag as TemplateTreenodeTag;
             if(curTag != null && curTag.NodeGUID == m_selTag.NodeGUID)
             {
-                this.m_lastNode = item;
+                m_lastNode = item;
                 //item.Expand();
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         protected void menuEditSchema_Click(object sender, EventArgs e)
         {
-            TreeNode currentTreeNode = this.SingleSelectedNode();
+            var currentTreeNode = SingleSelectedNode();
 
             if (currentTreeNode != null)
             {
-                TemplateTreenodeTag tagRel = (TemplateTreenodeTag)currentTreeNode.Tag;
-                TemplateTreenode plugin = TemplateTreenode.GetPluginForType(tagRel.NodeTypeOf);
+                var tagRel = (TemplateTreenodeTag)currentTreeNode.Tag;
+                var plugin = TemplateTreenode.GetPluginForType(tagRel.NodeTypeOf);
 
                 if (plugin != null)
                 {
@@ -954,10 +949,10 @@ namespace SDBees.ViewAdmin
 
         protected void menuView_Click(object sender, EventArgs e)
         {
-            MenuItem menuItem = (MenuItem)sender;
-            string viewName = menuItem.Text;
+            var menuItem = (MenuItem)sender;
+            var viewName = menuItem.Text;
             Error error = null;
-            Guid viewId = ViewProperty.GetViewIdFromName(Database, viewName, ref error);
+            var viewId = ViewProperty.GetViewIdFromName(Database, viewName, ref error);
 
             if ((error == null) && (viewId != null))
             {
@@ -979,7 +974,7 @@ namespace SDBees.ViewAdmin
             TreeNodeCollection nodes = null;
             if (args.ViewRelation.ParentId != Guid.Empty)
             {
-                string key = args.ViewRelation.ParentId.ToString();
+                var key = args.ViewRelation.ParentId.ToString();
 
                 if (m_HashObjectIdToTreeNode.ContainsKey(key))
                 {
@@ -993,12 +988,12 @@ namespace SDBees.ViewAdmin
             }
             else
             {
-                nodes = this.Nodes;
+                nodes = Nodes;
             }
 
             if (nodes != null)
             {
-                TreeNode treeNode = CreateNodeForViewRel(args.ViewRelation);
+                var treeNode = CreateNodeForViewRel(args.ViewRelation);
 
                 nodes.Add(treeNode);
 
@@ -1017,11 +1012,11 @@ namespace SDBees.ViewAdmin
 
         private void Current_ViewRelationModified(object sender, ViewAdmin.ViewRelationEventArgs args)
         {
-            string key = args.ViewRelation.ChildId.ToString();
+            var key = args.ViewRelation.ChildId.ToString();
 
             if (m_HashObjectIdToTreeNode.ContainsKey(key))
             {
-                TreeNode treeNode = (TreeNode)m_HashObjectIdToTreeNode[key];
+                var treeNode = (TreeNode)m_HashObjectIdToTreeNode[key];
 
                 if (treeNode != null)
                 {
@@ -1031,8 +1026,9 @@ namespace SDBees.ViewAdmin
                         {
                             treeNode.Text = args.ViewRelation.ChildName;
                         }
-                        catch (Exception ex)
+                        catch (Exception)
                         {
+                            // ignored
                         }
                     }
                 }
@@ -1041,15 +1037,15 @@ namespace SDBees.ViewAdmin
 
         private void Current_ViewRelationRemoved(object sender, ViewAdmin.ViewRelationEventArgs args)
         {
-            string key = args.ViewRelation.ChildId.ToString();
+            var key = args.ViewRelation.ChildId.ToString();
 
             if (m_HashObjectIdToTreeNode.ContainsKey(key))
             {
-                TreeNode treeNode = (TreeNode)m_HashObjectIdToTreeNode[key];
+                var treeNode = (TreeNode)m_HashObjectIdToTreeNode[key];
 
                 if (treeNode != null)
                 {
-                    this.ClearSelNodes();
+                    ClearSelNodes();
 
                     treeNode.Remove();
                     m_HashObjectIdToTreeNode.Remove(key);
@@ -1057,7 +1053,7 @@ namespace SDBees.ViewAdmin
             }
         }
 
-        private void Current_ViewSelectionChanged(object myObject, SDBees.ViewAdmin.ViewSelectArgs myArgs)
+        private void Current_ViewSelectionChanged(object myObject, ViewSelectArgs myArgs)
         {
             //Guid value = myArgs.ViewGuid;
 
@@ -1093,7 +1089,7 @@ namespace SDBees.ViewAdmin
             {
                 ViewName = viewName;
             }
-        };
+        }
         public delegate void NotificationHandler(object sender, NotificationEventArgs args);
 
         public event NotificationHandler ViewSwitched;
@@ -1102,7 +1098,7 @@ namespace SDBees.ViewAdmin
         {
             if (ViewSwitched != null)
             {
-                NotificationEventArgs args = new NotificationEventArgs(viewName);
+                var args = new NotificationEventArgs(viewName);
                 ViewSwitched.Invoke(this, args);
             }
         }

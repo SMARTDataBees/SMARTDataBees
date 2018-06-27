@@ -20,6 +20,10 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.ComponentModel;
+using System.Windows.Forms;
+
 namespace SDBees.DB.Forms
 {
     partial class frmLogin
@@ -27,7 +31,7 @@ namespace SDBees.DB.Forms
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -258,19 +262,19 @@ namespace SDBees.DB.Forms
 
         #endregion
 
-        private System.Windows.Forms.TextBox m_Password;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button m_buttonLogin;
-        private System.Windows.Forms.PictureBox m_pictureBoxLogo;
-        private System.Windows.Forms.PropertyGrid m_propertyGridSelectedConfigItem;
-        private System.Windows.Forms.Button m_buttonAddConfigItem;
-        private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.SplitContainer m_splitContainer;
-        private System.Windows.Forms.GroupBox m_groupBoxProjects;
-        private System.Windows.Forms.ListView m_listViewItems;
-        private System.Windows.Forms.Button m_buttonDelete;
-        private System.Windows.Forms.ImageList m_imageListItems;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private TextBox m_Password;
+        private Label label4;
+        private Button m_buttonLogin;
+        private PictureBox m_pictureBoxLogo;
+        private PropertyGrid m_propertyGridSelectedConfigItem;
+        private Button m_buttonAddConfigItem;
+        private ToolTip toolTip1;
+        private SplitContainer m_splitContainer;
+        private GroupBox m_groupBoxProjects;
+        private ListView m_listViewItems;
+        private Button m_buttonDelete;
+        private ImageList m_imageListItems;
+        private ColumnHeader columnHeader1;
+        private ColumnHeader columnHeader2;
     }
 }

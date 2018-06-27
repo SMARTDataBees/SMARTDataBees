@@ -20,9 +20,8 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
-using System.Text;
+
+using SDBees.DB.Generic;
 
 namespace SDBees.DB.MicrosoftLocalDB
 {
@@ -32,7 +31,7 @@ namespace SDBees.DB.MicrosoftLocalDB
     public class MsLocalDbServer : Server
     {
         #region Private Data Members
-        DB.Generic.ServerConfigItem m_SrvConfig;
+        ServerConfigItem m_SrvConfig;
         #endregion
 
         #region Public Properties
@@ -46,7 +45,7 @@ namespace SDBees.DB.MicrosoftLocalDB
         /// <param name="userName">Username for login</param>
         /// <param name="password">Password for login</param>
         /// </summary>
-        public MsLocalDbServer(DB.Generic.ServerConfigItem srcConfig, string password)
+        public MsLocalDbServer(ServerConfigItem srcConfig, string password)
             : base("MicrosoftSQL", "master", srcConfig, password)
         {
             m_SrvConfig = srcConfig;
@@ -66,7 +65,7 @@ namespace SDBees.DB.MicrosoftLocalDB
         public override bool GrantServerPrivileges(string loginName, int accessMask, ref Error error)
         {
             // TBD: Implement this...
-            error = new Error("Not implemented yet", 1, this.GetType(), error);
+            error = new Error("Not implemented yet", 1, GetType(), error);
             return false;
         }
 
@@ -80,7 +79,7 @@ namespace SDBees.DB.MicrosoftLocalDB
         public override bool RevokeServerPrivileges(string loginName, int accessMask, ref Error error)
         {
             // TBD: Implement this...
-            error = new Error("Not implemented yet", 1, this.GetType(), error);
+            error = new Error("Not implemented yet", 1, GetType(), error);
             return false;
         }
 
@@ -95,7 +94,7 @@ namespace SDBees.DB.MicrosoftLocalDB
         public override bool GrantDatabasePrivileges(string loginName, string databaseName, int accessMask, ref Error error)
         {
             // TBD: Implement this...
-            error = new Error("Not implemented yet", 1, this.GetType(), error);
+            error = new Error("Not implemented yet", 1, GetType(), error);
             return false;
         }
 
@@ -111,7 +110,7 @@ namespace SDBees.DB.MicrosoftLocalDB
         public override bool RevokeDatabasePrivileges(string loginName, string databaseName, int accessMask, ref Error error)
         {
             // TBD: Implement this...
-            error = new Error("Not implemented yet", 1, this.GetType(), error);
+            error = new Error("Not implemented yet", 1, GetType(), error);
             return false;
         }
 
@@ -124,7 +123,7 @@ namespace SDBees.DB.MicrosoftLocalDB
         public override bool UserHasGrantPrivileges(string loginName, ref Error error)
         {
             // TBD: Implement this...
-            error = new Error("Not implemented yet", 1, this.GetType(), error);
+            error = new Error("Not implemented yet", 1, GetType(), error);
             return false;
         }
 
@@ -137,7 +136,7 @@ namespace SDBees.DB.MicrosoftLocalDB
         public override bool UserExists(string loginName, ref Error error)
         {
             // TBD: Implement this...
-            error = new Error("Not implemented yet", 1, this.GetType(), error);
+            error = new Error("Not implemented yet", 1, GetType(), error);
             return false;
         }
 
@@ -150,7 +149,7 @@ namespace SDBees.DB.MicrosoftLocalDB
         public override bool CreateUser(User user, ref Error error)
         {
             // TBD: sp_addlogin verwenden
-            error = new Error("Not implemented yet", 1, this.GetType(), error);
+            error = new Error("Not implemented yet", 1, GetType(), error);
             return false;
         }
 
@@ -163,7 +162,7 @@ namespace SDBees.DB.MicrosoftLocalDB
         public override bool RemoveUser(string loginName, ref Error error)
         {
             // TBD: sp_droplogin verwenden
-            error = new Error("Not implemented yet", 1, this.GetType(), error);
+            error = new Error("Not implemented yet", 1, GetType(), error);
             return false;
         }
 
@@ -177,7 +176,7 @@ namespace SDBees.DB.MicrosoftLocalDB
         public override bool SetPassword(string loginName, string password, ref Error error)
         {
             // TBD: sp_password verwenden
-            error = new Error("Not implemented yet", 1, this.GetType(), error);
+            error = new Error("Not implemented yet", 1, GetType(), error);
             return false;
         }
 
@@ -192,11 +191,11 @@ namespace SDBees.DB.MicrosoftLocalDB
         public override bool ChangePassword(string loginName, string oldPassword, string newPassword, ref Error error)
         {
             // TBD: sp_password verwenden
-            error = new Error("Not implemented yet", 1, this.GetType(), error);
+            error = new Error("Not implemented yet", 1, GetType(), error);
             return false;
         }
 
-        public override Generic.ServerConfigItem GetServerConfigItem()
+        public override ServerConfigItem GetServerConfigItem()
         {
             return m_SrvConfig;
         }

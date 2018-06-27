@@ -36,7 +36,7 @@ namespace Carbon.AutoUpdate.Common
 	/// <summary>
 	/// Defines an EventArgs class that contains a AutoUpdateDownloadDescriptor as the context of the event.
 	/// </summary>
-	public class AutoUpdateDownloadDescriptorEventArgs : System.EventArgs 
+	public class AutoUpdateDownloadDescriptorEventArgs : EventArgs 
 	{
 		private AutoUpdateDownloadDescriptor _descriptor;
 
@@ -44,8 +44,7 @@ namespace Carbon.AutoUpdate.Common
 		/// Initializes a new instance of the AutoUpdateDownloadDescriptorEventArgs class
 		/// </summary>
 		/// <param name="downloadDescriptor">The descriptor that describes the download.</param>
-		public AutoUpdateDownloadDescriptorEventArgs(AutoUpdateDownloadDescriptor downloadDescriptor) 
-			: base()
+		public AutoUpdateDownloadDescriptorEventArgs(AutoUpdateDownloadDescriptor downloadDescriptor)
 		{
 			_descriptor = downloadDescriptor;
 		}

@@ -30,21 +30,22 @@
 //	============================================================================
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Runtime.InteropServices;
-using System.ComponentModel;
+using System.Security.Principal;
+using System.Text;
 
 namespace Carbon.Common
 {
 	/// <summary>
 	/// An attribute applied to the Security Access Rights values that determines if the right is displayed in the Windows UI for Permisions
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Field, AllowMultiple=false)]
-	public class WindowsUIPermission : System.Attribute
+	[AttributeUsage(AttributeTargets.Field)]
+	public class WindowsUIPermission : Attribute
 	{		
-		[Flags()]
+		[Flags]
 		public enum AppliesTo
 		{
 			Files = 1,
@@ -53,125 +54,15 @@ namespace Carbon.Common
 			Any = 8,
 			All = Files | Folders | Pipes
 		}
-		
-		private AppliesTo _appliesTo;
 
-		public WindowsUIPermission(AppliesTo appliesTo)
+	    public WindowsUIPermission(AppliesTo appliesTo)
 		{
-			_appliesTo = appliesTo;
+			AppliesToThese = appliesTo;
 		}
 
-		public AppliesTo AppliesToThese
-		{
-			get
-			{
-				return _appliesTo;
-			}
-		}
+		public AppliesTo AppliesToThese { get; }
 	}
 
-	// This enumeration contains a list of standard access rights. It's
-	// by no means complete because it lacks the specific access rights
-	// (which don't appear to be documented).
-	[Flags()]
-	public enum SecurityAccessRights : uint
-	{
-		[WindowsUIPermission(WindowsUIPermission.AppliesTo.Any)]
-		[Description("Delete")]
-		DELETE                    = 0x00010000,
-		
-		[WindowsUIPermission(WindowsUIPermission.AppliesTo.Any)]
-		[Description("Read Permissions")]
-		READ_CONTROL              = 0x00020000,
-		
-		[WindowsUIPermission(WindowsUIPermission.AppliesTo.Any)]
-		[Description("Change Permissions")]
-		WRITE_DAC                 = 0x00040000,
-		
-		[WindowsUIPermission(WindowsUIPermission.AppliesTo.Any)]
-		[Description("Take Ownership")]
-		WRITE_OWNER               = 0x00080000,
-
-		SYNCHRONIZE               = 0x00100000,
-		STANDARD_RIGHTS_REQUIRED  = 0x000F0000,
-		STANDARD_RIGHTS_READ      = READ_CONTROL,
-		STANDARD_RIGHTS_WRITE     = READ_CONTROL,
-		STANDARD_RIGHTS_EXECUTE   = READ_CONTROL,
-		STANDARD_RIGHTS_ALL       = 0x001F0000,
-		SPECIFIC_RIGHTS_ALL       = 0x0000FFFF,
-		ACCESS_SYSTEM_SECURITY    = 0x01000000,
-		MAXIMUM_ALLOWED           = 0x02000000,
-		GENERIC_READ              = 0x80000000,
-		GENERIC_WRITE             = 0x40000000,
-		GENERIC_EXECUTE           = 0x20000000,
-		GENERIC_ALL               = 0x10000000,
-
-		[WindowsUIPermission(WindowsUIPermission.AppliesTo.Files | WindowsUIPermission.AppliesTo.Pipes)]
-		[Description("Read Data")]
-		FILE_READ_DATA            = 0x0001,    // file & pipe		
-		
-		[WindowsUIPermission(WindowsUIPermission.AppliesTo.Folders)]
-		[Description("List Folder")]
-		FILE_LIST_DIRECTORY       = 0x0001,    // directory
-		
-		[WindowsUIPermission(WindowsUIPermission.AppliesTo.Files | WindowsUIPermission.AppliesTo.Pipes)]
-		[Description("Write Data")]
-		FILE_WRITE_DATA           = 0x0002,    // file & pipe
-		
-		[WindowsUIPermission(WindowsUIPermission.AppliesTo.Folders)]
-		[Description("Create Files")]
-		FILE_ADD_FILE             = 0x0002,    // directory
-		
-		[WindowsUIPermission(WindowsUIPermission.AppliesTo.Files)]
-		[Description("Append Data")]
-		FILE_APPEND_DATA          = 0x0004,    // file
-		
-		[WindowsUIPermission(WindowsUIPermission.AppliesTo.Folders)]
-		[Description("Create Folders")]
-		FILE_ADD_SUBDIRECTORY     = 0x0004,    // directory
-		
-		FILE_CREATE_PIPE_INSTANCE = 0x0004,    // named pipe
-		
-		[WindowsUIPermission(WindowsUIPermission.AppliesTo.Files | WindowsUIPermission.AppliesTo.Folders)]
-		[Description("Read Extended Attributes")]
-		FILE_READ_EA              = 0x0008,    // file & directory
-		
-		[WindowsUIPermission(WindowsUIPermission.AppliesTo.Files | WindowsUIPermission.AppliesTo.Folders)]
-		[Description("Write Extended Attributes")]
-		FILE_WRITE_EA             = 0x0010,    // file & directory
-		
-		[WindowsUIPermission(WindowsUIPermission.AppliesTo.Files)]
-		[Description("Execute File")]	
-		FILE_EXECUTE              = 0x0020,    // file
-		
-		[WindowsUIPermission(WindowsUIPermission.AppliesTo.Folders)]
-		[Description("Traverse Folder")]
-		FILE_TRAVERSE             = 0x0020,    // directory
-		
-		[WindowsUIPermission(WindowsUIPermission.AppliesTo.Folders)]
-		[Description("Delete Subfolders and File permissions")]
-		FILE_DELETE_CHILD         = 0x0040,    // directory
-		
-		[WindowsUIPermission(WindowsUIPermission.AppliesTo.All)]
-		[Description("Read Attributes")]
-		FILE_READ_ATTRIBUTES      = 0x0080,    // all
-		
-		[WindowsUIPermission(WindowsUIPermission.AppliesTo.All)]
-		[Description("Write Attributes")]
-		FILE_WRITE_ATTRIBUTES     = 0x0100,    // all
-		
-		[Description("All Access")]
-		FILE_ALL_ACCESS			  = STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | 0x1FF,
-		
-		[Description("Read")]
-		FILE_GENERIC_READ         = STANDARD_RIGHTS_READ | FILE_READ_DATA | FILE_READ_ATTRIBUTES | FILE_READ_EA | SYNCHRONIZE,
-
-		[Description("Write")]
-		FILE_GENERIC_WRITE        = STANDARD_RIGHTS_WRITE | FILE_WRITE_DATA | FILE_WRITE_ATTRIBUTES | FILE_WRITE_EA | FILE_APPEND_DATA | SYNCHRONIZE,
-
-		[Description("Execute")]
-		FILE_GENERIC_EXECUTE      = STANDARD_RIGHTS_EXECUTE | FILE_READ_ATTRIBUTES | FILE_EXECUTE | SYNCHRONIZE
-	}
 
 	public enum SE_OBJECT_TYPE
 	{
@@ -190,26 +81,7 @@ namespace Carbon.Common
 		SE_REGISTRY_WOW64_32KEY
 	}
 
-	/// <summary>
-	/// The SecurityInformation type identifies the object-related security information being set or queried. This security information includes:
-	/// <list type="">
-	/// <item>The owner of an object</item>
-	/// <item>The primary group of an object</item>
-	/// <item>The discretionary access control list (DACL) of an object</item>
-	/// <item>The system access control list (SACL) of an object</item>
-	/// </list>
-	/// </summary>
-	public enum SecurityInformation : uint
-	{
-		Owner                = 0x00000001,
-		Group                = 0x00000002,
-		DACL                 = 0x00000004,
-		SACL                 = 0x00000008,
-		ProtectedDACL       = 0x80000000,
-		ProtectedSACL       = 0x40000000,
-		UnprotectedDACL     = 0x20000000,
-		UnprotectedSACL     = 0x10000000
-	};
+	
 
 	// This enumeration contains the type of SID returned by the
 	// LookupAccountName() function.
@@ -237,7 +109,7 @@ namespace Carbon.Common
 		public MULTIPLE_TRUSTEE_OPERATION  MultipleTrusteeOperation;
 		public TRUSTEE_FORM                TrusteeForm;
 		public TRUSTEE_TYPE                TrusteeType;
-		public String                      ptstrName;
+		public string                      ptstrName;
 	}
 
 	[StructLayout(LayoutKind.Sequential, Pack=1)]
@@ -255,7 +127,7 @@ namespace Carbon.Common
 	public enum MULTIPLE_TRUSTEE_OPERATION 
 	{
 		NO_MULTIPLE_TRUSTEE,
-		TRUSTEE_IS_IMPERSONATE,
+		TRUSTEE_IS_IMPERSONATE
 	}
 
 	// The TRUSTEE_FORM enumeration determines what form the ACE trustee
@@ -286,13 +158,13 @@ namespace Carbon.Common
 	/// <summary>
 	/// Provides a class for determining access rights for files and folders.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public sealed class SecurityAccessRight : IDisposable
 	{			
 		private bool _disposed;
 		private string _path;
-		private string _accountName = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-		private uint _accessGranted;
+
+	    private uint _accessGranted;
 //		private uint _accessDenied;
 		private IntPtr _pSecurityDescriptor;
 		private IntPtr _pDacl;
@@ -307,14 +179,14 @@ namespace Carbon.Common
 		public SecurityAccessRight(string path, string accountName)
 		{
 			_path = path;			
-			_accountName = accountName;				
+			AccountName = accountName;				
 		}
 		
 		#region IDisposable Members
 
 		public void Dispose()
 		{
-			this.Dispose(true);
+			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
 
@@ -324,75 +196,60 @@ namespace Carbon.Common
 			{
 				if (disposing)
 				{
-					/// dispose of managed resources here
+					// dispose of managed resources here
 				}
 
-				/// dispose of unmanaged resources here				
+				// dispose of unmanaged resources here				
 				
-				/// free the security descriptor, the dacl, and the sid
+				// free the security descriptor, the dacl, and the sid
 				try
 				{
 					Marshal.FreeHGlobal(_pSecurityDescriptor);
 				}
-				catch(System.Exception /* ex */)
+				catch(Exception)
 				{
-					//					Debug.WriteLine(ex);
+					
 				}
 
 				try
 				{
 					Marshal.FreeHGlobal(_pDacl);
 				}
-				catch(System.Exception /* ex */)
+				catch(Exception)
 				{
-					//					Debug.WriteLine(ex);
 				}
 
 				try
 				{
 					Marshal.FreeHGlobal(_pSid);
 				}
-				catch(System.Exception /* ex */)
+				catch(Exception)
 				{
-					//					Debug.WriteLine(ex);
+					
 				}
 				
-				/// flag ourself
 				_disposed = true;
 			}	
 		}
 
 		#endregion
 
-		public string AccountName
-		{
-			get
-			{
-				return _accountName;
-			}
-			set
-			{
-				_accountName = value;
-			}
-		}
+		public string AccountName { get; set; } = WindowsIdentity.GetCurrent().Name;
 
-		public bool AssertReadAccess()
+	    public bool AssertReadAccess()
 		{
 			try
 			{
-				if (this.PertainsToADirectory())
+			    if (PertainsToADirectory())
 				{
 					// just fake like we did some good.
 					return true;
 				}
-				else
-				{
-					using(FileStream fs = new FileStream(_path, FileMode.Open, FileAccess.Read, FileShare.Read))
-					{
-						fs.Close();					
-						return true;
-					}
-				}
+			    using(var fs = new FileStream(_path, FileMode.Open, FileAccess.Read, FileShare.Read))
+			    {
+			        fs.Close();					
+			        return true;
+			    }
 			}
 			catch(Exception ex)
 			{
@@ -406,19 +263,16 @@ namespace Carbon.Common
 		{
 			try
 			{
-				if (this.PertainsToADirectory())
+			    if (PertainsToADirectory())
 				{
 					// just fake like we did some good.
 					return true;
 				}
-				else
-				{
-					using(FileStream fs = new FileStream(_path, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
-					{
-						fs.Close();					
-						return true;
-					}
-				}
+			    using(var fs = new FileStream(_path, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
+			    {
+			        fs.Close();					
+			        return true;
+			    }
 			}
 			catch(Exception ex)
 			{
@@ -432,7 +286,7 @@ namespace Carbon.Common
 		{
 			try
 			{
-				FileAttributes attributes = File.GetAttributes(_path);				
+				var attributes = File.GetAttributes(_path);				
 				return ((attributes & FileAttributes.Directory) == FileAttributes.Directory);				
 			}
 			catch(Exception ex)
@@ -446,7 +300,7 @@ namespace Carbon.Common
 		{
 			try
 			{
-				FileAttributes attributes = File.GetAttributes(path);				
+				var attributes = File.GetAttributes(path);				
 				return ((attributes & FileAttributes.Directory) == FileAttributes.Directory);				
 			}
 			catch(Exception ex)
@@ -458,15 +312,15 @@ namespace Carbon.Common
 
 		public bool Assert(SecurityAccessRights accessRequested)
 		{
-			/// permissions only apply to NT based systems
-			if (System.Environment.OSVersion.Platform == PlatformID.Win32NT)
+			// permissions only apply to NT based systems
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT)
 			{
 				if (!_hasDemanded)
 				{
-					this.GetEffectiveSecurityAccessRights();
+					GetEffectiveSecurityAccessRights();
 					_hasDemanded = true;
 				}						
-				return (((uint)_accessGranted & (uint)accessRequested) == (uint)accessRequested);
+				return ((_accessGranted & (uint)accessRequested) == (uint)accessRequested);
 			}
 			return true;
 		}
@@ -475,35 +329,35 @@ namespace Carbon.Common
 		{						
 			try
 			{
-				bool daclPresent = false;
-				bool defaulted = false;										
-				int sidSize = 0;					
-				SID_NAME_USE usage = SID_NAME_USE.SidTypeGroup;
-				StringBuilder domain = new StringBuilder(80);
-				int domainSize = 80;			
+				var daclPresent = false;
+				var defaulted = false;										
+				var sidSize = 0;					
+				var usage = SID_NAME_USE.SidTypeGroup;
+				var domain = new StringBuilder(80);
+				var domainSize = 80;			
 
 				// lookup the account name, first call gets the size
-				LookupAccountName(IntPtr.Zero, _accountName, IntPtr.Zero, ref sidSize, domain, ref domainSize, ref usage);
+				LookupAccountName(IntPtr.Zero, AccountName, IntPtr.Zero, ref sidSize, domain, ref domainSize, ref usage);
 
 				// allocate the memory for the SID
 				_pSid = Marshal.AllocHGlobal(sidSize);
 
 				// and calling again we get the sid
 				domainSize = 80;
-				LookupAccountName(IntPtr.Zero, _accountName, _pSid, ref sidSize, domain, ref domainSize, ref usage);
+				LookupAccountName(IntPtr.Zero, AccountName, _pSid, ref sidSize, domain, ref domainSize, ref usage);
 
 				// Create a the Trustee data structure.
-				TRUSTEE2 trustee = new TRUSTEE2();
+				var trustee = new TRUSTEE2();
 				trustee.MultipleTrusteeOperation = MULTIPLE_TRUSTEE_OPERATION.NO_MULTIPLE_TRUSTEE;
 				trustee.pMultipleTrustee = IntPtr.Zero;
 				trustee.ptstrName = _pSid;
 				trustee.TrusteeForm = TRUSTEE_FORM.TRUSTEE_IS_SID;
 				trustee.TrusteeType = TRUSTEE_TYPE.TRUSTEE_IS_UNKNOWN;
 
-				this.GetFileSecurityDescriptor(_path, SecurityInformation.DACL, out _pSecurityDescriptor);
+				GetFileSecurityDescriptor(_path, SecurityInformation.DACL, out _pSecurityDescriptor);
 				if (_pSecurityDescriptor == IntPtr.Zero)
 				{
-					System.Diagnostics.Debug.WriteLine("File security descriptor is null");
+					Debug.WriteLine("File security descriptor is null");
 					return false;;
 				}
 														
@@ -515,11 +369,11 @@ namespace Carbon.Common
 					return true;
 									
 				// get the rights for the dacl
-				int result = GetEffectiveRightsFromAcl(_pDacl, ref trustee, ref _accessGranted);
+				var result = GetEffectiveRightsFromAcl(_pDacl, ref trustee, ref _accessGranted);
 //				int result = GetAuditedPermissionsFromAcl(_pDacl, ref trustee, ref _accessGranted, ref _accessDenied);
 
 				if (result != ERROR_SUCCESS)
-					throw new System.ComponentModel.Win32Exception(result);
+					throw new Win32Exception(result);
 
 				return true;							
 			}
@@ -534,8 +388,8 @@ namespace Carbon.Common
 		private void GetFileSecurityDescriptor(string path, SecurityInformation requestedInformation, out IntPtr securityDescriptor)
 		{
 			securityDescriptor = new IntPtr(0); 
-			int size = 0; 
-			int sizeNeeded = 0; 
+			var size = 0; 
+			var sizeNeeded = 0; 
 			
 			// call once to get the size needed
 			GetFileSecurity(path, requestedInformation, securityDescriptor, 0, ref sizeNeeded);
@@ -572,18 +426,18 @@ namespace Carbon.Common
 		// This function retrieves the DACL from the file's security
 		// descriptor.
 		[DllImport("AdvAPI32.DLL", CharSet=CharSet.Auto, SetLastError=true )]
-		private static extern Boolean GetSecurityDescriptorDacl(
+		private static extern bool GetSecurityDescriptorDacl(
 			IntPtr pSecurityDescriptor,
-			ref Boolean lpbDaclPresent,
+			ref bool lpbDaclPresent,
 			out IntPtr pDacl,
-			ref Boolean lpbDaclDefaulted);
+			ref bool lpbDaclDefaulted);
 		
 		// This function retrieves a SID given a specific account name. The first form
 		// is for remote access. The second form is for local access and you set the
 		// lpSystemName value to IntPtr.Zero.
 		[DllImport("AdvAPI32.DLL", CharSet=CharSet.Auto, SetLastError=true )]
-		private static extern Boolean LookupAccountName(String lpSystemName,
-			String lpAccountName,
+		private static extern bool LookupAccountName(string lpSystemName,
+			string lpAccountName,
 			IntPtr Sid,
 			ref int cbSid,
 			StringBuilder DomainName,
@@ -591,8 +445,8 @@ namespace Carbon.Common
 			ref SID_NAME_USE peUse);
 
 		[DllImport("AdvAPI32.DLL", CharSet=CharSet.Auto, SetLastError=true )]
-		private static extern Boolean LookupAccountName(IntPtr NoSystemName,
-			String lpAccountName,
+		private static extern bool LookupAccountName(IntPtr NoSystemName,
+			string lpAccountName,
 			IntPtr Sid,
 			ref int cbSid,
 			StringBuilder DomainName,
@@ -608,12 +462,12 @@ namespace Carbon.Common
 		[DllImport("AdvAPI32.DLL", CharSet=CharSet.Auto, SetLastError=true )]
 		private static extern int GetEffectiveRightsFromAcl(IntPtr pacl,
 			ref TRUSTEE pTrustee,
-			ref UInt32 pAccessRights);
+			ref uint pAccessRights);
 
 		[DllImport("AdvAPI32.DLL", CharSet=CharSet.Auto, SetLastError=true )]
 		private static extern int GetEffectiveRightsFromAcl(IntPtr pacl,
 			ref TRUSTEE2 pTrustee,
-			ref UInt32 pAccessRights);			
+			ref uint pAccessRights);			
 
 		[DllImport("AdvAPI32.DLL", CharSet=CharSet.Auto, SetLastError=true )]
 		private static extern int GetAuditedPermissionsFromAcl(

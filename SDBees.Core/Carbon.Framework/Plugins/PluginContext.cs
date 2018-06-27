@@ -35,12 +35,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-
 using Carbon.Common;
 using Carbon.Configuration.Providers;
 using Carbon.Plugins.Providers;
-using Carbon.UI.Providers;
 using Carbon.UI;
+using Carbon.UI.Providers;
+using Timer = System.Threading.Timer;
 
 namespace Carbon.Plugins
 {
@@ -50,50 +50,31 @@ namespace Carbon.Plugins
 	public sealed class PluginContext : DisposableObject
 	{
 		private bool _running;
-		private static PluginContext _context;
-		private PluginApplicationContext _appContext;		
-		private ConfigurationProviderCollection _configurationProviders;
-		//private EncryptionProviderCollection _encryptionProviders;
-		private PluginProviderCollection _pluginProviders;
-		private WindowProviderCollection _windowProviders;
-		private PluginDescriptorCollection _pluginDescriptors;		
-		//private Assembly _startingAssembly;
-		private string[] _commandLineArgs;
-		private InstanceManager _instanceManager;
-		private IProgressViewer _progressViewer;
-		private System.Threading.Timer _gcTimer;
-		private bool _isInMessageLoop;
-		private Form _splashWindow;
 
-		#region PluginContextException
+	    //private Assembly _startingAssembly;
+	    private Timer _gcTimer;
+
+	    #region PluginContextException
 
 		/// <summary>
 		/// Defines the base PluginContext exception that is thrown by the PluginContext class.
 		/// </summary>
 		public abstract class PluginContextException : ApplicationException
 		{
-			private readonly PluginContext _context;
-
-			/// <summary>
+		    /// <summary>
 			/// Initializes a new instance of the PluginContextException class
 			/// </summary>
 			/// <param name="context">The PluginContext around which the exception is based</param>
 			/// <param name="message"></param>
 			protected PluginContextException(PluginContext context, string message) : base(message)
 			{
-				_context = context;
+				ExistingContext = context;
 			}
 
 			/// <summary>
 			/// Returns the PluginContext around which the exception is based
 			/// </summary>
-			public PluginContext ExistingContext
-			{
-				get
-				{
-					return _context;
-				}
-			}
+			public PluginContext ExistingContext { get; }
 		}
 
 		#endregion
@@ -111,7 +92,8 @@ namespace Carbon.Plugins
 			/// </summary>
 			/// <param name="context">The PluginContext that already exists</param>
 			internal PluginContextAlreadyExistsException(PluginContext context) :
-				base(context, string.Format("A PluginContext already exists for the AppDomain '{0}'. Only one context can exist per application.", AppDomain.CurrentDomain.FriendlyName))
+				base(context,
+			        $"A PluginContext already exists for the AppDomain '{AppDomain.CurrentDomain.FriendlyName}'. Only one context can exist per application.")
 			{
 
 			}
@@ -131,7 +113,8 @@ namespace Carbon.Plugins
 			/// </summary>
 			/// <param name="context">The PluginContext that is already running</param>
 			internal PluginContextAlreadyRunningException(PluginContext context) : 
-				base(context, string.Format("A PluginContext is already running for the AppDomain '{0}'. Only one context can be run per application.", AppDomain.CurrentDomain.FriendlyName))
+				base(context,
+			        $"A PluginContext is already running for the AppDomain '{AppDomain.CurrentDomain.FriendlyName}'. Only one context can be run per application.")
 			{
 
 			}
@@ -183,13 +166,13 @@ namespace Carbon.Plugins
 		/// </summary>
 		public PluginContext() 
 		{
-			this.AssertThisIsTheOnlyCreatedContext();
+			AssertThisIsTheOnlyCreatedContext();
 
 			// kick off the gc timer, call back in 5 minutes
-			_gcTimer = new System.Threading.Timer(this.OnGarbageCollectorTimerCallback, this, 50000, 50000);
+			_gcTimer = new Timer(OnGarbageCollectorTimerCallback, this, 50000, 50000);
 
 			// watch for unhandled exceptions
-			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(OnCurrentAppDomainUnhandledException);
+			AppDomain.CurrentDomain.UnhandledException += OnCurrentAppDomainUnhandledException;
 
 			// log the carbon sections that must exist in the App.config file
 			CarbonConfig.Initialize();						
@@ -210,15 +193,9 @@ namespace Carbon.Plugins
 		/// <summary>
 		/// Returns the current PluginContext that is hosting the current application's Plugins
 		/// </summary>
-		public static PluginContext Current
-		{
-			get
-			{
-				return _context;
-			}
-		}
+		public static PluginContext Current { get; private set; }
 
-		#endregion
+	    #endregion
 
 		#region My Overrides
 		
@@ -229,40 +206,34 @@ namespace Carbon.Plugins
 		{			
 			base.DisposeOfManagedResources ();
 
-			if (_configurationProviders != null)
+			if (ConfigurationProviders != null)
 			{
-				_configurationProviders.Dispose();
-				_configurationProviders = null;
+				ConfigurationProviders.Dispose();
+				ConfigurationProviders = null;
 			}
 
-			//if (_encryptionProviders != null)
-			//{
-			//    _encryptionProviders.Dispose();
-			//    _encryptionProviders = null;
-			//}
-
-			if (_pluginProviders != null)
+			if (PluginProviders != null)
 			{
-				_pluginProviders.Dispose();
-				_pluginProviders = null;
+				PluginProviders.Dispose();
+				PluginProviders = null;
 			}
 
-			if (_windowProviders != null)
+			if (WindowProviders != null)
 			{
-				_windowProviders.Dispose();
-				_windowProviders = null;
+				WindowProviders.Dispose();
+				WindowProviders = null;
 			}
 
-			if (_pluginDescriptors != null)
+			if (PluginDescriptors != null)
 			{
-				_pluginDescriptors.Dispose();
-				_pluginDescriptors = null;
+				PluginDescriptors.Dispose();
+				PluginDescriptors = null;
 			}
 			
-			if (_instanceManager != null)
+			if (InstanceManager != null)
 			{
-				_instanceManager.Dispose();
-				_instanceManager = null;
+				InstanceManager.Dispose();
+				InstanceManager = null;
 			}
 
 			if (_gcTimer != null)
@@ -271,16 +242,8 @@ namespace Carbon.Plugins
 				_gcTimer = null;
 			}
 
-			_commandLineArgs = null;
-			_progressViewer = null;
-		}
-
-		/// <summary>
-		/// Cleanup any unmanaged resources
-		/// </summary>
-		protected override void DisposeOfUnManagedResources()
-		{
-			base.DisposeOfUnManagedResources ();
+			CommandLineArgs = null;
+			SplashProgressViewer = null;
 		}
 
 		#endregion
@@ -290,49 +253,25 @@ namespace Carbon.Plugins
 		/// <summary>
 		/// Returns the Assembly that represents the starting executable
 		/// </summary>
-		public Assembly StartingAssembly
-		{
-			get
-			{
-				return Assembly.GetEntryAssembly();
-			}
-		}
+		public Assembly StartingAssembly { get; } = Assembly.GetEntryAssembly();
 
-		/// <summary>
+	    /// <summary>
 		/// Returns the command line arguments that were passed to the starting executable at run time.
 		/// </summary>
-		public string[] CommandLineArgs
-		{
-			get
-			{
-				return _commandLineArgs;
-			}
-		}
+		public string[] CommandLineArgs { get; private set; }
 
-		/// <summary>
+	    /// <summary>
 		/// Returns the application instance manager that should be used to receive notification
 		/// of subsequent application instances and to retrieve their command line arguments.
 		/// </summary>
-		public InstanceManager InstanceManager
-		{
-			get
-			{
-				return _instanceManager;
-			}
-		}
+		public InstanceManager InstanceManager { get; private set; }
 
-		/// <summary>
+	    /// <summary>
 		/// Returns a collection of ConfigurationProviders loaded in the PluginContext
 		/// </summary>
-		public ConfigurationProviderCollection ConfigurationProviders
-		{
-			get
-			{
-				return _configurationProviders;
-			}
-		}
+		public ConfigurationProviderCollection ConfigurationProviders { get; private set; }
 
-		///// <summary>
+	    ///// <summary>
 		///// Returns a collection of EncryptionProviders loaded in the PluginContext
 		///// </summary>
 		//public EncryptionProviderCollection EncryptionProviders
@@ -346,70 +285,34 @@ namespace Carbon.Plugins
 		/// <summary>
 		/// Returns a collection of PluginProviders loaded in the PluginContext
 		/// </summary>
-		public PluginProviderCollection PluginProviders
-		{
-			get
-			{
-				return _pluginProviders;
-			}
-		}
+		public PluginProviderCollection PluginProviders { get; private set; }
 
-		/// <summary>
+	    /// <summary>
 		/// Returns a collection of WindowProviders loaded in the PluginContext
 		/// </summary>
-		public WindowProviderCollection WindowProviders
-		{
-			get
-			{
-				return _windowProviders;
-			}
-		}
+		public WindowProviderCollection WindowProviders { get; private set; }
 
-		/// <summary>
+	    /// <summary>
 		/// Returns a collection of PluginDescriptors that is loaded in this PluginContext
 		/// </summary>
-		public PluginDescriptorCollection PluginDescriptors
-		{
-			get
-			{
-				return _pluginDescriptors;
-			}
-		}
+		public PluginDescriptorCollection PluginDescriptors { get; private set; }
 
-		/// <summary>
+	    /// <summary>
 		/// Returns the current PluginContext's ApplicationContext
 		/// </summary>
-		public PluginApplicationContext ApplicationContext
-		{
-			get
-			{
-				return _appContext;
-			}
-		}
-		
-        ///// <summary>
+		public PluginApplicationContext ApplicationContext { get; private set; }
+
+	    ///// <summary>
         ///// Returns the IProgressViewer implementation that should be used during startup (aka. the splash _splashWindow)
         ///// </summary>
-		public IProgressViewer SplashProgressViewer
-		{
-			get
-			{
-				return _progressViewer;
-			}
-		}
+		public IProgressViewer SplashProgressViewer { get; private set; }
 
-		/// <summary>
+	    /// <summary>
 		/// Returns the splash _splashWindow used by the plugin context.
 		/// </summary>
-		public Form SplashWindow
-		{
-			get
-			{
-				return _splashWindow;
-			}
-		}
+		public Form SplashWindow { get; private set; }
 
-		/// <summary>
+	    /// <summary>
 		/// Returns the current application version. First looks at the current folder, determines if it is the Debug, Release, or Current, and falls back upon the App.Config files, and then falls back upon the starting assembly version attribute.
 		/// </summary>
 		/// <returns></returns>
@@ -420,11 +323,11 @@ namespace Carbon.Plugins
 				string[] folderNames = { "Debug", "Release", "Current" };
 				try
 				{
-					DirectoryInfo di = new DirectoryInfo(Application.StartupPath);
-					string szVersion = di.Name;
+					var di = new DirectoryInfo(Application.StartupPath);
+					var szVersion = di.Name;
 
-					bool useAssembly = false;
-					foreach (string folderName in folderNames)
+					var useAssembly = false;
+					foreach (var folderName in folderNames)
 					{
 						if (string.Compare(di.Name, folderName, true) == 0)
 						{
@@ -449,11 +352,10 @@ namespace Carbon.Plugins
 
 					if (useAssembly)
 					{
-						AppSettingsReader reader = new AppSettingsReader();
 						try
 						{
 							
-							szVersion = System.Configuration.ConfigurationManager.AppSettings["AppVersion"];
+							szVersion = ConfigurationManager.AppSettings["AppVersion"];
 							if (szVersion != null && szVersion.Length >= 0)
 								v = new Version(szVersion);
 						}
@@ -466,7 +368,7 @@ namespace Carbon.Plugins
 						if (v == null)
 						{
 							// we must fall back upon the lonely executable that started it all, and hope to read a version from it
-							szVersion = PluginContext.Current.StartingAssembly.GetName().Version.ToString();
+							szVersion = Current.StartingAssembly.GetName().Version.ToString();
 						}
 					}
 
@@ -484,15 +386,9 @@ namespace Carbon.Plugins
 		/// <summary>
 		/// Returns a flag indicating whether the PluginContext is inside it's main message loop or not.
 		/// </summary>
-		public bool IsInMessageLoop
-		{
-			get
-			{
-				return _isInMessageLoop;
-			}
-		}
+		public bool IsInMessageLoop { get; private set; }
 
-		#endregion
+	    #endregion
 
 		#region My Public Methods
 
@@ -501,100 +397,100 @@ namespace Carbon.Plugins
 		/// </summary>
 		/// <param name="startingAssembly">The startingAssembly that started the CarbonRuntime</param>
 		/// <param name="args">The command line arguments that were passed to the startingAssembly that started the CarbonRuntime</param>
-		[STAThread()]
+		[STAThread]
 		public void Run(Assembly startingAssembly, string[] args, bool silent = false)
 		{
-			this.AssertThisIsTheOnlyRunningContext();
+			AssertThisIsTheOnlyRunningContext();
 
 			// create a new application context
-			_appContext = new PluginApplicationContext();	
+			ApplicationContext = new PluginApplicationContext();	
 
 			// save the command line args
-			_commandLineArgs = args;
+			CommandLineArgs = args;
 
 			if (CarbonConfig.SingleInstance)
 			{
 				// create a new instance manager, don't dispose of it just yet as we'll need to have our ui plugin 
 				// grab it and listen for events until the plugin context is destroyed...
-				_instanceManager = new InstanceManager(CarbonConfig.SingleInstancePort, CarbonConfig.SingleInstanceMutexName);
+				InstanceManager = new InstanceManager(CarbonConfig.SingleInstancePort, CarbonConfig.SingleInstanceMutexName);
 
 				// check to see if this one is the only instance running
-				if (!_instanceManager.IsOnlyInstance)
+				if (!InstanceManager.IsOnlyInstance)
 				{						
 					// if not, forward our command line, and then instruct the 
-					_instanceManager.SendCommandLineToPreviousInstance(PluginContext.Current.CommandLineArgs);
+					InstanceManager.SendCommandLineToPreviousInstance(Current.CommandLineArgs);
 					return;
 				}
 			}
 							
 			// load the Carbon core sub-system providers 
-			_windowProviders = CarbonConfig.GetWindowProviders();
-			_configurationProviders = CarbonConfig.GetConfigurationProviders();
+			WindowProviders = CarbonConfig.GetWindowProviders();
+			ConfigurationProviders = CarbonConfig.GetConfigurationProviders();
 			//_encryptionProviders = CarbonConfig.GetEncryptionProviders();
-			_pluginProviders = CarbonConfig.GetPluginProviders();
+			PluginProviders = CarbonConfig.GetPluginProviders();
 			
 			// show the splash _splashWindow if the config specifies			
 			if (!silent && CarbonConfig.ShowSplashWindow)
 			{
-				using (WindowProvider splashWindowProvider = this.GetSplashWindowProvider())
+				using (var splashWindowProvider = GetSplashWindowProvider())
 				{
-					_splashWindow = splashWindowProvider.CreateWindow(null);
+					SplashWindow = splashWindowProvider.CreateWindow(null);
 				}				
 
 #if DEBUG
 #else
 				_splashWindow.Show();
 #endif
-				_splashWindow.Refresh();				
-				_progressViewer = _splashWindow as IProgressViewer;
+				SplashWindow.Refresh();				
+				SplashProgressViewer = SplashWindow as IProgressViewer;
 			}
 
-			ProgressViewer.SetExtendedDescription(_progressViewer, "Initializing Carbon Framework System Providers.");
+			ProgressViewer.SetExtendedDescription(SplashProgressViewer, "Initializing Carbon Framework System Providers.");
 
 			// start configuration providers
-			ConfigurationProvidersManager.InstructConfigurationProvidersToLoad(_progressViewer, _configurationProviders);
+			ConfigurationProvidersManager.InstructConfigurationProvidersToLoad(SplashProgressViewer, ConfigurationProviders);
 
 			// use the plugin manager to load the plugin types that the plugin providers want loaded
-			using (TypeCollection pluginTypes = PluginManager.LoadPluginTypes(_progressViewer, _pluginProviders))
+			using (var pluginTypes = PluginManager.LoadPluginTypes(SplashProgressViewer, PluginProviders))
 			{
 				// use the plugin manager to create descriptors for all of the plugins
-				using (_pluginDescriptors = PluginManager.CreatePluginDescriptors(_progressViewer, pluginTypes))
+				using (PluginDescriptors = PluginManager.CreatePluginDescriptors(SplashProgressViewer, pluginTypes))
 				{
 					// validate the plugin dependencies
-					PluginManager.ValidatePluginDependencies(_progressViewer, _pluginDescriptors);
+					PluginManager.ValidatePluginDependencies(SplashProgressViewer, PluginDescriptors);
 
 					// sort plugins to have the least dependent plugins first
 					// NOTE: Always sort first because the dependencies are taken into account during instance construction!
-					_pluginDescriptors = PluginManager.Sort(_pluginDescriptors, true);
+					PluginDescriptors = PluginManager.Sort(PluginDescriptors, true);
 
 					// create the plugins
-					PluginManager.CreatePluginInstances(_progressViewer, _pluginDescriptors);
+					PluginManager.CreatePluginInstances(SplashProgressViewer, PluginDescriptors);
 
 					// start plugins
-					PluginManager.StartPlugins(_progressViewer, _pluginDescriptors);
+					PluginManager.StartPlugins(SplashProgressViewer, PluginDescriptors);
 			
 					// if we are supposed to run a message loop, do it now
 					if (CarbonConfig.RunApplicationContext)
 					{
-						this.OnEnteringMainMessageLoop(new PluginContextEventArgs(this));
+						OnEnteringMainMessageLoop(new PluginContextEventArgs(this));
 						
 						// run the plugin context's main message loop
-						Application.Run(this.ApplicationContext);
+						Application.Run(ApplicationContext);
 						
-						this.OnExitingMainMessageLoop(new PluginContextEventArgs(this));
+						OnExitingMainMessageLoop(new PluginContextEventArgs(this));
 					}
 
 					// sort plugins to have the most dependent plugins first
-					_pluginDescriptors = PluginManager.Sort(_pluginDescriptors, false);
+					PluginDescriptors = PluginManager.Sort(PluginDescriptors, false);
 
 					// stop plugins
-					PluginManager.StopPlugins(null, _pluginDescriptors);
+					PluginManager.StopPlugins(null, PluginDescriptors);
 				}
 			}
 
 			// stop configuration providers
 			// start configuration providers
-			ConfigurationProvidersManager.InstructConfigurationProvidersToSave(_configurationProviders);			
+			ConfigurationProvidersManager.InstructConfigurationProvidersToSave(ConfigurationProviders);			
 		}
 
 		/// <summary>
@@ -605,21 +501,21 @@ namespace Carbon.Plugins
 			try
 			{				
 				// look at the startup directory
-				DirectoryInfo directory = new DirectoryInfo(System.Windows.Forms.Application.StartupPath);
+				var directory = new DirectoryInfo(Application.StartupPath);
 
 				// jump to it's parent, that is going to be the download path for all updates (*.update)
-				string bootstrapPath = Path.GetDirectoryName(directory.FullName);
+				var bootstrapPath = Path.GetDirectoryName(directory.FullName);
 
 				// start the bootstrap with the instructions to wait for us to quit
-				string bootStrapFilename = Path.Combine(bootstrapPath, this.StartingAssembly.GetName().Name + ".exe");
+				var bootStrapFilename = Path.Combine(bootstrapPath, StartingAssembly.GetName().Name + ".exe");
 
 				// format the bootstrap's command line and tell it to wait on this process
-				string commandLine = string.Format("/pid:{0} /wait", Process.GetCurrentProcess().Id.ToString());
+				var commandLine = $"/pid:{Process.GetCurrentProcess().Id} /wait";
 
 				// start the bootstrapper
 				Process.Start(bootStrapFilename, commandLine);
 
-				EventManager.Raise<PluginContextEventArgs>(this.RestartPending, this, new PluginContextEventArgs(this));
+				EventManager.Raise(RestartPending, this, new PluginContextEventArgs(this));
 			}
 			catch (Exception ex)
 			{
@@ -635,14 +531,14 @@ namespace Carbon.Plugins
         private void AssertThisIsTheOnlyCreatedContext()
 		{
 			// there can be only one per application
-			if (_context != null)
+			if (Current != null)
 			{
-				throw new PluginContextAlreadyExistsException(_context);
+				throw new PluginContextAlreadyExistsException(Current);
 			}
 			
 			// the first thing is to set the context so that it can be retrieved
 			// anywhere in the application from here on using the PluginContext.Current property
-			_context = this;
+			Current = this;
 		}
 
 		/// <summary>
@@ -653,7 +549,7 @@ namespace Carbon.Plugins
 			// there can be only one context running per application
 			if (_running)
 			{
-				throw new PluginContextAlreadyRunningException(_context);
+				throw new PluginContextAlreadyRunningException(Current);
 			}
 
 			// set this so that future calls to the Run method will fail
@@ -668,11 +564,11 @@ namespace Carbon.Plugins
 		{			
 			// ignore the setting if the splash _splashWindow provider's name is empty or equals "none"
 			if (CarbonConfig.SplashWindowProviderName.Length == 0 ||
-				string.Compare(CarbonConfig.SplashWindowProviderName, "None", true) == 0)
+				string.Compare(CarbonConfig.SplashWindowProviderName, "None", StringComparison.OrdinalIgnoreCase) == 0)
 				return null;
 
 			// otherwise lookup the _splashWindow provider
-			WindowProvider provider = this.WindowProviders[CarbonConfig.SplashWindowProviderName];
+			var provider = WindowProviders[CarbonConfig.SplashWindowProviderName];
 			if (provider == null)
 				throw new WindowProviderNotFoundException(CarbonConfig.SplashWindowProviderName);			
 			return provider;
@@ -692,7 +588,7 @@ namespace Carbon.Plugins
 		/// <param name="e"></param>
 		internal void OnPluginStarted(PluginDescriptorEventArgs e)
 		{
-			EventManager.Raise<PluginDescriptorEventArgs>(this.PluginStarted, this, e);
+			EventManager.Raise(PluginStarted, this, e);
 		}
 
 		/// <summary>
@@ -701,7 +597,7 @@ namespace Carbon.Plugins
 		/// <param name="e"></param>
 		internal void OnPluginStopped(PluginDescriptorEventArgs e)
 		{
-			EventManager.Raise<PluginDescriptorEventArgs>(this.PluginStopped, this, e);
+			EventManager.Raise(PluginStopped, this, e);
 		}
 
 		/// <summary>
@@ -710,9 +606,9 @@ namespace Carbon.Plugins
 		/// <param name="e"></param>
 		internal void OnAfterPluginsStarted(PluginContextEventArgs e)
 		{
-			ProgressViewer.SetExtendedDescription(_progressViewer, "Plugins started. Application opening...");	
+			ProgressViewer.SetExtendedDescription(SplashProgressViewer, "Plugins started. Application opening...");	
 
-			EventManager.Raise<PluginContextEventArgs>(this.AfterPluginsStarted, this, e);
+			EventManager.Raise(AfterPluginsStarted, this, e);
 		}
 
 		/// <summary>
@@ -721,7 +617,7 @@ namespace Carbon.Plugins
 		/// <param name="e"></param>
 		internal void OnBeforePluginsStopped(PluginContextEventArgs e)
 		{
-			EventManager.Raise<PluginContextEventArgs>(this.BeforePluginsStopped, this, e);			
+			EventManager.Raise(BeforePluginsStopped, this, e);			
 		}
 
 		/// <summary>
@@ -730,7 +626,7 @@ namespace Carbon.Plugins
 		/// <param name="e"></param>
 		internal void OnRestartPending(PluginContextEventArgs e)
 		{
-			EventManager.Raise<PluginContextEventArgs>(this.RestartPending, this, e);			
+			EventManager.Raise(RestartPending, this, e);			
 		}
 
 		/// <summary>
@@ -740,10 +636,10 @@ namespace Carbon.Plugins
 		internal void OnEnteringMainMessageLoop(PluginContextEventArgs e)
 		{
 			Log.WriteLine("Entering PluginContext Message Loop.");
-			EventManager.Raise<PluginContextEventArgs>(this.EnteringMessageLoop, this, e);
+			EventManager.Raise(EnteringMessageLoop, this, e);
 
-			_isInMessageLoop = true;							
-			_progressViewer = null;			
+			IsInMessageLoop = true;							
+			SplashProgressViewer = null;			
 		}
 
 		/// <summary>
@@ -752,10 +648,10 @@ namespace Carbon.Plugins
 		/// <param name="e"></param>
 		internal void OnExitingMainMessageLoop(PluginContextEventArgs e)
 		{
-			_isInMessageLoop = false;
+			IsInMessageLoop = false;
 
 			Log.WriteLine("Exiting PluginContext Message Loop.");
-			EventManager.Raise<PluginContextEventArgs>(this.ExitingMessageLoop, this, e);	
+			EventManager.Raise(ExitingMessageLoop, this, e);	
 		}
 	}
 }

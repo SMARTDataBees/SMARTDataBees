@@ -20,10 +20,8 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
+
 using System.Collections;
-using System.Text;
 using System.Windows.Forms;
 
 namespace SDBees.DB
@@ -35,7 +33,7 @@ namespace SDBees.DB
     {
         #region Private Data Members
 
-        private SDBees.DB.SDBeesDBConnection m_dbManager;
+        private SDBeesDBConnection m_dbManager;
         private bool mAutomaticFix;
         private bool mDeleteUnreferenced;
         private ToolStripProgressBar mProgressBar;
@@ -90,7 +88,7 @@ namespace SDBees.DB
         /// <summary>
         /// Standard constructor
         /// </summary>
-        public Inspector(SDBees.DB.SDBeesDBConnection dbManager)
+        public Inspector(SDBeesDBConnection dbManager)
         {
             m_dbManager = dbManager;
 
@@ -131,7 +129,7 @@ namespace SDBees.DB
 
             foreach (DictionaryEntry registeredObject in gRegisteredInspectors)
             {
-                Inspector inspector = (Inspector)registeredObject.Value;
+                var inspector = (Inspector)registeredObject.Value;
                 inspector.AutomaticFix = automaticFix;
                 inspector.DeleteUnreferenced = deleteUnreferenced;
                 inspector.mProgressBar = progressBar;
@@ -163,7 +161,7 @@ namespace SDBees.DB
             {
                 gRegisteredInspectors = new Hashtable();
             }
-            string key = this.GetType().ToString();
+            var key = GetType().ToString();
 
             if (!gRegisteredInspectors.ContainsKey(key))
             {
@@ -176,7 +174,7 @@ namespace SDBees.DB
         /// </summary>
         private void UnregisterInspector()
         {
-            string key = this.GetType().ToString();
+            var key = GetType().ToString();
 
             if (gRegisteredInspectors.ContainsKey(key))
             {

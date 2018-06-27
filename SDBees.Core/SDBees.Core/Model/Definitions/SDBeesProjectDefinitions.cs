@@ -20,66 +20,49 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
 namespace SDBees.Core.Model
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-
-    using System.Runtime.Serialization;
-
-	/// <remarks>SDBees Projekt Definition</remarks>
+    /// <remarks>SDBees Projekt Definition</remarks>
 	[DataContract]
 	public class SDBeesProjectDefinitions
 	{
-		private HashSet<SDBeesExternalMappings> m_pluginMappings;
-        /// <summary>
+	    /// <summary>
         /// Mapping definitionen für alle Plugins
         /// </summary>
         [DataMember]
-		public HashSet<SDBeesExternalMappings> PluginMappings
-		{
-            get { return m_pluginMappings; }
-            set { m_pluginMappings = value; }
-		}
+		public HashSet<SDBeesExternalMappings> PluginMappings { get; set; }
 
-		private HashSet<SDBeesEntityDefinition> m_entityDefinitions;
-        /// <summary>
+	    /// <summary>
         /// Definitionen aller Entities mit Eigenschaften
         /// </summary>
         [DataMember]
-		public HashSet<SDBeesEntityDefinition> EntityDefinitions
-		{
-            get { return m_entityDefinitions; }
-            set { m_entityDefinitions = value; }
-		}
+		public HashSet<SDBeesEntityDefinition> EntityDefinitions { get; set; }
 
-		private HashSet<SDBeesRelationshipDefinition> m_relationshipDefinitions;
-        /// <summary>
+	    /// <summary>
         /// Definitionen aller Entity Beziehungen
         /// </summary>
         [DataMember]
-		public HashSet<SDBeesRelationshipDefinition> RelationshipDefinitions
-		{
-            get { return m_relationshipDefinitions; }
-            set { m_relationshipDefinitions = value; }
-		}
+		public HashSet<SDBeesRelationshipDefinition> RelationshipDefinitions { get; set; }
 
 
-		public SDBeesExternalMappings getPluginMappings(SDBeesPluginId pluginId)
+	    public SDBeesExternalMappings getPluginMappings(SDBeesPluginId pluginId)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public  bool addMappedProperty(SDBeesExternalMappings mappings)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
         public bool addEntityDefinition(SDBeesEntityDefinition entityDefinition)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 	}
 }

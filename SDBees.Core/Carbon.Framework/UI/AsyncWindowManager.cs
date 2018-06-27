@@ -30,10 +30,9 @@
 //	============================================================================
 
 using System;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
-
 using Carbon.Common;
 using Carbon.MultiThreading;
 using Carbon.UI.Providers;
@@ -90,7 +89,7 @@ namespace Carbon.UI
 			_provider = provider;
 			_type = null;
 			_thread = new BackgroundThread();			
-			_thread.Run += new BackgroundThreadStartEventHandler(HandleThreadRun);
+			_thread.Run += HandleThreadRun;
 		}
 
 		/// <summary>
@@ -105,7 +104,7 @@ namespace Carbon.UI
 			_provider = null;
 			_type = windowType;
 			_thread = new BackgroundThread();			
-			_thread.Run += new BackgroundThreadStartEventHandler(HandleThreadRun);
+			_thread.Run += HandleThreadRun;
 		}
 
 		/// <summary>
@@ -115,7 +114,7 @@ namespace Carbon.UI
 		{		
 			if (_window != null)
 			{
-				this.CloseWindow(false);
+				CloseWindow(false);
 			}
 		}
 
@@ -125,7 +124,7 @@ namespace Carbon.UI
 		/// <returns></returns>
 		public void ShowAsynchronously()
 		{			
-			this.ShowAsynchronously(null);
+			ShowAsynchronously(null);
 		}
 
 		/// <summary>
@@ -151,7 +150,7 @@ namespace Carbon.UI
 		public int PostMessage(uint uMsg, IntPtr wParam, IntPtr lParam)
 		{
             if (_window.InvokeRequired)
-                return (int)_window.Invoke(new WindowMessageCallback(this.PostMessage), new object[] { uMsg, wParam, lParam });
+                return (int)_window.Invoke(new WindowMessageCallback(PostMessage), uMsg, wParam, lParam);
             
 			if (_window.IsHandleCreated)
 				return PostMessage(_window.Handle, uMsg, wParam, lParam);
@@ -168,7 +167,7 @@ namespace Carbon.UI
 		public int SendMessage(uint uMsg, IntPtr wParam, IntPtr lParam)
         {
             if (_window.InvokeRequired)
-                return (int)_window.Invoke(new WindowMessageCallback(this.SendMessage), new object[] { uMsg, wParam, lParam });
+                return (int)_window.Invoke(new WindowMessageCallback(SendMessage), uMsg, wParam, lParam);
             
 			if (_window.IsHandleCreated)
 				return SendMessage(_window.Handle, uMsg, wParam, lParam);
@@ -182,9 +181,9 @@ namespace Carbon.UI
 		public void CloseWindow(bool asynchronously)
 		{
 			if (asynchronously)
-				this.PostMessage(WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+				PostMessage(WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
 			else
-				this.SendMessage(WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+				SendMessage(WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
 		}
 
 		/// <summary>
@@ -238,7 +237,7 @@ namespace Carbon.UI
 					throw new ArgumentNullException("InnerWindow", "No window instance was created.");
 
 				// raise an event so that we can modify the window as needed before it is shown
-				this.OnWindowCreated(this, new AsyncWindowManagerEventArgs(this));
+				OnWindowCreated(this, new AsyncWindowManagerEventArgs(this));
 
 				// release the start method by signalling we have created the window
 				_createdEvent.Set();
@@ -264,7 +263,7 @@ namespace Carbon.UI
 			{
 				_failed = true;
 				Log.WriteLine(ex);
-				this.OnException(this, new AsyncWindowManagerExceptionEventArgs(this, ex));
+				OnException(this, new AsyncWindowManagerExceptionEventArgs(this, ex));
 			}
 			finally
 			{
@@ -282,8 +281,8 @@ namespace Carbon.UI
 		{
 			try
 			{
-				if (this.WindowCreated != null)
-					this.WindowCreated(sender, e);
+				if (WindowCreated != null)
+					WindowCreated(sender, e);
 			}
 			catch(Exception ex)
 			{
@@ -300,8 +299,8 @@ namespace Carbon.UI
 		{
 			try
 			{
-				if (this.Exception != null)
-					this.Exception(sender, e);
+				if (Exception != null)
+					Exception(sender, e);
 			}
 			catch(Exception ex)
 			{
@@ -318,8 +317,8 @@ namespace Carbon.UI
 		{
 			try
 			{
-				if (this.WindowClosed != null)
-					this.WindowClosed(sender, e);				
+				if (WindowClosed != null)
+					WindowClosed(sender, e);				
 			}
 			catch(Exception ex)
 			{

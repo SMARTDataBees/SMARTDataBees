@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Diagnostics;
+using System.ComponentModel;
+using System.Configuration;
+using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
-using SDBees.Core.Properties;
-using Carbon;
-using System.Reflection;
-using Carbon.Common;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
-using SDBees.Plugs.Events;
-using SDBees.Plugs.TemplateTreeNode;
-using System.IO;
-using System.ComponentModel;
-
+using SDBees.Core.Global;
+using SDBees.Core.Properties;
+using SDBees.DB;
+using SDBees.Main.Window;
+using SDBees.Plugs.TemplateBase;
 
 namespace SDBees.Core.Main.Systemtray
 {
@@ -24,18 +23,18 @@ namespace SDBees.Core.Main.Systemtray
     [PluginId("B39961CF-AAC5-4F27-BC44-AD51DC1AABBA")]
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
-    [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
-    [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
-    [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
+    [PluginDependency(typeof(SDBeesDBConnection))]
+    [PluginDependency(typeof(MainWindowApplication))]
+    [PluginDependency(typeof(GlobalManager))]
 
-    public sealed class ProcessIcon : SDBees.Plugs.TemplateBase.TemplateBase, IDisposable
+    public sealed class ProcessIcon : TemplateBase, IDisposable
     {
         /// <summary>
         /// The NotifyIcon object.
         /// </summary>
-        NotifyIcon m_notifyicon = null;
-        ControlContainer m_container = null;
-        ContextMenus m_contextmenu = null;
+        NotifyIcon m_notifyicon;
+        ControlContainer m_container;
+        ContextMenus m_contextmenu;
 
         public ContextMenus MyContextMenu
         {
@@ -47,7 +46,6 @@ namespace SDBees.Core.Main.Systemtray
         /// Initializes a new instance of the <see cref="ProcessIcon"/> class.
         /// </summary>
         public ProcessIcon()
-            : base()
         {
             // Instantiate the NotifyIcon object.
             m_container = new ControlContainer();
@@ -80,9 +78,9 @@ namespace SDBees.Core.Main.Systemtray
         protected override void Start(PluginContext context, PluginDescriptorEventArgs e)
         {
             //Store the context for internal use
-            this.StartMe(context, e);
+            StartMe(context, e);
 
-            this.Display(context);
+            Display(context);
         }
 
         /// <summary>
@@ -94,17 +92,17 @@ namespace SDBees.Core.Main.Systemtray
             m_notifyicon.Icon = Resources.SDBeesIcon;
             try
             {
-                string _path = Path.GetDirectoryName(this.GetType().Assembly.Location) + System.Configuration.ConfigurationManager.AppSettings["MainWindowIcon"];
-                m_notifyicon.Icon = new System.Drawing.Icon(_path);
+                var _path = Path.GetDirectoryName(GetType().Assembly.Location) + ConfigurationManager.AppSettings["MainWindowIcon"];
+                m_notifyicon.Icon = new Icon(_path);
             }
             catch (Exception ex)
             {
             }
 
-            string _TitleText = "SMARTDataBees";
+            var _TitleText = "SMARTDataBees";
             try
             {
-                _TitleText = System.Configuration.ConfigurationManager.AppSettings["MainWindowTitle"];
+                _TitleText = ConfigurationManager.AppSettings["MainWindowTitle"];
             }
             catch (Exception ex)
             {
@@ -113,10 +111,10 @@ namespace SDBees.Core.Main.Systemtray
             m_notifyicon.Text = _TitleText;
 
             // Attach a context menu.
-            this.m_contextmenu = new ContextMenus(context) as ContextMenus;
+            m_contextmenu = new ContextMenus(context);
             //this.m_contextmenu.Create();
 
-            m_notifyicon.ContextMenuStrip = this.m_contextmenu;
+            m_notifyicon.ContextMenuStrip = m_contextmenu;
 
             m_contextmenu.Show();
             m_contextmenu.Hide();
@@ -126,17 +124,17 @@ namespace SDBees.Core.Main.Systemtray
 
         protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
         {
-            this.Dispose();
+            Dispose();
         }
 
         private delegate void OpenMainDialogHelper();
         internal void OpenMainDialog()
         {
-            ContextMenus contextMenu = ProcessIcon.Current.m_contextmenu;
+            var contextMenu = Current.m_contextmenu;
 
             if (contextMenu.InvokeRequired)
             {
-                OpenMainDialogHelper d = new OpenMainDialogHelper(OpenMainDialog);
+                OpenMainDialogHelper d = OpenMainDialog;
                 contextMenu.BeginInvoke(d);
             }
             else

@@ -1,12 +1,8 @@
-﻿using SDBees.DB;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using SDBees.Plugs.TemplateBase;
 
 namespace SDBees.Plugs.TemplateTreeNode
 {
-    public abstract class TemplateTreenodeBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
+    public abstract class TemplateTreenodeBaseData : TemplateDBBaseData
     {
 
 

@@ -31,13 +31,10 @@
 
 using System;
 using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using System.Threading;
-using System.Collections;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Carbon.Common
@@ -47,9 +44,8 @@ namespace Carbon.Common
 	{
 		private Mutex _instance;
 		private TcpChannel _channel;
-		private string _mutexName;
-		private string _url;
-		private int _port;
+	    private string _url;
+		private readonly int _port;
 		private ObjRef _marshalledObject;
 		private bool _disposed;
 
@@ -62,19 +58,17 @@ namespace Carbon.Common
 		/// Initializes a new instance of the InstanceManager class.
 		/// </summary>
 		public InstanceManager(int port, string mutexName)
-			: base()
 		{
 			try
 			{
 				_port = port;
-				_mutexName = mutexName.Replace("-", null);
-				string executablePath = this.ExecutablePath;
-				_url = string.Format("tcp://127.0.0.1:{0}/{1}", port.ToString(), executablePath);
+			    var executablePath = ExecutablePath;
+				_url = $"tcp://127.0.0.1:{port}/{executablePath}";
 				_instance = new Mutex(false, mutexName);
 
 				// if this is the only instance then register a new channel on the specified port
 				// and marshall this object instance on the channel
-				if (this.IsOnlyInstance)
+				if (IsOnlyInstance)
 				{
 					// create a tcp channel
 					_channel = new TcpChannel(port);
@@ -98,7 +92,7 @@ namespace Carbon.Common
 
 		public void Dispose()
 		{
-			this.Dispose(true);
+			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
 
@@ -108,13 +102,12 @@ namespace Carbon.Common
 			{
 				if (disposing)
 				{
-					this.ReleaseInstance();
+					ReleaseInstance();
 
 					_marshalledObject = null;
 					_channel = null;
 					_instance = null;
-					_mutexName = null;
-					_url = null;
+				    _url = null;
 				}
 				_disposed = true;
 			}
@@ -125,7 +118,7 @@ namespace Carbon.Common
 		{
 			get
 			{
-				string executablePath = Application.ExecutablePath.Replace("\\", "/");
+				var executablePath = Application.ExecutablePath.Replace("\\", "/");
 				executablePath = executablePath.ToLower();
 				return executablePath;
 			}
@@ -195,14 +188,14 @@ namespace Carbon.Common
 		/// <returns></returns>
 		public bool SendCommandLineToPreviousInstance(string[] args)
 		{
-			TcpChannel channel = new TcpChannel();
+			var channel = new TcpChannel();
 
 			try
 			{
 				ChannelServices.RegisterChannel(channel, false);
 
-				object instance = Activator.GetObject(typeof(InstanceManager), _url);
-				InstanceManager instanceManager = instance as InstanceManager;
+				var instance = Activator.GetObject(typeof(InstanceManager), _url);
+				var instanceManager = instance as InstanceManager;
 				if (instanceManager != null)
 				{
 					instanceManager.Run(args);					
@@ -229,7 +222,7 @@ namespace Carbon.Common
 		/// <param name="args"></param>
 		public void Run(string[] args)
 		{
-			EventManager.Raise<InstanceManagerEventArgs>(this.ReceivedCommandLineArgs, this, new InstanceManagerEventArgs(args));
+			EventManager.Raise(ReceivedCommandLineArgs, this, new InstanceManagerEventArgs(args));
 		}
 	}
 }

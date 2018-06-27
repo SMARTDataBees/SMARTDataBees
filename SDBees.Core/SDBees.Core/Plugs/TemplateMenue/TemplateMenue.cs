@@ -20,22 +20,10 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Carbon;
-using Carbon.Plugins;
-using Carbon.Plugins.Attributes;
 
 namespace SDBees.Plugs.TemplateMenue
 {
   public abstract class TemplateMenue : TemplateBase.TemplateBase
   {
-
-    public TemplateMenue()
-      : base()
-    {
-    }
   }
 }

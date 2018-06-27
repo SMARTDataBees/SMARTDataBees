@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
+using SDBees.Core.Model;
 
 namespace SDBees.Core.GuiTools.TypeConverters
 {
@@ -59,23 +57,23 @@ namespace SDBees.Core.GuiTools.TypeConverters
         {
             object result = null;
 
-            string valueString = value.ToString();
+            var valueString = value.ToString();
 
             if (valueString != "")
             {
-                string[] dimensions = valueString.Split(new Char[] { 'x' });
+                var dimensions = valueString.Split('x');
 
                 if ((dimensions.Length == 1) && IsRound(context))
                 {
-                    LengthTypeConverter converter = new LengthTypeConverter();
+                    var converter = new LengthTypeConverter();
 
-                    double doubleValue0 = 0.0;
+                    var doubleValue0 = 0.0;
 
-                    if (Double.TryParse(dimensions[0], out doubleValue0))
+                    if (double.TryParse(dimensions[0], out doubleValue0))
                     {
                         if (destinationType == null)
                         {
-                            SDBees.Core.Model.SDBeesOpeningSize openingSize = new SDBees.Core.Model.SDBeesOpeningSize(converter.ConvertFrom(context, culture, doubleValue0).ToString());
+                            var openingSize = new SDBeesOpeningSize(converter.ConvertFrom(context, culture, doubleValue0).ToString());
 
                             if (Validate(context, openingSize))
                             {
@@ -90,21 +88,21 @@ namespace SDBees.Core.GuiTools.TypeConverters
                 }
                 else if ((dimensions.Length == 2) && IsRectangular(context))
                 {
-                    LengthTypeConverter converter = new LengthTypeConverter();
+                    var converter = new LengthTypeConverter();
 
-                    double doubleValue0 = 0.0;
+                    var doubleValue0 = 0.0;
 
-                    double doubleValue1 = 0.0;
+                    var doubleValue1 = 0.0;
 
-                    if (Double.TryParse(dimensions[0], out doubleValue0) && Double.TryParse(dimensions[1], out doubleValue1))
+                    if (double.TryParse(dimensions[0], out doubleValue0) && double.TryParse(dimensions[1], out doubleValue1))
                     {
                         if (destinationType == null)
                         {
-                            object result0 = converter.ConvertFrom(context, culture, doubleValue0);
+                            var result0 = converter.ConvertFrom(context, culture, doubleValue0);
 
-                            object result1 = converter.ConvertFrom(context, culture, doubleValue1);
+                            var result1 = converter.ConvertFrom(context, culture, doubleValue1);
 
-                            SDBees.Core.Model.SDBeesOpeningSize openingSize = new SDBees.Core.Model.SDBeesOpeningSize(result0.ToString() + "x" + result1.ToString());
+                            var openingSize = new SDBeesOpeningSize(result0 + "x" + result1);
 
                             if (Validate(context, openingSize))
                             {
@@ -113,11 +111,11 @@ namespace SDBees.Core.GuiTools.TypeConverters
                         }
                         else
                         {
-                            object result0 = converter.ConvertTo(context, culture, doubleValue0, destinationType);
+                            var result0 = converter.ConvertTo(context, culture, doubleValue0, destinationType);
 
-                            object result1 = converter.ConvertTo(context, culture, doubleValue1, destinationType);
+                            var result1 = converter.ConvertTo(context, culture, doubleValue1, destinationType);
 
-                            result = result0.ToString() + "x" + result1.ToString();
+                            result = result0 + "x" + result1;
                         }
                     }
                 }
@@ -133,11 +131,11 @@ namespace SDBees.Core.GuiTools.TypeConverters
 
                 if (destinationType == null)
                 {
-                    exception = base.GetConvertFromException(value);
+                    exception = GetConvertFromException(value);
                 }
                 else
                 {
-                    exception = base.GetConvertToException(value, destinationType);
+                    exception = GetConvertToException(value, destinationType);
                 }
 
                 throw exception;
@@ -150,7 +148,7 @@ namespace SDBees.Core.GuiTools.TypeConverters
  
         protected abstract bool IsRectangular(ITypeDescriptorContext context);
 
-        protected virtual bool Validate(ITypeDescriptorContext context, SDBees.Core.Model.SDBeesOpeningSize openingSize)
+        protected virtual bool Validate(ITypeDescriptorContext context, SDBeesOpeningSize openingSize)
         {
             return true;
         }

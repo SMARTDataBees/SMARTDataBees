@@ -20,6 +20,10 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.ComponentModel;
+using System.Windows.Forms;
+
 namespace SDBees.UserAdmin
 {
     partial class UserAdminDLG
@@ -27,7 +31,7 @@ namespace SDBees.UserAdmin
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -51,7 +55,7 @@ namespace SDBees.UserAdmin
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserAdminDLG));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(UserAdminDLG));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabUsersAndGroups = new System.Windows.Forms.TabControl();
             this.tabPageUsers = new System.Windows.Forms.TabPage();
@@ -244,19 +248,19 @@ namespace SDBees.UserAdmin
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.TabControl tabUsersAndGroups;
-        private System.Windows.Forms.TabPage tabPageUsers;
-        private System.Windows.Forms.TabPage tabPageGroups;
-        private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.PropertyGrid pgProperties;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStripUser;
-        private System.Windows.Forms.ToolStripMenuItem mnuCreateUser;
-        private System.Windows.Forms.ToolStripMenuItem mnuDeleteUser;
-        private System.Windows.Forms.ToolStripMenuItem mnuSetPassword;
-        private System.Windows.Forms.ListView lvSecurityRights;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStripSecurityRights;
-        private System.Windows.Forms.ToolStripMenuItem mnuAddSecurityRight;
-        private System.Windows.Forms.ToolStripMenuItem mnuRemoveSecurityRight;
+        private SplitContainer splitContainer1;
+        private TabControl tabUsersAndGroups;
+        private TabPage tabPageUsers;
+        private TabPage tabPageGroups;
+        private SplitContainer splitContainer2;
+        private PropertyGrid pgProperties;
+        private ContextMenuStrip contextMenuStripUser;
+        private ToolStripMenuItem mnuCreateUser;
+        private ToolStripMenuItem mnuDeleteUser;
+        private ToolStripMenuItem mnuSetPassword;
+        private ListView lvSecurityRights;
+        private ContextMenuStrip contextMenuStripSecurityRights;
+        private ToolStripMenuItem mnuAddSecurityRight;
+        private ToolStripMenuItem mnuRemoveSecurityRight;
     }
 }

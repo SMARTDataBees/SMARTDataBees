@@ -20,6 +20,10 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.ComponentModel;
+using System.Windows.Forms;
+
 namespace SDBees.UserAdmin
 {
     partial class SecurityRightDLG
@@ -27,7 +31,7 @@ namespace SDBees.UserAdmin
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -234,18 +238,18 @@ namespace SDBees.UserAdmin
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox puSecurityType;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox puDatabase;
-        private System.Windows.Forms.CheckBox cbSystemAdministrator;
-        private System.Windows.Forms.CheckBox cbDatabaseAdministrator;
-        private System.Windows.Forms.Button bnCancel;
-        private System.Windows.Forms.Button bnOk;
-        private System.Windows.Forms.CheckBox cbTableAdministrator;
-        private System.Windows.Forms.ComboBox puTable;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ComboBox puColumn;
-        private System.Windows.Forms.Label label4;
+        private Label label1;
+        private ComboBox puSecurityType;
+        private Label label2;
+        private ComboBox puDatabase;
+        private CheckBox cbSystemAdministrator;
+        private CheckBox cbDatabaseAdministrator;
+        private Button bnCancel;
+        private Button bnOk;
+        private CheckBox cbTableAdministrator;
+        private ComboBox puTable;
+        private Label label3;
+        private ComboBox puColumn;
+        private Label label4;
     }
 }

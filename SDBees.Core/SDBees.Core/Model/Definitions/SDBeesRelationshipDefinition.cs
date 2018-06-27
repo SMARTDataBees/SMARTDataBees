@@ -20,16 +20,12 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.Runtime.Serialization;
+
 namespace SDBees.Core.Model
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-
-    using System.Runtime.Serialization;
-
-	/// <summary>
+    /// <summary>
 	/// Definition 
 	/// Mehrsprachigkeit ?
 	/// </summary>
@@ -38,77 +34,52 @@ namespace SDBees.Core.Model
 	{
         public SDBeesRelationshipDefinition()
         {
-            m_Id = new SDBeesRelationshipDefinitionId();
-            m_name = new SDBeesLabel();
-            m_relationshipType = new SDBeesRelationshipType();
-            m_sourceId = new SDBeesEntityDefinitionId();
-            m_targetId = new SDBeesEntityDefinitionId();
+            Id = new SDBeesRelationshipDefinitionId();
+            Name = new SDBeesLabel();
+            RelationshipType = new SDBeesRelationshipType();
+            SourceEntityDefId = new SDBeesEntityDefinitionId();
+            TargetEntityDefId = new SDBeesEntityDefinitionId();
         }
 
         public SDBeesRelationshipDefinition(SDBeesRelationshipDefinitionId id, SDBeesLabel name, SDBeesRelationshipType relType, SDBeesEntityDefinitionId sourceEntityDefId, SDBeesEntityDefinitionId targetEntityDefId)
         {
-            m_Id = id;
-            m_name = name;
-            m_relationshipType = relType;
-            m_sourceId = sourceEntityDefId;
-            m_targetId = targetEntityDefId;
+            Id = id;
+            Name = name;
+            RelationshipType = relType;
+            SourceEntityDefId = sourceEntityDefId;
+            TargetEntityDefId = targetEntityDefId;
         }
 
 
-		private SDBeesRelationshipDefinitionId m_Id;
-        /// <summary>
+	    /// <summary>
         /// Id der Beziehungdefinition
         /// </summary>
         [DataMember]
-		public SDBeesRelationshipDefinitionId Id
-		{
-			get { return m_Id; }
-			set { m_Id = value; }
-		}
+		public SDBeesRelationshipDefinitionId Id { get; set; }
 
-        private SDBeesLabel m_name;
-        /// <summary>
+	    /// <summary>
         /// Name der Beziehungdefinition
         /// </summary>
         [DataMember]
-        public SDBeesLabel Name
-        {
-            get { return m_name; }
-            set { m_name = value; }
-        }
+        public SDBeesLabel Name { get; set; }
 
-        public SDBeesRelationshipType m_relationshipType;
-        /// <summary>
+	    /// <summary>
         /// Typ der Beziehung
         /// </summary>
         [DataMember]
-		public SDBeesRelationshipType RelationshipType
-		{
-            get { return m_relationshipType; }
-            set { m_relationshipType = value; }
-		}
+		public SDBeesRelationshipType RelationshipType { get; set; }
 
-		private SDBeesEntityDefinitionId m_sourceId;
-        /// <summary>
+	    /// <summary>
         /// Ursprungs Entity Typ der Beziehung
         /// </summary>
         [DataMember]
-		public SDBeesEntityDefinitionId SourceEntityDefId
-		{
-            get { return m_sourceId; }
-            set { m_sourceId = value; }
-		}
+		public SDBeesEntityDefinitionId SourceEntityDefId { get; set; }
 
-		private SDBeesEntityDefinitionId m_targetId;
-        /// <summary>
+	    /// <summary>
         /// Ziel Entity Typ der Beziehung
         /// </summary>
         [DataMember]
-		public SDBeesEntityDefinitionId TargetEntityDefId
-		{
-            get { return m_targetId; }
-            set { m_targetId = value; }
-		}
+		public SDBeesEntityDefinitionId TargetEntityDefId { get; set; }
 	}
 }
 

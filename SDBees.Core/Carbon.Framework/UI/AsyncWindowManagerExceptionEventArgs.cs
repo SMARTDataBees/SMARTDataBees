@@ -30,13 +30,14 @@
 //	============================================================================
 
 using System;
+using System.Diagnostics;
 
 namespace Carbon.UI
 {
 	/// <summary>
 	/// Summary description for AsyncWindowManagerExceptionEventArgs.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public sealed class AsyncWindowManagerExceptionEventArgs : AsyncWindowManagerEventArgs
 	{
 		private readonly Exception _exception;

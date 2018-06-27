@@ -29,8 +29,6 @@
 //
 //	============================================================================
 
-using System;
-
 namespace Carbon.Configuration
 {	
 	/// <summary>
@@ -59,7 +57,7 @@ namespace Carbon.Configuration
 			}
 			set
 			{
-				base.Element = (XmlConfigurationElement)value;
+				base.Element = value;
 			}
 		}
 	}

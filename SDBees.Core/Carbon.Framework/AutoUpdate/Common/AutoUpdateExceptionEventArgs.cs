@@ -44,7 +44,7 @@ namespace Carbon.AutoUpdate.Common
 		/// Initializes a new instance of the AutoUpdateExceptionEventArgs class
 		/// </summary>
 		/// <param name="ex">The exception that is the context of the event.</param>
-		public AutoUpdateExceptionEventArgs(Exception ex) : base()
+		public AutoUpdateExceptionEventArgs(Exception ex)
 		{
 			_ex = ex;
 		}

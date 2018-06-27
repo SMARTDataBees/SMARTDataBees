@@ -31,16 +31,15 @@
 
 using System;
 using System.Diagnostics;
-using System.Text;
-using System.Collections;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Carbon.Common
 {	
     /// <summary>
     /// Provides a class capable of manipulating Windows .Ini files.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public sealed class IniFile 
 	{		
 		private string _filename;
@@ -101,8 +100,8 @@ namespace Carbon.Common
 
 		public string ReadString(string section, string key, string defVal) 
 		{
-			StringBuilder sb = new StringBuilder(MAX_ENTRY);
-			int Ret = GetPrivateProfileString(section, key, defVal, sb, MAX_ENTRY, Filename);
+			var sb = new StringBuilder(MAX_ENTRY);
+			var Ret = GetPrivateProfileString(section, key, defVal, sb, MAX_ENTRY, Filename);
 			return sb.ToString();
 		}
 
@@ -133,7 +132,7 @@ namespace Carbon.Common
 
 		public bool ReadBoolean(string section, string key, bool defVal) 
 		{
-			return Boolean.Parse(ReadString(section, key, defVal.ToString()));
+			return bool.Parse(ReadString(section, key, defVal.ToString()));
 		}
 
 		public bool ReadBoolean(string section, string key) 
@@ -156,20 +155,18 @@ namespace Carbon.Common
 			return Write(section, key, value.ToString());
 		}
 
-		public bool Write(string section, string key, byte [] value) 
+		public bool Write(string section, string key, byte [] value)
 		{
-			if (value == null)
+		    if (value == null)
 				return Write(section, key, (string)null);
-			else
-				return Write(section, key, value, 0, value.Length);
+		    return Write(section, key, value, 0, value.Length);
 		}
 
-		public bool Write(string section, string key, byte [] value, int offset, int length) 
+		public bool Write(string section, string key, byte [] value, int offset, int length)
 		{
-			if (value == null)
+		    if (value == null)
 				return Write(section, key, (string)null);
-			else
-				return Write(section, key, Convert.ToBase64String(value, offset, length));
+		    return Write(section, key, Convert.ToBase64String(value, offset, length));
 		}
 
 		public bool Write(string section, string key, bool value) 
@@ -191,8 +188,8 @@ namespace Carbon.Common
 		{
 			try 
 			{
-				byte[] buffer = new byte[MAX_ENTRY];
-				GetPrivateProfileSectionNames(buffer, MAX_ENTRY, this.Filename);
+				var buffer = new byte[MAX_ENTRY];
+				GetPrivateProfileSectionNames(buffer, MAX_ENTRY, Filename);
 				return Encoding.ASCII.GetString(buffer).Trim('\0').Split('\0');
 			} 
 			catch(Exception ex)

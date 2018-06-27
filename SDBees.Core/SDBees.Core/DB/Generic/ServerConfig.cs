@@ -1,15 +1,19 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
+using System.Drawing.Design;
 using System.IO;
-using System.Linq;
 using System.Text;
+using System.Windows.Forms;
+using System.Windows.Forms.Design;
 using System.Xml.Serialization;
+using SDBees.Core.DB.SQLite;
+using SDBees.Utils.ObjectXmlSerializer;
 
 namespace SDBees.DB.Generic
 {
-    [XmlRootAttribute("sdbeesserverconfiguration", Namespace = "", IsNullable = false)]
+    [XmlRoot("sdbeesserverconfiguration", Namespace = "", IsNullable = false)]
     public class ServerConfig
     {
         List<ServerConfigItem> mConfigItems;
@@ -30,8 +34,8 @@ namespace SDBees.DB.Generic
         [XmlAttribute("configversion")]
         public string ConfigVersion
         {
-            get { return this.mVersion; }
-            set { this.mVersion = value; }
+            get { return mVersion; }
+            set { mVersion = value; }
         }
 
         DateTime mConfigSaveDate = DateTime.Now;
@@ -54,11 +58,11 @@ namespace SDBees.DB.Generic
         {
             ServerConfigItem res = null;
 
-            if (!String.IsNullOrEmpty(this.SelectedItemGuid))
+            if (!string.IsNullOrEmpty(SelectedItemGuid))
             {
-                foreach (ServerConfigItem item in this.mConfigItems)
+                foreach (var item in mConfigItems)
                 {
-                    if (item.ConfigItemGuid == this.SelectedItemGuid)
+                    if (item.ConfigItemGuid == SelectedItemGuid)
                     {
                         res = item;
                         break;
@@ -68,10 +72,10 @@ namespace SDBees.DB.Generic
             else
             {
                 // nothing set or selected before, so we use the first config in list
-                foreach (ServerConfigItem item in this.mConfigItems)
+                foreach (var item in mConfigItems)
                 {
                     res = item;
-                    this.SelectedItemGuid = item.ConfigItemGuid;
+                    SelectedItemGuid = item.ConfigItemGuid;
                     break;
                 }
             }
@@ -81,14 +85,14 @@ namespace SDBees.DB.Generic
 
         public void AddDefaultItem()
         {
-            this.ConfigItems.Add(new ServerConfigItem());
+            ConfigItems.Add(new ServerConfigItem());
         }
 
         public ServerConfigItem FindServerConfigItemByProjectGuid(string projectGuid)
         {
             ServerConfigItem result = null;
 
-            foreach (ServerConfigItem item in mConfigItems)
+            foreach (var item in mConfigItems)
             {
                 if (item.ProjectGuid.Equals(projectGuid))
                 {
@@ -105,7 +109,7 @@ namespace SDBees.DB.Generic
         {
             ServerConfigItem result = null;
 
-            foreach (ServerConfigItem item in mConfigItems)
+            foreach (var item in mConfigItems)
             {
                 if (item.ServerDatabasePath.Equals(serverDatabasePath))
                 {
@@ -122,11 +126,11 @@ namespace SDBees.DB.Generic
         {
             ServerConfigItem res = null;
 
-            if (!String.IsNullOrEmpty(this.SelectedItemGuid))
+            if (!string.IsNullOrEmpty(SelectedItemGuid))
             {
-                foreach (ServerConfigItem item in this.mConfigItems)
+                foreach (var item in mConfigItems)
                 {
-                    if (item.ConfigItemGuid == this.SelectedItemGuid)
+                    if (item.ConfigItemGuid == SelectedItemGuid)
                     {
                         res = item;
                         break;
@@ -134,19 +138,14 @@ namespace SDBees.DB.Generic
                 }
             }
 
-            this.mConfigItems.Remove(res);
-            this.SelectedItemGuid = null;
-            this.GetSelectedItem();
+            mConfigItems.Remove(res);
+            SelectedItemGuid = null;
+            GetSelectedItem();
         }
     }
 
     public class ServerConfigItem
     {
-        public ServerConfigItem()
-        {
-            //m_ExchangeRules = new List<ExchangeRule>();
-        }
-
         string m_ConfigName = "Database configuration name";
         [XmlAttribute("configname")]
         [Description("Insert name for this configuration."), Category("1 - Config")]
@@ -223,26 +222,22 @@ namespace SDBees.DB.Generic
         private static string GetDefaultDatabase()
         {
             //Load expected window title
-            bool replace = false;
+            var replace = false;
 
-            string _title = System.Configuration.ConfigurationManager.AppSettings["MainWindowTitle"];
-            if (!String.IsNullOrEmpty(_title))
+            var _title = ConfigurationManager.AppSettings["MainWindowTitle"];
+            if (!string.IsNullOrEmpty(_title))
             {
                 replace = true;
             }
 
-            FileInfo inf = null;
-            if(replace)
-                inf = new FileInfo(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), _title + "\\DemoData\\DemoDb.s3db"));
-            else
-                inf = new FileInfo(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "SMARTDataBees\\DemoData\\DemoDb.s3db"));
+            var inf = replace ? new FileInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), _title + "\\DemoData\\DemoDb.s3db")) : new FileInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SMARTDataBees\\DemoData\\DemoDb.s3db"));
 
             return inf.FullName;
         }
 
         [XmlAttribute("serverdatabasepath")]
         [Description("If you use a filebased database system, insert path to databasefile here!"), Category("4 - Server")]
-        [EditorAttribute(typeof(SDBees.Core.DB.SQLite.SQLiteFilenameEditor), typeof(System.Drawing.Design.UITypeEditor))]
+        [Editor(typeof(SQLiteFilenameEditor), typeof(UITypeEditor))]
         public string ServerDatabasePath
         {
             get { return m_ServerDatabasePath; }
@@ -276,7 +271,7 @@ namespace SDBees.DB.Generic
             set { m_ServerPort = value; }
         }
 
-        bool m_TableCaching = false;
+        bool m_TableCaching;
         [XmlAttribute("servertablecaching")]
         [Description("Enable table caching for online databases?"), Category("4 - Server")]
         public bool ServerTableCaching
@@ -287,7 +282,7 @@ namespace SDBees.DB.Generic
 
         string m_EDMRootDirectory = "c:\\SDBees.EDM";
         [XmlAttribute("edmdirectory")]
-        [EditorAttribute(typeof(System.Windows.Forms.Design.FolderNameEditor), typeof(System.Drawing.Design.UITypeEditor))]
+        [Editor(typeof(FolderNameEditor), typeof(UITypeEditor))]
         [Description("Folder for the EDM root directory"), Category("3 - EDM")]
         public string EDMRootDirectory
         {
@@ -324,21 +319,18 @@ namespace SDBees.DB.Generic
         private static string GetStorageFolder()
         {
             //Load expected window title
-            string _title = System.Configuration.ConfigurationManager.AppSettings["MainWindowTitle"];
-            if (!String.IsNullOrEmpty(_title))
+            var _title = ConfigurationManager.AppSettings["MainWindowTitle"];
+            if (!string.IsNullOrEmpty(_title))
             {
                 return _title;
             }
-            else
-	        {
-                return "SMARTDataBees";
-	        }            
+            return "SMARTDataBees";
         }
 
         public static string GetConfigStorageFolder()
         {
-            string mainfolder = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), _SDBeesStorageFolder);
-            DirectoryInfo dirinf = new DirectoryInfo(mainfolder);
+            var mainfolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), _SDBeesStorageFolder);
+            var dirinf = new DirectoryInfo(mainfolder);
             if (!dirinf.Exists)
 	        {
 		        dirinf.Create();
@@ -354,18 +346,18 @@ namespace SDBees.DB.Generic
         public static ServerConfig LoadConfig(bool createDefaults = true)
         {
             ServerConfig mConfig = null;
-            if (!System.IO.File.Exists(GetMandatorConfigFile()))
+            if (!File.Exists(GetMandatorConfigFile()))
                 CreateMandatorConfig(createDefaults);
 
-            if (System.IO.File.Exists(GetMandatorConfigFile()))
+            if (File.Exists(GetMandatorConfigFile()))
             {
                 try
                 {
-                    mConfig = SDBees.Utils.ObjectXmlSerializer.ObjectXMLSerializer<ServerConfig>.Load(GetMandatorConfigFile());
+                    mConfig = ObjectXMLSerializer<ServerConfig>.Load(GetMandatorConfigFile());
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
-                    System.Windows.Forms.MessageBox.Show(ex.ToString());
+                    MessageBox.Show(ex.ToString());
                 }
             }
             return mConfig;
@@ -374,19 +366,17 @@ namespace SDBees.DB.Generic
         public static void SaveConfig(ServerConfig mConfig)
         {
             mConfig.ConfigSaveDate = DateTime.Now;
-            SDBees.Utils.ObjectXmlSerializer.ObjectXMLSerializer<ServerConfig>.Save(mConfig, GetMandatorConfigFile(), Encoding.UTF8);
+            ObjectXMLSerializer<ServerConfig>.Save(mConfig, GetMandatorConfigFile(), Encoding.UTF8);
         }
 
         private static void CreateMandatorConfig(bool createDefaults = true)
         {
-            ServerConfig cfg = new ServerConfig();
-            cfg.ConfigSaveDate = DateTime.Now;
+            var configuration = new ServerConfig {ConfigSaveDate = DateTime.Now};
 
             if(createDefaults)
-                cfg.AddDefaultItem();
+                configuration.AddDefaultItem();
 
-
-            SDBees.Utils.ObjectXmlSerializer.ObjectXMLSerializer<ServerConfig>.Save(cfg, GetMandatorConfigFile(), Encoding.UTF8);
+            ObjectXMLSerializer<ServerConfig>.Save(configuration, GetMandatorConfigFile(), Encoding.UTF8);
         }
     }
 }

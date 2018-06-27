@@ -20,11 +20,10 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
-using System.ComponentModel;
 
 /// <summary>
 ///	Mikael Wiberg 2003
@@ -106,8 +105,8 @@ namespace SDBees.GuiTools
 				reg = new Region(new Rectangle(0, 0, 0, 0));
 			}
 
-			RectangleF rectF = reg.GetBounds(g);
-			Rectangle rect = new Rectangle((int)Math.Floor(rectF.Left), (int)Math.Floor(rectF.Top), (int)Math.Ceiling(rectF.Width), (int)Math.Ceiling(rectF.Height));
+			var rectF = reg.GetBounds(g);
+			var rect = new Rectangle((int)Math.Floor(rectF.Left), (int)Math.Floor(rectF.Top), (int)Math.Ceiling(rectF.Width), (int)Math.Ceiling(rectF.Height));
 
 			return rect;
 		}
@@ -137,10 +136,10 @@ namespace SDBees.GuiTools
 		/// <returns>Smallest Region encompassing the supplied string.</returns>
 		public static Region GetGraphicalStringRegion(Graphics g, string str, Font fnt)
 		{
-			StringFormat format = new StringFormat();
-			RectangleF rect = new RectangleF(0, 0, 1000, 1000);
+			var format = new StringFormat();
+			var rect = new RectangleF(0, 0, 1000, 1000);
 			CharacterRange[] ranges = {new CharacterRange(0, str.Length)};
-			Region[] regions = new Region[1];
+			var regions = new Region[1];
 
 			format.SetMeasurableCharacterRanges(ranges);
 
@@ -223,8 +222,8 @@ namespace SDBees.GuiTools
 				reg = new Region(new Rectangle(0, 0, 0, 0));
 			}
 
-			RectangleF rctF = reg.GetBounds(g);
-			Rectangle rctRet = new Rectangle((int)Math.Floor(rctF.Left), (int)Math.Floor(rctF.Top), (int)Math.Ceiling(rctF.Width), (int)Math.Ceiling(rctF.Height));
+			var rctF = reg.GetBounds(g);
+			var rctRet = new Rectangle((int)Math.Floor(rctF.Left), (int)Math.Floor(rctF.Top), (int)Math.Ceiling(rctF.Width), (int)Math.Ceiling(rctF.Height));
 
 			return rctRet;
 		}
@@ -257,9 +256,9 @@ namespace SDBees.GuiTools
 		/// <returns>Smallest Region encompassing the Text of the Control supplied using the StringFormat supplied.</returns>
 		public static Region GetStringFormattedStringRegion(Graphics g, string str, Font fnt, Rectangle rct, StringFormat strfmt)
 		{
-			RectangleF rctF = new RectangleF(rct.X, rct.Y, rct.Width, rct.Height);
+			var rctF = new RectangleF(rct.X, rct.Y, rct.Width, rct.Height);
 			CharacterRange[] ranges = {new CharacterRange(0, str.Length)};
-			Region[] regions = new Region[1];
+			var regions = new Region[1];
 
 			strfmt.SetMeasurableCharacterRanges(ranges);
 

@@ -30,10 +30,8 @@
 //	============================================================================
 
 using System;
-using System.Diagnostics;
-using System.Reflection;
 using System.ComponentModel;
-using System.ComponentModel.Design;
+using System.Diagnostics;
 
 namespace Carbon.Configuration
 {
@@ -124,11 +122,11 @@ namespace Carbon.Configuration
 			{
 				if (_option.EditorAssemblyQualifiedName != null && _option.EditorAssemblyQualifiedName != string.Empty)
 				{
-					Type t = Type.GetType(_option.EditorAssemblyQualifiedName);
+					var t = Type.GetType(_option.EditorAssemblyQualifiedName);
 					if (t != null)
 					{										
-						ConstructorInfo ci = t.GetConstructor(Type.EmptyTypes);
-						object editor = ci.Invoke(null);
+						var ci = t.GetConstructor(Type.EmptyTypes);
+						var editor = ci.Invoke(null);
 						if (editor != null)
 							return editor;												
 					}					
@@ -150,11 +148,11 @@ namespace Carbon.Configuration
                 {
                     if (_option.TypeConverterAssemblyQualifiedName != null && _option.TypeConverterAssemblyQualifiedName != string.Empty)
                     {
-                        Type t = Type.GetType(_option.TypeConverterAssemblyQualifiedName);
+                        var t = Type.GetType(_option.TypeConverterAssemblyQualifiedName);
                         if (t != null)
                         {
-                            ConstructorInfo ci = t.GetConstructor(Type.EmptyTypes);
-                            object converter = ci.Invoke(null);
+                            var ci = t.GetConstructor(Type.EmptyTypes);
+                            var converter = ci.Invoke(null);
                             if (converter != null)
                                 return (TypeConverter)converter;
                         }
@@ -176,7 +174,7 @@ namespace Carbon.Configuration
 		{
 			get
 			{
-                Type t = XmlConfigurationOptionTypeUtilities.GetType(_option);
+                var t = XmlConfigurationOptionTypeUtilities.GetType(_option);
 				if (t != null)
 					return t;
 
@@ -193,7 +191,7 @@ namespace Carbon.Configuration
 		{
 			if (component != null)
 			{
-				Type t = component.GetType();
+				var t = component.GetType();
 				if (t != null)
 				{
 //					System.Diagnostics.Debug.WriteLine("GetValue('" + t.FullName + "' EditMode=" + _option.IsBeingEdited.ToString() + ")");
@@ -216,7 +214,7 @@ namespace Carbon.Configuration
 		{
 			if (component != null)
 			{
-				Type t = component.GetType();
+				var t = component.GetType();
 				if (t != null)
 				{
 //					System.Diagnostics.Debug.WriteLine("\tSetValue('" + t.FullName + "' EditMode=" + _option.IsBeingEdited.ToString() + ")");

@@ -20,20 +20,13 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.IO;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-
-using SDBees.DB;
-
-//using EasiReports;
 using fyiReporting.RdlViewer;
+using SDBees.DB;
+//using EasiReports;
 
 namespace SDBees.Reporting
 {
@@ -47,7 +40,7 @@ namespace SDBees.Reporting
             set { _sReportname = value; }
         }
 
-        bool _bNewReport = false;
+        bool _bNewReport;
 
         public bool NewReport
         {
@@ -56,7 +49,7 @@ namespace SDBees.Reporting
         }
 
         //Control for the Viewer
-        fyiReporting.RdlViewer.RdlViewer _ctlReport = null;
+        RdlViewer _ctlReport;
         //EasiReports.ReportControl _ctlReport = null;
 
         public ReportDLG()
@@ -79,17 +72,17 @@ namespace SDBees.Reporting
         private void ReportDLG_Load(object sender, EventArgs e)
         {
             _ctlReport = new RdlViewer();
-            this.Controls.Add(_ctlReport);
+            Controls.Add(_ctlReport);
             _ctlReport.Dock = DockStyle.Fill;
 
             //this._ctlReport.ShowButtons = true;
             //this._ctlReport.HelpNamespace = Application.StartupPath + "\\help\\EasiReports.chm";
             //this._ctlReport.HelpNavigator = HelpNavigator.Topic;
 
-            m_currentReportFile = this._sReportname + ".rdl";
+            m_currentReportFile = _sReportname + ".rdl";
             if (File.Exists(m_currentReportFile))
             {
-                this._ctlReport.SourceRdl = m_currentReportFile;
+                _ctlReport.SourceRdl = m_currentReportFile;
                 
             }
             //_report.DataSourceObject = _myDB.Database.Connection.GetReadOnlyDataSet();

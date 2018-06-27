@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
-
-using System.Runtime.Serialization;
-
+﻿using System.Runtime.Serialization;
 
 namespace SDBees.Core.Model
 {
@@ -32,7 +25,7 @@ namespace SDBees.Core.Model
 
         public SDBeesCoordinate(string serialized)
         {
-            SDBeesCoordinate coord = SerializationTools.Deserialize<SDBeesCoordinate>(serialized);
+            var coord = SerializationTools.Deserialize<SDBeesCoordinate>(serialized);
             m_x = coord.m_x;
             m_y = coord.m_y;
             m_z = coord.m_z;

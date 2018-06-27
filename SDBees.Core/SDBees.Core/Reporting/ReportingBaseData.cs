@@ -20,20 +20,17 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 
+using System.Collections;
 using SDBees.DB;
 
 namespace SDBees.Reporting
 {
-    class ReportingBaseData : SDBees.DB.Object
+    class ReportingBaseData : Object
     {
         #region Private Data Members
 
-        private static Table gTable = null;
+        private static Table gTable;
 
         #endregion
 
@@ -70,7 +67,7 @@ namespace SDBees.Reporting
 
         public static void InitTableSchema(Database database)
         {
-            ReportingBaseData baseData = new ReportingBaseData();
+            var baseData = new ReportingBaseData();
             baseData.InitTableSchema(ref gTable, database);
 
             // Now add columns always required by this plugIn

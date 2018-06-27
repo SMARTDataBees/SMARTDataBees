@@ -72,14 +72,14 @@ namespace SDBees.Core.Model.Math
         {
             get 
             { 
-                List<Unit> _lst = new List<Unit>();
-                _lst.Add(Unit.Centimeters);
-                _lst.Add(Unit.Decimeters);
-                _lst.Add(Unit.Feet);
-                _lst.Add(Unit.Inches);
-                _lst.Add(Unit.Meters);
-                _lst.Add(Unit.Millimeters);
-                _lst.Add(Unit.MillimeterSquare);
+                var _lst = new List<Unit>();
+                _lst.Add(Centimeters);
+                _lst.Add(Decimeters);
+                _lst.Add(Feet);
+                _lst.Add(Inches);
+                _lst.Add(Meters);
+                _lst.Add(Millimeters);
+                _lst.Add(MillimeterSquare);
                 return _lst; 
             }
         }
@@ -166,7 +166,7 @@ namespace SDBees.Core.Model.Math
             /// <summary>
             /// mm²
             /// </summary>
-            MillimeterSquare,
+            MillimeterSquare
         }
 
         /// <summary>
@@ -315,7 +315,7 @@ namespace SDBees.Core.Model.Math
         {
             foreach (var type in AllUnitTypes)
             {
-                if (this.Type == type.Type)
+                if (Type == type.Type)
                     return type.SymbolName;
             }
             return "";

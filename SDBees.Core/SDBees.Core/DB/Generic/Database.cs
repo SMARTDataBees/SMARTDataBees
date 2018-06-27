@@ -20,10 +20,9 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
+
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SDBees.DB
 {
@@ -50,7 +49,6 @@ namespace SDBees.DB
         // Optional caching of table names for improved performance
         private Hashtable mTableNameCache;
         private bool mUseTableNameCaching;
-        private bool mUseGlobalCaching;
 
         #endregion
 
@@ -213,17 +211,7 @@ namespace SDBees.DB
         /// <summary>
         /// Get or Set the database to use global caching
         /// </summary>
-        public bool UseGlobalCaching
-        {
-            get { return mUseGlobalCaching; }
-            set
-            {
-                if (mUseGlobalCaching != value)
-                {
-                    mUseGlobalCaching = value;
-                }
-            }
-        }
+        public bool UseGlobalCaching { get; set; }
 
         #endregion
 
@@ -256,7 +244,7 @@ namespace SDBees.DB
 
             mTableNameCache = null;
             mUseTableNameCaching = true;
-            mUseGlobalCaching = false;
+            UseGlobalCaching = false;
         }
 
         #endregion
@@ -320,10 +308,6 @@ namespace SDBees.DB
                 mConnection = null;
                 mOpenConnectionCount = 0;
             }
-            else
-            {
-                // Display error...
-            }
 
             return mOpenConnectionCount;
         }
@@ -338,7 +322,7 @@ namespace SDBees.DB
         /// <returns></returns>
         public virtual int TableNames(ref ArrayList names, ref Error error) // Overridden in SQLiteDatabase!
         {
-            int numTables = 0;
+            var numTables = 0;
 
             // could be recursive... think about a solution...
             // UpdateTableNameCache(ref error);
@@ -349,7 +333,7 @@ namespace SDBees.DB
 
                 foreach (DictionaryEntry entry in mTableNameCache)
                 {
-                    string name = (string)entry.Value;
+                    var name = (string)entry.Value;
                     names.Add(name);
                 }
 
@@ -357,7 +341,7 @@ namespace SDBees.DB
             }
             else
             {
-                string criteria = "(TABLE_NAME NOT LIKE 'sys%') AND (TABLE_NAME <> 'dtproperties') AND (TABLE_SCHEMA = '" + this.Name + "')";
+                var criteria = "(TABLE_NAME NOT LIKE 'sys%') AND (TABLE_NAME <> 'dtproperties') AND (TABLE_SCHEMA = '" + Name + "')";
 
                 numTables = GetRowValues(ref names, "INFORMATION_SCHEMA.Tables", "TABLE_NAME", criteria, false, true, 0, ref error);
             }
@@ -374,9 +358,9 @@ namespace SDBees.DB
         /// <returns></returns>
         public virtual bool CreateTable(Table table, ref Error error)
         {
-            Connection conn = Open(false, ref error);
+            var conn = Open(false, ref error);
 
-            bool success = false;
+            var success = false;
 
             // For now this will stop the caching...
             UseTableNameCaching = false;
@@ -400,9 +384,9 @@ namespace SDBees.DB
         /// <returns></returns>
         public virtual bool UpdateTable(Table table, Table oldTable, ref Error error)
         {
-            Connection conn = Open(false, ref error);
+            var conn = Open(false, ref error);
 
-            bool success = false;
+            var success = false;
 
             if (conn != null)
             {
@@ -422,7 +406,7 @@ namespace SDBees.DB
         /// <returns></returns>
         public virtual Table ReadTable(string tableName, ref Error error)
         {
-            Connection conn = Open(false, ref error);
+            var conn = Open(false, ref error);
 
             Table table = null;
 
@@ -446,9 +430,9 @@ namespace SDBees.DB
         /// <returns>True if successful</returns>
         public virtual bool RenameColumn(string tableName, string oldColumnName, string newColumnName, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
-            Connection conn = Open(false, ref error);
+            var conn = Open(false, ref error);
 
             if (conn != null)
             {
@@ -469,9 +453,9 @@ namespace SDBees.DB
         /// <returns>True if successful</returns>
         public virtual bool EraseColumn(string tableName, string columnName, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
-            Connection conn = Open(false, ref error);
+            var conn = Open(false, ref error);
 
             if (conn != null)
             {
@@ -492,10 +476,10 @@ namespace SDBees.DB
         /// <returns></returns>
         public virtual int GetTableColumns(string tableName, out List<string> columnNames, ref Error error)
         {
-            Connection conn = Open(false, ref error);
+            var conn = Open(false, ref error);
 
             columnNames = null;
-            int numColumns = 0;
+            var numColumns = 0;
 
             if (conn != null)
             {
@@ -515,9 +499,9 @@ namespace SDBees.DB
         /// <returns></returns>
         public virtual bool DeleteTable(string tableName, ref Error error)
         {
-            Connection conn = Open(false, ref error);
+            var conn = Open(false, ref error);
 
-            bool success = false;
+            var success = false;
 
             // For now this will stop the caching...
             UseTableNameCaching = false;
@@ -540,7 +524,7 @@ namespace SDBees.DB
         /// <returns></returns>
         public virtual bool TableExists(string tableName, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if (mUseTableNameCaching)
             {
@@ -554,7 +538,7 @@ namespace SDBees.DB
 
                 Error.Display("ERROR in table name cache!", cacheError);
             }
-            Connection conn = Open(false, ref error);
+            var conn = Open(false, ref error);
 
             if (conn != null)
             {
@@ -600,11 +584,11 @@ namespace SDBees.DB
         /// <param name="attributes">Attributes of this row</param>
         /// <param name="error">Contains error information if this fails</param>
         /// <returns></returns>
-        public object CreateRow(Table table, Column idColumn, Columns uniqueColumns, Attributes attributes, ref Error error)
+        public object CreateRow(Table table, Column idColumn, List<Column> uniqueColumns, Attributes attributes, ref Error error)
         {
             object id = null;
 
-            Connection conn = Open(true, ref error);
+            var conn = Open(true, ref error);
 
             if (conn != null)
             {
@@ -627,9 +611,9 @@ namespace SDBees.DB
         /// <returns></returns>
         public bool UpdateRow(Table table, Column idColumn, object id, Attributes attributes, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
-            Connection conn = Open(true, ref error);
+            var conn = Open(true, ref error);
 
             if (conn != null)
             {
@@ -652,9 +636,9 @@ namespace SDBees.DB
         /// <returns></returns>
         public bool LoadRow(Table table, Column idColumn, object id, ref Attributes attributes, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
-            Connection conn = Open(true, ref error);
+            var conn = Open(true, ref error);
 
             if (conn != null)
             {
@@ -675,9 +659,9 @@ namespace SDBees.DB
         /// <returns></returns>
         public bool EraseRow(Table table, string criteria, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
-            Connection conn = Open(true, ref error);
+            var conn = Open(true, ref error);
 
             if (conn != null)
             {
@@ -756,13 +740,13 @@ namespace SDBees.DB
         public object SelectSingle(string tableName, string searchColumn, string criteria, ref Error error)
         {
             ArrayList values = null;
-            int numFound = GetRowValues(ref values, tableName, searchColumn, criteria, true, true, 0, ref error);
+            var numFound = GetRowValues(ref values, tableName, searchColumn, criteria, true, true, 0, ref error);
             if (numFound == 1)
             {
                 return values[0];
             }
 
-            error = new Error("SelectSingle matches " + numFound + " entries!", 9999, this.GetType(), error);
+            error = new Error("SelectSingle matches " + numFound + " entries!", 9999, GetType(), error);
             return null;
         }
 
@@ -775,9 +759,9 @@ namespace SDBees.DB
         /// <returns>Formated criteria string to use in SQL queries</returns>
         public string FormatCriteria(Attribute attribute, DbBinaryOperator operation, ref Error error)
         {
-            string criteria = "";
+            var criteria = "";
 
-            Connection conn = Open(true, ref error);
+            var conn = Open(true, ref error);
 
             if (conn != null)
             {
@@ -799,9 +783,9 @@ namespace SDBees.DB
         /// <returns>Formated criteria string to use in SQL queries</returns>
         public string FormatCriteria(string criteria1, string criteria2, DbBooleanOperator operation, ref Error error)
         {
-            string criteria = "";
+            var criteria = "";
 
-            Connection conn = Open(true, ref error);
+            var conn = Open(true, ref error);
 
             if (conn != null)
             {
@@ -822,9 +806,9 @@ namespace SDBees.DB
         /// <returns>Formated criteria string to use in SQL queries</returns>
         public string FormatCriteria(ArrayList criterias, DbBooleanOperator operation, ref Error error)
         {
-            string criteria = "";
+            var criteria = "";
 
-            Connection conn = Open(true, ref error);
+            var conn = Open(true, ref error);
 
             if (conn != null)
             {
@@ -844,9 +828,9 @@ namespace SDBees.DB
         /// <returns>true if successful</returns>
         public bool ExecuteCommand(string cmdString, ref Error error)
         {
-            Connection conn = Open(false, ref error);
+            var conn = Open(false, ref error);
 
-            bool success = false;
+            var success = false;
 
             if (conn != null)
             {
@@ -865,7 +849,7 @@ namespace SDBees.DB
         /// <returns>A valid column name as similar as the given name as possible</returns>
         public virtual string MakeValidColumnName(string columnName)
         {
-            string result = columnName;
+            var result = columnName;
 
             result = result.Replace("Ä", "AE");
             result = result.Replace("Ö", "OE");
@@ -930,7 +914,7 @@ namespace SDBees.DB
         /// <returns></returns>
         protected virtual bool GetVersion(ref string description, ref int majorVersion, ref int minorVersion)
         {
-            bool foundVersion = false;
+            var foundVersion = false;
 
             description = mName + " (" + mServer.Name + ")";
             majorVersion = 1;
@@ -954,9 +938,9 @@ namespace SDBees.DB
         protected int GetRowValues(ref ArrayList values, string tableName, string columnName, string criteria, bool allowMultiple,
                         bool clearFirst, int topCount, ref Error error)
         {
-            int numTables = 0;
+            var numTables = 0;
 
-            Connection conn = Open(true, ref error);
+            var conn = Open(true, ref error);
 
             if (conn != null)
             {

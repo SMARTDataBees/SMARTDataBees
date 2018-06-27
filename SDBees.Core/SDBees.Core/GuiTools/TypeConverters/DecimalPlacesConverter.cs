@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
+using System.Windows.Forms;
 
 namespace SDBees.Core.GuiTools.TypeConverters
 {
@@ -25,7 +23,7 @@ namespace SDBees.Core.GuiTools.TypeConverters
 			return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
 		}
 
-		static bool inConversionMode = false;
+		static bool inConversionMode;
 		/// <summary>
 		/// Converts the given object to the type of this converter, using the specified context and culture information.
 		/// Called, when a property value is changed in UI.
@@ -36,11 +34,11 @@ namespace SDBees.Core.GuiTools.TypeConverters
 		/// <returns>An <see cref="T:System.Object" /> that represents the converted value.</returns>
 		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
 		{
-			Int16 places = 2;
+			short places = 2;
 
 			if (value != null)
 			{
-				if (Int16.TryParse(value.ToString(), out places))
+				if (short.TryParse(value.ToString(), out places))
 				{
 					if (!inConversionMode)
 					{
@@ -48,7 +46,7 @@ namespace SDBees.Core.GuiTools.TypeConverters
 						{
 							inConversionMode = true;
 							places = 2;
-							System.Windows.Forms.MessageBox.Show("No values lower than 0 and greater than 9 allowed!");
+							MessageBox.Show("No values lower than 0 and greater than 9 allowed!");
 							inConversionMode = false;
 						}
 					}
@@ -60,7 +58,7 @@ namespace SDBees.Core.GuiTools.TypeConverters
 
 		public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
 		{
-			if(destinationType == typeof(Int16))
+			if(destinationType == typeof(short))
 			{ }
 			return true;
 		}
@@ -81,7 +79,7 @@ namespace SDBees.Core.GuiTools.TypeConverters
 
 			if (value != null)
 			{
-				if (!Int16.TryParse(value.ToString(), out places))
+				if (!short.TryParse(value.ToString(), out places))
 					places = 2;
 			}
 
