@@ -23,9 +23,11 @@
 #endregion // Header
 
 #region Namespaces
+
 using System;
 using System.Windows.Forms;
 using SDBees.GuiTools;
+
 #endregion // Namespaces
 
 namespace AdnRme
@@ -79,7 +81,7 @@ namespace AdnRme
 #if true //USE_RALFS_PROGRESS_FORM
     public ProgressForm(IntPtr parentWindowHandle)
     {
-        string caption = " "; string format = null; int max = 100;
+        var caption = " "; string format = null; var max = 100;
 
         _format = format;
         InitializeComponent();
@@ -100,7 +102,7 @@ namespace AdnRme
 
     private string m_text2 = "";
     
-    private int m_max = 0;
+    private int m_max;
 
     public void Set(string caption, int max, string text1, string text2)
     {
@@ -153,7 +155,7 @@ namespace AdnRme
         {
             _format = m_text2;
 
-            label1.Text = string.Format(_format, progressBar1.Value, m_max.ToString());
+            label1.Text = string.Format(_format, progressBar1.Value, m_max);
         }
 
         Application.DoEvents();
@@ -166,7 +168,7 @@ namespace AdnRme
 
       if( null != _format )
       {
-        label1.Text = string.Format( _format, progressBar1.Value, m_max.ToString());
+        label1.Text = string.Format( _format, progressBar1.Value, m_max);
       }
       
       //Application.DoEvents();

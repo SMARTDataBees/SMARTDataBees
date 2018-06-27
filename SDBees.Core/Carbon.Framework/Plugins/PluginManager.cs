@@ -30,10 +30,7 @@
 //	============================================================================
 
 using System;
-
 using Carbon.Common;
-using Carbon.Plugins;
-using Carbon.Plugins.Attributes;
 using Carbon.Plugins.Providers;
 using Carbon.UI;
 
@@ -55,14 +52,14 @@ namespace Carbon.Plugins
 		/// <returns></returns>
 		public static TypeCollection LoadPluginTypes(IProgressViewer progressViewer, PluginProviderCollection pluginProviders)
 		{
-			TypeCollection pluginTypes = new TypeCollection();
+			var pluginTypes = new TypeCollection();
 			foreach (PluginProvider provider in pluginProviders)
 			{
 				try
 				{
 					Log.WriteLine("Loading Plugin Types. PluginProvider: '{0}'.", provider.Name);
 
-					TypeCollection types = provider.LoadPluginTypes(progressViewer);
+					var types = provider.LoadPluginTypes(progressViewer);
 					if (types != null)
 					{
 						pluginTypes.AddRange(types);
@@ -86,7 +83,7 @@ namespace Carbon.Plugins
 		{
 			Log.WriteLine("Sorting PluginDescriptor Collection. LeastDependentFirst: '{0}'.", leastDependentFirst.ToString());
 
-			PluginDescriptor[] descriptors = descriptorCollection.ToArray();
+			var descriptors = descriptorCollection.ToArray();
 			PluginDescriptor.Sort(descriptors, leastDependentFirst);
 
 			descriptorCollection.Clear();
@@ -103,16 +100,16 @@ namespace Carbon.Plugins
 		/// <returns></returns>
 		public static PluginDescriptorCollection CreatePluginDescriptors(IProgressViewer progressViewer, TypeCollection types)
 		{
-			PluginDescriptorCollection descriptors = new PluginDescriptorCollection();
+			var descriptors = new PluginDescriptorCollection();
 			foreach (Type type in types)
 			{
 				try
 				{
-					string message = string.Format("Creating PluginDescriptor, Type: '{0}'.", type.FullName);
+					var message = $"Creating PluginDescriptor, Type: '{type.FullName}'.";
                     ProgressViewer.SetExtendedDescription(progressViewer, message);
 					Log.WriteLine(message);
 
-                    PluginDescriptor descriptor = new PluginDescriptor(type);
+                    var descriptor = new PluginDescriptor(type);
 
                     descriptors.Add(descriptor);
 				}
@@ -224,7 +221,7 @@ namespace Carbon.Plugins
 				}
 				else
 				{
-					Log.WriteLine(string.Format("Skipped Plugin: '{0}' was not created.", descriptor.PluginName));
+					Log.WriteLine($"Skipped Plugin: '{descriptor.PluginName}' was not created.");
 				}
 			}
             
@@ -253,7 +250,7 @@ namespace Carbon.Plugins
 				}
 				else
 				{
-					Log.WriteLine(string.Format("Skipped Plugin: '{0}' was not created.", descriptor.PluginName));
+					Log.WriteLine($"Skipped Plugin: '{descriptor.PluginName}' was not created.");
 				}
 			}
         }
@@ -321,7 +318,7 @@ namespace Carbon.Plugins
 		private static void MarkDescriptorIfCircularlyDependent(PluginDescriptor descriptor, PluginDescriptorCollection descriptors)
 		{
 			// check each dependency in that descriptor depends on
-			foreach(Type type in descriptor.PluginDependencies)
+			foreach(var type in descriptor.PluginDependencies)
 			{
 				// against all the other descriptors
 				foreach(PluginDescriptor otherDescriptor in descriptors)
@@ -349,7 +346,7 @@ namespace Carbon.Plugins
 		private static void MarkDescriptorIfDependenciesAreMissingDependencyOrAreCircularlyDependent(PluginDescriptor descriptor, PluginDescriptorCollection descriptors)
 		{
 			// check each dependency in that descriptor depends on
-			foreach(Type type in descriptor.PluginDependencies)
+			foreach(var type in descriptor.PluginDependencies)
 			{
 				// against all the other descriptors
 				foreach(PluginDescriptor otherDescriptor in descriptors)
@@ -385,7 +382,7 @@ namespace Carbon.Plugins
         /// <returns></returns>
         private static bool AreDependenciesCreated(PluginDescriptor descriptor, PluginDescriptorCollection descriptors)
         {
-            foreach (Type type in descriptor.PluginDependencies)
+            foreach (var type in descriptor.PluginDependencies)
                 if (descriptors[type].PluginInstance == null)
                     return false;            
             return true;
@@ -402,11 +399,11 @@ namespace Carbon.Plugins
             {
                 TypeUtilities.AssertTypeIsSubclassOfBaseType(descriptor.PluginType, typeof(Plugin));
 
-				string message = string.Format("Creating Plugin: '{0}'.", descriptor.PluginName);
+				var message = $"Creating Plugin: '{descriptor.PluginName}'.";
 				ProgressViewer.SetExtendedDescription(progressViewer, message);
 				Log.WriteLine(message);
 
-                Plugin plugin = (Plugin)TypeUtilities.CreateInstanceOfType(descriptor.PluginType, Type.EmptyTypes, new object[] {});
+                var plugin = (Plugin)TypeUtilities.CreateInstanceOfType(descriptor.PluginType, Type.EmptyTypes, new object[] {});
                 
                 descriptor.AttachPluginInstance(plugin);
             }
@@ -423,7 +420,7 @@ namespace Carbon.Plugins
         /// <param name="descriptor">The descriptor that contains the plugin to start.</param>
         private static void StartPlugin(IProgressViewer progressViewer, PluginDescriptor descriptor)
         {			
-            ProgressViewer.SetExtendedDescription(progressViewer, string.Format("Starting Plugin: '{0}'.", descriptor.PluginName));
+            ProgressViewer.SetExtendedDescription(progressViewer, $"Starting Plugin: '{descriptor.PluginName}'.");
 
             // start the plugin
             descriptor.PluginInstance.OnStart(PluginContext.Current, new PluginDescriptorEventArgs(descriptor));			
@@ -436,7 +433,7 @@ namespace Carbon.Plugins
         /// <param name="descriptor">The descriptor that contains the plugin to stop.</param>
         private static void StopPlugin(IProgressViewer progressViewer, PluginDescriptor descriptor)
         {
-			ProgressViewer.SetExtendedDescription(progressViewer, string.Format("Stopping Plugin: '{0}'.", descriptor.PluginName));
+			ProgressViewer.SetExtendedDescription(progressViewer, $"Stopping Plugin: '{descriptor.PluginName}'.");
 
             // stop the plugin
             descriptor.PluginInstance.OnStop(PluginContext.Current, new PluginDescriptorEventArgs(descriptor));

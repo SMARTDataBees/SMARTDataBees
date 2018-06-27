@@ -31,9 +31,7 @@
 
 using System;
 using System.Reflection;
-using System.Threading;
 using System.Windows.Forms;
-
 using Carbon.Common;
 using Carbon.Plugins;
 
@@ -53,7 +51,7 @@ namespace Carbon
 		/// entry point that should be called by the hosting executable.
 		/// </summary>
 		/// <param name="args">An array of command line arguments</param>
-		[STAThread()]
+		[STAThread]
 		public static void CreatePluginContext(Assembly assembly, string[] args, bool silent, bool setApplicationDefaults = true)
 		{            
 			try
@@ -65,7 +63,7 @@ namespace Carbon
                 }
 
 				// create a new plugin context
-				using (PluginContext context = new PluginContext())
+				using (var context = new PluginContext())
 				{
 					// run the application in this context
 					context.Run(assembly, args, silent);
@@ -74,7 +72,7 @@ namespace Carbon
 			catch(Exception ex)
 			{
 				Log.WriteLine(ex);
-				MessageBox.Show(null, string.Format("Additional Information: {0}", ex.Message) , "Critical Application Exception Encountered", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show(null, $"Additional Information: {ex.Message}", "Critical Application Exception Encountered", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 			finally
 			{

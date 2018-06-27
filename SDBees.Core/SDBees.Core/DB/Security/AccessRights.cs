@@ -20,10 +20,10 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.Text;
+using System.Linq;
 
 namespace SDBees.DB
 {
@@ -94,7 +94,7 @@ namespace SDBees.DB
         public const int All = 0x7fffffff;
 
         #endregion
-    };
+    }
 
     /// <summary>
     /// Class specifying the access rights for a user/group
@@ -122,7 +122,7 @@ namespace SDBees.DB
         {
             get
             {
-                int accessIndex = (int)mBaseData.GetPropertyByColumn("type");
+                var accessIndex = (int)mBaseData.GetPropertyByColumn("type");
                 if (accessIndex == 0)
                     return AccessType.Server;
                 if (accessIndex == 1)
@@ -163,18 +163,18 @@ namespace SDBees.DB
         /// <summary>
         /// Flags representing the rights explicitly granted
         /// </summary>
-        public Int32 AllowedFlags
+        public int AllowedFlags
         {
-            get { return (Int32)mBaseData.GetPropertyByColumn("allowflags"); }
+            get { return (int)mBaseData.GetPropertyByColumn("allowflags"); }
             set { mBaseData.SetPropertyByColumn("allowflags", value); }
         }
 
         /// <summary>
         /// Flags representing the rights explicitly denied
         /// </summary>
-        public Int32 DeniedFlags
+        public int DeniedFlags
         {
-            get { return (Int32)mBaseData.GetPropertyByColumn("denyflags"); }
+            get { return (int)mBaseData.GetPropertyByColumn("denyflags"); }
             set { mBaseData.SetPropertyByColumn("denyflags", value); }
         }
 
@@ -231,9 +231,9 @@ namespace SDBees.DB
         /// <returns></returns>
         public string Description()
         {
-            string result = "Unknown";
+            var result = "Unknown";
 
-            AccessType type = Type;
+            var type = Type;
             if (type == AccessType.Server)
             {
                 result = "Server Zugriff";
@@ -261,7 +261,7 @@ namespace SDBees.DB
         /// <returns></returns>
         public bool Save(ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if ((error == null) && (mBaseData.Database != null))
             {
@@ -278,7 +278,7 @@ namespace SDBees.DB
         /// <returns></returns>
         public bool Remove(ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if ((error == null) && (mBaseData.Database != null))
             {
@@ -297,7 +297,7 @@ namespace SDBees.DB
         /// <returns></returns>
         public bool UpdateAccessRightsOnServer(Server server, string loginName, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if (Type == AccessType.Server)
             {
@@ -312,7 +312,7 @@ namespace SDBees.DB
             else
             {
                 // TBD: Table and column access...
-                error = new Error("Not implemented yet", 1, this.GetType(), error);
+                error = new Error("Not implemented yet", 1, GetType(), error);
             }
 
             return success;
@@ -327,17 +327,16 @@ namespace SDBees.DB
         /// <returns>number of defined access rights</returns>
         public static int GetAccessRightsForUserId(Server server, string userId, ref ArrayList objectIds)
         {
-            int numFound = 0;
-
             Error error = null;
 
-            Database database = server.SecurityDatabase;
+            var database = server.SecurityDatabase;
 
-            RightsBaseData baseData = new RightsBaseData();
-            Attribute attribute = new Attribute(baseData.Table.Columns["userid"], userId);
-            string criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
+            var baseData = new RightsBaseData();
+            var column = baseData.Table.Columns.FirstOrDefault(clmn => clmn.Name.Equals("userid"));
+            var attribute = new Attribute(column, userId);
+            var criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
 
-            numFound = database.Select(baseData.Table, baseData.Table.PrimaryKey, criteria, ref objectIds, ref error);
+            var numFound = database.Select(baseData.Table, baseData.Table.PrimaryKey, criteria, ref objectIds, ref error);
 
             Error.Display("GetAccessRightsForUserId failed!", error);
 

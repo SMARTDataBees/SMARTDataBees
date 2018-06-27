@@ -38,7 +38,7 @@ namespace Carbon.Common
 	/// <summary>
 	/// Provides methods commonly used to manipulate Xml documents.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public static class XmlUtilities
 	{
 		#region XmlAttributeMissingException
@@ -48,42 +48,27 @@ namespace Carbon.Common
 		/// </summary>
 		public sealed class XmlAttributeMissingException : ApplicationException
 		{
-			private readonly XmlNode _node;
-			private readonly string _attributeName;
-
-			/// <summary>
+		    /// <summary>
 			/// Initializes a new instance of the XmlAttributeMissingException class
 			/// </summary>
 			/// <param name="node">The XmlNode missing the attribute</param>
 			/// <param name="attributeName">The name of the attribute missing</param>
 			internal XmlAttributeMissingException(XmlNode node, string attributeName) : 
-				base(string.Format("The XmlNode '{0}' does not have an attribute named '{1}'.", node.Name, attributeName))
+				base($"The XmlNode '{node.Name}' does not have an attribute named '{attributeName}'.")
 			{
-				_node = node;
-				_attributeName = attributeName;
+				Node = node;
+				AttributeName = attributeName;
 			}
 
 			/// <summary>
 			/// Returns the XmlNode that is missing the attribute
 			/// </summary>
-			public XmlNode Node
-			{
-				get
-				{
-					return _node;
-				}
-			}
+			public XmlNode Node { get; }
 
-			/// <summary>
+		    /// <summary>
 			/// Returns the name of the attribute that is missing on the XmlNode
 			/// </summary>
-			public string AttributeName
-			{
-				get
-				{
-					return _attributeName;
-				}
-			}
+			public string AttributeName { get; }
 		}
 
 		#endregion        
@@ -98,16 +83,17 @@ namespace Carbon.Common
 		public static XmlAttribute GetAttribute(XmlNode node, string attributeName, bool throwExceptionIfMissing)
 		{
 			if (node == null)
-				throw new ArgumentNullException("node");
+				throw new ArgumentNullException(nameof(node));
 
-			if (attributeName == null || attributeName == string.Empty)
-				throw new ArgumentNullException("attributeName");
+			if (string.IsNullOrEmpty(attributeName))
+				throw new ArgumentNullException(nameof(attributeName));
 
-			foreach (XmlAttribute attribute in node.Attributes)
-				if (string.Compare(attribute.Name, attributeName, true) == 0)
-					return attribute;
+		    if (node.Attributes != null)
+		        foreach (XmlAttribute attribute in node.Attributes)
+		            if (string.Compare(attribute.Name, attributeName, true) == 0)
+		                return attribute;
 
-			if (throwExceptionIfMissing)
+		    if (throwExceptionIfMissing)
 				throw new XmlAttributeMissingException(node, attributeName);
 
 			return null;

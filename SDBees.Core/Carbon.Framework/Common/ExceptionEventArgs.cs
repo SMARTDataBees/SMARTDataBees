@@ -44,8 +44,8 @@ namespace Carbon.Common
         /// Initializes a new instance of the ExceptionEventArgs class.
         /// </summary>
         /// <param name="exception">The Exception that is the context of the event.</param>
-		public ExceptionEventArgs(Exception exception) : base()
-		{
+		public ExceptionEventArgs(Exception exception)
+        {
 			_exception = exception;
 		}
 

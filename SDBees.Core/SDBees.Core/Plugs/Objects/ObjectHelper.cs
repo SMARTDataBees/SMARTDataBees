@@ -20,64 +20,40 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SDBees.Plugs.Objects
 {
   public class ObjectHelper
   {
-    private string _sTypeOf = null;
-    private string _Name = null;
-    private string _TabPageLabel = null;
-    private object _Plugin = null;
-
-    /// <summary>
+      /// <summary>
     /// The Type of the HelperPlugin
     /// </summary>
-    public string PluginType
-    {
-      get { return this._sTypeOf; }
-      set { this._sTypeOf = value; }
-    }
+    public string PluginType { get; set; }
 
-    /// <summary>
+      /// <summary>
     /// The Name of the HelperPlugin
     /// </summary>
-    public string PluginName
-    {
-      get { return this._Name; }
-      set { this._Name = value; }
-    }
+    public string PluginName { get; set; }
 
-    /// <summary>
+      /// <summary>
     /// The Label of TabPage for the HelperPlugin, "" if not to be displayed
     /// </summary>
-    public string PluginTabPageLabel
-    {
-        get { return this._TabPageLabel; }
-        set { this._TabPageLabel = value; }
-    }
+    public string PluginTabPageLabel { get; set; }
 
-    /// <summary>
+      /// <summary>
     /// The Plugin instance for the HelperPlugin
     /// </summary>
-    public object Plugin
-    {
-        get { return this._Plugin; }
-        set { this._Plugin = value; }
-    }
+    public object Plugin { get; set; }
 
-    /// <summary>
+      /// <summary>
     /// The Constructor for the HelperPlugin
     /// </summary>
     public ObjectHelper()
     {
-      _sTypeOf = "";
-      _Name = "";
-      _TabPageLabel = "";
-      _Plugin = null;
+      PluginType = "";
+      PluginName = "";
+      PluginTabPageLabel = "";
+      Plugin = null;
   }
   }
 }

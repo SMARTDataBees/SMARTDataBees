@@ -30,10 +30,7 @@
 //	============================================================================
 
 using System;
-using System.Diagnostics;
 using System.Reflection;
-
-using Carbon.Common;
 using Carbon.Common.Attributes;
 
 namespace Carbon.AutoUpdate.Common
@@ -89,10 +86,10 @@ namespace Carbon.AutoUpdate.Common
 		public static AutoUpdateProductDescriptor FromAssembly(Assembly assembly, Version version)
 		{			
 			// create a product descriptor
-			AutoUpdateProductDescriptor productDescriptor = new AutoUpdateProductDescriptor();				
+			var productDescriptor = new AutoUpdateProductDescriptor();				
 						
 			// grab its assembly name
-			AssemblyName assemblyName = assembly.GetName();
+			var assemblyName = assembly.GetName();
 
 			// set the name of the product
 			productDescriptor.Name = assemblyName.Name.Replace(".exe", null);
@@ -106,12 +103,12 @@ namespace Carbon.AutoUpdate.Common
 			productDescriptor.Version = version;
 			
 			// snag the product id attribute from the assembly
-			ProductIdentifierAttribute pia = ProductIdentifierAttribute.FromAssembly(assembly);
+			var pia = ProductIdentifierAttribute.FromAssembly(assembly);
 			if (pia != null)
 				productDescriptor.Id = pia.Id;
 
 			// snag the product requires registration attribute from the assembly
-			ProductRequiresRegistrationAttribute rra = ProductRequiresRegistrationAttribute.FromAssembly(assembly);
+			var rra = ProductRequiresRegistrationAttribute.FromAssembly(assembly);
 			if (rra != null)
 				productDescriptor.RequiresRegistration = rra.RequiresRegistration;
 		

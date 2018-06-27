@@ -20,15 +20,14 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using SDBees.DB;
 using System.IO;
+using System.Windows.Forms;
+using SDBees.Core.Global;
+using SDBees.DB.Generic;
+using SDBees.Main.Window;
 
 namespace SDBees.DB.Forms
 {
@@ -39,13 +38,13 @@ namespace SDBees.DB.Forms
 	{
 		#region Public Properties
 
-		BindingSource m_binding = null;
+		
 
-		private DB.Generic.ServerConfig m_Serverconfig;
+		private ServerConfig m_Serverconfig;
 		/// <summary>
 		/// Configurationfile for the available Servers
 		/// </summary>
-		public DB.Generic.ServerConfig Serverconfig
+		public ServerConfig Serverconfig
 		{
 			get { return m_Serverconfig; }
 			set { m_Serverconfig = value; }
@@ -58,7 +57,7 @@ namespace SDBees.DB.Forms
 			set
 			{
 				m_DialogTitle = value;
-				this.Text = m_DialogTitle + " project manager";
+				Text = m_DialogTitle + " project manager";
 			}
 		}
 
@@ -66,7 +65,7 @@ namespace SDBees.DB.Forms
 		{
 			get
 			{
-				return this.m_Password.Text;
+				return m_Password.Text;
 			}
 		}
 
@@ -84,7 +83,7 @@ namespace SDBees.DB.Forms
 
 				try
 				{
-					int index = m_Serverconfig.ConfigItems.IndexOf(m_Serverconfig.GetSelectedItem());
+					var index = m_Serverconfig.ConfigItems.IndexOf(m_Serverconfig.GetSelectedItem());
 					SelectLastItem(m_Serverconfig.ConfigItems[index]);
 				}
 				catch (Exception ex)
@@ -94,15 +93,15 @@ namespace SDBees.DB.Forms
 			}
 		}
 
-		private void SelectLastItem(Generic.ServerConfigItem serverConfigItem)
+		private void SelectLastItem(ServerConfigItem serverConfigItem)
 		{
-			foreach (ListViewItem item in this.m_listViewItems.Items)
+			foreach (ListViewItem item in m_listViewItems.Items)
 			{
-				Generic.ServerConfigItem sc = item.Tag as Generic.ServerConfigItem;
+				var sc = item.Tag as ServerConfigItem;
 				if(sc.ConfigItemGuid == serverConfigItem.ConfigItemGuid)
 				{
-					this.m_listViewItems.Items[item.Index].Selected = true;
-					this.m_listViewItems.Select();
+					m_listViewItems.Items[item.Index].Selected = true;
+					m_listViewItems.Select();
 					break;
 				}
 			}
@@ -123,17 +122,17 @@ namespace SDBees.DB.Forms
 
 		private void SetPropertyGridAndControls()
 		{
-			if (this.m_listViewItems.SelectedItems != null && this.m_listViewItems.SelectedItems.Count > 0)
+			if (m_listViewItems.SelectedItems != null && m_listViewItems.SelectedItems.Count > 0)
 			{
-				DB.Generic.ServerConfigItem item = this.m_listViewItems.SelectedItems[0].Tag as DB.Generic.ServerConfigItem;
+				var item = m_listViewItems.SelectedItems[0].Tag as ServerConfigItem;
 				m_Serverconfig.SelectedItemGuid = item.ConfigItemGuid;
 				m_propertyGridSelectedConfigItem.SelectedObject = m_Serverconfig.GetSelectedItem();
 
-				this.m_propertyGridSelectedConfigItem.Enabled = SDBees.Core.Global.SDBeesGlobalVars.GetLoginDlgPropertiesEnabled() == true ? true : false;
-				if (this.m_propertyGridSelectedConfigItem.Enabled)
-					this.m_propertyGridSelectedConfigItem.ExpandAllGridItems();
+				m_propertyGridSelectedConfigItem.Enabled = SDBeesGlobalVars.GetLoginDlgPropertiesEnabled() ? true : false;
+				if (m_propertyGridSelectedConfigItem.Enabled)
+					m_propertyGridSelectedConfigItem.ExpandAllGridItems();
 				else
-					this.m_propertyGridSelectedConfigItem.CollapseAllGridItems();
+					m_propertyGridSelectedConfigItem.CollapseAllGridItems();
 
 				m_buttonDelete.Enabled = true;
 			}
@@ -148,29 +147,29 @@ namespace SDBees.DB.Forms
 		{
 			try
 			{
-				this.m_propertyGridSelectedConfigItem.Dock = DockStyle.Fill;
+				m_propertyGridSelectedConfigItem.Dock = DockStyle.Fill;
 
 				//Load expected window title
-				string _title = Main.Window.MainWindowApplication.Current.GetApplicationTitle();
-				if (!String.IsNullOrEmpty(_title))
+				var _title = MainWindowApplication.Current.GetApplicationTitle();
+				if (!string.IsNullOrEmpty(_title))
 				{
 					DialogTitle = _title;
 				}
 
 				// Load icon for maindialog
-				this.Icon = Main.Window.MainWindowApplication.Current.GetApplicationIcon();
+				Icon = MainWindowApplication.Current.GetApplicationIcon();
 
-				string _icon = Main.Window.MainWindowApplication.Current.GetApplicationIconPath();
-				if (!String.IsNullOrEmpty(_icon))
+				var _icon = MainWindowApplication.Current.GetApplicationIconPath();
+				if (!string.IsNullOrEmpty(_icon))
 				{
-					string path = Path.GetDirectoryName(this.GetType().Assembly.Location);
-					string full = path + _icon;
-					FileInfo fi = new FileInfo(full);
+					var path = Path.GetDirectoryName(GetType().Assembly.Location);
+					var full = path + _icon;
+					var fi = new FileInfo(full);
 					if (fi.Exists)
 					{
-						Bitmap bmp = new Bitmap(fi.FullName);
-						bmp = new Bitmap(bmp, new Size(this.m_pictureBoxLogo.Image.Width, this.m_pictureBoxLogo.Image.Height));
-						this.m_pictureBoxLogo.Image = bmp;
+						var bmp = new Bitmap(fi.FullName);
+						bmp = new Bitmap(bmp, new Size(m_pictureBoxLogo.Image.Width, m_pictureBoxLogo.Image.Height));
+						m_pictureBoxLogo.Image = bmp;
 
 						//Setup Imagelist for tile view
 						m_imageListItems.Images.Add(bmp);
@@ -196,9 +195,9 @@ namespace SDBees.DB.Forms
 
 		private void m_buttonAddConfigItem_Click(object sender, EventArgs e)
 		{
-			DB.Generic.ServerConfigItem item = new Generic.ServerConfigItem();
+			var item = new ServerConfigItem();
 
-			OpenFileDialog dlgDatabase = new OpenFileDialog();
+			var dlgDatabase = new OpenFileDialog();
 
 			//dlgDatabase.Icon = Main.Window.MainWindowApplication.Current.GetApplicationIcon(); //Geht leider nicht, da der OpenFiledialog kein Icon unterstützt ...
 
@@ -209,7 +208,7 @@ namespace SDBees.DB.Forms
 			dlgDatabase.DefaultExt = "s3db";
 			dlgDatabase.CheckFileExists = false;
 
-			if (dlgDatabase.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+			if (dlgDatabase.ShowDialog(this) == DialogResult.OK)
 			{
 				//if (File.Exists(dlgDatabase.FileName))
 				//    MessageBox.Show("The database already exists! We will use it...", "Database creation", MessageBoxButtons.OK);
@@ -221,14 +220,14 @@ namespace SDBees.DB.Forms
 				m_Serverconfig.SelectedItemGuid = item.ConfigItemGuid;
 				m_Serverconfig.ConfigItems.Add(item);
 			}
-			this.FillListView();
-			this.SetFromObject();
+			FillListView();
+			SetFromObject();
 		}
 
 		private void m_propertyGridSelectedConfigItem_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
 		{
-			this.FillListView();
-			this.SetFromObject();
+			FillListView();
+			SetFromObject();
 		}
 
 		private void m_listViewItems_SelectedIndexChanged(object sender, EventArgs e)
@@ -243,9 +242,9 @@ namespace SDBees.DB.Forms
 
 		private void m_buttonDelete_Click(object sender, EventArgs e)
 		{
-			if (this.m_listViewItems.SelectedItems != null && this.m_listViewItems.SelectedItems.Count > 0)
+			if (m_listViewItems.SelectedItems != null && m_listViewItems.SelectedItems.Count > 0)
 			{
-				if (MessageBox.Show("Do you really want to delete the selected item? The projectfile won't be deleted!", "Project", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+				if (MessageBox.Show("Do you really want to delete the selected item? The projectfile won't be deleted!", "Project", MessageBoxButtons.YesNo) == DialogResult.Yes)
 				{
 					m_Serverconfig.DeleteSelectedItem();
 					FillListView();
@@ -256,9 +255,9 @@ namespace SDBees.DB.Forms
 
 		private void m_listViewItems_DoubleClick(object sender, EventArgs e)
 		{
-			if (this.m_listViewItems.SelectedItems != null && this.m_listViewItems.SelectedItems.Count > 0)
+			if (m_listViewItems.SelectedItems != null && m_listViewItems.SelectedItems.Count > 0)
 			{
-				this.m_buttonLogin.PerformClick();
+				m_buttonLogin.PerformClick();
 			}
 		}
 
@@ -270,28 +269,28 @@ namespace SDBees.DB.Forms
 
 		private void FillListView()
 		{
-			this.m_listViewItems.Items.Clear();
+			m_listViewItems.Items.Clear();
 
-			foreach (Generic.ServerConfigItem item in m_Serverconfig.ConfigItems)
+			foreach (var item in m_Serverconfig.ConfigItems)
 			{
-				ListViewItem lvi = new ListViewItem( Path.GetFileName(item.ConfigItemName));
+				var lvi = new ListViewItem( Path.GetFileName(item.ConfigItemName));
 				lvi.Tag = item;
 				lvi.ImageIndex = 0;
 				lvi.SubItems.Add(item.ServerDatabasePath);
 				lvi.SubItems.Add(item.ProjectDescription);
-				lvi.ToolTipText = String.Format("{0}", item.ServerDatabasePath);
+				lvi.ToolTipText = string.Format("{0}", item.ServerDatabasePath);
 
 				m_listViewItems.Items.Add(lvi);
 			}
 
-			this.m_listViewItems.Sort();
-			this.m_listViewItems.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+			m_listViewItems.Sort();
+			m_listViewItems.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 		}
 
 		private void bnLogin_Click(object sender, EventArgs e)
 		{
-			this.DialogResult = DialogResult.OK;
-			this.Close();
+			DialogResult = DialogResult.OK;
+			Close();
 		}
 
 		#endregion

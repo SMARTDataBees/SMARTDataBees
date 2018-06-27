@@ -20,16 +20,12 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.Runtime.Serialization;
+
 namespace SDBees.Core.Model
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-
-    using System.Runtime.Serialization;
-
-	/// <remarks>
+    /// <remarks>
 	/// Definition einer Eigenschaft
 	/// </remarks>
 	[DataContract]
@@ -37,105 +33,70 @@ namespace SDBees.Core.Model
 	{
         public SDBeesPropertyDefinition()
         {
-            m_Id = new SDBeesPropertyDefinitionId();
-            m_name = new SDBeesLabel();
-            m_propertyType = SDBeesPropertyValueType.Text;
+            Id = new SDBeesPropertyDefinitionId();
+            Name = new SDBeesLabel();
+            PropertyType = SDBeesPropertyValueType.Text;
         }
 
         public SDBeesPropertyDefinition(SDBeesPropertyDefinitionId id, SDBeesLabel name, SDBeesPropertyType propType)
         {
-            m_Id = id;
-            m_name = name;
-            m_propertyType = propType;
+            Id = id;
+            Name = name;
+            PropertyType = propType;
         }
 
         public SDBeesPropertyDefinition(string id, string name, string propertyTypeConverter, string propertyUiTypeEditor, bool browsable, bool editable)
         {
-            m_Id = id;
-            m_name = name;
-            m_propertyType = SDBeesPropertyValueType.Text;
-            m_propertyTypeConverter = propertyTypeConverter;
-            m_propertyUiTypeEditor = propertyUiTypeEditor;
-            m_Browsable = browsable;
-            m_Editable = editable;
+            Id = id;
+            Name = name;
+            PropertyType = SDBeesPropertyValueType.Text;
+            PropertyTypeConverter = propertyTypeConverter;
+            PropertyUiTypeEditor = propertyUiTypeEditor;
+            Browsable = browsable;
+            Editable = editable;
         }
 
-		private SDBeesPropertyDefinitionId m_Id;
-        /// <summary>
+	    /// <summary>
         /// Die Id der zu prüfenden Eigenschaft
         /// </summary>
         [DataMember]
-		public SDBeesPropertyDefinitionId Id
-		{
-            get { return m_Id; }
-            set { m_Id = value; }
-		}
+		public SDBeesPropertyDefinitionId Id { get; set; }
 
-		private SDBeesLabel m_name;
-        /// <summary>
+	    /// <summary>
         /// Name des Filters
         /// </summary>
         [DataMember]
-		public SDBeesLabel Name
-		{
-            get { return m_name; }
-            set { m_name = value; }
-		}
+		public SDBeesLabel Name { get; set; }
 
-        SDBeesPropertyType m_propertyType;
-        /// <summary>
+	    /// <summary>
         /// Datentyp der Eigenschaft
         /// </summary>
         [DataMember]
-        public SDBeesPropertyType PropertyType
-		{
-            get { return m_propertyType; }
-            set { m_propertyType = value; }
-		}
+        public SDBeesPropertyType PropertyType { get; set; }
 
-        string m_propertyUiTypeEditor;
-        /// <summary>
+	    /// <summary>
         /// UiTypeEditor for this Property
         /// </summary>
         [DataMember]
-        public string PropertyUiTypeEditor
-        {
-            get { return m_propertyUiTypeEditor; }
-            set { m_propertyUiTypeEditor = value; }
-        }
+        public string PropertyUiTypeEditor { get; set; }
 
-        string m_propertyTypeConverter;
-        /// <summary>
+	    /// <summary>
         /// TypeConverter for this Property
         /// </summary>
         [DataMember]
-        public string PropertyTypeConverter
-        {
-            get { return m_propertyTypeConverter; }
-            set { m_propertyTypeConverter = value; }
-        }
+        public string PropertyTypeConverter { get; set; }
 
-        bool m_Editable = false;
-        /// <summary>
+	    /// <summary>
         /// Is Property Editable?
         /// </summary>
         [DataMember]
-        public bool Editable
-        {
-            get { return m_Editable; }
-            set { m_Editable = value; }
-        }
+        public bool Editable { get; set; }
 
-        bool m_Browsable = false;
-        /// <summary>
+	    /// <summary>
         /// Is Property Browsable?
         /// </summary>
         [DataMember]
-        public bool Browsable
-        {
-            get { return m_Browsable; }
-            set { m_Browsable = value; } 
-        }
-    }
+        public bool Browsable { get; set; }
+	}
 }
 

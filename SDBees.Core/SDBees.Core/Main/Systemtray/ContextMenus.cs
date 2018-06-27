@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Configuration;
 using System.Diagnostics;
-using System.Windows.Forms;
-using SDBees.Core.Properties;
 using System.Drawing;
-using Carbon.Plugins;
 using System.IO;
+using System.Windows.Forms;
+using Carbon.Plugins;
+using SDBees.Core.Connectivity;
+using SDBees.Core.Properties;
+using SDBees.GuiTools;
+using SDBees.Main.Window;
 
 namespace SDBees.Core.Main.Systemtray
 {
@@ -13,7 +17,7 @@ namespace SDBees.Core.Main.Systemtray
 	/// </summary>
     public class ContextMenus : ContextMenuStrip
 	{
-        public ContextMenus(PluginContext context) : base()
+        public ContextMenus(PluginContext context)
         {
             MyContext = context;
             Create();
@@ -23,8 +27,8 @@ namespace SDBees.Core.Main.Systemtray
 		/// <summary>
 		/// Is the About box displayed?
 		/// </summary>
-		bool isAboutLoaded = false;
-        ToolStripMenuItem m_mainWindowItem = null;
+		bool isAboutLoaded;
+        ToolStripMenuItem m_mainWindowItem;
 
         public ToolStripMenuItem MainWindowItem
         {
@@ -32,8 +36,8 @@ namespace SDBees.Core.Main.Systemtray
             set { m_mainWindowItem = value; }
         }
 
-        SDBees.Main.Window.MainWindowApplication m_MainWindow;
-        SDBees.Core.Connectivity.ConnectivityManager m_ConnManager;
+        MainWindowApplication m_MainWindow;
+        ConnectivityManager m_ConnManager;
 
 		/// <summary>
 		/// Creates this instance.
@@ -44,24 +48,24 @@ namespace SDBees.Core.Main.Systemtray
             //MyContext = context;
 
             //Das MainWindowplugin besorgen
-            if (MyContext.PluginDescriptors.Contains(new PluginDescriptor(typeof(SDBees.Main.Window.MainWindowApplication))))
+            if (MyContext.PluginDescriptors.Contains(new PluginDescriptor(typeof(MainWindowApplication))))
             {
-                m_MainWindow = (SDBees.Main.Window.MainWindowApplication)MyContext.PluginDescriptors[typeof(SDBees.Main.Window.MainWindowApplication)].PluginInstance;
+                m_MainWindow = (MainWindowApplication)MyContext.PluginDescriptors[typeof(MainWindowApplication)].PluginInstance;
             }
             else
             {
-                MessageBox.Show("Es konnte kein Hauptfenster gefunden werden!", this.ToString());
+                MessageBox.Show("Es konnte kein Hauptfenster gefunden werden!", ToString());
                 m_MainWindow = null;
             }
 
             //Den ConnectivityManager besorgen
-            if (MyContext.PluginDescriptors.Contains(new PluginDescriptor(typeof(Core.Connectivity.ConnectivityManager))))
+            if (MyContext.PluginDescriptors.Contains(new PluginDescriptor(typeof(ConnectivityManager))))
             {
-                m_ConnManager = (Core.Connectivity.ConnectivityManager)MyContext.PluginDescriptors[typeof(Core.Connectivity.ConnectivityManager)].PluginInstance;
+                m_ConnManager = (ConnectivityManager)MyContext.PluginDescriptors[typeof(ConnectivityManager)].PluginInstance;
             }
             else
             {
-                MessageBox.Show("Es konnte kein ConnectivityManager gefunden werden!", this.ToString());
+                MessageBox.Show("Es konnte kein ConnectivityManager gefunden werden!", ToString());
                 m_ConnManager = null;
             }
 
@@ -80,18 +84,18 @@ namespace SDBees.Core.Main.Systemtray
             // Main window SDBees
             m_mainWindowItem = new ToolStripMenuItem();
             m_mainWindowItem.Text = "Show main window";
-            m_mainWindowItem.Click += new EventHandler(MainWindow_Click);
+            m_mainWindowItem.Click += MainWindow_Click;
             m_mainWindowItem.Image = Resources.SDBees;
             try
             {
-                string _path = Path.GetDirectoryName(this.GetType().Assembly.Location) + System.Configuration.ConfigurationManager.AppSettings["MainWindowIcon"];
-                m_mainWindowItem.Image = System.Drawing.Image.FromFile(_path);
+                var _path = Path.GetDirectoryName(GetType().Assembly.Location) + ConfigurationManager.AppSettings["MainWindowIcon"];
+                m_mainWindowItem.Image = Image.FromFile(_path);
             }
             catch (Exception ex)
             {
             }
 
-            this.Items.Add(m_mainWindowItem);
+            Items.Add(m_mainWindowItem);
 
 #if false
 			// About.
@@ -109,9 +113,9 @@ namespace SDBees.Core.Main.Systemtray
             // Exit.
 			item = new ToolStripMenuItem();
 			item.Text = "Exit";
-			item.Click += new System.EventHandler(Exit_Click);
+			item.Click += Exit_Click;
 			item.Image = Resources.Exit;
-			this.Items.Add(item);
+			Items.Add(item);
 		}
 
         /// <summary>
@@ -125,9 +129,9 @@ namespace SDBees.Core.Main.Systemtray
             {
                 if (m_ConnManager.IsEditDataSet())
                 {
-                    IntPtr myMainWindowHandle = SDBees.Main.Window.MainWindowApplication.Current.TheDialog.Handle;
+                    var myMainWindowHandle = MainWindowApplication.Current.TheDialog.Handle;
 
-                    string caption = SDBees.Main.Window.MainWindowApplication.Current.GetApplicationTitle();
+                    var caption = MainWindowApplication.Current.GetApplicationTitle();
 
                     MessageBox.Show(new JtWindowHandle(myMainWindowHandle), "Cannot close application while connections are still open.", caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -146,7 +150,7 @@ namespace SDBees.Core.Main.Systemtray
         {
             try
             {
-                SDBees.Main.Window.MainWindowApplication.Current.StartMainDialog();
+                MainWindowApplication.Current.StartMainDialog();
             }
             catch (Exception ex)
             {
@@ -173,7 +177,7 @@ namespace SDBees.Core.Main.Systemtray
 			if (!isAboutLoaded)
 			{
 				isAboutLoaded = true;
-				new SDBees.GuiTools.AboutBox(this.GetType().Assembly).ShowDialog();
+				new AboutBox(GetType().Assembly).ShowDialog();
 				isAboutLoaded = false;
 			}
 		}
@@ -185,18 +189,18 @@ namespace SDBees.Core.Main.Systemtray
 		/// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
 		void Exit_Click(object sender, EventArgs e)
 		{
-            ExitHandler exitHandler = new ExitHandler(m_ConnManager);
+            var exitHandler = new ExitHandler(m_ConnManager);
 
             exitHandler.run();
 		}
 
         private class ExitHandler
         {
-            private Connectivity.ConnectivityManager m_connectionManager = null;
+            private ConnectivityManager m_connectionManager;
 
-            private System.Windows.Forms.Timer m_timer = null;
+            private Timer m_timer;
 
-            public ExitHandler(Connectivity.ConnectivityManager connectionManager)
+            public ExitHandler(ConnectivityManager connectionManager)
             {
                 m_connectionManager = connectionManager;
             }
@@ -215,9 +219,9 @@ namespace SDBees.Core.Main.Systemtray
                         }
                         else
                         {
-                            IntPtr myMainWindowHandle = SDBees.Main.Window.MainWindowApplication.Current.TheDialog.Handle;
+                            var myMainWindowHandle = MainWindowApplication.Current.TheDialog.Handle;
 
-                            string caption = SDBees.Main.Window.MainWindowApplication.Current.GetApplicationTitle();
+                            var caption = MainWindowApplication.Current.GetApplicationTitle();
 
                             MessageBox.Show(new JtWindowHandle(myMainWindowHandle), "Cannot close application while connections are still open.", caption, MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
@@ -251,9 +255,9 @@ namespace SDBees.Core.Main.Systemtray
 
             private void activateTimer()
             {
-                m_timer = new System.Windows.Forms.Timer();
+                m_timer = new Timer();
 
-                m_timer.Tick += new EventHandler(handleTimer);
+                m_timer.Tick += handleTimer;
 
                 m_timer.Interval = 200; // 200 ms
 

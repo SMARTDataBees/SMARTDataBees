@@ -42,8 +42,8 @@ namespace SDBees.Core.Model.Math
             if (s == null)
                 throw new FormatException("Can't parse null string.");
             double value;
-            string ls = s.ToLowerInvariant();
-            for (int nameLength = Unit.LongestUnitName; nameLength >= Unit.ShortestUnitName; nameLength--)
+            var ls = s.ToLowerInvariant();
+            for (var nameLength = Unit.LongestUnitName; nameLength >= Unit.ShortestUnitName; nameLength--)
             {
                 foreach (var unit in Unit.AllUnitTypes)
                 {
@@ -51,10 +51,9 @@ namespace SDBees.Core.Model.Math
                     {
                         if (ls.EndsWith(unit.SymbolName))
                         {
-                            if (double.TryParse(s.Substring(0, s.Length - nameLength), System.Globalization.NumberStyles.Number, CultureInfo.InvariantCulture, out value))
+                            if (double.TryParse(s.Substring(0, s.Length - nameLength), NumberStyles.Number, CultureInfo.InvariantCulture, out value))
                                 return new DistanceD(value, Unit.Millimeters);
-                            else
-                                throw new FormatException("Invalid " + unit.SymbolName + " unit value.");
+                            throw new FormatException("Invalid " + unit.SymbolName + " unit value.");
                         }
                     }
                 }
@@ -109,7 +108,7 @@ namespace SDBees.Core.Model.Math
         /// <returns>Value in specified units</returns>
         public double GetIn(Unit unit)
         {
-            return this.unit.Convert(this.value, unit);
+            return this.unit.Convert(value, unit);
         }
 
         /// <summary>
@@ -119,18 +118,18 @@ namespace SDBees.Core.Model.Math
         /// <returns>New distance object</returns>
         public DistanceD Converted(Unit unit)
         {
-            return new DistanceD(this.unit.Convert(this.value, unit), unit);
+            return new DistanceD(this.unit.Convert(value, unit), unit);
         }
 
         /// <summary>
         /// Get value in native format
         /// </summary>
-        public double NativeValue { get { return this.value; } }
+        public double NativeValue { get { return value; } }
 
         /// <summary>
         /// Get units used for this distance
         /// </summary>
-        public Unit NativeUnit { get { return this.unit; } }
+        public Unit NativeUnit { get { return unit; } }
 
         /// <summary>
         /// Get distance as meters
@@ -216,7 +215,7 @@ namespace SDBees.Core.Model.Math
             {
                 return this == (DistanceD)obj;
             }
-            else return false;
+            return false;
         }
 
         /// <summary>
@@ -336,7 +335,7 @@ namespace SDBees.Core.Model.Math
             var sb = new StringBuilder();
 
             sb.Append(value.ToString(CultureInfo.InvariantCulture));
-            sb.Append(unit.ToString());
+            sb.Append(unit);
 
             return sb.ToString();
         }

@@ -31,12 +31,8 @@
 
 using System;
 using System.Configuration;
-using System.Diagnostics;
 using System.IO;
-using System.Resources;
-using System.Reflection;
 using System.Windows.Forms;
-
 using Carbon.Configuration.Providers;
 using Carbon.Plugins.Providers;
 using Carbon.UI.Providers;
@@ -90,7 +86,8 @@ namespace Carbon.Common
 			{
 				get
 				{
-					return string.Format("The setting '{0}' is missing. The setting is a critical setting that must exist. Please add the setting to the App.config file.", _key);
+					return
+					    $"The setting '{_key}' is missing. The setting is a critical setting that must exist. Please add the setting to the App.config file.";
 				}
 			}
 
@@ -213,7 +210,7 @@ namespace Carbon.Common
 			
 			try
 			{
-				object value = _reader.GetValue(key, type);
+				var value = _reader.GetValue(key, type);
 
 				LogSetting(key, value.ToString());
 
@@ -359,7 +356,7 @@ namespace Carbon.Common
         {
             get
             {
-                return Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonApplicationData), _carbonDocumentsAndSettingsRelativePath);                
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), _carbonDocumentsAndSettingsRelativePath);                
             }
         }
 
@@ -370,7 +367,7 @@ namespace Carbon.Common
         {
             get
             {
-                return Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), _carbonDocumentsAndSettingsRelativePath);			
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), _carbonDocumentsAndSettingsRelativePath);			
             }
         }
 
@@ -465,7 +462,7 @@ namespace Carbon.Common
 		/// <returns></returns>
 		private static string GetCarbonConfigSectionName(string sectionName)
 		{			
-			return string.Format("{0}/{1}", _carbonSettingsGroupName, sectionName);
+			return $"{_carbonSettingsGroupName}/{sectionName}";
 		}
 
 		/// <summary>

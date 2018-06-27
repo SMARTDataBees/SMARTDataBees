@@ -20,10 +20,9 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
+
 using System.Collections;
-using System.Text;
+using System.Linq;
 
 namespace SDBees.DB
 {
@@ -78,7 +77,7 @@ namespace SDBees.DB
         /// <summary>
         /// Returns the base data for this object
         /// </summary>
-        public SDBees.DB.Object BaseData
+        public Object BaseData
         {
             get { return mBaseData; }
         }
@@ -133,14 +132,16 @@ namespace SDBees.DB
 
             Error error = null;
 
-            Database database = server.SecurityDatabase;
+            var database = server.SecurityDatabase;
 
-            GroupBaseData baseData = new GroupBaseData();
-            Attribute attribute = new Attribute(baseData.Table.Columns["name"], name);
-            string criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
+            var baseData = new GroupBaseData();
 
-            ArrayList values = new ArrayList();
-            int numFound = database.Select(baseData.Table, baseData.Table.PrimaryKey, criteria, ref values, ref error);
+            var column = baseData.Table.Columns.FirstOrDefault(clmn => clmn.Name.Equals("name"));
+            var attribute = new Attribute(column, name);
+            var criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
+
+            var values = new ArrayList();
+            var numFound = database.Select(baseData.Table, baseData.Table.PrimaryKey, criteria, ref values, ref error);
 
             if (numFound == 1)
             {
@@ -161,46 +162,17 @@ namespace SDBees.DB
         /// <returns></returns>
         public static int GetAllGroups(Server server, ref ArrayList names)
         {
-            int count = 0;
-
             Error error = null;
-            GroupBaseData baseData = new GroupBaseData();
+            var baseData = new GroupBaseData();
 
-            count = server.SecurityDatabase.Select(baseData.Table, "name", ref names, ref error);
+            var count = server.SecurityDatabase.Select(baseData.Table, "name", ref names, ref error);
 
             Error.Display("GetAllGroups failed!", error);
 
             return count;
         }
 
-        /// <summary>
-        /// Update the database access for this user to the server
-        /// </summary>
-        /// <param name="error">Error description if this function fails</param>
-        /// <returns>true if successful</returns>
-        public bool UpdateAccessRightsOnServer(ref Error error)
-        {
-            bool success = false;
-
-            // TBD: get all members (and derived...) and update their rights
-            //ArrayList objectIds = null;
-            //if (AccessRights.GetAccessRightsForUserId(server, Id.ToString(), ref objectIds) == 0)
-            //{
-            //    return true;
-            //}
-
-            //success = true;
-
-            //foreach (object objectId in objectIds)
-            //{
-            //    AccessRights accessRight = new AccessRights(server, objectId);
-
-            //    success = success && accessRight.UpdateAccessRightsOnServer(server, LoginName, ref error);
-            //}
-
-            return success;
-        }
-
+      
         /// <summary>
         /// Load a user from the database
         /// </summary>
@@ -221,7 +193,7 @@ namespace SDBees.DB
         /// <returns></returns>
         public bool Save(ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if ((error == null) && (mBaseData.Database != null))
             {
@@ -238,7 +210,7 @@ namespace SDBees.DB
         /// <returns></returns>
         public bool Remove(ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if ((error == null) && (mBaseData.Database != null))
             {

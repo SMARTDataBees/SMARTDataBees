@@ -20,19 +20,19 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using SDBees.DB;
+using Object = SDBees.DB.Object;
 
 namespace SDBees.UserAdmin
 {
-    public class RoleDefinitions : SDBees.DB.Object
+    public class RoleDefinitions : Object
     {
         #region Private Data Members
 
-        private static Table gTable = null;
+        private static Table gTable;
 
         #endregion
 
@@ -67,7 +67,7 @@ namespace SDBees.UserAdmin
 
         public RoleDefinitions()
         {
-            base.Table = gTable;
+            Table = gTable;
         }
 
         #endregion
@@ -82,13 +82,13 @@ namespace SDBees.UserAdmin
 
         public static void InitTableSchema(Database database)
         {
-            RoleDefinitions viewDefinition = new RoleDefinitions();
+            var viewDefinition = new RoleDefinitions();
             viewDefinition.InitTableSchema(ref gTable, database);
 
             // Now add columns always required by this plugIn
-            viewDefinition.AddColumn(new Column("role", DbType.eGuidString, "Role", "Role", "", 0, "", 0), database);
-            viewDefinition.AddColumn(new Column("role_name", DbType.eString, "Role Name", "Role Name", "", 80, "", (int)DbFlags.eAllowNull), database);
-            viewDefinition.AddColumn(new Column("role_description", DbType.eString, "Role Descritption", "Role Descritption", "", 80, "", 0), database);
+            viewDefinition.AddColumn(new Column("role", DbType.GuidString, "Role", "Role", "", 0, "", 0), database);
+            viewDefinition.AddColumn(new Column("role_name", DbType.String, "Role Name", "Role Name", "", 80, "", (int)DbFlags.eAllowNull), database);
+            viewDefinition.AddColumn(new Column("role_description", DbType.String, "Role Descritption", "Role Descritption", "", 80, "", 0), database);
         }
 
         #endregion

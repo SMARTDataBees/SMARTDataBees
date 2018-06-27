@@ -30,10 +30,8 @@
 //	============================================================================
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
-using System.Text;
 
 namespace Carbon.Common
 {
@@ -41,8 +39,8 @@ namespace Carbon.Common
 	/// Defines the base object for all 'Keyed' objects that exist in the Carbon.Common namespace.
 	/// This class is thread-safe, serializable, and cloneable.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
-	[Serializable()]
+	[DebuggerStepThrough]
+	[Serializable]
 	public class KeyedObject : ObjectBase, ISerializable	
 	{
 		private string _key;
@@ -51,7 +49,6 @@ namespace Carbon.Common
 		/// Initializes a new instance of the KeyedObject class.
 		/// </summary>
 		public KeyedObject()
-			: base()
 		{
 
 		}
@@ -104,7 +101,7 @@ namespace Carbon.Common
 		/// </summary>
 		/// <param name="element">The object to copy.</param>
 		public KeyedObject(KeyedObject element)
-			: base((ObjectBase)element)
+			: base(element)
 		{
 			_key = element.Key;
 		}
@@ -126,7 +123,7 @@ namespace Carbon.Common
 		/// <returns></returns>
 		public new virtual object Clone()
 		{			
-			return this.MemberwiseClone();
+			return MemberwiseClone();
 		}
 
 		/// <summary>
@@ -136,17 +133,17 @@ namespace Carbon.Common
 		{
 			get
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
 					return _key;
 				}
 			}
 			set
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
-					KeyedObjectCancelEventArgs e = new KeyedObjectCancelEventArgs(this, ObjectActions.Changed, false);
-					base.OnBeforeChanged(this, (ObjectCancelEventArgs)e);
+					var e = new KeyedObjectCancelEventArgs(this, ObjectActions.Changed, false);
+					OnBeforeChanged(this, e);
 					if (e.Cancel)
 					{
 						Debug.WriteLine("The property 'Key' could not be changed because the 'BeforeChanged' was cancelled.");
@@ -155,7 +152,7 @@ namespace Carbon.Common
 
 					_key = value;
 
-					base.OnAfterChanged(this, new KeyedObjectEventArgs(this, ObjectActions.Changed));
+					OnAfterChanged(this, new KeyedObjectEventArgs(this, ObjectActions.Changed));
 				}
 			}
 		}

@@ -30,49 +30,38 @@
 //	============================================================================
 
 using System;
-using System.Diagnostics;
+using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Carbon.Configuration
 {
 	/// <summary>
 	/// Summary description for XmlConfigurationCategoryCollection.
 	/// </summary>
-	public class XmlConfigurationCategoryCollection : System.Collections.CollectionBase, ICloneable, ISupportsEditing, IXmlConfigurationElementEvents, ISupportInitialize
+	public class XmlConfigurationCategoryCollection : CollectionBase, ICloneable, ISupportsEditing, IXmlConfigurationElementEvents, ISupportInitialize
 	{
-		private XmlConfigurationElement _parent;
-		private bool _hasChanges;
-		protected bool _isBeingEdited;
-		private bool _isBeingInitialized;
+	    private bool _hasChanges;
+	    private bool _isBeingInitialized;
 
 		#region Instance Constructors
 
-		/// <summary>
-		/// Initializes a new instance of the XmlConfigurationCategoryCollection class
-		/// </summary>
-		public XmlConfigurationCategoryCollection()
-		{
-			//
-			// TODO: Add constructor logic here
-			//
-		}
-
-		#endregion
+	    #endregion
 
 		#region Public Methods
 
 		public int Add(XmlConfigurationCategory category)
 		{
-			if (this.Contains(category))
+			if (Contains(category))
 				throw new ArgumentException("ElementName already exists. ElementName in collection: " + category.ElementName + " ElementName being added: " + category.ElementName);
 				
 			category.Parent = this;
-			category.BeforeEdit += new XmlConfigurationElementCancelEventHandler(this.OnBeforeEdit);
-			category.Changed += new XmlConfigurationElementEventHandler(this.OnChanged);			
-			category.AfterEdit += new XmlConfigurationElementEventHandler(this.OnAfterEdit);
-			category.EditCancelled += new XmlConfigurationElementEventHandler(this.OnEditCancelled);
-			int index = base.InnerList.Add(category);
-			this.OnChanged(this, new XmlConfigurationCategoryEventArgs(category, XmlConfigurationElementActions.Added));
+			category.BeforeEdit += OnBeforeEdit;
+			category.Changed += OnChanged;			
+			category.AfterEdit += OnAfterEdit;
+			category.EditCancelled += OnEditCancelled;
+			var index = InnerList.Add(category);
+			OnChanged(this, new XmlConfigurationCategoryEventArgs(category, XmlConfigurationElementActions.Added));
 			return index;
 		}
 
@@ -81,11 +70,11 @@ namespace Carbon.Configuration
 			if (categories == null)
 				throw new ArgumentNullException("categories");			
 
-			foreach(XmlConfigurationCategory category in categories) 
+			foreach(var category in categories) 
 			{
 				try 
 				{
-					this.Add(category);
+					Add(category);
 				}
 				catch(Exception ex) 
 				{
@@ -98,51 +87,51 @@ namespace Carbon.Configuration
 		{
 			XmlConfigurationCategory category = null;
 
-			if (!this.Contains(elementName))
+			if (!Contains(elementName))
 			{
 				category = new XmlConfigurationCategory(elementName);
-				this.Add(category);
+				Add(category);
 			}
 		}
 
 		public void Insert(int index, XmlConfigurationCategory category)
 		{
-			if (this.Contains(category))
+			if (Contains(category))
 				throw new ArgumentException("ElementName already exists. ElementName in collection: " + category.ElementName + " ElementName being added: " + category.ElementName);
 			
 			category.Parent = this;
-			category.BeforeEdit += new XmlConfigurationElementCancelEventHandler(this.OnBeforeEdit);
-			category.Changed += new XmlConfigurationElementEventHandler(this.OnChanged);			
-			category.AfterEdit += new XmlConfigurationElementEventHandler(this.OnAfterEdit);
-			category.EditCancelled += new XmlConfigurationElementEventHandler(this.OnEditCancelled);
-			base.InnerList.Insert(index, category);
-			this.OnChanged(this, new XmlConfigurationCategoryEventArgs(category, XmlConfigurationElementActions.Added));			
+			category.BeforeEdit += OnBeforeEdit;
+			category.Changed += OnChanged;			
+			category.AfterEdit += OnAfterEdit;
+			category.EditCancelled += OnEditCancelled;
+			InnerList.Insert(index, category);
+			OnChanged(this, new XmlConfigurationCategoryEventArgs(category, XmlConfigurationElementActions.Added));			
 		}
 
 		public void Remove(XmlConfigurationCategory category)
 		{
-			if (this.Contains(category))
+			if (Contains(category))
 			{											
-				category.BeforeEdit -= new XmlConfigurationElementCancelEventHandler(this.OnBeforeEdit);
-				category.Changed -= new XmlConfigurationElementEventHandler(this.OnChanged);			
-				category.AfterEdit -= new XmlConfigurationElementEventHandler(this.OnAfterEdit);
-				category.EditCancelled -= new XmlConfigurationElementEventHandler(this.OnEditCancelled);
-				base.InnerList.Remove(category);
-				this.OnChanged(this, new XmlConfigurationCategoryEventArgs(category, XmlConfigurationElementActions.Removed));
+				category.BeforeEdit -= OnBeforeEdit;
+				category.Changed -= OnChanged;			
+				category.AfterEdit -= OnAfterEdit;
+				category.EditCancelled -= OnEditCancelled;
+				InnerList.Remove(category);
+				OnChanged(this, new XmlConfigurationCategoryEventArgs(category, XmlConfigurationElementActions.Removed));
 			}		
 		}
 
 		public void Remove(string elementName)
 		{
-			if (this.Contains(elementName))
-				foreach(XmlConfigurationCategory category in base.InnerList)
+			if (Contains(elementName))
+				foreach(XmlConfigurationCategory category in InnerList)
 					if (category.ElementName == elementName)
-						this.Remove(category);					
+						Remove(category);					
 		}
 
 		public bool Contains(XmlConfigurationCategory category)
 		{
-			foreach(XmlConfigurationCategory c in base.InnerList)
+			foreach(XmlConfigurationCategory c in InnerList)
 				if (c.ElementName == category.ElementName)
 					return true;
 			
@@ -151,7 +140,7 @@ namespace Carbon.Configuration
 
 		public bool Contains(string elementName)
 		{
-			foreach(XmlConfigurationCategory c in base.InnerList)
+			foreach(XmlConfigurationCategory c in InnerList)
 				if (c.ElementName == elementName)
 					return true;
 			return false;
@@ -165,11 +154,11 @@ namespace Carbon.Configuration
 		{
 			get
 			{
-				return base.InnerList[index] as XmlConfigurationCategory;
+				return InnerList[index] as XmlConfigurationCategory;
 			}
 			set
 			{
-				base.InnerList[index] = value;
+				InnerList[index] = value;
 			}
 		}
 
@@ -177,8 +166,8 @@ namespace Carbon.Configuration
 		{
 			get
 			{
-				string[] categories = keyOrPath.Split(XmlConfiguration.CategoryPathSeparators);
-				foreach(XmlConfigurationCategory category in base.InnerList)
+				var categories = keyOrPath.Split(XmlConfiguration.CategoryPathSeparators);
+				foreach(XmlConfigurationCategory category in InnerList)
 				{
 					if (category.ElementName == categories[0])
 					{
@@ -186,11 +175,8 @@ namespace Carbon.Configuration
 						{
 							return category;
 						}
-						else
-						{
-							keyOrPath = string.Join(XmlConfiguration.DefaultPathSeparator, categories, 1, categories.Length - 1);
-							return category.Categories[keyOrPath];
-						}
+					    keyOrPath = string.Join(XmlConfiguration.DefaultPathSeparator, categories, 1, categories.Length - 1);
+					    return category.Categories[keyOrPath];
 					}					
 				}
 				return null;
@@ -201,35 +187,32 @@ namespace Carbon.Configuration
 		{
 			get
 			{
-				string[] categories = keyOrPath.Split(XmlConfiguration.CategoryPathSeparators);
-				foreach(XmlConfigurationCategory category in base.InnerList)
+				var categories = keyOrPath.Split(XmlConfiguration.CategoryPathSeparators);
+				foreach(XmlConfigurationCategory category in InnerList)
 				{
 					if (category.ElementName == categories[0])
 					{
 						if (categories.Length == 1)
 							return category;
-						else
-							keyOrPath = string.Join(XmlConfiguration.DefaultPathSeparator, categories, 1, categories.Length - 1);
+					    keyOrPath = string.Join(XmlConfiguration.DefaultPathSeparator, categories, 1, categories.Length - 1);
 
-						XmlConfigurationCategory subCategory = category.Categories[keyOrPath];
+					    var subCategory = category.Categories[keyOrPath];
 						if (subCategory != null)
 							return subCategory;
-						else
-							break;
+					    break;
 					}
 				}
 
 				if (createIfNotFound)
 					if (categories.Length > 0)
 					{
-						this.Add(categories[0]);
-						XmlConfigurationCategory newCategory = this[categories[0]];
+						Add(categories[0]);
+						var newCategory = this[categories[0]];
 						if (categories.Length == 1)
 							return newCategory;
-						else
-							keyOrPath = string.Join(XmlConfiguration.DefaultPathSeparator, categories, 1, categories.Length - 1);
+					    keyOrPath = string.Join(XmlConfiguration.DefaultPathSeparator, categories, 1, categories.Length - 1);
 
-						return newCategory.Categories[keyOrPath, createIfNotFound];
+					    return newCategory.Categories[keyOrPath, createIfNotFound];
 					}
 				return null;
 			}
@@ -240,11 +223,11 @@ namespace Carbon.Configuration
 		{
 			try
 			{
-				/// chunk up the path into the separate categories
-				string[] categories = keyOrPath.Split(XmlConfiguration.CategoryPathSeparators);
+				// chunk up the path into the separate categories
+				var categories = keyOrPath.Split(XmlConfiguration.CategoryPathSeparators);
 				
-				/// at the first level, look for the first category in our list, if we find it and it's the last one then return it
-				foreach(XmlConfigurationCategory category in base.InnerList)
+				// at the first level, look for the first category in our list, if we find it and it's the last one then return it
+				foreach(XmlConfigurationCategory category in InnerList)
 				{
 					if (category.ElementName == categories[0])
 					{
@@ -252,12 +235,9 @@ namespace Carbon.Configuration
 						{
 							return category;						
 						}
-						else
-						{
-							/// chomp the first category off
-							keyOrPath = string.Join(XmlConfiguration.DefaultPathSeparator, categories, 1, categories.Length - 1);
-							return category.FindCategory(keyOrPath);
-						}
+					    // chomp the first category off
+					    keyOrPath = string.Join(XmlConfiguration.DefaultPathSeparator, categories, 1, categories.Length - 1);
+					    return category.FindCategory(keyOrPath);
 					}
 				}							
 			}
@@ -276,12 +256,9 @@ namespace Carbon.Configuration
 		{
 			get
 			{
-				if (_parent == null)
+			    if (Parent == null)
 					return null;
-				else
-				{
-					return _parent.Fullpath;
-				}				
+			    return Parent.Fullpath;
 			}
 		}
 		
@@ -289,30 +266,20 @@ namespace Carbon.Configuration
 		/// Gets or sets the element to which this collection is a child (Either a XmlConfiguration or a XmlConfigurationCategory)
 		/// </summary>
 		[Browsable(false)]
-		public XmlConfigurationElement Parent
-		{
-			get
-			{
-				return _parent;
-			}
-			set
-			{
-				_parent = value;
-			}
-		}		
+		public XmlConfigurationElement Parent { get; set; }
 
-		[Browsable(false)]
+	    [Browsable(false)]
 		public XmlConfiguration Configuration
 		{
 			get
 			{
-				if (_parent != null)
+				if (Parent != null)
 				{
-					if (_parent.GetElementType() == XmlConfigurationElementTypes.XmlConfiguration)
-						return ((XmlConfiguration)_parent).Configuration;
+					if (Parent.GetElementType() == XmlConfigurationElementTypes.XmlConfiguration)
+						return ((XmlConfiguration)Parent).Configuration;
 
-					if (_parent.GetElementType() == XmlConfigurationElementTypes.XmlConfigurationCategory)
-						return ((XmlConfigurationCategory)_parent).Configuration;
+					if (Parent.GetElementType() == XmlConfigurationElementTypes.XmlConfigurationCategory)
+						return ((XmlConfigurationCategory)Parent).Configuration;
 				}
 				return null;
 			}
@@ -328,16 +295,16 @@ namespace Carbon.Configuration
 		/// <returns></returns>
 		public object Clone()
 		{
-			XmlConfigurationCategoryCollection clone = new XmlConfigurationCategoryCollection();
+			var clone = new XmlConfigurationCategoryCollection();
 			clone.ResetBeforeEdit();
 			clone.ResetChanged();
 			clone.ResetAfterEdit();
 			clone.ResetEditCancelled();
-			clone.Parent = _parent;
+			clone.Parent = Parent;
 
-			foreach(XmlConfigurationCategory category in base.InnerList)
+			foreach(XmlConfigurationCategory category in InnerList)
 			{
-				XmlConfigurationCategory clonedCategory = (XmlConfigurationCategory)category.Clone();				
+				var clonedCategory = category.Clone();				
 				clonedCategory.Parent = clone;
 				clone.Add(clonedCategory);
 			}
@@ -353,24 +320,18 @@ namespace Carbon.Configuration
 		public event XmlConfigurationElementEventHandler AfterEdit;
 		public event XmlConfigurationElementEventHandler EditCancelled;
 
-		public bool IsBeingEdited
-		{
-			get
-			{
-				return _isBeingEdited;
-			}
-		}
+		public bool IsBeingEdited { get; protected set; }
 
-		public bool BeginEdit()
+	    public bool BeginEdit()
 		{
 			try
 			{
-				if (!_isBeingEdited)
+				if (!IsBeingEdited)
 				{									
-					/// place the element in edit mode and clone ourself so that future changes will be redirected to the clone and not to ourself
-					_isBeingEdited = true;
+					// place the element in edit mode and clone ourself so that future changes will be redirected to the clone and not to ourself
+					IsBeingEdited = true;
 
-					foreach(XmlConfigurationCategory category in base.InnerList)
+					foreach(XmlConfigurationCategory category in InnerList)
 					{
 						try
 						{
@@ -395,12 +356,12 @@ namespace Carbon.Configuration
 		{
 			try
 			{
-				if (_isBeingEdited)
+				if (IsBeingEdited)
 				{									
-					/// place the element in edit mode and clone ourself so that future changes will be redirected to the clone and not to ourself
-					_isBeingEdited = false;
+					// place the element in edit mode and clone ourself so that future changes will be redirected to the clone and not to ourself
+					IsBeingEdited = false;
 					
-					foreach(XmlConfigurationCategory category in base.InnerList)
+					foreach(XmlConfigurationCategory category in InnerList)
 					{
 						try
 						{
@@ -425,11 +386,11 @@ namespace Carbon.Configuration
 		{
 			try
 			{
-				if (_isBeingEdited)
+				if (IsBeingEdited)
 				{
-					_isBeingEdited = false;
+					IsBeingEdited = false;
 
-					foreach(XmlConfigurationCategory category in base.InnerList)
+					foreach(XmlConfigurationCategory category in InnerList)
 					{
 						try
 						{
@@ -456,8 +417,8 @@ namespace Carbon.Configuration
 			{
 				//EventTracing.TraceMethodAndDelegate(this, this.BeforeEdit);
 
-				if (this.BeforeEdit != null)
-					this.BeforeEdit(sender, e);
+				if (BeforeEdit != null)
+					BeforeEdit(sender, e);
 			}
 			catch(Exception ex)
 			{
@@ -471,8 +432,8 @@ namespace Carbon.Configuration
 			{
 				//EventTracing.TraceMethodAndDelegate(this, this.AfterEdit);
 
-				if (this.AfterEdit != null)
-					this.AfterEdit(sender, e);
+				if (AfterEdit != null)
+					AfterEdit(sender, e);
 			}
 			catch(Exception ex)
 			{
@@ -486,8 +447,8 @@ namespace Carbon.Configuration
 			{
 				//EventTracing.TraceMethodAndDelegate(this, this.EditCancelled);
 
-				if (this.EditCancelled != null)
-					this.EditCancelled(sender, e);
+				if (EditCancelled != null)
+					EditCancelled(sender, e);
 			}
 			catch(Exception ex)
 			{
@@ -499,13 +460,13 @@ namespace Carbon.Configuration
 		{
 			lock(this)
 			{
-				if (this.BeforeEdit != null)
+				if (BeforeEdit != null)
 				{
-					System.Delegate[] invocationList = this.BeforeEdit.GetInvocationList();
+					var invocationList = BeforeEdit.GetInvocationList();
 					if (invocationList != null)
 					{
-						foreach(System.Delegate subscriber in invocationList)
-							this.BeforeEdit -= (XmlConfigurationElementCancelEventHandler)subscriber;
+						foreach(var subscriber in invocationList)
+							BeforeEdit -= (XmlConfigurationElementCancelEventHandler)subscriber;
 					}
 				}
 			}
@@ -515,13 +476,13 @@ namespace Carbon.Configuration
 		{
 			lock(this)
 			{
-				if (this.AfterEdit != null)
+				if (AfterEdit != null)
 				{
-					System.Delegate[] invocationList = this.AfterEdit.GetInvocationList();
+					var invocationList = AfterEdit.GetInvocationList();
 					if (invocationList != null)
 					{
-						foreach(System.Delegate subscriber in invocationList)
-							this.AfterEdit -= (XmlConfigurationElementEventHandler)subscriber;
+						foreach(var subscriber in invocationList)
+							AfterEdit -= (XmlConfigurationElementEventHandler)subscriber;
 					}
 				}
 			}
@@ -531,13 +492,13 @@ namespace Carbon.Configuration
 		{
 			lock(this)
 			{
-				if (this.EditCancelled != null)
+				if (EditCancelled != null)
 				{
-					System.Delegate[] invocationList = this.EditCancelled.GetInvocationList();
+					var invocationList = EditCancelled.GetInvocationList();
 					if (invocationList != null)
 					{
-						foreach(System.Delegate subscriber in invocationList)
-							this.EditCancelled -= (XmlConfigurationElementEventHandler)subscriber;
+						foreach(var subscriber in invocationList)
+							EditCancelled -= (XmlConfigurationElementEventHandler)subscriber;
 					}
 				}
 			}
@@ -547,8 +508,8 @@ namespace Carbon.Configuration
 		{
 			get
 			{
-				bool anyCategory = false;
-				foreach(XmlConfigurationCategory category in base.InnerList)
+				var anyCategory = false;
+				foreach(XmlConfigurationCategory category in InnerList)
 					if (category.HasChanges)
 						anyCategory = true;
 				return _hasChanges || anyCategory;
@@ -561,24 +522,24 @@ namespace Carbon.Configuration
 
 		public void AcceptChanges()
 		{
-			foreach(XmlConfigurationCategory category in base.InnerList)
+			foreach(XmlConfigurationCategory category in InnerList)
 				category.AcceptChanges();				
 			_hasChanges = false;
 		}
 
-		public bool ApplyChanges(ISupportsEditing editableObject, Carbon.Configuration.SupportedEditingActions actions)
+		public bool ApplyChanges(ISupportsEditing editableObject, SupportedEditingActions actions)
 		{
-			XmlConfigurationCategoryCollection categories = editableObject as XmlConfigurationCategoryCollection;
+			var categories = editableObject as XmlConfigurationCategoryCollection;
 			if (categories != null)
 			{					
 				foreach(XmlConfigurationCategory category in categories)
 				{					
-					XmlConfigurationCategory myCategory = this[category.ElementName];
+					var myCategory = this[category.ElementName];
 					if (myCategory != null)
 					{
 						try
 						{
-							myCategory.ApplyChanges((ISupportsEditing)category, actions);
+							myCategory.ApplyChanges(category, actions);
 						}
 						catch(Exception ex)
 						{
@@ -593,17 +554,17 @@ namespace Carbon.Configuration
 
 		public bool ApplyToSelf(ISupportsEditing editableObject, SupportedEditingActions actions)
 		{
-			XmlConfigurationCategoryCollection categories = editableObject as XmlConfigurationCategoryCollection;
+			var categories = editableObject as XmlConfigurationCategoryCollection;
 			if (categories != null)
 			{	
 				foreach(XmlConfigurationCategory category in categories)
 				{					
-					XmlConfigurationCategory myCategory = this[category.ElementName];
+					var myCategory = this[category.ElementName];
 					if (myCategory != null)
 					{
 						try
 						{
-							myCategory.ApplyToSelf((ISupportsEditing)category, actions);
+							myCategory.ApplyToSelf(category, actions);
 						}
 						catch(Exception ex)
 						{
@@ -632,8 +593,8 @@ namespace Carbon.Configuration
 				
 				//EventTracing.TraceMethodAndDelegate(this, this.Changed);
 
-				if (this.Changed != null)
-					this.Changed(sender, e);
+				if (Changed != null)
+					Changed(sender, e);
 			}
 			catch(Exception ex)
 			{
@@ -645,13 +606,13 @@ namespace Carbon.Configuration
 		{
 			lock(this)
 			{
-				if (this.Changed != null)
+				if (Changed != null)
 				{
-					System.Delegate[] invocationList = this.Changed.GetInvocationList();
+					var invocationList = Changed.GetInvocationList();
 					if (invocationList != null)
 					{
-						foreach(System.Delegate subscriber in invocationList)
-							this.Changed -= (XmlConfigurationElementEventHandler)subscriber;
+						foreach(var subscriber in invocationList)
+							Changed -= (XmlConfigurationElementEventHandler)subscriber;
 					}
 				}
 			}
@@ -665,7 +626,7 @@ namespace Carbon.Configuration
 		{
 			_isBeingInitialized = true;
 
-			foreach(XmlConfigurationCategory category in base.InnerList)
+			foreach(XmlConfigurationCategory category in InnerList)
 				category.BeginInit();
 		}
 
@@ -673,7 +634,7 @@ namespace Carbon.Configuration
 		{
 			_isBeingInitialized = false;
 
-			foreach(XmlConfigurationCategory category in base.InnerList)
+			foreach(XmlConfigurationCategory category in InnerList)
 				category.EndInit();
 		}
 

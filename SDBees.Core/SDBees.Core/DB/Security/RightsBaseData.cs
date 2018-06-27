@@ -20,17 +20,14 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SDBees.DB
 {
-    public class RightsBaseData : SDBees.DB.Object
+    public class RightsBaseData : Object
     {
         #region Private Data Members
 
-        private static Table gTable = null;
+        private static Table gTable;
 
         #endregion
 
@@ -49,7 +46,7 @@ namespace SDBees.DB
         /// </summary>
         public RightsBaseData()
         {
-            base.Table = gTable;
+            Table = gTable;
         }
 
         #endregion
@@ -58,15 +55,15 @@ namespace SDBees.DB
 
         internal static void InitTableSchema(Database database)
         {
-            RightsBaseData baseData = new RightsBaseData();
+            var baseData = new RightsBaseData();
             baseData.InitTableSchema(ref gTable, database);
 
             // Now add the name column
-            baseData.AddColumn(new Column("type", DbType.eInt32, "Type", "Type of the Security rights", "General", 0, "", 0), database);
-            baseData.AddColumn(new Column("name", DbType.eString, "Name", "Name of the server, database, table or column depending on the type", "General", 100, "", 0), database);
-            baseData.AddColumn(new Column("userid", DbType.eGuidString, "User/Group Id", "Id of the user or group", "General", 100, "", 0), database);
-            baseData.AddColumn(new Column("allowflags", DbType.eInt32, "Allow Flags", "Allowed operations depending on the type", "Security", 0, "", 0), database);
-            baseData.AddColumn(new Column("denyflags", DbType.eInt32, "Deny Flags", "Denied operations depending on the type", "Security", 0, "", 0), database);
+            baseData.AddColumn(new Column("type", DbType.Int32, "Type", "Type of the Security rights", "General", 0, "", 0), database);
+            baseData.AddColumn(new Column("name", DbType.String, "Name", "Name of the server, database, table or column depending on the type", "General", 100, "", 0), database);
+            baseData.AddColumn(new Column("userid", DbType.GuidString, "User/Group Id", "Id of the user or group", "General", 100, "", 0), database);
+            baseData.AddColumn(new Column("allowflags", DbType.Int32, "Allow Flags", "Allowed operations depending on the type", "Security", 0, "", 0), database);
+            baseData.AddColumn(new Column("denyflags", DbType.Int32, "Deny Flags", "Denied operations depending on the type", "Security", 0, "", 0), database);
         }
 
         public override void SetDefaults(Database database)

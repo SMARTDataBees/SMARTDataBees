@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -21,13 +18,7 @@ namespace EXOE.CsharpHelper
         static Singleton()
         { }
 
-        public static T Instance
-        {
-            get
-            {
-                return (_instance != null) ? _instance : ResetAndGetInstance();
-            }
-        }
+        public static T Instance => _instance ?? ResetAndGetInstance();
 
         private static T ResetAndGetInstance()
         {

@@ -20,10 +20,8 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Drawing;
 using System.Windows.Forms;
 using SDBees.DB;
 using SDBees.GuiTools;
@@ -44,53 +42,53 @@ namespace SDBees.UserAdmin
 
         internal GroupTreeView(Database database) : base(database)
         {
-            GroupBaseData baseData = new GroupBaseData();
+            var baseData = new GroupBaseData();
 
-            this.Table = baseData.Table;
-            this.NodeColumnName = baseData.Table.PrimaryKey;
-            this.ParentNodeColumnName = "parentid";
-            this.DisplayColumnName = "name";
-            this.ParentNullId = Guid.Empty;
+            Table = baseData.Table;
+            NodeColumnName = baseData.Table.PrimaryKey;
+            ParentNodeColumnName = "parentid";
+            DisplayColumnName = "name";
+            ParentNullId = Guid.Empty;
 
-            MenuItem menuCreateGroup = new MenuItem("Neue Gruppe erzeugen");
-            menuCreateGroup.Click += new EventHandler(menuCreateGroup_Click);
-            this.AddContextMenuItem(menuCreateGroup, false, true, -1);
+            var menuCreateGroup = new MenuItem("Neue Gruppe erzeugen");
+            menuCreateGroup.Click += menuCreateGroup_Click;
+            AddContextMenuItem(menuCreateGroup, false, true, -1);
 
-            MenuItem menuDeleteGroup = new MenuItem("Gruppe(n) löschen");
-            menuDeleteGroup.Click += new EventHandler(menuDeleteGroup_Click);
-            this.AddContextMenuItem(menuDeleteGroup, true, true, -1);
+            var menuDeleteGroup = new MenuItem("Gruppe(n) löschen");
+            menuDeleteGroup.Click += menuDeleteGroup_Click;
+            AddContextMenuItem(menuDeleteGroup, true, true, -1);
 
-            MenuItem menuEditSchema = new MenuItem("Schema bearbeiten");
-            menuEditSchema.Click += new EventHandler(menuEditSchema_Click);
-            this.AddContextMenuItem(menuEditSchema, true, true, -1);
+            var menuEditSchema = new MenuItem("Schema bearbeiten");
+            menuEditSchema.Click += menuEditSchema_Click;
+            AddContextMenuItem(menuEditSchema, true, true, -1);
         }
 
         void menuCreateGroup_Click(object sender, EventArgs e)
         {
-            if (this.SelNodes.Count == 1)
+            if (SelNodes.Count == 1)
             {
-                TreeNode selectedNode = this.SingleSelectedNode();
+                var selectedNode = SingleSelectedNode();
 
                 Error error = null;
-                Group group = new Group(this.Database.Server);
+                var group = new Group(Database.Server);
 
-                System.Drawing.Point location = Control.MousePosition;
+                var location = MousePosition;
 
-                System.Windows.Forms.DialogResult dlgres = DialogResult.Abort;
-                string name = InputBox.Show("Bezeichnung", "Name für neue Gruppe", group.Name, location.X, location.Y, ref dlgres);
+                var dlgres = DialogResult.Abort;
+                var name = InputBox.Show("Bezeichnung", "Name für neue Gruppe", group.Name, location.X, location.Y, ref dlgres);
                 if (name != "")
                 {
                     group.Name = name;
                     group.ParentId = selectedNode.Tag.ToString();
                     group.Save(ref error);
 
-                    TreeNode treeNode = CreateNode(group.Id, ref error);
+                    var treeNode = CreateNode(group.Id, ref error);
                     if (treeNode != null)
                     {
                         selectedNode.Nodes.Add(treeNode);
 
-                        this.ClearSelNodes();
-                        this.SelectNode(treeNode, true);
+                        ClearSelNodes();
+                        SelectNode(treeNode, true);
                     }
                 }
             }
@@ -98,15 +96,15 @@ namespace SDBees.UserAdmin
 
         void menuDeleteGroup_Click(object sender, EventArgs e)
         {
-            string message = "";
-            int selectionCount = this.SelNodes.Count;
+            var message = "";
+            var selectionCount = SelNodes.Count;
             if (selectionCount == 0)
             {
                 return;
             }
-            else if (selectionCount == 1)
+            if (selectionCount == 1)
             {
-                TreeNode treeNode = SingleSelectedNode();
+                var treeNode = SingleSelectedNode();
                 if (treeNode == null)
                     return;
 
@@ -122,13 +120,13 @@ namespace SDBees.UserAdmin
             }
 
             Error error = null;
-            foreach (MWTreeNodeWrapper tnWrapper in this.SelNodes.Values)
+            foreach (MWTreeNodeWrapper tnWrapper in SelNodes.Values)
             {
-                TreeNode treeNode = tnWrapper.Node;
+                var treeNode = tnWrapper.Node;
                 DeleteRecursiveGroups(treeNode, ref error);
             }
 
-            this.Fill(ref error);
+            Fill(ref error);
 
             Error.Display("Fehler beim Löschen von Gruppen aufgetreten!", error);
         }
@@ -160,10 +158,10 @@ namespace SDBees.UserAdmin
                     DeleteRecursiveGroups(subTreeNode, ref error);
                 }
 
-                object groupId = treeNode.Tag;
+                var groupId = treeNode.Tag;
                 if (groupId != null)
                 {
-                    Group group = new Group(Database.Server);
+                    var group = new Group(Database.Server);
                     Error loadError = null;
                     if (group.Load(Database, groupId, ref loadError))
                     {

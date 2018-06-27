@@ -30,9 +30,6 @@
 //	============================================================================
 
 using System;
-using System.Diagnostics;
-using System.Drawing;
-using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 
@@ -41,33 +38,33 @@ namespace Carbon.Configuration
 	/// <summary>
 	/// Summary description for XmlConfigurationPropertiesWindow.
 	/// </summary>
-	public class XmlConfigurationPropertiesWindow : System.Windows.Forms.Form
+	public class XmlConfigurationPropertiesWindow : Form
 	{	
 		protected bool _triggeredByButton;
-		protected System.Windows.Forms.Button _buttonApply;
-		protected System.Windows.Forms.Button _buttonCancel;
-		protected System.Windows.Forms.Button _buttonOK;
-        private Carbon.Configuration.XmlConfigurationView _xmlConfigurationView;
+		protected Button _buttonApply;
+		protected Button _buttonCancel;
+		protected Button _buttonOK;
+        private XmlConfigurationView _xmlConfigurationView;
 		
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		private System.ComponentModel.Container components = null;
+		private Container components = null;
 
 		/// <summary>
 		/// Initializes a new instance of the XmlConfigurationPropertiesWindow class
 		/// </summary>
 		public XmlConfigurationPropertiesWindow()
 		{
-			this.InitializeComponent();
+			InitializeComponent();
 
-			this.CancelButton = _buttonCancel;
+			CancelButton = _buttonCancel;
 
-			this._buttonApply.Click += new System.EventHandler(this._buttonApply_Click);
-			this._buttonCancel.Click += new System.EventHandler(this._buttonCancel_Click);
-			this._buttonOK.Click += new System.EventHandler(this._buttonOK_Click);
+			_buttonApply.Click += _buttonApply_Click;
+			_buttonCancel.Click += _buttonCancel_Click;
+			_buttonOK.Click += _buttonOK_Click;
 
-			_xmlConfigurationView.ConfigurationChanged += new XmlConfigurationElementEventHandler(this.OnConfigurationChanged);
+			_xmlConfigurationView.ConfigurationChanged += OnConfigurationChanged;
 		}
 
 		/// <summary>
@@ -180,12 +177,12 @@ namespace Carbon.Configuration
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void _buttonCancel_Click(object sender, System.EventArgs e)
+		private void _buttonCancel_Click(object sender, EventArgs e)
 		{
 			_triggeredByButton = true;
-			this.DialogResult = DialogResult.Cancel;
+			DialogResult = DialogResult.Cancel;
 			_xmlConfigurationView.CancelEdit();
-			this.Close();
+			Close();
 		}
 
 		/// <summary>
@@ -193,13 +190,13 @@ namespace Carbon.Configuration
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void _buttonOK_Click(object sender, System.EventArgs e)
+		private void _buttonOK_Click(object sender, EventArgs e)
 		{				
 			_triggeredByButton = true;
-			this.DialogResult = DialogResult.OK;
+			DialogResult = DialogResult.OK;
 			_xmlConfigurationView.ApplyChanges();
 			_xmlConfigurationView.CancelEdit();
-			this.Close();
+			Close();
 		}
 
 		/// <summary>
@@ -207,7 +204,7 @@ namespace Carbon.Configuration
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void _buttonApply_Click(object sender, System.EventArgs e)
+		private void _buttonApply_Click(object sender, EventArgs e)
 		{
 			_xmlConfigurationView.ApplyChanges();			
 			_buttonApply.Enabled = false;

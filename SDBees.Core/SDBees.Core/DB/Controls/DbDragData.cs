@@ -20,10 +20,8 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
+
 using System.Collections;
-using System.Text;
 using System.Windows.Forms;
 
 namespace SDBees.DB
@@ -77,11 +75,11 @@ namespace SDBees.DB
 
             if ((0 <= index) && (index < mDragItems.Count))
             {
-                object dragObject = mDragItems[index];
+                var dragObject = mDragItems[index];
 
                 if (typeof(TreeNode).IsInstanceOfType(dragObject))
                 {
-                    TreeNode treeNode = (TreeNode)dragObject;
+                    var treeNode = (TreeNode)dragObject;
                     result = (DbTreeNodeTag)treeNode.Tag;
                 }
             }
@@ -99,11 +97,11 @@ namespace SDBees.DB
 
             if (mDragItems.Count > 0)
             {
-                object dragObject = mDragItems[0];
+                var dragObject = mDragItems[0];
 
                 if (typeof(TreeNode).IsInstanceOfType(dragObject))
                 {
-                    TreeNode treeNode = (TreeNode)dragObject;
+                    var treeNode = (TreeNode)dragObject;
                     result = treeNode.TreeView;
                 }
             }

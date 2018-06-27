@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.IO;
-
+﻿using System.IO;
 using System.Runtime.Serialization;
-
-
+using System.Xml;
 
 namespace SDBees.Core.Model
 {
@@ -15,10 +8,10 @@ namespace SDBees.Core.Model
     {
         public static string Serialize(object t)
         {
-            DataContractSerializer ser = new DataContractSerializer(t.GetType());
-            using (StringWriter stringWriter = new StringWriter())
+            var ser = new DataContractSerializer(t.GetType());
+            using (var stringWriter = new StringWriter())
             {
-                using (XmlTextWriter textWriter = new XmlTextWriter(stringWriter) { Formatting = Formatting.None })
+                using (var textWriter = new XmlTextWriter(stringWriter) { Formatting = Formatting.None })
                 {
                     ser.WriteObject(textWriter, t);
                     return stringWriter.GetStringBuilder().ToString();
@@ -28,10 +21,10 @@ namespace SDBees.Core.Model
 
         public static T Deserialize<T>(string xml)
         {
-            DataContractSerializer ser = new DataContractSerializer(typeof (T));
-            using (StringReader stringReader = new StringReader (xml))
+            var ser = new DataContractSerializer(typeof (T));
+            using (var stringReader = new StringReader (xml))
             {
-                using (XmlReader xmlReader = XmlReader.Create(stringReader))
+                using (var xmlReader = XmlReader.Create(stringReader))
                 {
                     return (T)ser.ReadObject(xmlReader);        
                 }

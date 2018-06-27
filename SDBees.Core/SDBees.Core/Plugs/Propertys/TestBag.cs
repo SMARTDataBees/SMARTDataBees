@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace SDBees.Plugs.Properties
 {
-    using System;
     //using System.Windows.Forms;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Runtime.CompilerServices;
 
     //static class Program
     //{
@@ -69,10 +65,8 @@ namespace SDBees.Plugs.Properties
     }
     sealed class BagDefinition<T> : IBagDefinition
     {
-        private readonly PropertyDescriptor property;
-        public PropertyDescriptor Property { get { return property; } }
-        private readonly T defaultValue;
-        public T DefaultValue { get { return defaultValue; } }
+        public PropertyDescriptor Property { get; }
+        public T DefaultValue { get; }
         public string Name { get { return Property.Name; } }
         IBagValue IBagDefinition.Create(IBag bag)
         {
@@ -80,21 +74,21 @@ namespace SDBees.Plugs.Properties
         }
         public BagDefinition(string propertyName, Attribute[] attributes)
         {
-            defaultValue = default(T);
+            DefaultValue = default(T);
             if (attributes != null)
             { // check for A default value
-                foreach (Attribute attrib in attributes)
+                foreach (var attrib in attributes)
                 {
-                    DefaultValueAttribute defAttrib = attrib as
+                    var defAttrib = attrib as
     DefaultValueAttribute;
                     if (defAttrib != null)
                     {
-                        defaultValue = (T)defAttrib.Value;
+                        DefaultValue = (T)defAttrib.Value;
                         break;
                     }
                 }
             }
-            property = new BagPropertyDescriptor(propertyName, attributes);
+            Property = new BagPropertyDescriptor(propertyName, attributes);
         }
         
         internal class BagPropertyDescriptor : PropertyDescriptor
@@ -117,14 +111,10 @@ namespace SDBees.Plugs.Properties
             {
                 get { return typeof(Bag); }
             }
-            public override Type PropertyType
-            {
-                get { return typeof(T); }
-            }
-            public override bool IsReadOnly
-            {
-                get { return false; }
-            }
+            public override Type PropertyType { get; } = typeof(T);
+
+            public override bool IsReadOnly { get; } = false;
+
             public override bool CanResetValue(object component)
             {
                 return true;
@@ -137,10 +127,8 @@ namespace SDBees.Plugs.Properties
             {
                 return !GetBagValue(component).IsDefaultValue;
             }
-            public override bool SupportsChangeEvents
-            {
-                get { return true; }
-            }
+            public override bool SupportsChangeEvents { get; } = true;
+
             public override void AddValueChanged(object component,
     EventHandler handler)
             {
@@ -157,7 +145,7 @@ namespace SDBees.Plugs.Properties
     sealed class BagValue<T> : IBagValue, ITypeDescriptorContext
     {
         private T value;
-        private readonly IBag bag;
+
         void IBagValue.ResetValue()
         {
             Value = Definition.DefaultValue;
@@ -170,21 +158,21 @@ namespace SDBees.Plugs.Properties
                     Definition.DefaultValue);
             }
         }
-        private readonly BagDefinition<T> definition;
-        public IBag Bag { get { return bag; } }
-        public BagDefinition<T> Definition { get { return definition; } }
+
+        public IBag Bag { get; }
+        public BagDefinition<T> Definition { get; }
+
         public BagValue(IBag bag, BagDefinition<T> definition)
         {
-            if (bag == null) throw new ArgumentNullException("bag");
             if (definition == null) throw new
-    ArgumentNullException("definition");
-            this.bag = bag;
-            this.definition = definition;
+    ArgumentNullException(nameof(definition));
+            Bag = bag ?? throw new ArgumentNullException(nameof(bag));
+            Definition = definition;
             Value = Definition.DefaultValue;
         }
         public T Value
         {
-            get { return value; }
+            get => value;
             set
             {
                 if (EqualityComparer<T>.Default.Equals(Value, value))
@@ -201,8 +189,8 @@ namespace SDBees.Plugs.Properties
         }
         object IBagValue.Value
         {
-            get { return Value; }
-            set { Value = (T)value; }
+            get => Value;
+            set => Value = (T)value;
         }
 
         IContainer ITypeDescriptorContext.Container
@@ -260,7 +248,7 @@ namespace SDBees.Plugs.Properties
         private void OnEvent(object key)
         {
             if (events == null) return;
-            EventHandler handler = events[key] as EventHandler;
+            var handler = events[key] as EventHandler;
             if (handler != null) handler(this, EventArgs.Empty);
         }
         public event PropertyChangedEventHandler PropertyChanged
@@ -273,7 +261,7 @@ namespace SDBees.Plugs.Properties
         private void OnPropertyChanged(string propertyName)
         {
             if (events == null) return;
-            PropertyChangedEventHandler handler =
+            var handler =
     events[EVENT_PropertyChanged] as PropertyChangedEventHandler;
             if (handler != null) handler(this, new
     PropertyChangedEventArgs(propertyName));
@@ -310,7 +298,7 @@ namespace SDBees.Plugs.Properties
         public static void AddProperty<T>(string propertyName, params 
 Attribute[] attributes)
         {
-            BagDefinition<T> def = new BagDefinition<T>(propertyName,
+            var def = new BagDefinition<T>(propertyName,
     attributes);
             lock (defintions)
             {
@@ -322,10 +310,10 @@ Attribute[] attributes)
         {
             lock (defintions)
             {
-                PropertyDescriptor[] props = new
+                var props = new
     PropertyDescriptor[defintions.Count];
-                int i = 0;
-                foreach (IBagDefinition def in defintions.Values)
+                var i = 0;
+                foreach (var def in defintions.Values)
                 {
                     props[i++] = def.Property;
                 }
@@ -340,7 +328,6 @@ Attribute[] attributes)
             }
         }
 
-        public Bag() { }
         static Bag()
         {
             BagDescriptionProvider.Initialize();
@@ -356,7 +343,7 @@ Attribute[] attributes)
         internal static void Initialize() { } // to force static ctor
         static BagDescriptionProvider()
         {
-            ICustomTypeDescriptor parent =
+            var parent =
     TypeDescriptor.GetProvider(typeof(Bag)).GetTypeDescriptor(typeof(Bag));
             descriptor = new BagTypeDescriptor(parent);
             TypeDescriptor.AddProvider(new BagDescriptionProvider(),

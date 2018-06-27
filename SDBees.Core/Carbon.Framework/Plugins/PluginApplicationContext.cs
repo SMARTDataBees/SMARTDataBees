@@ -31,8 +31,8 @@
 
 using System;
 using System.Windows.Forms;
-
 using Carbon.Common;
+using FormCollection = Carbon.Common.FormCollection;
 
 namespace Carbon.Plugins
 {
@@ -41,14 +41,14 @@ namespace Carbon.Plugins
 	/// </summary>
 	public sealed class PluginApplicationContext : ApplicationContext
 	{		
-		private Carbon.Common.FormCollection _topLevelWindows;
+		private FormCollection _topLevelWindows;
 
 		/// <summary>
 		/// Initializes a new instance of the SnapInApplicationContext class
 		/// </summary>
 		public PluginApplicationContext()
 		{
-            _topLevelWindows = new Carbon.Common.FormCollection();			
+            _topLevelWindows = new FormCollection();			
 		}				
 
 		/// <summary>
@@ -61,7 +61,7 @@ namespace Carbon.Plugins
 				throw new ArgumentNullException("form");
 
 			// wire up to the form's closed event
-			form.Closed += new EventHandler(OnTopLevelWindowClosed);
+			form.Closed += OnTopLevelWindowClosed;
 
 			// add the window to the list
 			lock (_topLevelWindows)
@@ -80,7 +80,7 @@ namespace Carbon.Plugins
 				throw new ArgumentNullException("form");
 
 			// unwire from the form's closed event
-			form.Closed -= new EventHandler(OnTopLevelWindowClosed);
+			form.Closed -= OnTopLevelWindowClosed;
 
 			// lock the window list
 			lock(_topLevelWindows)
@@ -91,7 +91,7 @@ namespace Carbon.Plugins
 				// if that was the last top level window
 				if (_topLevelWindows.Count == 0)
 					// go ahead and exit the main thread
-					this.ExitThread();
+					ExitThread();
 			}
 		}
 
@@ -105,10 +105,10 @@ namespace Carbon.Plugins
 			try
 			{
 				// snag the sender of the event
-				Form form = (Form)sender;
+				var form = (Form)sender;
 
 				// remove the window from out list, if it's the last one this will exit the main thread
-				this.RemoveTopLevelWindow(form);
+				RemoveTopLevelWindow(form);
 			}
 			catch(Exception ex)
 			{

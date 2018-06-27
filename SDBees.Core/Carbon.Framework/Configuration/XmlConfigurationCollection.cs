@@ -30,10 +30,10 @@
 //	============================================================================
 
 using System;
-using System.Diagnostics;
-using System.IO;
 using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 
 namespace Carbon.Configuration
 {
@@ -59,18 +59,15 @@ namespace Carbon.Configuration
 		
 		public XmlConfigurationCollection(params XmlConfiguration[] configurations)
 		{
-			this.Add(configurations);
+			Add(configurations);
 		}
 
 		public int Add(XmlConfiguration configuration)
 		{
-			if (this.Contains(configuration))
+			if (Contains(configuration))
 				throw new ArgumentException("ElementName already exists. ElementName in collection: " + configuration.ElementName + " ElementName being added: " + configuration.ElementName);
 
-			int index = base.InnerList.Add(configuration);
-			
-			/// bind to events 
-
+		    InnerList.Add(configuration);
 			return 0;
 		}
 		
@@ -80,11 +77,11 @@ namespace Carbon.Configuration
 			{
 				//				throw new ArgumentNullException("configuration");
 
-				foreach(XmlConfiguration configuration in configurations)
+				foreach(var configuration in configurations)
 				{
 					try
 					{
-						this.Add(configuration);
+						Add(configuration);
 					}
 					catch(Exception ex)
 					{
@@ -96,15 +93,15 @@ namespace Carbon.Configuration
 
 		public void Remove(XmlConfiguration configuration)
 		{
-			if (this.Contains(configuration))
+			if (Contains(configuration))
 			{
-				base.InnerList.Remove(configuration);
+				InnerList.Remove(configuration);
 			}
 		}
 
 		public bool Contains(XmlConfiguration configuration)
 		{
-			foreach(XmlConfiguration config in base.InnerList)
+			foreach(XmlConfiguration config in InnerList)
 				if (config.ElementName == configuration.ElementName)
 					return true;
 			return false;
@@ -112,7 +109,7 @@ namespace Carbon.Configuration
 
 		public XmlConfiguration[] ToArray()
 		{
-			return base.InnerList.ToArray(typeof(XmlConfiguration)) as XmlConfiguration[];
+			return InnerList.ToArray(typeof(XmlConfiguration)) as XmlConfiguration[];
 		}
 		
 		/// <summary>
@@ -123,11 +120,11 @@ namespace Carbon.Configuration
 		{
 			get
 			{
-				return base.InnerList[index] as XmlConfiguration;
+				return InnerList[index] as XmlConfiguration;
 			}
 			set
 			{
-				base.InnerList[index] = value;
+				InnerList[index] = value;
 			}
 		}
 
@@ -139,17 +136,17 @@ namespace Carbon.Configuration
 		{
 			get
 			{
-				foreach(XmlConfiguration configuration in base.InnerList)
+				foreach(XmlConfiguration configuration in InnerList)
 					if (configuration.ElementName == elementName)
 						return configuration;
 				return null;
 			}
 			set
 			{
-				for(int i = 0; i < base.InnerList.Count; i++)
-					if (((XmlConfiguration)base.InnerList[i]).ElementName == value.ElementName)
+				for(var i = 0; i < InnerList.Count; i++)
+					if (((XmlConfiguration)InnerList[i]).ElementName == value.ElementName)
 					{
-						base.InnerList[i] = value;
+						InnerList[i] = value;
 						return;
 					}
 			}
@@ -165,25 +162,25 @@ namespace Carbon.Configuration
 		{
 			get
 			{
-				/// try and find the configuration in the collection
-				XmlConfiguration configuration = this[elementName];
+				// try and find the configuration in the collection
+				var configuration = this[elementName];
 				
-				/// if it's not in the collection
+				// if it's not in the collection
 				if (configuration == null)
 				{
-					/// perhaps it does in the filesystem, if so then read it, and optionally add it to the collection
+					// perhaps it does in the filesystem, if so then read it, and optionally add it to the collection
 					if (File.Exists(path))
 					{
 						try
 						{
-							FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
-							XmlConfigurationReader reader = new XmlConfigurationReader();
+							var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+							var reader = new XmlConfigurationReader();
 							configuration = reader.Read(stream);
 							configuration.Path = path;								
 							stream.Close();
 
 							if (addToCollectionIfNew)
-								this.Add(configuration);
+								Add(configuration);
 
 							return configuration;
 						} 
@@ -193,24 +190,24 @@ namespace Carbon.Configuration
 						}
 					}
 
-					/// apparently it doesnt' exist in the filesystem
+					// apparently it doesnt' exist in the filesystem
 					if (createIfNotFound)
 					{
-						/// so create a new file
+						// so create a new file
 						configuration = new XmlConfiguration();						
 						configuration.Path = path;	
 						configuration.ElementName = elementName;
 
-						/// save the blank config
+						// save the blank config
 						Directory.CreateDirectory(path);
-						FileStream stream = new FileStream(path, FileMode.Create, FileAccess.Write);
-						XmlConfigurationWriter writer = new XmlConfigurationWriter();
+						var stream = new FileStream(path, FileMode.Create, FileAccess.Write);
+						var writer = new XmlConfigurationWriter();
 						writer.Write(configuration, stream, false);
 						stream.Close();						
 
-						/// add it to the config if so instructed
+						// add it to the config if so instructed
 						if (addToCollectionIfNew)
-							this.Add(configuration);
+							Add(configuration);
 					}
 				}
 				return configuration;

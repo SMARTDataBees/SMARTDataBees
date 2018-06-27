@@ -29,10 +29,6 @@
 //
 //	============================================================================
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using Carbon.UI;
 
 namespace Carbon.AutoUpdate

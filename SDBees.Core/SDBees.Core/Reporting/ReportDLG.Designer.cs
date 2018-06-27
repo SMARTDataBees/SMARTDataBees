@@ -20,6 +20,9 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.ComponentModel;
+
 namespace SDBees.Reporting
 {
     partial class ReportDLG
@@ -27,7 +30,7 @@ namespace SDBees.Reporting
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -50,7 +53,7 @@ namespace SDBees.Reporting
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ReportDLG));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(ReportDLG));
             this.SuspendLayout();
             // 
             // ReportDLG

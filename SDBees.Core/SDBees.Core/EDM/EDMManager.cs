@@ -20,24 +20,20 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-
+using System.IO;
+using System.Linq;
 using System.Windows.Forms;
-
-using SDBees.Plugs.TemplateTreeNode;
-using SDBees.Plugs.TreenodeHelper;
+using Carbon.Plugins;
+using Carbon.Plugins.Attributes;
+using SDBees.Core.Global;
 using SDBees.DB;
 using SDBees.Main.Window;
-
-using System.Configuration;
-using System.IO;
-
-using Carbon;
-using Carbon.Plugins.Attributes;
-using Carbon.Plugins;
+using SDBees.Plugs.TemplateTreeNode;
+using SDBees.Plugs.TreenodeHelper;
+using Attribute = SDBees.DB.Attribute;
 
 namespace SDBees.EDM
 {
@@ -47,14 +43,14 @@ namespace SDBees.EDM
     [PluginId("B11CB5B7-82D2-455B-B99D-8E5A4A7E2119")]
     [PluginManufacturer("G.E.M Team-Solutions")]
     [PluginVersion("1.0.0")]
-    [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
-    [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
-    [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
+    [PluginDependency(typeof(MainWindowApplication))]
+    [PluginDependency(typeof(SDBeesDBConnection))]
+    [PluginDependency(typeof(GlobalManager))]
 
-    public class EDMManager : SDBees.Plugs.TreenodeHelper.TemplateTreenodeHelper
+    public class EDMManager : TemplateTreenodeHelper
     {
-        private static EDMManager _theInstance = null;
-        private EDMUserControl1 _myControl = null;
+        private static EDMManager _theInstance;
+        private EDMUserControl1 _myControl;
         private string mRootDirectory;
 
         public static EDMManager Current
@@ -73,7 +69,6 @@ namespace SDBees.EDM
         }
 
         public EDMManager()
-            : base()
         {
             _theInstance = this;
 
@@ -91,7 +86,7 @@ namespace SDBees.EDM
             {
                 Console.WriteLine("EDM Manager Plugin starts\n");
 
-                this.StartMe(context, e);
+                StartMe(context, e);
 
                 mRootDirectory = MyDBManager.CurrentServerConfigItem.EDMRootDirectory;
 
@@ -147,19 +142,19 @@ namespace SDBees.EDM
         {
             if (tabPage != null)
             {
-                this._myControl.TemplateTreenodeTag = selectedTag;
+                _myControl.TemplateTreenodeTag = selectedTag;
 
                 tabPage.Controls.Clear();
-                tabPage.Controls.Add(this.MyUserControl());
-                this.MyUserControl().Dock = DockStyle.Fill;
+                tabPage.Controls.Add(MyUserControl());
+                MyUserControl().Dock = DockStyle.Fill;
 
-                this._myControl.Refresh();
+                _myControl.Refresh();
             }
         }
 
         public int FindAllEDMDatas(Database database, ref ArrayList objectIds, ref Error error)
         {
-            Table table = EDMBaseData.Table;
+            var table = EDMBaseData.Table;
             return database.Select(table, table.PrimaryKey, ref objectIds, ref error);
         }
 
@@ -170,12 +165,15 @@ namespace SDBees.EDM
 
         public int FindEDMDatasForObject(Database database, string pluginName, string objectId, ref ArrayList objectIds, ref Error error)
         {
-            Table table = EDMBaseData.Table;
-            SDBees.DB.Attribute attributePlugin = new SDBees.DB.Attribute(table.Columns["plugin"], pluginName);
-            SDBees.DB.Attribute attributeObject = new SDBees.DB.Attribute(table.Columns["object_id"], objectId);
-            string criteria1 = database.FormatCriteria(attributePlugin, DbBinaryOperator.eIsEqual, ref error);
-            string criteria2 = database.FormatCriteria(attributeObject, DbBinaryOperator.eIsEqual, ref error);
-            string criteria = "(" + criteria1 + ") AND (" + criteria2 + ")";
+            var table = EDMBaseData.Table;
+              var pluginColumn = table.Columns.FirstOrDefault(clmn => clmn.Name.Equals("plugin"));
+            var attributePlugin = new Attribute(pluginColumn, pluginName);
+
+            var objectIdColumn = table.Columns.FirstOrDefault(clmn => clmn.Name.Equals("object_id"));
+            var attributeObject = new Attribute(objectIdColumn, objectId);
+            var criteria1 = database.FormatCriteria(attributePlugin, DbBinaryOperator.eIsEqual, ref error);
+            var criteria2 = database.FormatCriteria(attributeObject, DbBinaryOperator.eIsEqual, ref error);
+            var criteria = "(" + criteria1 + ") AND (" + criteria2 + ")";
             return database.Select(table, table.PrimaryKey, criteria, ref objectIds, ref error);
         }
 
@@ -196,14 +194,14 @@ namespace SDBees.EDM
 
         public string GetFullCurrentPath()
         {
-            return this.GetFullPathname(this._myControl.CurrentSelectedPath);
+            return GetFullPathname(_myControl.CurrentSelectedPath);
         }
 
         public bool IsInRootDirectory(string fullPath)
         {
-            DirectoryInfo dirFullPath = new DirectoryInfo(fullPath);
-            DirectoryInfo dirRoot = new DirectoryInfo(mRootDirectory);
-            return dirFullPath.FullName.ToLower().Contains(dirRoot.FullName.ToLower()) == true ? true : false;
+            var dirFullPath = new DirectoryInfo(fullPath);
+            var dirRoot = new DirectoryInfo(mRootDirectory);
+            return dirFullPath.FullName.ToLower().Contains(dirRoot.FullName.ToLower()) ? true : false;
             //return (fullPath.Length >= mRootDirectory.Length) && (fullPath.Substring(0, mRootDirectory.Length).CompareTo(mRootDirectory) == 0);
         }
 
@@ -214,7 +212,7 @@ namespace SDBees.EDM
         /// <returns></returns>
         public string GetRelativePathname(string fullPath)
         {
-            string partialFoldername = fullPath;
+            var partialFoldername = fullPath;
 
             if (fullPath.CompareTo(mRootDirectory) == 0)
             {
@@ -244,7 +242,7 @@ namespace SDBees.EDM
             if (MyDBManager != null)
             {
                 // Verify that the required Tables are created/updated in the database
-                Database database = MyDBManager.Database;
+                var database = MyDBManager.Database;
                 EDMBaseData.InitTableSchema(database);
             }
         }

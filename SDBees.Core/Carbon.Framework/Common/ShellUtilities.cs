@@ -30,8 +30,9 @@
 //	============================================================================
 
 using System;
-using System.IO;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace Carbon.Common
@@ -56,7 +57,7 @@ namespace Carbon.Common
 		/// Extract the Icon at the predefined Shell size
 		/// </summary>
 		ShellIconSize = 0x0004
-	};
+	}
 		
 	/// <summary>
 	/// Defines the predefined styles that can be applied to Icon's extracted using SHGetFileInfo
@@ -83,12 +84,12 @@ namespace Carbon.Common
 		/// Gets the open version of the Icon, usually applied to folders that can display open and closed versions of their icons
 		/// </summary>
 		OpenIconStyle = ShellUtilities.SHGFI_OPENICON
-	};
+	}
 		
 	/// <summary>
 	/// Provides utility methods for retrieving Windows shell information.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public sealed class ShellUtilities
 	{
 		internal const int MAX_PATH = 256;
@@ -133,7 +134,7 @@ namespace Carbon.Common
 			public string szDisplayName;
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
 			public string szTypeName;
-		};
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the ShellUtilities class.
@@ -152,7 +153,7 @@ namespace Carbon.Common
 		/// <returns></returns>
 		public static Icon GetIconFromPath(string path, IconSizes size, IconStyles style, FileAttributes attributes)
 		{
-			SHFILEINFO shfi = new SHFILEINFO();
+			var shfi = new SHFILEINFO();
 			uint uFlags = SHGFI_ICON;
 			
 			uFlags |= (uint)size;
@@ -162,7 +163,7 @@ namespace Carbon.Common
 			
 			SHGetFileInfo(path,	(int)attributes, ref shfi, (uint)Marshal.SizeOf(shfi), uFlags);
 
-			Icon icon = (Icon)Icon.FromHandle(shfi.hIcon).Clone();
+			var icon = (Icon)Icon.FromHandle(shfi.hIcon).Clone();
 			DeleteObject(shfi.hIcon);
 			return icon;
 		}
@@ -177,7 +178,7 @@ namespace Carbon.Common
 		/// <returns></returns>
 		public static Bitmap GetBitmapFromPath(string path,	IconSizes size,	IconStyles style, FileAttributes attributes)
 		{
-			SHFILEINFO shfi = new SHFILEINFO();
+			var shfi = new SHFILEINFO();
 			uint uFlags = SHGFI_ICON;
 			
 			uFlags |= (uint)size;
@@ -187,7 +188,7 @@ namespace Carbon.Common
 			
 			SHGetFileInfo(path,	(int)attributes, ref shfi, (uint)Marshal.SizeOf(shfi), uFlags);
 						
-			Bitmap bitmap = (Bitmap)Bitmap.FromHicon(shfi.hIcon).Clone();			
+			var bitmap = (Bitmap)Bitmap.FromHicon(shfi.hIcon).Clone();			
 			DeleteObject(shfi.hIcon);
 			return bitmap;
 		}
@@ -202,7 +203,7 @@ namespace Carbon.Common
 		/// <returns></returns>
 		public static Image GetImageFromPath(string path, IconSizes size, IconStyles style, FileAttributes attributes)
 		{
-			SHFILEINFO shfi = new SHFILEINFO();
+			var shfi = new SHFILEINFO();
 			uint uFlags = SHGFI_ICON;
 			
 			uFlags |= (uint)size;
@@ -212,7 +213,7 @@ namespace Carbon.Common
 			
 			SHGetFileInfo(path,	(int)attributes, ref shfi, (uint)Marshal.SizeOf(shfi), uFlags);
 						
-			Image image = (Image)Bitmap.FromHicon(shfi.hIcon).Clone();			
+			var image = (Image)Bitmap.FromHicon(shfi.hIcon).Clone();			
 			DeleteObject(shfi.hIcon);
 			return image;
 		}
@@ -224,8 +225,8 @@ namespace Carbon.Common
 		/// <returns></returns>
 		public static string GetTypeName(string path)
 		{
-			SHFILEINFO shfi = new SHFILEINFO();
-			IntPtr p = SHGetFileInfo(path, (int)FileAttributes.Normal, ref shfi, (uint)Marshal.SizeOf(shfi), (uint)(SHGFI_TYPENAME | SHGFI_USEFILEATTRIBUTES));
+			var shfi = new SHFILEINFO();
+			var p = SHGetFileInfo(path, (int)FileAttributes.Normal, ref shfi, (uint)Marshal.SizeOf(shfi), SHGFI_TYPENAME | SHGFI_USEFILEATTRIBUTES);
 			return shfi.szTypeName;
 		}
 
@@ -236,8 +237,8 @@ namespace Carbon.Common
 		/// <returns></returns>
 		public static string GetDisplayName(string path)
 		{
-			SHFILEINFO shfi = new SHFILEINFO();
-			IntPtr p = SHGetFileInfo(path, (int)FileAttributes.Normal, ref shfi, (uint)Marshal.SizeOf(shfi), (uint)(SHGFI_DISPLAYNAME | SHGFI_USEFILEATTRIBUTES));
+			var shfi = new SHFILEINFO();
+			var p = SHGetFileInfo(path, (int)FileAttributes.Normal, ref shfi, (uint)Marshal.SizeOf(shfi), SHGFI_DISPLAYNAME | SHGFI_USEFILEATTRIBUTES);
 			return shfi.szDisplayName;
 		}
 
@@ -250,8 +251,8 @@ namespace Carbon.Common
 		{
 			try
 			{
-				FileAttributes attributes = File.GetAttributes(path);				
-				return ((attributes & System.IO.FileAttributes.Directory) == System.IO.FileAttributes.Directory);				
+				var attributes = File.GetAttributes(path);				
+				return ((attributes & FileAttributes.Directory) == FileAttributes.Directory);				
 			}
 			catch(Exception ex)
 			{
@@ -269,7 +270,7 @@ namespace Carbon.Common
 		{		
 			try
 			{
-				DateTime last = System.IO.File.GetLastWriteTime(path);
+				var last = File.GetLastWriteTime(path);
 				return last.ToString();
 			}
 			catch(Exception ex)

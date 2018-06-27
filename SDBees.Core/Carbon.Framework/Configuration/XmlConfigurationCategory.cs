@@ -29,11 +29,9 @@
 //
 //	============================================================================
 
-using System;
-using System.Collections;
 using System.ComponentModel;
 using System.ComponentModel.Design;
-using System.Drawing;
+using System.Drawing.Design;
 
 namespace Carbon.Configuration
 {
@@ -55,7 +53,7 @@ namespace Carbon.Configuration
 		/// <summary>
 		/// Initializes a new instance of the XmlConfigurationCategory class
 		/// </summary>
-		public XmlConfigurationCategory() : base()
+		public XmlConfigurationCategory()
 		{			
 			
 		}
@@ -87,7 +85,7 @@ namespace Carbon.Configuration
 		/// <summary>
 		/// Initializes a new instance of the XmlConfigurationCategory class
 		/// </summary>
-		public XmlConfigurationCategory(XmlConfigurationCategory category) : base((XmlConfigurationElement)category)
+		public XmlConfigurationCategory(XmlConfigurationCategory category) : base(category)
 		{
 			_options = category.Options;
 			_categories = category.Categories;
@@ -102,7 +100,7 @@ namespace Carbon.Configuration
 		/// Gets or sets a collection of options (sub-options for this XmlConfigurationElement)
 		/// </summary>
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-		[Editor(typeof(CollectionEditor), typeof(System.Drawing.Design.UITypeEditor))]
+		[Editor(typeof(CollectionEditor), typeof(UITypeEditor))]
 		[Description("The collection of options contained in this category.")]
 		[Category("Category Properties")]
 		public XmlConfigurationOptionCollection Options
@@ -113,10 +111,10 @@ namespace Carbon.Configuration
 				{
 					_options = new XmlConfigurationOptionCollection();	
 					_options.Parent = this;
-					_options.BeforeEdit += new XmlConfigurationElementCancelEventHandler(base.OnBeforeEdit);
-					_options.Changed += new XmlConfigurationElementEventHandler(base.OnChanged);
-					_options.AfterEdit += new XmlConfigurationElementEventHandler(base.OnAfterEdit);
-					_options.EditCancelled += new XmlConfigurationElementEventHandler(base.OnEditCancelled);
+					_options.BeforeEdit += OnBeforeEdit;
+					_options.Changed += OnChanged;
+					_options.AfterEdit += OnAfterEdit;
+					_options.EditCancelled += OnEditCancelled;
 					if (_isBeingInitialized)
 						_options.BeginInit();
 				}
@@ -126,10 +124,10 @@ namespace Carbon.Configuration
 			{
 				_options = (XmlConfigurationOptionCollection)value.Clone();
 				_options.Parent = this;
-				_options.BeforeEdit += new XmlConfigurationElementCancelEventHandler(base.OnBeforeEdit);
-				_options.Changed += new XmlConfigurationElementEventHandler(base.OnChanged);
-				_options.AfterEdit += new XmlConfigurationElementEventHandler(base.OnAfterEdit);
-				_options.EditCancelled += new XmlConfigurationElementEventHandler(base.OnEditCancelled);
+				_options.BeforeEdit += OnBeforeEdit;
+				_options.Changed += OnChanged;
+				_options.AfterEdit += OnAfterEdit;
+				_options.EditCancelled += OnEditCancelled;
 				if (_isBeingInitialized)
 					_options.BeginInit();
 			}
@@ -139,7 +137,7 @@ namespace Carbon.Configuration
 		/// Gets or sets a collection of categories (sub-categories for this XmlConfigurationElement)
 		/// </summary>
 		[DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-		[Editor(typeof(CollectionEditor), typeof(System.Drawing.Design.UITypeEditor))]
+		[Editor(typeof(CollectionEditor), typeof(UITypeEditor))]
 		[Description("The collection of categories contained in this category.")]
 		[Category("Category Properties")]
 		public XmlConfigurationCategoryCollection Categories
@@ -150,10 +148,10 @@ namespace Carbon.Configuration
 				{
 					_categories = new XmlConfigurationCategoryCollection();	
 					_categories.Parent = this;
-					_categories.BeforeEdit += new XmlConfigurationElementCancelEventHandler(base.OnBeforeEdit);
-					_categories.Changed += new XmlConfigurationElementEventHandler(base.OnChanged);			
-					_categories.AfterEdit += new XmlConfigurationElementEventHandler(base.OnAfterEdit);
-					_categories.EditCancelled += new XmlConfigurationElementEventHandler(base.OnEditCancelled);
+					_categories.BeforeEdit += OnBeforeEdit;
+					_categories.Changed += OnChanged;			
+					_categories.AfterEdit += OnAfterEdit;
+					_categories.EditCancelled += OnEditCancelled;
 					if (_isBeingInitialized)
 						_categories.BeginInit();
 				}
@@ -163,10 +161,10 @@ namespace Carbon.Configuration
 			{
 				_categories = (XmlConfigurationCategoryCollection)value.Clone();				
 				_categories.Parent = this;
-				_categories.BeforeEdit += new XmlConfigurationElementCancelEventHandler(base.OnBeforeEdit);
-				_categories.Changed += new XmlConfigurationElementEventHandler(base.OnChanged);			
-				_categories.AfterEdit += new XmlConfigurationElementEventHandler(base.OnAfterEdit);
-				_categories.EditCancelled += new XmlConfigurationElementEventHandler(base.OnEditCancelled);
+				_categories.BeforeEdit += OnBeforeEdit;
+				_categories.Changed += OnChanged;			
+				_categories.AfterEdit += OnAfterEdit;
+				_categories.EditCancelled += OnEditCancelled;
 				if (_isBeingInitialized)
 					_categories.BeginInit();
 			}
@@ -209,11 +207,8 @@ namespace Carbon.Configuration
 			{
 				if (_parent == null)
 					return base.Fullpath;
-				else
-				{
-					string path = _parent.Fullpath;
-					return (path != null ? path + @"\" + base.Fullpath : base.Fullpath);
-				}
+			    var path = _parent.Fullpath;
+			    return (path != null ? path + @"\" + base.Fullpath : base.Fullpath);
 			}
 		}
 
@@ -221,8 +216,8 @@ namespace Carbon.Configuration
 		{
 			get
 			{
-				bool anyCategory = false; 
-				bool anyOption = false;
+				var anyCategory = false; 
+				var anyOption = false;
 							
 				if (_categories != null)
 					anyCategory = _categories.HasChanges;
@@ -318,11 +313,11 @@ namespace Carbon.Configuration
 		{
 			if (base.ApplyChanges (editableObject, actions))
 			{
-				XmlConfigurationCategory category = editableObject as XmlConfigurationCategory;			
+				var category = editableObject as XmlConfigurationCategory;			
 				if (category != null)
 				{
 					if (_categories != null)
-						_categories.ApplyChanges((ISupportsEditing)category.Categories, actions);
+						_categories.ApplyChanges(category.Categories, actions);
 				}
 				return true;
 			}
@@ -333,14 +328,14 @@ namespace Carbon.Configuration
 		{
 			if (base.ApplyToSelf(editableObject, actions))
 			{
-				XmlConfigurationCategory category = editableObject as XmlConfigurationCategory;			
+				var category = editableObject as XmlConfigurationCategory;			
 				if (category != null)
 				{
 					if (_options != null)
-						_options.ApplyToSelf((ISupportsEditing)category.Options, actions);					
+						_options.ApplyToSelf(category.Options, actions);					
 
 					if (_categories != null)
-						_categories.ApplyToSelf((ISupportsEditing)category.Categories, actions);
+						_categories.ApplyToSelf(category.Categories, actions);
 				}
 				return true;
 			}
@@ -354,7 +349,7 @@ namespace Carbon.Configuration
 		public new XmlConfigurationCategory Clone()
 		{						
 			XmlConfigurationCategory clone = null;
-			XmlConfigurationElement element = (XmlConfigurationElement)base.Clone();
+			var element = (XmlConfigurationElement)base.Clone();
 			if (element != null)
 			{
 				clone = new XmlConfigurationCategory(element);
@@ -384,7 +379,7 @@ namespace Carbon.Configuration
 
 		public XmlConfigurationCategory FindCategory(string keyOrPath)
 		{			
-			return this.Categories.FindCategory(keyOrPath);
+			return Categories.FindCategory(keyOrPath);
 		}
 	}
 }

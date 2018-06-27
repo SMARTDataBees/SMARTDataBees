@@ -22,18 +22,11 @@
 // #EndHeader# ================================================================
 namespace SDBees.Core.Model
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// Typ der boolschen Operation
     /// </summary>
-	public enum SDBeesFilterOperator : int
-	{
+	public enum SDBeesFilterOperator
+    {
 		AND,
 		OR
 	}

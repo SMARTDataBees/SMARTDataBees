@@ -40,43 +40,28 @@ namespace Carbon.Common
 	/// </summary>
 	public sealed class VersionedDirectory
 	{
-		private Version _version;
-		private DirectoryInfo _directory;
-
-		/// <summary>
-		/// Initializes a new instance of the VersionedDirectory class.
-		/// </summary>
-		/// <param name="version">A version to associate with this directory.</param>
-		/// <param name="file">Directory information that is the context of this object.</param>
-		public VersionedDirectory(Version version, DirectoryInfo directory)
+	    /// <summary>
+        /// Initializes a new instance of the VersionedDirectory class.
+        /// </summary>
+        /// <param name="version">A version to associate with this directory.</param>
+        /// <param name="directory">Directory information that is the context of this object.</param>
+        public VersionedDirectory(Version version, DirectoryInfo directory)
 		{
-			_version = version;
-			_directory = directory;
+			Version = version;
+			Directory = directory;
 		}
 
 		/// <summary>
 		/// Returns a version that is associated with this directory.
 		/// </summary>
-		public Version Version
-		{
-			get
-			{
-				return _version;
-			}
-		}
+		public Version Version { get; }
 
-		/// <summary>
+	    /// <summary>
 		/// Returns the directory 
 		/// </summary>
-		public DirectoryInfo Directory 
-		{
-			get	
-			{
-				return _directory;
-			}
-		}
+		public DirectoryInfo Directory { get; }
 
-		#region My Static Methods
+	    #region static Mmthods
 
 		/// <summary>
 		/// 
@@ -86,15 +71,15 @@ namespace Carbon.Common
 		public static VersionedDirectory[] Sort(VersionedDirectory[] directories)
 		{
 			// front to back - 1 
-			for(int i = 0; i < directories.Length - 1; i++)
+			for(var i = 0; i < directories.Length - 1; i++)
 			{
 				// front + 1 to back
-				for(int j = i + 1; j < directories.Length; j++)
+				for(var j = i + 1; j < directories.Length; j++)
 				{			
 					if (directories[i].Version < directories[j].Version)
 					{											 
 						// swap i with j, where i=1 and j=2
-						VersionedDirectory directory = directories[j];
+						var directory = directories[j];
 						directories[j] = directories[i];
 						directories[i] = directory;
 					}													

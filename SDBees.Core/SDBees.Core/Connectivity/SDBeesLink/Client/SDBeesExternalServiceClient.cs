@@ -1,25 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
-using System.ServiceModel;
-using System.Text;
 using System.Diagnostics;
-
+using System.ServiceModel;
+using EXOE.CsharpHelper;
+using SDBees.Core.Connectivity.SDBeesLink.Service;
 using SDBees.Core.Model;
-using SDBees.Core.Connectivity.SDBeesLink;
 
 namespace SDBees.Core.Connectivity.SDBeesLink
 {
     [CallbackBehavior(UseSynchronizationContext = false)] 
-    public class SDBeesExternalServiceClient : SDBees.Core.Connectivity.SDBeesLink.Service.ISDBeesExternalPluginCallbackService
+    public class SDBeesExternalServiceClient : ISDBeesExternalPluginCallbackService
     {
-        private DuplexChannelFactory<SDBees.Core.Connectivity.SDBeesLink.Service.ISDBeesExternalPluginService> _namedPipeBindingFactory;
-        private SDBees.Core.Connectivity.SDBeesLink.Service.ISDBeesExternalPluginService _namedPipeBindingProxy;
+        private DuplexChannelFactory<ISDBeesExternalPluginService> _namedPipeBindingFactory;
+        private ISDBeesExternalPluginService _namedPipeBindingProxy;
         //private System.Threading.Timer _timer;
-        private SDBeesCallbackCommandQueue m_stack = null;
-        private Process m_process = null;
+        private SDBeesCallbackCommandQueue m_stack;
+        private Process m_process;
         
         public void PushCallbackCommand(SDBeesCallbackCommand command)
         {
@@ -43,7 +38,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink
         {
             m_clientname = UniqueClientName(clientName, m_process);
 
-            bool result = OpenDuplexChannel();
+            var result = OpenDuplexChannel();
 
             if (result)
             {
@@ -55,19 +50,19 @@ namespace SDBees.Core.Connectivity.SDBeesLink
 
         private bool OpenDuplexChannel()
         {
-            bool result = false;
+            var result = false;
 
             try
             {
-                InstanceContext context = new InstanceContext(Instance());
-                EndpointAddress endPoint = Service.GlobalVars.getServiceEndPoint();
-                System.ServiceModel.Channels.Binding binding = Service.GlobalVars.getServiceBinding();
-                _namedPipeBindingFactory = new DuplexChannelFactory<Service.ISDBeesExternalPluginService>(context, binding, endPoint);
+                var context = new InstanceContext(Instance());
+                var endPoint = GlobalVars.getServiceEndPoint();
+                var binding = GlobalVars.getServiceBinding();
+                _namedPipeBindingFactory = new DuplexChannelFactory<ISDBeesExternalPluginService>(context, binding, endPoint);
                 //_namedPipeBindingFactory.
 
                 _namedPipeBindingProxy = _namedPipeBindingFactory.CreateChannel();
-                ((IClientChannel)_namedPipeBindingProxy).Faulted += new EventHandler(Speaker_Faulted);
-                ((IClientChannel)_namedPipeBindingProxy).Opened += new EventHandler(Speaker_Opened);
+                ((IClientChannel)_namedPipeBindingProxy).Faulted += Speaker_Faulted;
+                ((IClientChannel)_namedPipeBindingProxy).Opened += Speaker_Opened;
                 ((IClientChannel)_namedPipeBindingProxy).Open();
 
                 //Connect to the SDBees project db
@@ -123,7 +118,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink
 
         private static string UniqueClientName(string clientName, Process process)
         {
-            return process.Id.ToString() + ":" + clientName;
+            return process.Id + ":" + clientName;
         }
 
         void Speaker_Opened(object sender, EventArgs e)
@@ -139,7 +134,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink
             return _namedPipeBindingProxy.MappingsGet(pluginId, roleId, docId);
         }
 
-        public void SendData(SDBeesExternalDocument doc, SDBeesDataSet dataset, SDBees.Core.Connectivity.SDBeesLink.SDBeesSyncMode mode, IntPtr windowHandle, bool blockApplication = true)
+        public void SendData(SDBeesExternalDocument doc, SDBeesDataSet dataset, SDBeesSyncMode mode, IntPtr windowHandle, bool blockApplication = true)
         {
             try
             {
@@ -160,7 +155,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink
 
         public static SDBeesExternalServiceClient Instance()
         {
-            return EXOE.CsharpHelper.Singleton<SDBeesExternalServiceClient>.Instance;
+            return Singleton<SDBeesExternalServiceClient>.Instance;
         }
 
         public SDBeesExternalDocument DocGet(string m_DocName)

@@ -33,7 +33,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
-
 using Carbon.Common;
 
 namespace Carbon.AutoUpdate.Common
@@ -66,30 +65,30 @@ namespace Carbon.AutoUpdate.Common
 					return null;
 
 				// append the product name to the updates path 
-				string path = Path.Combine(updatesPath, productName);
+				var path = Path.Combine(updatesPath, productName);
 
 				// if the directory doesn't exist, bail with null
 				if (!Directory.Exists(path))
 					return null;
 				
 				// find all of the manifest files in the path specified							
-				DirectoryInfo di = new DirectoryInfo(path);							
-				FileInfo[] files = di.GetFiles("*.manifest", SearchOption.TopDirectoryOnly);
+				var di = new DirectoryInfo(path);							
+				var files = di.GetFiles("*.manifest", SearchOption.TopDirectoryOnly);
 
 				// create versioned files from the results
-				VersionedFile[] versionedFiles = VersionedFile.CreateVersionedFiles(string.Format("{0}-", productName), files);
+				var versionedFiles = VersionedFile.CreateVersionedFiles($"{productName}-", files);
 
 				// sort them
 				versionedFiles = VersionedFile.Sort(versionedFiles);
 
 				// grab the latest version
-				VersionedFile latestVersion = VersionedFile.GetLatestVersion(versionedFiles);
+				var latestVersion = VersionedFile.GetLatestVersion(versionedFiles);
 				
 				// assuming there is a version available
 				if (latestVersion != null)
 				{					
 					// create a new xml document to hold the response
-					XmlDocument doc = new XmlDocument();
+					var doc = new XmlDocument();
 
 					// load the document with the xml
 					doc.Load(latestVersion.File.FullName);

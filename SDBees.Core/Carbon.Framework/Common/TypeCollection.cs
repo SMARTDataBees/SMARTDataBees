@@ -30,7 +30,7 @@
 //	============================================================================
 
 using System;
-using System.Collections;
+using System.Diagnostics;
 
 namespace Carbon.Common
 {
@@ -38,8 +38,8 @@ namespace Carbon.Common
 	/// Provides a strongly-typed collection of Type instances.
 	/// This class is thread safe.
 	/// </summary>	
-	[System.Diagnostics.DebuggerStepThrough()]
-	[Serializable()]
+	[DebuggerStepThrough]
+	[Serializable]
 	public sealed class TypeCollection : DisposableCollection	
 	{
 		private bool _allowDuplicates;
@@ -58,7 +58,7 @@ namespace Carbon.Common
 			/// </summary>
 			/// <param name="type"></param>
 			internal TypeAlreadyExistsException(Type type) : 
-				base(string.Format("The Type '{0}' already exists in the collection.", type.FullName))
+				base($"The Type '{type.FullName}' already exists in the collection.")
 			{
 				_type = type;
 			}
@@ -96,7 +96,7 @@ namespace Carbon.Common
 			if (types == null)
 				throw new ArgumentNullException("types");
 			
-			this.AddRange(types);
+			AddRange(types);
 		}
 
 		/// <summary>
@@ -105,7 +105,7 @@ namespace Carbon.Common
 		/// <param name="types">A TypeCollection filled with types to add to the collection</param>
 		public TypeCollection(TypeCollection types)
 		{
-			this.AddRange(types);
+			AddRange(types);
 		}
 
 		/// <summary>
@@ -129,14 +129,14 @@ namespace Carbon.Common
 		/// <param name="type">The Type to add</param>
 		public void Add(Type type)
 		{
-			if (!this.AllowDuplicates)
-				if (this.Contains(type))
+			if (!AllowDuplicates)
+				if (Contains(type))
 					throw new TypeAlreadyExistsException(type);
 
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
-				base.InnerList.Add(type);
-				EventManager.Raise<TypeCollectionEventArgs>(this.Changed, this, new TypeCollectionEventArgs(type, ObjectActions.Added));
+				InnerList.Add(type);
+				EventManager.Raise(Changed, this, new TypeCollectionEventArgs(type, ObjectActions.Added));
 			}			
 		}
 
@@ -146,8 +146,8 @@ namespace Carbon.Common
 		/// <param name="types">The array of Types to add</param>
 		public void AddRange(Type[] types)
 		{
-			foreach (Type type in types)
-				this.Add(type);
+			foreach (var type in types)
+				Add(type);
 		}
 
 		/// <summary>
@@ -161,7 +161,7 @@ namespace Carbon.Common
 
 			foreach (Type type in types)
 			{				
-				this.Add(type);
+				Add(type);
 			}
 		}
 
@@ -175,13 +175,13 @@ namespace Carbon.Common
 			if (type == null)
 				throw new ArgumentNullException("type");
 
-			if (this.Contains(type))
+			if (Contains(type))
 				throw new TypeAlreadyExistsException(type);
 
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{				
-				base.InnerList.Insert(index, type);
-				EventManager.Raise<TypeCollectionEventArgs>(this.Changed, this, new TypeCollectionEventArgs(type, ObjectActions.Added));
+				InnerList.Insert(index, type);
+				EventManager.Raise(Changed, this, new TypeCollectionEventArgs(type, ObjectActions.Added));
 			}				
 		}
 
@@ -203,11 +203,11 @@ namespace Carbon.Common
 		/// <param name="type">The Type to remove</param>
 		public void Remove(Type type)
 		{
-			if (this.Contains(type))
-				lock (base.SyncRoot)
+			if (Contains(type))
+				lock (SyncRoot)
 				{
-					base.InnerList.Remove(type);
-					EventManager.Raise<TypeCollectionEventArgs>(this.Changed, this, new TypeCollectionEventArgs(type, ObjectActions.Changed));
+					InnerList.Remove(type);
+					EventManager.Raise(Changed, this, new TypeCollectionEventArgs(type, ObjectActions.Changed));
 				}
 		}
 
@@ -220,9 +220,9 @@ namespace Carbon.Common
 		{
 			get
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
-					return base.InnerList[index] as Type;
+					return InnerList[index] as Type;
 				}
 			}
 		}
@@ -234,9 +234,9 @@ namespace Carbon.Common
 		{
 			get
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
-					foreach (Type t in base.InnerList)
+					foreach (Type t in InnerList)
 						if (string.Compare(t.FullName, fullName, true) == 0)
 							return t;
 					return null;
@@ -250,9 +250,9 @@ namespace Carbon.Common
 		/// <returns></returns>
 		public Type[] ToArray()
 		{
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
-				return base.InnerList.ToArray(typeof(Type)) as Type[];
+				return InnerList.ToArray(typeof(Type)) as Type[];
 			}
 		}
 	}

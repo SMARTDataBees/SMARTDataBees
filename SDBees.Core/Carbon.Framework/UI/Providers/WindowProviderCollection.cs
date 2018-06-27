@@ -29,8 +29,6 @@
 //
 //	============================================================================
 
-using System;
-
 using Carbon.Common;
 
 namespace Carbon.UI.Providers

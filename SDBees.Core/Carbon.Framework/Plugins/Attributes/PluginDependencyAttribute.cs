@@ -30,9 +30,6 @@
 //	============================================================================
 
 using System;
-using System.Reflection;
-
-using Carbon.Common;
 
 namespace Carbon.Plugins.Attributes
 {
@@ -43,9 +40,7 @@ namespace Carbon.Plugins.Attributes
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple=true)]
 	public sealed class PluginDependencyAttribute : Attribute
 	{
-		private readonly Type _type;
-
-        /// <summary>
+	    /// <summary>
         /// Initializes a new instance of the PluginDependencyAttribute class.
         /// </summary>
         /// <param name="type">The Plugin Type that the class depends upon.</param>
@@ -53,18 +48,12 @@ namespace Carbon.Plugins.Attributes
 		{
 			if (type == null)
 				throw new ArgumentNullException("type");
-			_type = type;
+			Type = type;
 		}
 
         /// <summary>
         /// Returns the Type of the other Plugin that the class depends upon.
         /// </summary>
-		public Type Type
-		{
-			get
-			{
-				return _type;
-			}
-		}
+		public Type Type { get; }
 	}
 }

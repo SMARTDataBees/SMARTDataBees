@@ -20,26 +20,16 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-
-using System.Windows.Forms;
-
-using SDBees.Plugs.TemplateTreeNode;
-using SDBees.Plugs.TreenodeHelper;
-using SDBees.DB;
-using SDBees.Main.Window;
-using SDBees.EDM;
-
-using System.Configuration;
 using System.IO;
-
-using Carbon;
-using Carbon.Plugins.Attributes;
+using System.Windows.Forms;
 using Carbon.Plugins;
-using System.Data;
+using Carbon.Plugins.Attributes;
+using SDBees.Core.Global;
+using SDBees.DB;
+using SDBees.EDM;
+using SDBees.Main.Window;
 
 namespace SDBees.Reporting
 {
@@ -49,19 +39,19 @@ namespace SDBees.Reporting
     [PluginId("380F73A8-D99E-40EA-971C-E4F753DBF773")]
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
-    [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
-    [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
-    [PluginDependency(typeof(SDBees.EDM.EDMManager))]
-    [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
+    [PluginDependency(typeof(MainWindowApplication))]
+    [PluginDependency(typeof(SDBeesDBConnection))]
+    [PluginDependency(typeof(EDMManager))]
+    [PluginDependency(typeof(GlobalManager))]
 
-    public class ReportingManager : SDBees.EDM.EDMTreeNodeHelper
+    public class ReportingManager : EDMTreeNodeHelper
     {
-        private static ReportingManager m_theInstance = null;
-        private EDMManager _myEDMManager = null;
+        private static ReportingManager m_theInstance;
+        private EDMManager _myEDMManager;
 
-        private ToolStripMenuItem _itemNew = null;
-        private ToolStripMenuItem _itemDelete = null;
-        private ToolStripMenuItem _itemModify = null;
+        private ToolStripMenuItem _itemNew;
+        private ToolStripMenuItem _itemDelete;
+        private ToolStripMenuItem _itemModify;
 
         public static ReportingManager Current
         {
@@ -69,18 +59,17 @@ namespace SDBees.Reporting
         }
 
         public ReportingManager()
-            : base()
         {
             m_theInstance = this;
 
             //_myControl = new ReportingUserControl();
-            this._itemNew = new ToolStripMenuItem("New RDLReport");
-            this._itemDelete = new ToolStripMenuItem("Delete RDLReport");
-            this._itemModify = new ToolStripMenuItem("Modify / View RDLReport");
+            _itemNew = new ToolStripMenuItem("New RDLReport");
+            _itemDelete = new ToolStripMenuItem("Delete RDLReport");
+            _itemModify = new ToolStripMenuItem("Modify / View RDLReport");
 
-            this._itemModify.Click += new EventHandler(_itemModify_Click);
-            this._itemNew.Click += new EventHandler(_itemNew_Click);
-            this._itemDelete.Click += new EventHandler(_itemDelete_Click);
+            _itemModify.Click += _itemModify_Click;
+            _itemNew.Click += _itemNew_Click;
+            _itemDelete.Click += _itemDelete_Click;
         }
 
         void _itemDelete_Click(object sender, EventArgs e)
@@ -92,18 +81,20 @@ namespace SDBees.Reporting
         {
             try
             {
-                string sFullPath = this._myEDMManager.GetFullCurrentPath();
-                DataSet ds = SDBeesDBConnection.Current.GetDataSetForAllTables();
+                var sFullPath = _myEDMManager.GetFullCurrentPath();
+                var ds = SDBeesDBConnection.Current.GetDataSetForAllTables();
 
-                AddReport _addReportDLG = new AddReport();
-                DialogResult _dlgRes = _addReportDLG.ShowDialog();
+                var _addReportDLG = new AddReport();
+                var _dlgRes = _addReportDLG.ShowDialog();
 
                 if (_dlgRes == DialogResult.OK)
                 {
-                    ReportDLG _reportDLG = new ReportDLG();
-                    _reportDLG.Reportname = Path.Combine(sFullPath, _addReportDLG.ReportName);
-                    _reportDLG.NewReport = true;
-                    DialogResult _dlgResReport = _reportDLG.ShowDialog();
+                    var dialog = new ReportDLG
+                    {
+                        Reportname = Path.Combine(sFullPath, _addReportDLG.ReportName),
+                        NewReport = true
+                    };
+                    dialog.ShowDialog();
                 }
             }
             catch (Exception ex)
@@ -116,7 +107,7 @@ namespace SDBees.Reporting
         {
             try
             {
-                string sFullPath = this._myEDMManager.GetFullCurrentPath();
+                var sFullPath = _myEDMManager.GetFullCurrentPath();
 
 
                 //ReportDLG _reportDLG = new ReportDLG();
@@ -141,16 +132,16 @@ namespace SDBees.Reporting
             {
                 Console.WriteLine("Reporting Manager Plugin starts\n");
 
-                this.StartMe(context, e);
+                StartMe(context, e);
 
                 //Das EDM-Manager Plugin besorgen
                 if (context.PluginDescriptors.Contains(new PluginDescriptor(typeof(EDMManager))))
                 {
-                    _myEDMManager = (EDMManager)context.PluginDescriptors[typeof(SDBees.EDM.EDMManager)].PluginInstance;
+                    _myEDMManager = (EDMManager)context.PluginDescriptors[typeof(EDMManager)].PluginInstance;
                 }
                 else
                 {
-                    MessageBox.Show("Es konnte kein EDM-Manager gefunden werden!", this.ToString());
+                    MessageBox.Show("Es konnte kein EDM-Manager gefunden werden!", ToString());
                     _myEDMManager = null;
                 }
 
@@ -181,7 +172,7 @@ namespace SDBees.Reporting
 
         public override ToolStripMenuItem NewItemsMenue()
         {
-            return this._itemNew;
+            return _itemNew;
         }
 
         public override void ReactOnNew()
@@ -191,7 +182,7 @@ namespace SDBees.Reporting
 
         public override ToolStripMenuItem DeleteItemsMenue()
         {
-            return this._itemDelete;
+            return _itemDelete;
         }
 
         public override void ReactOnDelete()
@@ -201,7 +192,7 @@ namespace SDBees.Reporting
 
         public override ToolStripMenuItem ExecuteItemsMenue()
         {
-            return this._itemModify;
+            return _itemModify;
         }
 
         public override void ReactOnExecute()
@@ -220,7 +211,7 @@ namespace SDBees.Reporting
             if (MyDBManager != null)
             {
                 // Verify that the required Tables are created/updated in the database
-                Database database = MyDBManager.Database;
+                var database = MyDBManager.Database;
                 ReportingBaseData.InitTableSchema(database);
             }
         }

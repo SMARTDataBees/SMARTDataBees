@@ -20,17 +20,14 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using SDBees.DB;
-using System.IO;
 using System.Reflection;
+using System.Windows.Forms;
+using SDBees.Core.Properties;
+using SDBees.DB;
 
 namespace SDBees.UserAdmin
 {
@@ -69,28 +66,30 @@ namespace SDBees.UserAdmin
 
         private void CreateUserList()
         {
-            lvUsers = new ListView();
-            lvUsers.Dock = DockStyle.Fill;
+            lvUsers = new ListView
+            {
+                Dock = DockStyle.Fill,
+                View = View.Details,
+                LabelEdit = false,
+                AllowColumnReorder = false,
+                FullRowSelect = true,
+                GridLines = false,
+                Sorting = SortOrder.Ascending,
+                HideSelection = false,
+                SmallImageList = new ImageList()
+            };
 
             // Set the view to show details.
-            lvUsers.View = View.Details;
             // Don't allow the user to edit item text.
-            lvUsers.LabelEdit = false;
             // Don't allow the user to rearrange columns.
-            lvUsers.AllowColumnReorder = false;
             // Select the item and sub items when selection is made.
-            lvUsers.FullRowSelect = true;
             // Don't display grid lines.
-            lvUsers.GridLines = false;
             // Sort the items in the list in ascending order.
-            lvUsers.Sorting = SortOrder.Ascending;
             // Show the selection, even when focus is lost
-            lvUsers.HideSelection = false;
 
             // Images...
-            lvUsers.SmallImageList = new ImageList();
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            Image image = new Bitmap(SDBees.Core.Properties.Resources.User);
+            var assembly = Assembly.GetExecutingAssembly();
+            Image image = new Bitmap(Resources.User);
             lvUsers.SmallImageList.Images.Add(image);
 
             // Create columns for the items and sub items.
@@ -98,19 +97,14 @@ namespace SDBees.UserAdmin
             lvUsers.Columns.Add("Beschreibung", -2, HorizontalAlignment.Left);
 
             // Define the event handlers...
-            lvUsers.SelectedIndexChanged += new EventHandler(lvUsers_SelectedIndexChanged);
+            lvUsers.SelectedIndexChanged += lvUsers_SelectedIndexChanged;
             lvUsers.ContextMenuStrip = contextMenuStripUser;
 
             FillUserList();
 
-            if (lvUsers.Items.Count > 0)
-            {
-                lvUsers.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-            }
-            else
-            {
-                lvUsers.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-            }
+            lvUsers.AutoResizeColumns(lvUsers.Items.Count > 0
+                ? ColumnHeaderAutoResizeStyle.ColumnContent
+                : ColumnHeaderAutoResizeStyle.HeaderSize);
         }
 
         private void FillUserList()
@@ -119,14 +113,14 @@ namespace SDBees.UserAdmin
 
             ListViewItem lviSelected = null;
 
-            ArrayList loginNames = new ArrayList();
-            int loginCount = User.GetAllLogins(Server, ref loginNames);
+            var loginNames = new ArrayList();
+            var loginCount = User.GetAllLogins(Server, ref loginNames);
 
             foreach (string loginName in loginNames)
             {
-                User user = User.FindUser(Server, loginName);
+                var user = User.FindUser(Server, loginName);
 
-                ListViewItem lvItem = new ListViewItem(user.LoginName, 0);
+                var lvItem = new ListViewItem(user.LoginName, 0);
                 lvItem.SubItems.Add(user.Description);
                 lvUsers.Items.Add(lvItem);
 
@@ -141,15 +135,14 @@ namespace SDBees.UserAdmin
 
         private void CreateGroupTree()
         {
-            tvGroups = new GroupTreeView(Server.SecurityDatabase);
-            tvGroups.Dock = DockStyle.Fill;
+            tvGroups = new GroupTreeView(Server.SecurityDatabase) {Dock = DockStyle.Fill};
 
             Error error = null;
             tvGroups.Fill(ref error);
 
-            tvGroups.AfterSelect += new TreeViewEventHandler(tvGroups_AfterSelect);
-            tvGroups.AfterSelNodesChanged += new EventHandler(tvGroups_AfterSelNodesChanged);
-            tvGroups.MouseUp += new MouseEventHandler(tvGroups_MouseUp);
+            tvGroups.AfterSelect += tvGroups_AfterSelect;
+            tvGroups.AfterSelNodesChanged += tvGroups_AfterSelNodesChanged;
+            tvGroups.MouseUp += tvGroups_MouseUp;
 
             Error.Display("Failed to fill Group tree", error);
         }
@@ -173,10 +166,10 @@ namespace SDBees.UserAdmin
 
             // Images...
             lvSecurityRights.SmallImageList = new ImageList();
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            Image image = new Bitmap(SDBees.Core.Properties.Resources.SecurityAllow);
+            var assembly = Assembly.GetExecutingAssembly();
+            Image image = new Bitmap(Resources.SecurityAllow);
             lvSecurityRights.SmallImageList.Images.Add(image);
-            image = new Bitmap(SDBees.Core.Properties.Resources.SecurityDeny);
+            image = new Bitmap(Resources.SecurityDeny);
             lvSecurityRights.SmallImageList.Images.Add(image);
 
             // Create columns for the items and sub items.
@@ -184,16 +177,11 @@ namespace SDBees.UserAdmin
             lvSecurityRights.Columns.Add("Datenbank/Tabelle/Spalte", -2, HorizontalAlignment.Left);
 
             // Add event handlers
-            lvSecurityRights.DoubleClick += new EventHandler(lvSecurityRights_DoubleClick);
+            lvSecurityRights.DoubleClick += lvSecurityRights_DoubleClick;
 
-            if (lvSecurityRights.Items.Count > 0)
-            {
-                lvSecurityRights.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-            }
-            else
-            {
-                lvSecurityRights.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-            }
+            lvSecurityRights.AutoResizeColumns(lvSecurityRights.Items.Count > 0
+                ? ColumnHeaderAutoResizeStyle.ColumnContent
+                : ColumnHeaderAutoResizeStyle.HeaderSize);
         }
 
         void lvSecurityRights_DoubleClick(object sender, EventArgs e)
@@ -206,19 +194,19 @@ namespace SDBees.UserAdmin
             lvSecurityRights.Items.Clear();
 
             ArrayList objectIds = null;
-            int numAccessRights = AccessRights.GetAccessRightsForUserId(Server, userOrGroupId, ref objectIds);
+            var numAccessRights = AccessRights.GetAccessRightsForUserId(Server, userOrGroupId, ref objectIds);
 
-            foreach (object objectId in objectIds)
+            foreach (var objectId in objectIds)
             {
-                AccessRights accessRights = new AccessRights(Server, objectId);
+                var accessRights = new AccessRights(Server, objectId);
 
-                int imageIndex = 0;
+                var imageIndex = 0;
                 if (accessRights.DeniedFlags != 0)
                 {
                     imageIndex = 1;
                 }
 
-                ListViewItem lvItem = new ListViewItem(accessRights.Description(), imageIndex);
+                var lvItem = new ListViewItem(accessRights.Description(), imageIndex);
                 lvItem.SubItems.Add(accessRights.Name);
                 lvItem.Tag = objectId;
 
@@ -228,17 +216,10 @@ namespace SDBees.UserAdmin
 
         private void EnableControls()
         {
-            bool tabOnUsers = (tabUsersAndGroups.SelectedTab == this.tabPageUsers);
-            int selectionCount = 0;
+            var tabOnUsers = (tabUsersAndGroups.SelectedTab == tabPageUsers);
+            var selectionCount = 0;
 
-            if (tabOnUsers)
-            {
-                selectionCount = lvUsers.SelectedItems.Count;
-            }
-            else
-            {
-                selectionCount = tvGroups.SelNodes.Count;
-            }
+            selectionCount = tabOnUsers ? lvUsers.SelectedItems.Count : tvGroups.SelNodes.Count;
 
             mnuAddSecurityRight.Enabled = tabOnUsers && (selectionCount == 1);
             mnuRemoveSecurityRight.Enabled = tabOnUsers && (selectionCount == 1) && (lvSecurityRights.SelectedItems.Count > 0);
@@ -271,28 +252,30 @@ namespace SDBees.UserAdmin
 
         private void mnuCreateUser_Click(object sender, EventArgs e)
         {
-            System.Windows.Forms.DialogResult dlgres = DialogResult.Abort;
-            string loginName = InputBox.Show("Login name", "Benutzer erzeugen", "benutzer1", ref dlgres);
+            var dlgres = DialogResult.Abort;
+            var loginName = InputBox.Show("Login name", "Benutzer erzeugen", "benutzer1", ref dlgres);
 
             if (loginName != "")
             {
                 Error error = null;
-                User newUser = User.FindUser(Server, loginName);
+                var newUser = User.FindUser(Server, loginName);
                 if ((newUser != null) || (Server.UserExists(loginName, ref error)))
                 {
                     MessageBox.Show("Ein Benutzer mit dem login '" + loginName + "' existiert bereits!");
                 }
                 else
                 {
-                    newUser = new User(Server);
-                    newUser.LoginName = loginName;
-                    newUser.Name = loginName;
+                    newUser = new User(Server)
+                    {
+                        LoginName = loginName,
+                        Name = loginName
+                    };
 
                     newUser.Save(ref error);
 
                     if (error == null)
                     {
-                        ListViewItem lvItem = new ListViewItem(newUser.LoginName, 0);
+                        var lvItem = new ListViewItem(newUser.LoginName, 0);
                         lvItem.SubItems.Add(newUser.Description);
                         lvUsers.Items.Add(lvItem);
 
@@ -312,14 +295,14 @@ namespace SDBees.UserAdmin
 
         private void mnuDeleteUser_Click(object sender, EventArgs e)
         {
-            bool listModified = false;
+            var listModified = false;
 
-            ListView.SelectedListViewItemCollection selection = lvUsers.SelectedItems;
+            var selection = lvUsers.SelectedItems;
 
             if (selection.Count == 0)
                 return;
 
-            string message = "";
+            var message = "";
             if (selection.Count == 1)
             {
                 message = "Soll der Benutzer '" + selection[0].Text + "' gelöscht werden?";
@@ -335,8 +318,8 @@ namespace SDBees.UserAdmin
 
             foreach (ListViewItem lvItem in selection)
             {
-                string loginName = lvItem.Text;
-                User user = User.FindUser(Server, loginName);
+                var loginName = lvItem.Text;
+                var user = User.FindUser(Server, loginName);
                 if (user != null)
                 {
                     listModified = true;
@@ -360,39 +343,32 @@ namespace SDBees.UserAdmin
 
         private void mnuSetPassword_Click(object sender, EventArgs e)
         {
-            bool listModified = false;
+            var listModified = false;
 
-            ListView.SelectedListViewItemCollection selection = lvUsers.SelectedItems;
+            var selection = lvUsers.SelectedItems;
 
             if (selection.Count != 1)
             {
-                string message = "";
-                if (selection.Count == 0)
-                {
-                    message = "Kein Benutzer ausgewählt!";
-                }
-                else
-                {
-                    message = "Es darf nur ein Benutzer ausgewählt sein!";
-                }
+                var message = "";
+                message = selection.Count == 0 ? "Kein Benutzer ausgewählt!" : "Es darf nur ein Benutzer ausgewählt sein!";
                 MessageBox.Show(message, "Passwort festlegen", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
 
-            ListViewItem lvItem = selection[0];
+            var lvItem = selection[0];
 
-            string loginName = lvItem.Text;
-            User user = User.FindUser(Server, loginName);
+            var loginName = lvItem.Text;
+            var user = User.FindUser(Server, loginName);
             if (user != null)
             {
-                System.Windows.Forms.DialogResult dlgres = DialogResult.Abort;
-                string password = InputBox.Show("Passwort für Benutzer '" + loginName + "'", "Passwort festlegen", ref dlgres);
+                var dlgres = DialogResult.Abort;
+                var password = InputBox.Show("Passwort für Benutzer '" + loginName + "'", "Passwort festlegen", ref dlgres);
 
                 if (password != "")
                 {
                     Error error = null;
-                    bool success = user.SetPassword(password, ref error);
+                    var success = user.SetPassword(password, ref error);
 
                     if (error != null)
                     {
@@ -408,47 +384,38 @@ namespace SDBees.UserAdmin
                     }
                 }
             }
-
-            if (listModified)
-            {
-                FillUserList();
-            }
         }
 
         private void mnuAddSecurityRight_Click(object sender, EventArgs e)
         {
-            ListView.SelectedListViewItemCollection selection = lvUsers.SelectedItems;
+            var selection = lvUsers.SelectedItems;
 
             if (selection.Count == 0)
                 return;
 
-            User user = User.FindUser(Server, lvUsers.SelectedItems[0].Text);
+            var user = User.FindUser(Server, lvUsers.SelectedItems[0].Text);
 
-            SecurityRightDLG dlg = new SecurityRightDLG(Server);
-            AccessRights accessRights = new AccessRights(Server);
-            accessRights.UserId = user.Id.ToString();
+            var dlg = new SecurityRightDLG(Server);
+            var accessRights = new AccessRights(Server) {UserId = user.Id.ToString()};
             dlg.AccessRights = accessRights;
 
-            DialogResult dlgResult = dlg.ShowDialog();
+            var dlgResult = dlg.ShowDialog();
             if (dlgResult == DialogResult.OK)
             {
-                string userId = "";
+                var userId = "";
 
                 Error error = null;
                 accessRights.Save(ref error);
 
                 Error.Display("Saving AccessRights failed!", error);
 
-                if (user != null)
-                {
-                    // Now update the server....
-                    error = null;
-                    user.UpdateAccessRightsOnServer(ref error);
+                // Now update the server....
+                error = null;
+                user.UpdateAccessRightsOnServer(ref error);
 
-                    Error.Display("Failed to update the user privileges on the server", error);
+                Error.Display("Failed to update the user privileges on the server", error);
 
-                    userId = user.Id.ToString();
-                }
+                userId = user.Id.ToString();
 
                 FillSecurityRightList(userId);
             }
@@ -456,16 +423,16 @@ namespace SDBees.UserAdmin
 
         private void mnuRemoveSecurityRight_Click(object sender, EventArgs e)
         {
-            ListView.SelectedListViewItemCollection selection = lvSecurityRights.SelectedItems;
+            var selection = lvSecurityRights.SelectedItems;
 
             if (selection.Count == 0)
                 return;
 
-            User user = User.FindUser(Server, lvUsers.SelectedItems[0].Text);
+            var user = User.FindUser(Server, lvUsers.SelectedItems[0].Text);
 
-            bool listModified = false;
+            var listModified = false;
 
-            string message = "";
+            string message;
             if (selection.Count == 1)
             {
                 message = "Soll die Berechtigung '" + selection[0].Text + "' gelöscht werden?";
@@ -481,8 +448,8 @@ namespace SDBees.UserAdmin
 
             foreach (ListViewItem lvItem in selection)
             {
-                object objectId = lvItem.Tag;
-                AccessRights accessRight = new AccessRights(Server, objectId);
+                var objectId = lvItem.Tag;
+                var accessRight = new AccessRights(Server, objectId);
                 if (accessRight != null)
                 {
                     listModified = true;
@@ -500,7 +467,7 @@ namespace SDBees.UserAdmin
 
             if (listModified)
             {
-                string userId = "";
+                var userId = "";
 
                 if (user != null)
                 {
@@ -524,9 +491,9 @@ namespace SDBees.UserAdmin
 
         private void UpdatePropertiesAndRightsControls()
         {
-            bool tabOnUsers = (tabUsersAndGroups.SelectedTab == this.tabPageUsers);
+            var tabOnUsers = (tabUsersAndGroups.SelectedTab == tabPageUsers);
 
-            string userOrGroupId = "";
+            var userOrGroupId = "";
 
             if (tabOnUsers)
             {
@@ -534,8 +501,8 @@ namespace SDBees.UserAdmin
 
                 if (lvUsers.SelectedItems.Count == 1)
                 {
-                    ListViewItem lvItem = lvUsers.SelectedItems[0];
-                    string loginName = lvItem.Text;
+                    var lvItem = lvUsers.SelectedItems[0];
+                    var loginName = lvItem.Text;
                     user = User.FindUser(Server, loginName);
                 }
 
@@ -543,7 +510,7 @@ namespace SDBees.UserAdmin
                 {
                     userOrGroupId = user.Id.ToString();
 
-                    ObjectPropertyTable properties = new ObjectPropertyTable(user.BaseData);
+                    var properties = new ObjectPropertyTable(user.BaseData);
                     pgProperties.SelectedObject = properties;
                 }
                 else
@@ -553,12 +520,12 @@ namespace SDBees.UserAdmin
             }
             else
             {
-                TreeNode tnSelected = tvGroups.SingleSelectedNode();
+                var tnSelected = tvGroups.SingleSelectedNode();
 
                 Group group = null;
                 if (tnSelected != null)
                 {
-                    string groupName = tnSelected.Text;
+                    var groupName = tnSelected.Text;
                     group = Group.FindGroup(Server, groupName);
                 }
 
@@ -566,7 +533,7 @@ namespace SDBees.UserAdmin
                 {
                     userOrGroupId = group.Id.ToString();
 
-                    ObjectPropertyTable properties = new ObjectPropertyTable(group.BaseData);
+                    var properties = new ObjectPropertyTable(group.BaseData);
                     pgProperties.SelectedObject = properties;
                 }
                 else

@@ -20,6 +20,7 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Windows.Forms;
 
@@ -53,7 +54,7 @@ namespace SDBees.GuiTools
 		/// <summary>
 		/// Core TreeNode of this MWTreeNodeWrapper object.
 		/// </summary>
-		private TreeNode tnNode = null;
+		private TreeNode tnNode;
 
 		/// <summary>
 		/// Original ImageIndex of the TreeNode in the Node property.
@@ -219,8 +220,8 @@ namespace SDBees.GuiTools
 		/// <param name="mwtnw">MWTreeNodeWrapper containing TreeNode that should be deselected.</param>
 		public void Reset()
 		{
-			this.Node.ImageIndex = this.ImageIndex;
-			this.Node.SelectedImageIndex = this.SelectedImageIndex;
+			Node.ImageIndex = ImageIndex;
+			Node.SelectedImageIndex = SelectedImageIndex;
 		}
 
 		#endregion Methods

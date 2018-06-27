@@ -20,15 +20,12 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SDBees.DB
 {
     /// <summary>
     /// Baseclass for Tags that should be set to a TreeNode in a DbTreeView or derived
-    /// class if all functionality should be used (Drag&Drop etc. all refer to this)
+    /// class if all functionality should be used (Drag And Drop etc. all refer to this)
     /// </summary>
     public class DbTreeNodeTag
     {

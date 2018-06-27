@@ -29,14 +29,14 @@
 //
 //	============================================================================
 
-using System;
+using System.Diagnostics;
 
 namespace Carbon.Configuration
 {
 	/// <summary>
 	/// Provides methods for working with bit masks.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public static class FlagsHelper
 	{
 		/// <summary>
@@ -47,7 +47,7 @@ namespace Carbon.Configuration
 		/// <returns></returns>
 		public static bool IsFlagSet(int value, int flag) 
 		{
-			return (bool)((value & flag) == flag);
+			return (value & flag) == flag;
 		}
 
 		/// <summary>
@@ -67,7 +67,7 @@ namespace Carbon.Configuration
 		/// <param name="flag"></param>
 		public static void Disable(int value, int flag)
 		{
-			if (!FlagsHelper.IsFlagSet(value, flag))
+			if (!IsFlagSet(value, flag))
 				value ^= flag;
 		}
 	}

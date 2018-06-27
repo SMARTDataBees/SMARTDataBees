@@ -1,32 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Windows.Forms;
+using System.Windows.Forms.Design;
 
 namespace SDBees.Core.DB.SQLite
 {
-    internal class SQLiteFilenameEditor : System.Windows.Forms.Design.FileNameEditor
+    internal class SQLiteFilenameEditor : FileNameEditor
     {
-        public SQLiteFilenameEditor() : base()
-        { }
-
-        protected override void InitializeDialog(System.Windows.Forms.OpenFileDialog openFileDialog)
+        protected override void InitializeDialog(OpenFileDialog openFileDialog)
         {
-            openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            openFileDialog = new OpenFileDialog
+            {
+                Title = @"Select database file",
+                AddExtension = true,
+                AutoUpgradeEnabled = true,
+                Filter = @"Database files (*.s3db)|*.s3db|All files (*.*)|*.* ",
+                DefaultExt = "s3db",
+                CheckPathExists = false,
+                CheckFileExists = false,
+                FileName = "*.s3db",
+                Multiselect = false
+            };
 
-            openFileDialog.Title = "Select Databasefile";
-            openFileDialog.AddExtension = true;
-            openFileDialog.AutoUpgradeEnabled = true;
-            openFileDialog.Filter = "Database files (*.s3db)|*.s3db|All files (*.*)|*.* ";
-            openFileDialog.DefaultExt = "s3db";
-            openFileDialog.CheckPathExists = false;
-            openFileDialog.CheckFileExists = false;
-            openFileDialog.FileName = "*.s3db";
-            openFileDialog.Multiselect = false;
 
             base.InitializeDialog(openFileDialog);
         }
 
-        // public override 
     }
 }

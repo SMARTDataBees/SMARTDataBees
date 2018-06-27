@@ -20,6 +20,10 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.ComponentModel;
+using System.Windows.Forms;
+
 namespace SDBees.GuiTools
 {
     partial class AboutBox
@@ -27,7 +31,7 @@ namespace SDBees.GuiTools
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -51,7 +55,7 @@ namespace SDBees.GuiTools
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutBox));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutBox));
             this._AssemblyInformation = new System.Windows.Forms.TextBox();
             this.bnClose = new System.Windows.Forms.Button();
             this.lbApplicationName = new System.Windows.Forms.Label();
@@ -184,14 +188,14 @@ namespace SDBees.GuiTools
 
         #endregion
 
-        private System.Windows.Forms.TextBox _AssemblyInformation;
-        private System.Windows.Forms.Button bnClose;
-        private System.Windows.Forms.Label lbApplicationName;
-        private System.Windows.Forms.Label lbApplicationLocation;
-        private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.Panel _panelLinkLabels;
+        private TextBox _AssemblyInformation;
+        private Button bnClose;
+        private Label lbApplicationName;
+        private Label lbApplicationLocation;
+        private ToolTip toolTip1;
+        private TabControl tabControl1;
+        private TabPage tabPage1;
+        private TabPage tabPage2;
+        private Panel _panelLinkLabels;
     }
 }

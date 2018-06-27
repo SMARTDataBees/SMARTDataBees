@@ -22,22 +22,9 @@
 //
 // #EndHeader# ================================================================
 using System;
-using System.Collections.Generic;
-
-using System.Diagnostics;
-using System.Reflection;
-
-using System.Data;
-
-using System.Text;
 using System.Drawing;
-using System.Windows.Forms;
-
-using Carbon;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
-
-using SDBees.Plugs.TemplateTreeNode;
 using SDBees.DB;
 using SDBees.Core.Model;
 
@@ -55,10 +42,10 @@ namespace SDBees.Core.Plugins.AEC.Level
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
     [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
-    [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
-    [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
+    [PluginDependency(typeof(SDBeesDBConnection))]
+    [PluginDependency(typeof(Global.GlobalManager))]
 
-    public class AECLevel : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
+    public class AECLevel : Plugs.TemplateTreeNode.TemplateTreenode
     {
         private static AECLevel _theInstance;
 
@@ -96,7 +83,7 @@ namespace SDBees.Core.Plugins.AEC.Level
             {
                 Console.WriteLine("Level Plugin starts\n");
 
-                this.StartMe(context, e);
+                StartMe(context, e);
 
                 InitDatabase();
             }
@@ -131,7 +118,7 @@ namespace SDBees.Core.Plugins.AEC.Level
         //    //base.
         //}
 
-        public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
+        public override Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
         {
             return new AECLevelBaseData();
         }
@@ -143,7 +130,7 @@ namespace SDBees.Core.Plugins.AEC.Level
 
         public override SDBeesEntityDefinition GetEntityDefinition()
         {
-            return base.GetEntityDefinition(this.GetType());
+            return base.GetEntityDefinition(GetType());
         }
 
         protected override void OnDatabaseChanged(object sender, EventArgs e)
@@ -157,13 +144,13 @@ namespace SDBees.Core.Plugins.AEC.Level
             if (MyDBManager != null)
             {
                 // Verify that the required Tables are created/updated in the database
-                Database database = MyDBManager.Database;
-                this.CreateDataObject().InitTableSchema(ref AECLevelBaseData.gTable, database);
+                var database = MyDBManager.Database;
+                CreateDataObject().InitTableSchema(ref AECLevelBaseData.gTable, database);
             }
         }
     }
 
-    public class AECLevelBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
+    public class AECLevelBaseData : Plugs.TemplateBase.TemplateDBBaseData
     {
         #region Private Data Members
 
@@ -185,7 +172,7 @@ namespace SDBees.Core.Plugins.AEC.Level
         public AECLevelBaseData() :
             base("Levelname", "Level", "General")
         {
-            base.Table = gTable;
+            Table = gTable;
         }
 
         #endregion

@@ -32,6 +32,7 @@
 using System;
 using System.ComponentModel;
 using System.ComponentModel.Design.Serialization;
+using System.Globalization;
 
 namespace Carbon.Configuration
 {
@@ -62,12 +63,12 @@ namespace Carbon.Configuration
 		/// <param name="value"></param>
 		/// <param name="destinationType"></param>
 		/// <returns></returns>
-		public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+		public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
 		{
 			if (destinationType == typeof(InstanceDescriptor) && value is XmlConfiguration)
 			{
 				//				XmlConfigurationCategory category = (XmlConfigurationCategory)value;
-				System.Reflection.ConstructorInfo ci = typeof(XmlConfiguration).GetConstructor(new Type[] {});
+				var ci = typeof(XmlConfiguration).GetConstructor(new Type[] {});
 				if (ci != null)
 					return new InstanceDescriptor(ci, null, false);
 			}

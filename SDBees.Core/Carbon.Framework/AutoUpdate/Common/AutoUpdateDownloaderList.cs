@@ -30,9 +30,6 @@
 //	============================================================================
 
 using System;
-using System.Diagnostics;
-using System.Collections;
-
 using Carbon.Common;
 
 namespace Carbon.AutoUpdate.Common
@@ -43,15 +40,7 @@ namespace Carbon.AutoUpdate.Common
 	/// </summary>
 	public class AutoUpdateDownloaderList : DisposableCollection 
 	{
-		/// <summary>
-		/// Initializes a new instance of the AutoUpdateDownloaderList class
-		/// </summary>
-		public AutoUpdateDownloaderList()
-		{
-			
-		}
-
-		/// <summary>
+	    /// <summary>
 		/// Adds a downloader to the collection.
 		/// </summary>
 		/// <param name="downloader">The downloader to add to the collection.</param>
@@ -60,12 +49,12 @@ namespace Carbon.AutoUpdate.Common
 			if (downloader ==  null)
 				throw new ArgumentNullException("downloader");
 
-			if (this.Contains(downloader))
+			if (Contains(downloader))
 				throw new AutoUpdateDownloaderAlreadyExistsException(downloader);
 
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
-				base.InnerList.Add(downloader);
+				InnerList.Add(downloader);
 			}
 		}
 
@@ -78,8 +67,8 @@ namespace Carbon.AutoUpdate.Common
 			if (downloaders == null)
 				throw new ArgumentNullException("downloaders");
 
-			foreach(AutoUpdateDownloader downloader in downloaders)
-				this.Add(downloader);
+			foreach(var downloader in downloaders)
+				Add(downloader);
 		}
 
 		/// <summary>
@@ -91,8 +80,8 @@ namespace Carbon.AutoUpdate.Common
 			if (downloader ==  null)
 				throw new ArgumentNullException("downloader");
 
-			if (this.Contains(downloader))
-				base.InnerList.Remove(downloader);
+			if (Contains(downloader))
+				InnerList.Remove(downloader);
 		}
 
 		/// <summary>
@@ -105,9 +94,9 @@ namespace Carbon.AutoUpdate.Common
 			if (downloader ==  null)
 				throw new ArgumentNullException("downloader");
 
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
-				foreach (AutoUpdateDownloader existingDownloader in base.InnerList)
+				foreach (AutoUpdateDownloader existingDownloader in InnerList)
 					if (string.Compare(existingDownloader.Id, downloader.Id, true) == 0)
 						return true;
 			}
@@ -124,9 +113,9 @@ namespace Carbon.AutoUpdate.Common
 		{
 			get
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
-					return base.InnerList[index] as AutoUpdateDownloader;
+					return InnerList[index] as AutoUpdateDownloader;
 				}
 			}
 		}
@@ -140,9 +129,9 @@ namespace Carbon.AutoUpdate.Common
 		{
 			get
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
-					foreach (AutoUpdateDownloader existingDownloader in base.InnerList)
+					foreach (AutoUpdateDownloader existingDownloader in InnerList)
 						if (string.Compare(existingDownloader.Id, id, true) == 0)
 							return existingDownloader;
 				}

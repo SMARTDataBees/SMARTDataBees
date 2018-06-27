@@ -30,18 +30,18 @@
 //	============================================================================
 
 using System;
-using System.Diagnostics;
-using System.Text;
 using System.Collections;
-using System.Reflection;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Reflection;
+using System.Text;
 
 namespace Carbon.Configuration
 {
 	/// <summary>
 	/// Provides methods for retrieving Enum value description and category attribute values.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public static class EnumUtilities
 	{
 		public static string GetCombinedEnumValuesDescription(object value, Type t)
@@ -51,11 +51,11 @@ namespace Carbon.Configuration
 			{
 				description = value.ToString();
 
-				MemberInfo[] members = t.GetMembers(BindingFlags.Static | BindingFlags.Public);	
+				var members = t.GetMembers(BindingFlags.Static | BindingFlags.Public);	
 
-				ArrayList valuesSet = new ArrayList();
-				Array values = Enum.GetValues(t);
-				foreach(object enumValue in values)
+				var valuesSet = new ArrayList();
+				var values = Enum.GetValues(t);
+				foreach(var enumValue in values)
 				{
 					if (FlagsHelper.IsFlagSet((int)value, (int)enumValue))
 					{
@@ -63,19 +63,19 @@ namespace Carbon.Configuration
 					}
 				}
 
-				StringBuilder sb = new StringBuilder();
-				int count = 0;
-				foreach(MemberInfo memberInfo in members)
+				var sb = new StringBuilder();
+				var count = 0;
+				foreach(var memberInfo in members)
 				{
-					foreach(object enumValue in valuesSet)
+					foreach(var enumValue in valuesSet)
 					{
 						if (string.Compare(enumValue.ToString(), memberInfo.Name, false) == 0)
 						{
-							/// get the custom attributes, specifically looking for the description attribute
-							object[] attributes = memberInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);							
+							// get the custom attributes, specifically looking for the description attribute
+							var attributes = memberInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);							
 							if (attributes != null)
 							{									
-								/// who knows there may be more than one
+								// who knows there may be more than one
 								foreach(DescriptionAttribute attribute in attributes)
 									sb.AppendFormat("{0}{1}", attribute.Description, (count > 0 ? ", " : null));												
 								count++;
@@ -97,7 +97,7 @@ namespace Carbon.Configuration
 			try
 			{
 				// get the custom attributes, specifically looking for the description attribute
-				object[] attributes = enumType.GetCustomAttributes(typeof(FlagsAttribute), false);						
+				var attributes = enumType.GetCustomAttributes(typeof(FlagsAttribute), false);						
 				if (attributes != null)
 					foreach(Attribute a in attributes)
 						if (a.GetType() == typeof(FlagsAttribute))
@@ -115,12 +115,12 @@ namespace Carbon.Configuration
 			try
 			{
 				// grab the public static members, which enum values are dynamically generated to be public static members
-				MemberInfo[] members = enumType.GetMembers(BindingFlags.Static | BindingFlags.Public);						
+				var members = enumType.GetMembers(BindingFlags.Static | BindingFlags.Public);						
 
 				// bool areFlags = EnumUtilities.IsEnumFlags(enumType);
 
 				// loop thru the values of the enum until the correct value is found
-				foreach(MemberInfo memberInfo in members)
+				foreach(var memberInfo in members)
 				{
 //					object enumValueParsed = Enum.Parse(enumType, memberInfo.Name, true);					                    
 //					bool match = (areFlags ? (((uint)enumValueParsed & (uint)value) == (uint)value) : (enumValueParsed == value));
@@ -128,7 +128,7 @@ namespace Carbon.Configuration
 					if (string.Compare(value.ToString(), memberInfo.Name, false) == 0)
 					{
 						// get the custom attributes, specifically looking for the description attribute
-						object[] attributes = memberInfo.GetCustomAttributes(attributeType, false);						
+						var attributes = memberInfo.GetCustomAttributes(attributeType, false);						
 						if (attributes != null)
 							foreach(Attribute a in attributes)
 								if (a.GetType() == attributeType)
@@ -148,31 +148,25 @@ namespace Carbon.Configuration
 		{
 			try
 			{
-				/// default it to the value's string representation
-				string description = value.ToString();
+				// default it to the value's string representation
+				var description = value.ToString();
 
-				/// grab the public static members, which enum values are dynamically generated to be public static members
-				MemberInfo[] members = t.GetMembers(BindingFlags.Static | BindingFlags.Public);		
+				// grab the public static members, which enum values are dynamically generated to be public static members
+				var members = t.GetMembers(BindingFlags.Static | BindingFlags.Public);		
 
-				/// loop thru the values of the enum until the correct value is found
-				foreach(MemberInfo memberInfo in members)
+				// loop thru the values of the enum until the correct value is found
+				foreach(var memberInfo in members)
 				{
-					/// if the name of the member matches the name of value, then we can assume we have found the correct member of the enum from which to extract the description
+					// if the name of the member matches the name of value, then we can assume we have found the correct member of the enum from which to extract the description
 					if (string.Compare(value.ToString(), memberInfo.Name, false) == 0)
 					{
-						/// print the name of the enum
-//						System.Diagnostics.Debug.WriteLine(memberInfo.Name);
-					
-						/// get the custom attributes, specifically looking for the description attribute
-						object[] attributes = memberInfo.GetCustomAttributes(typeof(System.ComponentModel.DescriptionAttribute), false);
-						StringBuilder sb = new StringBuilder();
-						if (attributes != null)
-						{						
-							/// who knows there may be more than one
-							foreach(DescriptionAttribute attribute in attributes)
-								sb.AppendFormat("{0}", attribute.Description);												
-						}	
-						return sb.ToString();
+						// get the custom attributes, specifically looking for the description attribute
+						var attributes = memberInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
+						var sb = new StringBuilder();
+					    // who knows there may be more than one
+					    foreach(DescriptionAttribute attribute in attributes)
+					        sb.AppendFormat("{0}", attribute.Description);
+					    return sb.ToString();
 					}
 				}	
 				return description;
@@ -188,27 +182,24 @@ namespace Carbon.Configuration
 		{
 			try
 			{
-				/// default it to the value's string representation
-				string description = "Misc";
+				// default it to the value's string representation
+				var description = "Misc";
 
-				/// grab the public static members, which enum values are dynamically generated to be public static members
-				MemberInfo[] members = t.GetMembers(BindingFlags.Static | BindingFlags.Public);		
+				// grab the public static members, which enum values are dynamically generated to be public static members
+				var members = t.GetMembers(BindingFlags.Static | BindingFlags.Public);		
 
-				/// loop thru the values of the enum until the correct value is found
-				foreach(MemberInfo memberInfo in members)
+				// loop thru the values of the enum until the correct value is found
+				foreach(var memberInfo in members)
 				{
-					/// if the name of the member matches the name of value, then we can assume we have found the correct member of the enum from which to extract the description
+					// if the name of the member matches the name of value, then we can assume we have found the correct member of the enum from which to extract the description
 					if (string.Compare(value.ToString(), memberInfo.Name, false) == 0)
 					{
-						/// print the name of the enum
-						//						System.Diagnostics.Debug.WriteLine(memberInfo.Name);
-					
-						/// get the custom attributes, specifically looking for the description attribute
-						object[] attributes = memberInfo.GetCustomAttributes(typeof(System.ComponentModel.CategoryAttribute), false);
-						StringBuilder sb = new StringBuilder();
+						// get the custom attributes, specifically looking for the description attribute
+						var attributes = memberInfo.GetCustomAttributes(typeof(CategoryAttribute), false);
+						var sb = new StringBuilder();
 						if (attributes != null)
 						{						
-							/// who knows there may be more than one
+							// who knows there may be more than one
 							foreach(CategoryAttribute attribute in attributes)
 								sb.AppendFormat("{0}", attribute.Category);												
 						}	

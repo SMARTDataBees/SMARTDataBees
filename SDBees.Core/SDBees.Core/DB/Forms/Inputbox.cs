@@ -28,8 +28,8 @@
  * ajmaonline@hotmail.com
  */
 
-using System;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace SDBees.DB
 {
@@ -44,7 +44,7 @@ namespace SDBees.DB
 		/// <param name="Prompt">String expression displayed as the message in the dialog box.</param>
 		/// <param name="Title">String expression displayed in the title bar of the dialog box.</param>
 		/// <returns>The value in the textbox is returned if the user clicks OK or presses the ENTER key. If the user clicks Cancel, a zero-length string is returned.</returns>
-		public static string Show(string Prompt, string Title, ref System.Windows.Forms.DialogResult dlgres)
+		public static string Show(string Prompt, string Title, ref DialogResult dlgres)
 		{
 			return Show(Prompt, Title, "", -1, -1, ref dlgres);
 		}
@@ -56,7 +56,7 @@ namespace SDBees.DB
 		/// <param name="Title">String expression displayed in the title bar of the dialog box.</param>
 		/// <param name="DefaultResponse">String expression displayed in the text box as the default response if no other input is provided. If you omit DefaultResponse, the displayed text box is empty.</param>
 		/// <returns>The value in the textbox is returned if the user clicks OK or presses the ENTER key. If the user clicks Cancel, a zero-length string is returned.</returns>
-		public static string Show(string Prompt, string Title, string DefaultResponse, ref System.Windows.Forms.DialogResult dlgres)
+		public static string Show(string Prompt, string Title, string DefaultResponse, ref DialogResult dlgres)
 		{
 			return Show(Prompt, Title, DefaultResponse, -1, -1, ref dlgres);
 		}
@@ -70,16 +70,16 @@ namespace SDBees.DB
 		/// <param name="XPos">Integer expression that specifies, in pixels, the distance of the left edge of the dialog box from the left edge of the screen.</param>
 		/// <param name="YPos">Integer expression that specifies, in pixels, the distance of the upper edge of the dialog box from the top of the screen.</param>
 		/// <returns>The value in the textbox is returned if the user clicks OK or presses the ENTER key. If the user clicks Cancel, a zero-length string is returned.</returns>
-		public static string Show(string Prompt, string Title, string DefaultResponse, int XPos, int YPos, ref System.Windows.Forms.DialogResult dlgres)
+		public static string Show(string Prompt, string Title, string DefaultResponse, int XPos, int YPos, ref DialogResult dlgres)
 		{
 			// Create a new input box dialog
-			frmInputBox frmInputBox = new frmInputBox();
+			var frmInputBox = new frmInputBox();
 			frmInputBox.Title = Title;
 			frmInputBox.Prompt = Prompt;
 			frmInputBox.DefaultResponse = DefaultResponse;
 			if (XPos >= 0 && YPos >= 0)
 			{
-				frmInputBox.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+				frmInputBox.StartPosition = FormStartPosition.Manual;
 				frmInputBox.Location = new Point(XPos, YPos);
 			}
 			dlgres = frmInputBox.ShowDialog();

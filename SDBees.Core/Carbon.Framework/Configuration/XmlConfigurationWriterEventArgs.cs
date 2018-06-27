@@ -30,7 +30,6 @@
 //	============================================================================
 
 using System;
-using Carbon.Configuration;
 
 namespace Carbon.Configuration
 {
@@ -39,7 +38,7 @@ namespace Carbon.Configuration
 	/// </summary>
 	public class XmlConfigurationWriterEventArgs
 	{
-		private System.Exception _ex;
+		private Exception _ex;
 		private XmlConfigurationOption _option;
 
 		public XmlConfigurationWriterEventArgs(Exception ex, XmlConfigurationOption option)
@@ -48,7 +47,7 @@ namespace Carbon.Configuration
 			_option = option;
 		}
 
-		public System.Exception Exception
+		public Exception Exception
 		{
 			get
 			{

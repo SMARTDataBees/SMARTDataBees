@@ -58,19 +58,19 @@ namespace Carbon.Configuration
 		{						
 			try
 			{				
-				Type t = instance.GetType();
+				var t = instance.GetType();
 				if (t != null)
 				{
-					FieldInfo[] fields = t.GetFields(bindingFlags);
+					var fields = t.GetFields(bindingFlags);
 					if (fields != null)
 					{
-						ConstructorInfo ci = t.GetConstructor(Type.EmptyTypes);
+						var ci = t.GetConstructor(Type.EmptyTypes);
 						if (ci != null)
 						{
-							object clone = ci.Invoke(null);
+							var clone = ci.Invoke(null);
 							if (clone != null)
 							{
-								foreach(FieldInfo fi in fields)
+								foreach(var fi in fields)
 								{
 									try
 									{

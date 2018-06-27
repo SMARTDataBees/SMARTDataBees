@@ -1,11 +1,13 @@
-﻿using Carbon.Configuration;
-using Carbon.Configuration.Providers.Custom;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Threading;
+using System.Windows.Forms;
+using Carbon.Configuration;
+using Carbon.Configuration.Providers.Custom;
+using Carbon.UI;
+using SDBees.Core.GuiTools.TypeConverters;
+using SDBees.Core.Model.Math;
 
 namespace SDBees.Core.Global
 {
@@ -18,14 +20,14 @@ namespace SDBees.Core.Global
 		private const string m_SDBees = "Global";
 		public static XmlConfigurationCategory SDBeesLocalUsersConfiguration()
 		{
-			XmlConfigurationCategory cat = LocalUsersConfigurationProvider.Current.Configuration.Categories[m_SDBees, true];
+			var cat = LocalUsersConfigurationProvider.Current.Configuration.Categories[m_SDBees, true];
 
 			return cat;
 		}
 
 		public static XmlConfigurationCategory SDBeesAllUsersConfiguration()
 		{
-			XmlConfigurationCategory cat = AllUsersConfigurationProvider.Current.Configuration.Categories[m_SDBees, true];
+			var cat = AllUsersConfigurationProvider.Current.Configuration.Categories[m_SDBees, true];
 
 			return cat;
 		}
@@ -47,7 +49,7 @@ namespace SDBees.Core.Global
 			try
 			{
 				// Add unit configuration
-				XmlConfigurationCategory catSDBees = SDBeesLocalUsersConfiguration();
+				var catSDBees = SDBeesLocalUsersConfiguration();
 
 				AddLengthUnitsToConfiguration(catSDBees);
 
@@ -65,13 +67,13 @@ namespace SDBees.Core.Global
 
 		private static void AddRegionConfiguration(XmlConfigurationCategory catSDBees)
 		{
-			XmlConfigurationOption opRegion = new XmlConfigurationOption();
+			var opRegion = new XmlConfigurationOption();
 			opRegion.DisplayName = m_UIRegion;
 			opRegion.ElementName = m_UIRegion;
 			opRegion.Category = m_UIRegionCategory;
 			opRegion.ValueAssemblyQualifiedName = typeof(string).AssemblyQualifiedName;
-			opRegion.TypeConverterAssemblyQualifiedName = typeof(GuiTools.TypeConverters.CountryInfoTypeConverter).AssemblyQualifiedName;
-			opRegion.Value = GuiTools.TypeConverters.CountryInfoTypeConverter.GetDefaultCountryDisplayName("en-US");
+			opRegion.TypeConverterAssemblyQualifiedName = typeof(CountryInfoTypeConverter).AssemblyQualifiedName;
+			opRegion.Value = CountryInfoTypeConverter.GetDefaultCountryDisplayName("en-US");
 			opRegion.Description = "Region settings for UI";
 			//opAnullarSpace.EditorAssemblyQualifiedName
 			if (!catSDBees.Options.Contains(opRegion))
@@ -80,12 +82,12 @@ namespace SDBees.Core.Global
 
 		private static void AddDecimalPlacesToConfiguration(XmlConfigurationCategory catSDBees)
 		{
-			XmlConfigurationOption opPrecision = new XmlConfigurationOption();
+			var opPrecision = new XmlConfigurationOption();
 			opPrecision.DisplayName = m_UIDecimalPlaces;
 			opPrecision.ElementName = m_UIDecimalPlaces;
 			opPrecision.Category = m_UIUnitsCategory;
-			opPrecision.ValueAssemblyQualifiedName = typeof(Int16).AssemblyQualifiedName;
-			opPrecision.TypeConverterAssemblyQualifiedName = typeof(GuiTools.TypeConverters.DecimalPlacesTypeConverter).AssemblyQualifiedName;
+			opPrecision.ValueAssemblyQualifiedName = typeof(short).AssemblyQualifiedName;
+			opPrecision.TypeConverterAssemblyQualifiedName = typeof(DecimalPlacesTypeConverter).AssemblyQualifiedName;
 			opPrecision.Value = 3;
 			opPrecision.Description = "Decimal places for rounding in ui";
 			//opAnullarSpace.EditorAssemblyQualifiedName
@@ -95,11 +97,11 @@ namespace SDBees.Core.Global
 
 		private static void AddAreaUnitsToConfiguration(XmlConfigurationCategory catSDBees)
 		{
-			XmlConfigurationOption opLengthArea = new XmlConfigurationOption();
+			var opLengthArea = new XmlConfigurationOption();
 			opLengthArea.DisplayName = m_UIUnitsArea;
 			opLengthArea.ElementName = m_UIUnitsArea;
 			opLengthArea.Category = m_UIUnitsCategory;
-			opLengthArea.ValueAssemblyQualifiedName = typeof(SDBees.Core.Model.Math.AreaUnits).AssemblyQualifiedName;
+			opLengthArea.ValueAssemblyQualifiedName = typeof(AreaUnits).AssemblyQualifiedName;
 			opLengthArea.Value = DefaultAreaUnits;
 			opLengthArea.Description = "Configuration for area units in ui";
 			//opAnullarSpace.EditorAssemblyQualifiedName
@@ -109,11 +111,11 @@ namespace SDBees.Core.Global
 
 		private static void AddLengthUnitsToConfiguration(XmlConfigurationCategory catSDBees)
 		{
-			XmlConfigurationOption opLengthUnits = new XmlConfigurationOption();
+			var opLengthUnits = new XmlConfigurationOption();
 			opLengthUnits.DisplayName = m_UIUnitsLength;
 			opLengthUnits.ElementName = m_UIUnitsLength;
 			opLengthUnits.Category = m_UIUnitsCategory;
-			opLengthUnits.ValueAssemblyQualifiedName = typeof(SDBees.Core.Model.Math.LengthUnits).AssemblyQualifiedName;
+			opLengthUnits.ValueAssemblyQualifiedName = typeof(LengthUnits).AssemblyQualifiedName;
 			opLengthUnits.Value = DefaultLengthUnits;
 			opLengthUnits.Description = "Configuration for length units in ui";
 			//opAnullarSpace.EditorAssemblyQualifiedName
@@ -127,56 +129,56 @@ namespace SDBees.Core.Global
 
 		public static string GetRegionCode()
 		{
-			return GuiTools.TypeConverters.CountryInfoTypeConverter.GetIsoCodeForDisplayname(GetRegionDisplayName());
+			return CountryInfoTypeConverter.GetIsoCodeForDisplayname(GetRegionDisplayName());
 		}
 
 		public static CultureInfo GetCultureInfo()
 		{
-			string regionCode = GetRegionCode();
-			CultureInfo cInf = CultureInfo.GetCultureInfo(regionCode);
+			var regionCode = GetRegionCode();
+			var cInf = CultureInfo.GetCultureInfo(regionCode);
 
 			return cInf;
 		}
 
-		public static SDBees.Core.Model.Math.LengthUnits GetLengthUnits()
+		public static LengthUnits GetLengthUnits()
 		{
-			SDBees.Core.Model.Math.LengthUnits lu = DefaultLengthUnits;
+			var lu = DefaultLengthUnits;
 
-			if (!Enum.TryParse<SDBees.Core.Model.Math.LengthUnits>(SDBeesLocalUsersConfiguration().Options[m_UIUnitsLength, true].Value.ToString(), out lu))
+			if (!Enum.TryParse(SDBeesLocalUsersConfiguration().Options[m_UIUnitsLength, true].Value.ToString(), out lu))
 			{
-				System.Windows.Forms.MessageBox.Show("Error while retriving LengthUnits!\nPlease check Configuration!");
+				MessageBox.Show("Error while retriving LengthUnits!\nPlease check Configuration!");
 			}
 			return lu;
 		}
 
-		public static SDBees.Core.Model.Math.AreaUnits GetAreaUnits()
+		public static AreaUnits GetAreaUnits()
 		{
-			SDBees.Core.Model.Math.AreaUnits au = DefaultAreaUnits;
+			var au = DefaultAreaUnits;
 
-			if (!Enum.TryParse<SDBees.Core.Model.Math.AreaUnits>(SDBeesLocalUsersConfiguration().Options[m_UIUnitsArea, true].Value.ToString(), out au))
+			if (!Enum.TryParse(SDBeesLocalUsersConfiguration().Options[m_UIUnitsArea, true].Value.ToString(), out au))
 			{
-				System.Windows.Forms.MessageBox.Show("Error while retriving AreaUnits!\nPlease check Configuration!");
+				MessageBox.Show("Error while retriving AreaUnits!\nPlease check Configuration!");
 			}
 			return au;
 		}
 
-		public static Int16 GetDecimalPlaces()
+		public static short GetDecimalPlaces()
 		{
-			Int16 au = 2;
+			short au = 2;
 
-			if (!Int16.TryParse(SDBeesLocalUsersConfiguration().Options[m_UIDecimalPlaces, true].Value.ToString(), out au))
+			if (!short.TryParse(SDBeesLocalUsersConfiguration().Options[m_UIDecimalPlaces, true].Value.ToString(), out au))
 			{
-				System.Windows.Forms.MessageBox.Show("Error while retriving precision!\nPlease check Configuration!");
+				MessageBox.Show("Error while retriving precision!\nPlease check Configuration!");
 			}
 			return au;
 		}
 
 		public static string GetFormattingForDecimalPlaces()
 		{
-			string result = "0.";
+			var result = "0.";
 			int dp = GetDecimalPlaces();
 
-			for (int i = 0; i < dp; i++)
+			for (var i = 0; i < dp; i++)
 			{
 				result += "0";
 			}
@@ -188,26 +190,26 @@ namespace SDBees.Core.Global
 			return Thread.CurrentThread.CurrentCulture;
 		}
 
-		public static SDBees.Core.Model.Math.LengthUnits DefaultLengthUnits
+		public static LengthUnits DefaultLengthUnits
 		{
 			get
 			{
-				return SDBees.Core.Model.Math.LengthUnits.Inches;
+				return LengthUnits.Inches;
 			}
 		}
 
-		public static SDBees.Core.Model.Math.AreaUnits DefaultAreaUnits
+		public static AreaUnits DefaultAreaUnits
 		{
 			get
 			{
-				return SDBees.Core.Model.Math.AreaUnits.Square_Inches;
+				return AreaUnits.Square_Inches;
 			}
 		}
 
 		const string m_DisplaymentCategory = "Displayment";
 		private static void SetUpDisplaymentConfiguration()
 		{
-			XmlConfigurationCategory catSDBees = SDBeesLocalUsersConfiguration();
+			var catSDBees = SDBeesLocalUsersConfiguration();
 
 			//AddViewAdminDisplayment(catSDBees);
 		}
@@ -233,16 +235,16 @@ namespace SDBees.Core.Global
 		private const string m_DisallowEditSchemaList = "DisallowEditSchema";
 		public static List<string> GetEditSchemaDissallowList()
 		{
-			List<string> _dissallow = new List<string>();
-			if (SDBees.Core.Global.GlobalManager.Current != null)
+			var _dissallow = new List<string>();
+			if (GlobalManager.Current != null)
 			{
 				try
 				{
-					_dissallow.AddRange(SDBees.Core.Global.GlobalManager.Current.Config.AppSettings.Settings[m_DisallowEditSchemaList].Value.ToString().Split(';'));
+					_dissallow.AddRange(GlobalManager.Current.Configuration.AppSettings.Settings[m_DisallowEditSchemaList].Value.Split(';'));
 				}
 				catch (Exception ex)
 				{
-					System.Windows.Forms.MessageBox.Show(ex.Message);
+					MessageBox.Show(ex.Message);
 				}
 			}
 			return _dissallow;
@@ -251,19 +253,19 @@ namespace SDBees.Core.Global
 		private const string m_ViewAdminDisplayment = "ViewAdminVisible";
 		public static bool GetViewAdminDisplayment()
 		{
-			bool _showViewAdmin = false;
+			var _showViewAdmin = false;
 
 			// Replaced to .config file to handle seperate settings for SDBees and derived Apps
-			if(SDBees.Core.Global.GlobalManager.Current != null)
+			if(GlobalManager.Current != null)
 			{
 				try
 				{
-					if(!Boolean.TryParse(SDBees.Core.Global.GlobalManager.Current.Config.AppSettings.Settings[m_ViewAdminDisplayment].Value.ToString(), out _showViewAdmin))
-						System.Windows.Forms.MessageBox.Show("Error while retriving displament setting for ViewAdmin!\nPlease check Configuration!");
+					if(!bool.TryParse(GlobalManager.Current.Configuration.AppSettings.Settings[m_ViewAdminDisplayment].Value, out _showViewAdmin))
+						MessageBox.Show("Error while retriving displament setting for ViewAdmin!\nPlease check Configuration!");
 				}
 				catch (Exception ex)
 				{
-					System.Windows.Forms.MessageBox.Show(ex.Message);
+					MessageBox.Show(ex.Message);
 				}
 			}
 			return _showViewAdmin;
@@ -272,17 +274,17 @@ namespace SDBees.Core.Global
 		private const string m_ReportingManagerDisplayment = "ReportingManagerVisible";
 		public static bool GetReportingManagerDisplayment()
 		{
-			bool _showReportingManager = false;
-			if (SDBees.Core.Global.GlobalManager.Current != null)
+			var _showReportingManager = false;
+			if (GlobalManager.Current != null)
 			{
 				try
 				{
-					if (!Boolean.TryParse(SDBees.Core.Global.GlobalManager.Current.Config.AppSettings.Settings[m_ReportingManagerDisplayment].Value.ToString(), out _showReportingManager))
-						System.Windows.Forms.MessageBox.Show("Error while retriving displament setting for ReportingManager!\nPlease check Configuration!");
+					if (!bool.TryParse(GlobalManager.Current.Configuration.AppSettings.Settings[m_ReportingManagerDisplayment].Value, out _showReportingManager))
+						MessageBox.Show("Error while retriving displament setting for ReportingManager!\nPlease check Configuration!");
 				}
 				catch (Exception ex)
 				{
-					System.Windows.Forms.MessageBox.Show(ex.Message);
+					MessageBox.Show(ex.Message);
 				}
 			}
 
@@ -292,17 +294,17 @@ namespace SDBees.Core.Global
 		private const string m_EDMManagerDisplayment = "EDMManagerVisible";
 		public static bool GetEDMManagerDisplayment()
 		{
-			bool _showEDMManager = false;
-			if (SDBees.Core.Global.GlobalManager.Current != null)
+			var _showEDMManager = false;
+			if (GlobalManager.Current != null)
 			{
 				try
 				{
-					if (!Boolean.TryParse(SDBees.Core.Global.GlobalManager.Current.Config.AppSettings.Settings[m_EDMManagerDisplayment].Value.ToString(), out _showEDMManager))
-						System.Windows.Forms.MessageBox.Show("Error while retriving displament setting for EDMManager!\nPlease check Configuration!");
+					if (!bool.TryParse(GlobalManager.Current.Configuration.AppSettings.Settings[m_EDMManagerDisplayment].Value, out _showEDMManager))
+						MessageBox.Show("Error while retriving displament setting for EDMManager!\nPlease check Configuration!");
 				}
 				catch (Exception ex)
 				{
-					System.Windows.Forms.MessageBox.Show(ex.Message);
+					MessageBox.Show(ex.Message);
 				}
 			}
 
@@ -312,17 +314,17 @@ namespace SDBees.Core.Global
 		private const string m_LoginDlgPropertiesEnabled = "LoginDlgPropertiesEnabled";
 		public static bool GetLoginDlgPropertiesEnabled()
 		{
-			bool _enableLoginDlgProps = false;
-			if (SDBees.Core.Global.GlobalManager.Current != null)
+			var _enableLoginDlgProps = false;
+			if (GlobalManager.Current != null)
 			{
 				try
 				{
-					if (!Boolean.TryParse(SDBees.Core.Global.GlobalManager.Current.Config.AppSettings.Settings[m_LoginDlgPropertiesEnabled].Value.ToString(), out _enableLoginDlgProps))
-						System.Windows.Forms.MessageBox.Show("Error while retriving enable setting for LoginDlg!\nPlease check Configuration!");
+					if (!bool.TryParse(GlobalManager.Current.Configuration.AppSettings.Settings[m_LoginDlgPropertiesEnabled].Value, out _enableLoginDlgProps))
+						MessageBox.Show("Error while retriving enable setting for LoginDlg!\nPlease check Configuration!");
 				}
 				catch (Exception ex)
 				{
-					System.Windows.Forms.MessageBox.Show(ex.Message);
+					MessageBox.Show(ex.Message);
 				}
 			}
 
@@ -331,18 +333,18 @@ namespace SDBees.Core.Global
 		#endregion
 
 		#region progress dlg
-		static Carbon.UI.ProgressWindow m_ProgressDlg;
+		static ProgressWindow m_ProgressDlg;
 
 		/// <summary>
 		/// Progressdialog in SDBees style
 		/// </summary>
 		/// <returns></returns>
-		public static void ProgressWindowShow(System.Windows.Forms.IWin32Window owner, string title, string heading, string description, string extendedDescription)
+		public static void ProgressWindowShow(IWin32Window owner, string title, string heading, string description, string extendedDescription)
 		{
 			if (m_ProgressDlg == null)
-				m_ProgressDlg = new Carbon.UI.ProgressWindow();
+				m_ProgressDlg = new ProgressWindow();
 
-			m_ProgressDlg.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+			m_ProgressDlg.StartPosition = FormStartPosition.CenterParent;
 			m_ProgressDlg.Show(owner);
 			m_ProgressDlg.SetTitle(title);
 			m_ProgressDlg.SetHeading(heading);

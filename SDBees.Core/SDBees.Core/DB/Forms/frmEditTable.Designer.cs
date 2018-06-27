@@ -20,6 +20,10 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.ComponentModel;
+using System.Windows.Forms;
+
 namespace SDBees.DB
 {
     /// <summary>
@@ -30,7 +34,7 @@ namespace SDBees.DB
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -107,7 +111,7 @@ namespace SDBees.DB
             this.bnDeleteColumn.Name = "bnDeleteColumn";
             this.bnDeleteColumn.Size = new System.Drawing.Size(126, 23);
             this.bnDeleteColumn.TabIndex = 3;
-            this.bnDeleteColumn.Text = "Eigenschaft &löschen";
+            this.bnDeleteColumn.Text = "&Delete property";
             this.bnDeleteColumn.UseVisualStyleBackColor = true;
             this.bnDeleteColumn.Click += new System.EventHandler(this.bnDeleteColumn_Click);
             // 
@@ -118,7 +122,7 @@ namespace SDBees.DB
             this.bnAddColumn.Name = "bnAddColumn";
             this.bnAddColumn.Size = new System.Drawing.Size(126, 23);
             this.bnAddColumn.TabIndex = 1;
-            this.bnAddColumn.Text = "&Neue Eigenschaft";
+            this.bnAddColumn.Text = "&New property";
             this.bnAddColumn.UseVisualStyleBackColor = true;
             this.bnAddColumn.Click += new System.EventHandler(this.bnAddColumn_Click);
             // 
@@ -130,7 +134,7 @@ namespace SDBees.DB
             this.bnCancel.Name = "bnCancel";
             this.bnCancel.Size = new System.Drawing.Size(126, 23);
             this.bnCancel.TabIndex = 4;
-            this.bnCancel.Text = "Abbrechen";
+            this.bnCancel.Text = "Cancel";
             this.bnCancel.UseVisualStyleBackColor = true;
             // 
             // bnOk
@@ -183,7 +187,7 @@ namespace SDBees.DB
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "frmEditTable";
             this.ShowIcon = false;
-            this.Text = "Eigenschaften Editor";
+            this.Text = "Property editor";
             this.Load += new System.EventHandler(this.frmEditTable_Load);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -192,14 +196,14 @@ namespace SDBees.DB
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button bnDeleteColumn;
-        private System.Windows.Forms.Button bnAddColumn;
-        private System.Windows.Forms.ListBox lbColumns;
-        private System.Windows.Forms.PropertyGrid pgProperties;
-        private System.Windows.Forms.Button bnCancel;
-        private System.Windows.Forms.Button bnOk;
-        private System.Windows.Forms.Button bnExport;
-        private System.Windows.Forms.Button bnImport;
+        private GroupBox groupBox1;
+        private Button bnDeleteColumn;
+        private Button bnAddColumn;
+        private ListBox lbColumns;
+        private PropertyGrid pgProperties;
+        private Button bnCancel;
+        private Button bnOk;
+        private Button bnExport;
+        private Button bnImport;
     }
 }

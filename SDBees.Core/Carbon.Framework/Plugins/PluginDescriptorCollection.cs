@@ -31,7 +31,6 @@
 
 using System;
 using System.Collections;
-
 using Carbon.Common;
 
 namespace Carbon.Plugins
@@ -54,7 +53,7 @@ namespace Carbon.Plugins
 			private readonly PluginDescriptor _descriptor;
 
 			internal PluginDescriptorAlreadyExistsException(PluginDescriptor descriptor) : 
-				base(string.Format("The PluginDescriptor '{0}' already exists in the collection.", descriptor.ToString()))
+				base($"The PluginDescriptor '{descriptor}' already exists in the collection.")
 			{
 				_descriptor = descriptor;
 			}
@@ -78,14 +77,6 @@ namespace Carbon.Plugins
         /// </summary>
         private sealed class LeastDependentComparer : IComparer
         {
-            /// <summary>
-            /// Initializes a new instance of the LeastDependentComparer class
-            /// </summary>
-            public LeastDependentComparer()
-            {
-
-            }
-
             #region IComparer Members
 
             /// <summary>
@@ -96,8 +87,8 @@ namespace Carbon.Plugins
             /// <returns></returns>
             public int Compare(object x, object y)
             {
-                PluginDescriptor xDescriptor = (PluginDescriptor)x;
-                PluginDescriptor yDescriptor = (PluginDescriptor)y;
+                var xDescriptor = (PluginDescriptor)x;
+                var yDescriptor = (PluginDescriptor)y;
 
 				//Log.WriteLine(xDescriptor.ToString() + " == " + yDescriptor.ToString());
                 
@@ -105,15 +96,14 @@ namespace Carbon.Plugins
                     return 0;
 
                 // the opposite of the MostDependentComparer class
-                bool xDependsOnY = xDescriptor.DependsOn(yDescriptor);
-                bool yDependsOnX = yDescriptor.DependsOn(xDescriptor);
+                var xDependsOnY = xDescriptor.DependsOn(yDescriptor);
+                var yDependsOnX = yDescriptor.DependsOn(xDescriptor);
 
                 if (xDependsOnY)
                     return 1;
-                else if (yDependsOnX)
+                if (yDependsOnX)
                     return -1;
-                else
-                    return 0;
+                return 0;
             }
 
             #endregion
@@ -129,14 +119,6 @@ namespace Carbon.Plugins
         /// </summary>
         private sealed class MostDependentComparer : IComparer
         {
-            /// <summary>
-            /// Initializes a new instance of the MostDependentComparer class
-            /// </summary>
-            public MostDependentComparer() 
-            {
-            
-            }
-
             #region IComparer Members
 
             /// <summary>
@@ -147,22 +129,21 @@ namespace Carbon.Plugins
             /// <returns></returns>
             public int Compare(object x, object y)
             {
-                PluginDescriptor xDescriptor = (PluginDescriptor)x;
-                PluginDescriptor yDescriptor = (PluginDescriptor)y;
+                var xDescriptor = (PluginDescriptor)x;
+                var yDescriptor = (PluginDescriptor)y;
 
                 if (xDescriptor == yDescriptor)
                     return 0;
 
                 // the opposite of the LeastDependentComparer class
-                bool xDependsOnY = xDescriptor.DependsOn(yDescriptor);
-                bool yDependsOnX = yDescriptor.DependsOn(xDescriptor);
+                var xDependsOnY = xDescriptor.DependsOn(yDescriptor);
+                var yDependsOnX = yDescriptor.DependsOn(xDescriptor);
 
                 if (xDependsOnY)
                     return -1;
-                else if (yDependsOnX)
+                if (yDependsOnX)
                     return 1;
-                else
-                    return 0;
+                return 0;
             }
 
             #endregion
@@ -185,12 +166,12 @@ namespace Carbon.Plugins
 		/// <param name="descriptor">The descriptor to add to the collection</param>
 		internal void Add(PluginDescriptor descriptor)
 		{
-			if (this.Contains(descriptor))
+			if (Contains(descriptor))
 				throw new PluginDescriptorAlreadyExistsException(descriptor);
 
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
-				base.InnerList.Add(descriptor);
+				InnerList.Add(descriptor);
 			}
 		}
 
@@ -203,9 +184,9 @@ namespace Carbon.Plugins
 			if (descriptors == null)
 				throw new ArgumentNullException("descriptors");
 
-			foreach (PluginDescriptor descriptor in descriptors)
+			foreach (var descriptor in descriptors)
 			{
-				this.Add(descriptor);
+				Add(descriptor);
 			}
 		}
 
@@ -236,9 +217,9 @@ namespace Carbon.Plugins
             else
                 comparer = new MostDependentComparer();                       
 
-            this.Sort(comparer);
+            Sort(comparer);
 
-            this.LogContents();
+            LogContents();
         }
 
 		/// <summary>
@@ -249,9 +230,9 @@ namespace Carbon.Plugins
 		{
 			get
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
-					foreach (PluginDescriptor descriptor in base.InnerList)
+					foreach (PluginDescriptor descriptor in InnerList)
 					{
 						if (descriptor.PluginType == pluginType)
 							return descriptor;
@@ -269,9 +250,9 @@ namespace Carbon.Plugins
 		{
 			get
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
-					foreach (PluginDescriptor descriptor in base.InnerList)
+					foreach (PluginDescriptor descriptor in InnerList)
 					{
 						if (string.Compare(descriptor.PluginType.FullName, pluginTypeFullName, true) == 0)
 							return descriptor;
@@ -283,9 +264,9 @@ namespace Carbon.Plugins
 
 		internal new void Clear()
 		{
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
-				base.InnerList.Clear();
+				InnerList.Clear();
 			}
 		}
 
@@ -295,9 +276,9 @@ namespace Carbon.Plugins
 		/// <returns></returns>
 		internal PluginDescriptor[] ToArray()
 		{
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
-				return base.InnerList.ToArray(typeof(PluginDescriptor)) as PluginDescriptor[];
+				return InnerList.ToArray(typeof(PluginDescriptor)) as PluginDescriptor[];
 			}
 		}
 
@@ -312,7 +293,7 @@ namespace Carbon.Plugins
                 Log.WriteLine("PluginDescriptorCollection Contents :");            
                 Log.Indent();
 
-                foreach (PluginDescriptor descriptor in base.InnerList)
+                foreach (PluginDescriptor descriptor in InnerList)
                     Log.WriteLine("PluginDescriptor: '{0}', Status: '{1}'", descriptor.PluginName, descriptor.IsStartable ? "Startable" : "Unstartable");
             }
             catch(Exception ex)

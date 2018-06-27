@@ -20,9 +20,8 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
-using System.Text;
 using SDBees.DB.Forms;
 
 namespace SDBees.DB
@@ -133,7 +132,7 @@ namespace SDBees.DB
         /// <returns></returns>
         public string FullDescription()
         {
-            string msg = "(E" + mNumber + ") - " + mMessage + " - in " + mSource.FullName + " (" + mSource.Module + ")";
+            var msg = "(E" + mNumber + ") - " + mMessage + " - in " + mSource.FullName + " (" + mSource.Module + ")";
             if (mInnerError != null)
             {
                 msg += "\r\n" + mInnerError.FullDescription();
@@ -151,7 +150,7 @@ namespace SDBees.DB
         {
             if (error != null)
             {
-                frmError dlg = new frmError(msg, "Application error", error);
+                var dlg = new frmError(msg, "Application error", error);
                 dlg.ShowDialog();
 
                 dlg.Dispose();

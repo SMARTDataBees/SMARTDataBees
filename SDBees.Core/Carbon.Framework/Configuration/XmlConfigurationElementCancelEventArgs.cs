@@ -29,14 +29,14 @@
 //
 //	============================================================================
 
-using System;
+using System.ComponentModel;
 
 namespace Carbon.Configuration
 {
 	/// <summary>
 	/// Summary description for XmlConfigurationElementCancelEventArgs.
 	/// </summary>
-	public class XmlConfigurationElementCancelEventArgs : System.ComponentModel.CancelEventArgs 
+	public class XmlConfigurationElementCancelEventArgs : CancelEventArgs 
 	{
 		private XmlConfigurationElement _element;
 

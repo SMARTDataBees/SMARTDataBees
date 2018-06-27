@@ -30,19 +30,17 @@
 //	============================================================================
 
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 
 namespace Carbon.Common
 {
-	[System.Diagnostics.DebuggerStepThrough()]
-	[Serializable()]
+	[DebuggerStepThrough]
+	[Serializable]
 	public sealed class InstanceManagerEventArgs : EventArgs 
 	{
 		private readonly string[] _args;
 
 		public InstanceManagerEventArgs(string[] commandLineArgs)
-			: base()
 		{
 			_args = commandLineArgs;
 		}

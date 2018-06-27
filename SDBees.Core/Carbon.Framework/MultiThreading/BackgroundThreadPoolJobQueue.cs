@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections;
+using System.Diagnostics;
 
 namespace Carbon.MultiThreading
 {
@@ -38,7 +39,7 @@ namespace Carbon.MultiThreading
 	/// Provides a strongly-typed queue of BackgroundThreadPoolJob instances.
 	/// This class is thread safe.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public sealed class BackgroundThreadPoolJobQueue : Queue 
 	{	
 		#region BackgroundThreadPoolJobAlreadyQueuedException
@@ -75,24 +76,16 @@ namespace Carbon.MultiThreading
 	
 		#endregion
 
-		/// <summary>
-		/// Initializes a new instance of the BackgroundThreadPoolJobQueue class
-		/// </summary>
-		public BackgroundThreadPoolJobQueue() : base()
-		{
-
-		}
-		
-		/// <summary>
+	    /// <summary>
 		/// Adds a job to the queue
 		/// </summary>
 		/// <param name="job"></param>
 		public void Enqueue(BackgroundThreadPoolJob job)
 		{
-			if (this.Contains(job))
+			if (Contains(job))
 				throw new BackgroundThreadPoolJobAlreadyQueuedException(job);
 
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
 				base.Enqueue(job);
 			}
@@ -104,7 +97,7 @@ namespace Carbon.MultiThreading
 		/// <returns></returns>
 		public new BackgroundThreadPoolJob Dequeue()
 		{
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
 				return base.Dequeue() as BackgroundThreadPoolJob;
 			}
@@ -116,7 +109,7 @@ namespace Carbon.MultiThreading
 		/// <returns></returns>
 		public new BackgroundThreadPoolJob[] ToArray()
 		{
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
 				return base.ToArray() as BackgroundThreadPoolJob[];
 			}
@@ -129,12 +122,12 @@ namespace Carbon.MultiThreading
 		/// <returns></returns>
 		public bool Contains(BackgroundThreadPoolJob job)
 		{
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
-				IEnumerator it = base.GetEnumerator();
+				var it = GetEnumerator();
 				while(it.MoveNext())
 				{
-					if (Guid.Equals(((BackgroundThreadPoolJob)it.Current).Id, job.Id))
+					if (Equals(((BackgroundThreadPoolJob)it.Current).Id, job.Id))
 					{
 						return true;
 					}

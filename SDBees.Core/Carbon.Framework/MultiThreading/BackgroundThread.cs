@@ -30,11 +30,8 @@
 //	============================================================================
 
 using System;
-using System.Collections;
 using System.Diagnostics;
 using System.Threading;
-using System.Windows.Forms;
-
 using Carbon.Common;
 
 namespace Carbon.MultiThreading
@@ -42,7 +39,7 @@ namespace Carbon.MultiThreading
 	/// <summary>
 	/// Defines a wrapper class around the .Net Thread class which makes multi-threading safer and easier
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public class BackgroundThread : DisposableObject
 	{
 		protected object[] _args;
@@ -84,10 +81,10 @@ namespace Carbon.MultiThreading
 				throw new ArgumentNullException("onRun", "A callback method is required.");
 
 			// auto wire the callback to our event
-			this.Run += onRun;
+			Run += onRun;
 
 			// auto start the thread
-			this.Start(isBackground, args);
+			Start(isBackground, args);
 		}
 
 		/// <summary>
@@ -95,7 +92,7 @@ namespace Carbon.MultiThreading
 		/// </summary>
 		protected override void DisposeOfManagedResources()
 		{
-			this.Stop();			
+			Stop();			
 		}
 
 		#region My Public Methods
@@ -107,12 +104,12 @@ namespace Carbon.MultiThreading
 		/// <param name="args">An array of arguments to pass to the thread when it starts</param>
 		public virtual void Start(bool isBackground, object[] args)	
 		{
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
 				// if the thread is running
-				if (this.IsRunning)
+				if (IsRunning)
 					// stop it before we continue
-					this.Stop();
+					Stop();
 
 				// save the args that will be passed to the thread
 				_args = args;
@@ -124,11 +121,11 @@ namespace Carbon.MultiThreading
 				_completedEvent = new ManualResetEvent(false);
 
 				// create a new thread aimed at our internal callback method
-				_processingThread = new Thread(new ThreadStart(this.ThreadProc));
+				_processingThread = new Thread(ThreadProc);
                 _processingThread.ApartmentState = ApartmentState.STA;
 
 				// name the processing thread
-				_processingThread.Name = string.Format("{0} '0x{1}'", this.GetType().Name, this.GetHashCode().ToString("X"));
+				_processingThread.Name = $"{GetType().Name} '0x{GetHashCode().ToString("X")}'";
 
 				// it is a background thread an will not keep the main thread alive
 				_processingThread.IsBackground = isBackground;
@@ -149,7 +146,7 @@ namespace Carbon.MultiThreading
 		{
 			try
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
 					if (_processingThread != null)
 					{
@@ -249,7 +246,7 @@ namespace Carbon.MultiThreading
 		/// </summary>
 		public virtual void WaitToFinish()
 		{
-			if (this.IsRunning)
+			if (IsRunning)
 				if (_completedEvent != null)
 					_completedEvent.WaitOne();
 		}
@@ -270,7 +267,7 @@ namespace Carbon.MultiThreading
 				
 				// call our virtual method which will raise the Run event
 				// or if overridden in a derived class will allow for custom background processing
-				this.OnRun(this, new BackgroundThreadStartEventArgs(_args));
+				OnRun(this, new BackgroundThreadStartEventArgs(_args));
 			}
 			catch(ThreadAbortException)
 			{
@@ -288,7 +285,7 @@ namespace Carbon.MultiThreading
 			finally
 			{
 				// and lastly mark the fact that the thread is finished
-				this.MarkAsFinished();				
+				MarkAsFinished();				
 			}
 		}
 		
@@ -300,8 +297,8 @@ namespace Carbon.MultiThreading
             try
             {
                 // only fire the finished event one time
-                if (!this.IsFinished)
-                    this.OnFinished(this, new BackgroundThreadEventArgs(this));
+                if (!IsFinished)
+                    OnFinished(this, new BackgroundThreadEventArgs(this));
             }
             catch (ThreadAbortException)
             {
@@ -329,8 +326,8 @@ namespace Carbon.MultiThreading
 		{
 			try
 			{
-				if (this.Run != null)
-					this.Run(sender, e);
+				if (Run != null)
+					Run(sender, e);
 			}
 			catch (ThreadAbortException)
 			{
@@ -353,8 +350,8 @@ namespace Carbon.MultiThreading
 		{
             try
             {
-                if (this.Finished != null)
-                    this.Finished(sender, e);
+                if (Finished != null)
+                    Finished(sender, e);
             }
             catch (ThreadAbortException)
             {

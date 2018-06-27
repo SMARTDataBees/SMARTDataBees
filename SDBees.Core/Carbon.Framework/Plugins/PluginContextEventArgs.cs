@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Carbon.Plugins
 {
@@ -16,7 +14,6 @@ namespace Carbon.Plugins
 		/// </summary>
 		/// <param name="context">The plugin context that is the context of the event.</param>
 		public PluginContextEventArgs(PluginContext context)
-			: base()
 		{
 			_context = context;
 		}

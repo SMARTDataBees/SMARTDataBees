@@ -20,16 +20,13 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
 namespace SDBees.Core.Model
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-
-	using System.Runtime.Serialization;
-
-	/// <summary>
+    /// <summary>
 	/// Repräsentation einer Entity Instanz
 	/// </summary>
 	[DataContract]
@@ -139,7 +136,7 @@ namespace SDBees.Core.Model
 		{
             SDBeesProperty result = null;
 
-			foreach (SDBeesProperty property in Properties)
+			foreach (var property in Properties)
 			{
 				if (property.DefinitionId.Id == propertyId)
 				{

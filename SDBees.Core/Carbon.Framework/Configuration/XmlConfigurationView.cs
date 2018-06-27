@@ -30,13 +30,12 @@
 //	============================================================================
 
 using System;
-using System.Diagnostics;
 using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
-using System.Data;
+using System.IO;
 using System.Windows.Forms;
-
 using Carbon.Common;
 
 namespace Carbon.Configuration
@@ -44,7 +43,7 @@ namespace Carbon.Configuration
     /// <summary>
     /// Summary description for XmlConfigurationView.
     /// </summary>
-    public class XmlConfigurationView : System.Windows.Forms.UserControl
+    public class XmlConfigurationView : UserControl
     {
         /// <summary>
         /// Defines the indexes of the images associated with categories displayed in the treeview
@@ -74,41 +73,40 @@ namespace Carbon.Configuration
             /// <summary>
             /// The category is selected without sub categories (displayed with an arrow)
             /// </summary>
-            SelectedWithoutSubCategories = 2,
+            SelectedWithoutSubCategories = 2
         }
 
         /// <summary>
         /// The configurations that are currently selected into the control
         /// </summary>
         private XmlConfigurationCollection _selectedConfigurations;
-        private bool _placeElementsIntoEditMode;
 
         public event XmlConfigurationElementEventHandler ConfigurationChanged;
 
         /// <summary>
         /// The various controls that are used to display the configurations
         /// </summary>
-        private System.Windows.Forms.TabControl tabControlMain;
-        private System.Windows.Forms.TabPage tabPagePropertyPages;
-        private System.Windows.Forms.Panel rootPanel;
-        private System.Windows.Forms.Panel optionsPanel;
-        private System.Windows.Forms.Splitter _splitter;
-        private System.Windows.Forms.Panel categoriesPanel;
-        private System.Windows.Forms.TreeView _treeView;
-        private System.Windows.Forms.TabPage tabPageXml;
-        private System.Windows.Forms.TabControl tabControlXmlViews;
-        private System.Windows.Forms.ImageList _imageList;
-        private System.Windows.Forms.ContextMenu _contextMenu;
-        private System.Windows.Forms.Label _labelCategory;
-        private System.Windows.Forms.PropertyGrid _propertyGrid;
-        private System.ComponentModel.IContainer components;
+        private TabControl tabControlMain;
+        private TabPage tabPagePropertyPages;
+        private Panel rootPanel;
+        private Panel optionsPanel;
+        private Splitter _splitter;
+        private Panel categoriesPanel;
+        private TreeView _treeView;
+        private TabPage tabPageXml;
+        private TabControl tabControlXmlViews;
+        private ImageList _imageList;
+        private ContextMenu _contextMenu;
+        private Label _labelCategory;
+        private PropertyGrid _propertyGrid;
+        private IContainer components;
 
         /// <summary>
         /// Initializes a new instance of the XmlConfigurationView class
         /// </summary>
         public XmlConfigurationView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             _selectedConfigurations = new XmlConfigurationCollection();
 
@@ -117,16 +115,16 @@ namespace Carbon.Configuration
             _propertyGrid.ToolbarVisible = true;
 
             // splitter
-            _splitter.MouseEnter += new EventHandler(OnMouseEnterSplitter);
-            _splitter.MouseLeave += new EventHandler(OnMouseLeaveSplitter);
+            _splitter.MouseEnter += OnMouseEnterSplitter;
+            _splitter.MouseLeave += OnMouseLeaveSplitter;
 
             // treeview
-            _treeView.AfterSelect += new TreeViewEventHandler(OnAfterNodeSelected);
+            _treeView.AfterSelect += OnAfterNodeSelected;
             _treeView.ImageList = _imageList;
 
-            _placeElementsIntoEditMode = true;
+            PlaceElementsIntoEditMode = true;
 
-            _contextMenu.Popup += new EventHandler(OnGridContextMenuPoppedUp);
+            _contextMenu.Popup += OnGridContextMenuPoppedUp;
             //			this.ClearNodes();
             //			this.ClearXmlTabPages();
         }
@@ -154,7 +152,7 @@ namespace Carbon.Configuration
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(XmlConfigurationView));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(XmlConfigurationView));
             this.tabControlMain = new System.Windows.Forms.TabControl();
             this.tabPagePropertyPages = new System.Windows.Forms.TabPage();
             this.rootPanel = new System.Windows.Forms.Panel();
@@ -329,8 +327,8 @@ namespace Carbon.Configuration
         /// <param name="e"></param>
         protected override void OnParentChanged(EventArgs e)
         {
-            if (this.ParentForm != null)
-                this.ParentForm.Closed += new EventHandler(OnParentFormClosed);
+            if (ParentForm != null)
+                ParentForm.Closed += OnParentFormClosed;
 
             base.OnParentChanged(e);
         }
@@ -357,9 +355,9 @@ namespace Carbon.Configuration
         /// <param name="configuration"></param>
         public void AddConfiguration(XmlConfiguration configuration)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                this.Invoke(new AddConfigurationInvoker(this.AddConfiguration), new object[] { configuration });
+                Invoke(new AddConfigurationInvoker(AddConfiguration), configuration);
                 return;
             }
 
@@ -367,12 +365,12 @@ namespace Carbon.Configuration
             {
                 if (configuration != null)
                 {
-                    configuration.Changed += new XmlConfigurationElementEventHandler(OnConfigurationChanged);
-                    if (_placeElementsIntoEditMode)
+                    configuration.Changed += OnConfigurationChanged;
+                    if (PlaceElementsIntoEditMode)
                         configuration.BeginEdit();
                     _selectedConfigurations.Add(configuration);
-                    this.AddNodesForCategories(_treeView, null, configuration.Categories);
-                    this.AddXmlTabForConfiguration(configuration);
+                    AddNodesForCategories(_treeView, null, configuration.Categories);
+                    AddXmlTabForConfiguration(configuration);
                 }
             }
             catch (Exception ex)
@@ -390,9 +388,9 @@ namespace Carbon.Configuration
         /// <param name="keepLocationIfPossible"></param>
         public void RemoveConfiguration(XmlConfiguration configuration, bool keepLocationIfPossible)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                this.Invoke(new RemoveConfigurationInvoker(this.RemoveConfiguration), new object[] { configuration, keepLocationIfPossible });
+                Invoke(new RemoveConfigurationInvoker(RemoveConfiguration), configuration, keepLocationIfPossible);
                 return;
             }
 
@@ -403,13 +401,13 @@ namespace Carbon.Configuration
                     if (_selectedConfigurations.Contains(configuration))
                     {
                         string path = null;
-                        TreeNode n = _treeView.SelectedNode;
+                        var n = _treeView.SelectedNode;
                         if (n != null)
                             path = n.FullPath;
 
                         _selectedConfigurations.Remove(configuration);
 
-                        this.RefreshDisplay(path, keepLocationIfPossible);
+                        RefreshDisplay(path, keepLocationIfPossible);
                     }
                 }
             }
@@ -428,14 +426,14 @@ namespace Carbon.Configuration
         /// <returns></returns>
         public bool SelectPath(string path)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                return (bool)this.Invoke(new SelectPathInvoker(this.SelectPath), new object[] { path });
+                return (bool)Invoke(new SelectPathInvoker(SelectPath), path);
             }
 
             try
             {
-                return this.SelectPathFromNodes(_treeView.Nodes, path);
+                return SelectPathFromNodes(_treeView.Nodes, path);
             }
             catch (Exception ex)
             {
@@ -449,19 +447,19 @@ namespace Carbon.Configuration
         /// </summary>
         public void RefreshDisplay()
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                this.Invoke(new MethodInvoker(this.RefreshDisplay), new object[] { });
+                Invoke(new MethodInvoker(RefreshDisplay), new object[] { });
                 return;
             }
 
             try
             {
                 string path = null;
-                TreeNode n = _treeView.SelectedNode;
+                var n = _treeView.SelectedNode;
                 if (n != null)
                     path = n.FullPath;
-                this.RefreshDisplay(path, true);
+                RefreshDisplay(path, true);
             }
             catch (Exception ex)
             {
@@ -478,29 +476,29 @@ namespace Carbon.Configuration
         /// <param name="keepLocationIfPossible"></param>
         public void RefreshDisplay(string path, bool keepLocationIfPossible)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                this.Invoke(new RefreshDisplayInvoker(this.RefreshDisplay), new object[] { path, keepLocationIfPossible });
+                Invoke(new RefreshDisplayInvoker(RefreshDisplay), path, keepLocationIfPossible);
                 return;
             }
 
             try
             {
-                this.ClearNodes();
-                this.ClearXmlTabPages();
+                ClearNodes();
+                ClearXmlTabPages();
 
                 foreach (XmlConfiguration configuration in _selectedConfigurations)
                 {
-                    this.AddNodesForCategories(_treeView, null, configuration.Categories);
-                    this.AddXmlTabForConfiguration(configuration);
+                    AddNodesForCategories(_treeView, null, configuration.Categories);
+                    AddXmlTabForConfiguration(configuration);
                 }
 
                 if (keepLocationIfPossible)
-                    this.SelectPath(path);
+                    SelectPath(path);
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex);
+                Debug.WriteLine(ex);
             }
         }
 
@@ -509,22 +507,22 @@ namespace Carbon.Configuration
         /// </summary>
         public void RefreshXmlDisplay()
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                this.Invoke(new MethodInvoker(this.RefreshXmlDisplay), new object[] { });
+                Invoke(new MethodInvoker(RefreshXmlDisplay), new object[] { });
                 return;
             }
 
             try
             {
-                this.ClearXmlTabPages();
+                ClearXmlTabPages();
 
                 foreach (XmlConfiguration configuration in _selectedConfigurations)
-                    this.AddXmlTabForConfiguration(configuration);
+                    AddXmlTabForConfiguration(configuration);
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex);
+                Debug.WriteLine(ex);
             }
         }
 
@@ -533,9 +531,9 @@ namespace Carbon.Configuration
         /// </summary>
         public void ApplyChanges()
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                this.Invoke(new MethodInvoker(this.ApplyChanges), new object[] { });
+                Invoke(new MethodInvoker(ApplyChanges), new object[] { });
                 return;
             }
 
@@ -544,7 +542,7 @@ namespace Carbon.Configuration
                 if (configuration.IsBeingEdited)
                     configuration.EndEdit();
 
-                if (_placeElementsIntoEditMode)
+                if (PlaceElementsIntoEditMode)
                     configuration.BeginEdit();
             }
         }
@@ -554,9 +552,9 @@ namespace Carbon.Configuration
         /// </summary>
         public void CancelEdit()
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                this.Invoke(new MethodInvoker(this.CancelEdit), new object[] { });
+                Invoke(new MethodInvoker(CancelEdit), new object[] { });
                 return;
             }
 
@@ -575,27 +573,27 @@ namespace Carbon.Configuration
 
             try
             {
-                bool anyAreDeniedWriteAccess = false;
+                var anyAreDeniedWriteAccess = false;
                 foreach (XmlConfiguration configuration in _selectedConfigurations)
                 {
-                    string path = configuration.Path;
+                    var path = configuration.Path;
                     if (path != null && path != string.Empty)
                     {
-                        if (System.IO.File.Exists(path))
+                        if (File.Exists(path))
                         {
-                            using (SecurityAccessRight right = new SecurityAccessRight(path))
+                            using (var right = new SecurityAccessRight(path))
                             {
-                                bool noWrite = right.AssertWriteAccess();
+                                var noWrite = right.AssertWriteAccess();
                                 if (!noWrite)
                                     anyAreDeniedWriteAccess = true;
                             }
                         }
                         else
                         {
-                            string dir = System.IO.Path.GetDirectoryName(path);
-                            using (SecurityAccessRight right = new SecurityAccessRight(dir))
+                            var dir = Path.GetDirectoryName(path);
+                            using (var right = new SecurityAccessRight(dir))
                             {
-                                bool noWrite = right.AssertWriteAccess();
+                                var noWrite = right.AssertWriteAccess();
                                 if (!noWrite)
                                     anyAreDeniedWriteAccess = true;
                             }
@@ -611,7 +609,7 @@ namespace Carbon.Configuration
                         MessageBoxIcon.Information,
                         MessageBoxButtons.OK,
                         null,
-                        "One or more of the configuration files that store the options you are about to configure, has been denied write access for the current user '" + System.Environment.UserName + "'.",
+                        "One or more of the configuration files that store the options you are about to configure, has been denied write access for the current user '" + Environment.UserName + "'.",
                         "You may continue and make changes to the options as normal, however some options may not be saved when the appliation exits.",
                         "Please contact your system administrator for questions regarding Windows security and access rights.");
                 }
@@ -655,8 +653,8 @@ namespace Carbon.Configuration
             if (tabControlMain.TabPages.Contains(tp1) == false || tabControlMain.TabPages.Contains(tp2) == false)
                 throw new ArgumentException("TabPages must be in the TabControls TabPageCollection.");
 
-            int Index1 = tabControlMain.TabPages.IndexOf(tp1);
-            int Index2 = tabControlMain.TabPages.IndexOf(tp2);
+            var Index1 = tabControlMain.TabPages.IndexOf(tp1);
+            var Index2 = tabControlMain.TabPages.IndexOf(tp2);
             tabControlMain.TabPages[Index1] = tp2;
             tabControlMain.TabPages[Index2] = tp1;
 
@@ -673,21 +671,21 @@ namespace Carbon.Configuration
         /// </summary>
         private void ClearNodes()
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                this.Invoke(new MethodInvoker(this.ClearNodes), new object[] { });
+                Invoke(new MethodInvoker(ClearNodes), new object[] { });
                 return;
             }
 
             try
             {
-                this._treeView.Nodes.Clear();
-                this._propertyGrid.SelectedObject = null;
+                _treeView.Nodes.Clear();
+                _propertyGrid.SelectedObject = null;
                 _labelCategory.Text = null;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex);
+                Debug.WriteLine(ex);
             }
         }
 
@@ -696,20 +694,20 @@ namespace Carbon.Configuration
         /// </summary>
         private void ClearXmlTabPages()
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                this.Invoke(new MethodInvoker(this.ClearXmlTabPages), new object[] { });
+                Invoke(new MethodInvoker(ClearXmlTabPages), new object[] { });
                 return;
             }
 
             try
             {
-                foreach (TabPage page in this.tabControlXmlViews.TabPages)
-                    this.tabControlXmlViews.TabPages.Remove(page);
+                foreach (TabPage page in tabControlXmlViews.TabPages)
+                    tabControlXmlViews.TabPages.Remove(page);
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex);
+                Debug.WriteLine(ex);
             }
         }
 
@@ -723,12 +721,12 @@ namespace Carbon.Configuration
         /// <returns></returns>
         private bool SelectPathFromNodes(TreeNodeCollection nodes, string path)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                return (bool)this.Invoke(new SelectPathFromNodesInvoker(this.SelectPathFromNodes), new object[] { nodes, path });
+                return (bool)Invoke(new SelectPathFromNodesInvoker(SelectPathFromNodes), nodes, path);
             }
 
-            string[] paths = path.Split(new char[] { '\\' });
+            var paths = path.Split('\\');
 
             if (paths.Length > 0)
             {
@@ -744,12 +742,9 @@ namespace Carbon.Configuration
                                 _treeView.SelectedNode = n;
                                 return true;
                             }
-                            else
-                            {
-                                n.Expand();
-                                path = string.Join("\\", paths, 1, paths.Length - 1);
-                                return this.SelectPathFromNodes(n.Nodes, path);
-                            }
+                            n.Expand();
+                            path = string.Join("\\", paths, 1, paths.Length - 1);
+                            return SelectPathFromNodes(n.Nodes, path);
                         }
                     }
                 }
@@ -767,9 +762,9 @@ namespace Carbon.Configuration
         /// <param name="categories"></param>
         private void AddNodesForCategories(TreeView tree, TreeNodeCollection nodes, XmlConfigurationCategoryCollection categories)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                this.Invoke(new AddNodesForCategoriesInvoker(this.AddNodesForCategories), new object[] { tree, nodes, categories });
+                Invoke(new AddNodesForCategoriesInvoker(AddNodesForCategories), tree, nodes, categories);
                 return;
             }
 
@@ -781,17 +776,17 @@ namespace Carbon.Configuration
                     if (!category.Hidden)
                     {
                         // try and find an existing node that we can merge with
-                        CategoryTreeNode n = this.FindNodeForCategory(nodes, category);
+                        var n = FindNodeForCategory(nodes, category);
 
                         if (n == null)
-                            n = this.AddNodeForCategory(tree, nodes, category);
+                            n = AddNodeForCategory(tree, nodes, category);
 
                         if (n != null)
                         {
                             if (!n.IsBoundToCategory(category))
                                 n.BindToCategory(category);
 
-                            this.AddNodesForCategories(tree, n.Nodes, category.Categories);
+                            AddNodesForCategories(tree, n.Nodes, category.Categories);
                         }
                     }
                 }
@@ -816,9 +811,9 @@ namespace Carbon.Configuration
         /// <returns></returns>
         private CategoryTreeNode FindNodeForCategory(TreeNodeCollection nodes, XmlConfigurationCategory category)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                return this.Invoke(new FindNodeForCategoryInvoker(this.FindNodeForCategory), new object[] { nodes, category }) as CategoryTreeNode;
+                return Invoke(new FindNodeForCategoryInvoker(FindNodeForCategory), nodes, category) as CategoryTreeNode;
             }
 
             if (nodes == null)
@@ -852,18 +847,18 @@ namespace Carbon.Configuration
         /// <returns></returns>
         private CategoryTreeNode AddNodeForCategory(TreeView tree, TreeNodeCollection nodes, XmlConfigurationCategory category)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                return this.Invoke(new AddNodeForCategoryInvoker(this.AddNodeForCategory), new object[] { tree, nodes, category }) as CategoryTreeNode;
+                return Invoke(new AddNodeForCategoryInvoker(AddNodeForCategory), tree, nodes, category) as CategoryTreeNode;
             }
 
-            bool isRootCategory = (nodes == null);
+            var isRootCategory = (nodes == null);
 
             if (nodes == null)
                 if (tree != null)
                     nodes = tree.Nodes;
 
-            CategoryTreeNode n = new CategoryTreeNode(category.DisplayName);
+            var n = new CategoryTreeNode(category.DisplayName);
             n.BindToCategory(category);
             nodes.Add(n);
 
@@ -874,8 +869,8 @@ namespace Carbon.Configuration
             }
             else
             {
-                /// ok, off the root, now base images on whether the category has sub categories or not, 
-                /// and whether the category is selected
+                // ok, off the root, now base images on whether the category has sub categories or not, 
+                // and whether the category is selected
                 if (category.Categories.Count > 0)
                 {
                     n.ImageIndex = (int)CategoryImageIndexes.UnselectedWithSubCategories;
@@ -899,26 +894,25 @@ namespace Carbon.Configuration
         /// <param name="configuration"></param>
         private void AddXmlTabForConfiguration(XmlConfiguration configuration)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                this.Invoke(new AddXmlTabForConfigurationInvoker(this.AddXmlTabForConfiguration), new object[] { configuration });
+                Invoke(new AddXmlTabForConfigurationInvoker(AddXmlTabForConfiguration), configuration);
                 return;
             }
 
             try
             {
-                this.tabControlXmlViews.SuspendLayout();
+                tabControlXmlViews.SuspendLayout();
 
-                XmlConfigurationXmlBehindViewer view = new XmlConfigurationXmlBehindViewer();
-                view.Xml = configuration.ToXml();
+                var view = new XmlConfigurationXmlBehindViewer {Xml = configuration.ToXml()};
 
-                TabPage page = new TabPage(configuration.ElementName);
+                var page = new TabPage(configuration.ElementName);
                 page.Controls.Add(view);
                 view.Parent = page;
                 view.Dock = DockStyle.Fill;
 
-                this.tabControlXmlViews.TabPages.Add(page);
-                this.tabControlXmlViews.ResumeLayout(true);
+                tabControlXmlViews.TabPages.Add(page);
+                tabControlXmlViews.ResumeLayout(true);
             }
             catch (Exception ex)
             {
@@ -934,9 +928,9 @@ namespace Carbon.Configuration
         /// <param name="n"></param>
         private void SelectPropertyDescriptorForNodeIntoPropertyGrid(CategoryTreeNode n)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                this.Invoke(new SelectPropertyDescriptorForNodeIntoPropertyGridInvoker(this.SelectPropertyDescriptorForNodeIntoPropertyGrid), new object[] { n });
+                Invoke(new SelectPropertyDescriptorForNodeIntoPropertyGridInvoker(SelectPropertyDescriptorForNodeIntoPropertyGrid), n);
                 return;
             }
 
@@ -945,23 +939,19 @@ namespace Carbon.Configuration
                 _propertyGrid.SelectedObject = null;
                 _labelCategory.Text = null;
 
-                if (n != null)
+                if (n?.Categories.Count > 0)
                 {
-                    if (n.Categories.Count > 0)
+
+                    var td = new XmlConfigurationOptionCollectionTypeDescriptor(n.Categories);
+                    _propertyGrid.SelectedObject = td;
+
+                    foreach (DictionaryEntry entry in n.Categories)
                     {
-
-                        XmlConfigurationOptionCollectionTypeDescriptor td = new XmlConfigurationOptionCollectionTypeDescriptor(n.Categories);
-                        if (td != null)
-                            _propertyGrid.SelectedObject = td;
-
-                        foreach (DictionaryEntry entry in n.Categories)
+                        var category = entry.Value as XmlConfigurationCategory;
+                        if (category != null)
                         {
-                            XmlConfigurationCategory category = entry.Value as XmlConfigurationCategory;
-                            if (category != null)
-                            {
-                                _labelCategory.Text = category.DisplayName;
-                                break;
-                            }
+                            _labelCategory.Text = category.DisplayName;
+                            break;
                         }
                     }
                 }
@@ -976,17 +966,7 @@ namespace Carbon.Configuration
 
         #region Public Properties
 
-        public bool PlaceElementsIntoEditMode
-        {
-            get
-            {
-                return _placeElementsIntoEditMode;
-            }
-            set
-            {
-                _placeElementsIntoEditMode = value;
-            }
-        }
+        public bool PlaceElementsIntoEditMode { get; set; }
 
 
         /// <summary>
@@ -997,20 +977,17 @@ namespace Carbon.Configuration
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public XmlConfigurationCollection SelectedConfigurations
         {
-            get
-            {
-                return _selectedConfigurations;
-            }
+            get => _selectedConfigurations;
             set
             {
-                this.ClearNodes();
-                this.ClearXmlTabPages();
+                ClearNodes();
+                ClearXmlTabPages();
                 _selectedConfigurations = new XmlConfigurationCollection();
 
                 if (value != null)
                 {
                     foreach (XmlConfiguration configuration in value)
-                        this.AddConfiguration(configuration);
+                        AddConfiguration(configuration);
                 }
             }
         }
@@ -1028,8 +1005,7 @@ namespace Carbon.Configuration
         {
             try
             {
-                if (this.ConfigurationChanged != null)
-                    this.ConfigurationChanged(sender, e);
+                ConfigurationChanged?.Invoke(sender, e);
 
                 //				System.Diagnostics.Debug.WriteLine(XmlConfiguration.DescribeElementChanging(e));
             }
@@ -1048,8 +1024,8 @@ namespace Carbon.Configuration
         {
             if (_selectedConfigurations != null)
                 foreach (XmlConfiguration configuration in _selectedConfigurations)
-                    if (_placeElementsIntoEditMode)
-                        configuration.Changed -= new XmlConfigurationElementEventHandler(OnConfigurationChanged);
+                    if (PlaceElementsIntoEditMode)
+                        configuration.Changed -= OnConfigurationChanged;
         }
 
         /// <summary>
@@ -1057,7 +1033,7 @@ namespace Carbon.Configuration
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnMouseEnterSplitter(object sender, System.EventArgs e)
+        private void OnMouseEnterSplitter(object sender, EventArgs e)
         {
             _splitter.BackColor = SystemColors.ControlDark;
         }
@@ -1067,7 +1043,7 @@ namespace Carbon.Configuration
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnMouseLeaveSplitter(object sender, System.EventArgs e)
+        private void OnMouseLeaveSplitter(object sender, EventArgs e)
         {
             _splitter.BackColor = SystemColors.Control;
         }
@@ -1077,9 +1053,9 @@ namespace Carbon.Configuration
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnAfterNodeSelected(object sender, System.Windows.Forms.TreeViewEventArgs e)
+        private void OnAfterNodeSelected(object sender, TreeViewEventArgs e)
         {
-            this.SelectPropertyDescriptorForNodeIntoPropertyGrid(e.Node as CategoryTreeNode);
+            SelectPropertyDescriptorForNodeIntoPropertyGrid(e.Node as CategoryTreeNode);
         }
 
         #endregion
@@ -1092,20 +1068,17 @@ namespace Carbon.Configuration
         private void OnToggleOptionHasChangesClicked(object sender, EventArgs e)
         {
             // grab one of our custom menu items
-            XmlConfigurationOptionPropertyDescriptorMenuItem menuItem = sender as XmlConfigurationOptionPropertyDescriptorMenuItem;
-            if (menuItem != null)
+            var menuItem = sender as XmlConfigurationOptionPropertyDescriptorMenuItem;
+            // and the option it points to
+            var option = menuItem?.Option;
+            if (option != null)
             {
-                // and the option it points to
-                XmlConfigurationOption option = menuItem.Option;
-                if (option != null)
-                {
-                    // toggle the check
-                    option.HasChanges = !menuItem.Checked;
+                // toggle the check
+                option.HasChanges = !menuItem.Checked;
 
-                    // if changed, then trigger the changed event for the option
-                    if (option.HasChanges)
-                        option.TriggerChange();
-                }
+                // if changed, then trigger the changed event for the option
+                if (option.HasChanges)
+                    option.TriggerChange();
             }
         }
 
@@ -1117,32 +1090,22 @@ namespace Carbon.Configuration
         private void OnGridContextMenuPoppedUp(object sender, EventArgs e)
         {
             // grab the grid
-            PropertyGrid grid = this._propertyGrid;
-            if (grid != null)
+            var grid = _propertyGrid;
+            // grab the selected item
+            var item = grid?.SelectedGridItem;
+            if (item != null)
             {
-                // grab the selected item
-                if (grid.SelectedGridItem != null)
+                // grab the descriptor as one of our option descriptors
+                var descriptor = item.PropertyDescriptor as XmlConfigurationOptionPropertyDescriptor;
+                var option = descriptor?.Option;
+                if (option != null)
                 {
-                    GridItem item = grid.SelectedGridItem;
-                    if (item != null)
-                    {
-                        // grab the descriptor as one of our option descriptors
-                        XmlConfigurationOptionPropertyDescriptor descriptor = item.PropertyDescriptor as XmlConfigurationOptionPropertyDescriptor;
-                        if (descriptor != null)
-                        {
-                            XmlConfigurationOption option = descriptor.Option;
-                            if (option != null)
-                            {
-                                // construct a new menu item for it
-                                XmlConfigurationOptionPropertyDescriptorMenuItem menuItem = new XmlConfigurationOptionPropertyDescriptorMenuItem("Has changes", new EventHandler(OnToggleOptionHasChangesClicked), option);
-                                // determine its checked state
-                                menuItem.Checked = option.HasChanges;
-                                // rinse and repeat								
-                                _contextMenu.MenuItems.Clear();
-                                _contextMenu.MenuItems.Add(menuItem);
-                            }
-                        }
-                    }
+                    // construct a new menu item for it
+                    var menuItem =
+                        new XmlConfigurationOptionPropertyDescriptorMenuItem("Has changes",
+                            OnToggleOptionHasChangesClicked, option) {Checked = option.HasChanges};						
+                    _contextMenu.MenuItems.Clear();
+                    _contextMenu.MenuItems.Add(menuItem);
                 }
             }
         }

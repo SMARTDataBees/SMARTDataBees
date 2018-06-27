@@ -20,12 +20,13 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using System.Data;
+using MySql.Data.MySqlClient;
 using SDBees.DB.Forms;
+using SDBees.GuiTools;
 
 namespace SDBees.DB.MySQL
 {
@@ -81,7 +82,7 @@ namespace SDBees.DB.MySQL
             {
                 "Unknown",  // eUnknown
                 "AND",      // eAnd
-                "OR",       // eOr
+                "OR"       // eOr
             };
 
         #endregion
@@ -126,7 +127,7 @@ namespace SDBees.DB.MySQL
             : base(database)
         {
             mDbConnection = null;
-            mPort = System.Convert.ToInt16(database.Port);
+            mPort = Convert.ToInt16(database.Port);
         }
 
         #endregion
@@ -142,11 +143,10 @@ namespace SDBees.DB.MySQL
         /// <returns>true if successful</returns>
         public override bool Open(Database database, bool bReadOnly, ref Error error)
         {
-            string connectionString = ConnectionString(database, bReadOnly);
+            var connectionString = ConnectionString(database, bReadOnly);
 
 #if DEBUG
-            bool m_logValue = false;
-            if (Boolean.TryParse(SDBees.GuiTools.LogfileWriter.SDBeesLogLocalConfiguration().Options[SDBees.GuiTools.LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue == true)
+            if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out var m_logValue) && m_logValue)
                 SDBeesDBConnection.Current.LogfileWriter.Writeline("Open", connectionString, "DB.Details");
 #endif
 
@@ -155,29 +155,29 @@ namespace SDBees.DB.MySQL
                 mDbConnection = new MySql.Data.MySqlClient.MySqlConnection(connectionString);
                 mDbConnection.Open();
             }
-            catch (MySql.Data.MySqlClient.MySqlException ex)
+            catch (MySqlException ex)
             {
                 // Add this error to the list...
-                Error myError = new Error(ex.Message, 9999, this.GetType(), error);
+                var myError = new Error(ex.Message, 9999, GetType(), error);
                 error = myError;
                 mDbConnection = null;
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 // Add this error to the list...
-                Error myError = new Error(ex.Message, 9999, this.GetType(), error);
+                var myError = new Error(ex.Message, 9999, GetType(), error);
                 error = myError;
                 mDbConnection = null;
             }
 
 #if DEBUG
-            string msg = "Success";
+            var msg = "Success";
             if (mDbConnection == null)
             {
                 msg = "Failed";
             }
 
-            if (Boolean.TryParse(SDBees.GuiTools.LogfileWriter.SDBeesLogLocalConfiguration().Options[SDBees.GuiTools.LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue == true)
+            if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
                 SDBeesDBConnection.Current.LogfileWriter.Writeline("Open", msg, "DB.Details");
 #endif
 
@@ -195,8 +195,7 @@ namespace SDBees.DB.MySQL
             {
 
 #if DEBUG
-                bool m_logValue = false;
-                if (Boolean.TryParse(SDBees.GuiTools.LogfileWriter.SDBeesLogLocalConfiguration().Options[SDBees.GuiTools.LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue == true)
+                if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out var m_logValue) && m_logValue)
                     SDBeesDBConnection.Current.LogfileWriter.Writeline("Close", "Closing MySQL connection", "DB.Details");
 #endif
                 try
@@ -205,15 +204,15 @@ namespace SDBees.DB.MySQL
                     mDbConnection.Dispose();
                     mDbConnection = null;
                 }
-                catch (MySql.Data.MySqlClient.MySqlException ex)
+                catch (MySqlException ex)
                 {
-                    Error myError = new Error(ex.Message, 9999, this.GetType(), error);
+                    var myError = new Error(ex.Message, 9999, GetType(), error);
                     error = myError;
                     mDbConnection = null;
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
-                    Error myError = new Error(ex.Message, 9999, this.GetType(), error);
+                    var myError = new Error(ex.Message, 9999, GetType(), error);
                     error = myError;
                     mDbConnection = null;
                 }
@@ -232,39 +231,38 @@ namespace SDBees.DB.MySQL
         /// <returns>true if successful</returns>
         public override bool ExecuteCommand(string cmdString, ref Error error)
         {
-            bool success = false;
+            var success = false;
 
             if (mDbConnection != null)
             {
 
 #if DEBUG
-                bool m_logValue = false;
-                if (Boolean.TryParse(SDBees.GuiTools.LogfileWriter.SDBeesLogLocalConfiguration().Options[SDBees.GuiTools.LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue == true)
+                if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out var m_logValue) && m_logValue)
                     SDBeesDBConnection.Current.LogfileWriter.Writeline("ExecuteCommand", cmdString, "DB.Details");
 #endif
 
                 // Execute the query
-                MySql.Data.MySqlClient.MySqlCommand sqlCmd = new MySql.Data.MySqlClient.MySqlCommand(cmdString, mDbConnection);
+                var sqlCmd = new MySqlCommand(cmdString, mDbConnection);
                 // MySql doesn't support this method...
                 // sqlCmd.CommandTimeout = 30;
 
                 try
                 {
-                    int rowsAffected = sqlCmd.ExecuteNonQuery();
+                    var rowsAffected = sqlCmd.ExecuteNonQuery();
 
 #if DEBUG
-                    if (Boolean.TryParse(SDBees.GuiTools.LogfileWriter.SDBeesLogLocalConfiguration().Options[SDBees.GuiTools.LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue == true)
+                    if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
                         SDBeesDBConnection.Current.LogfileWriter.Writeline("ExecuteCommand", "Success " + rowsAffected + " rows were affected.", "DB.Details");
 #endif
                     success = true;
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
-                    Error myError = new Error(ex.Message, 9999, this.GetType(), error);
+                    var myError = new Error(ex.Message, 9999, GetType(), error);
                     error = myError;
 
 #if DEBUG
-                    if (Boolean.TryParse(SDBees.GuiTools.LogfileWriter.SDBeesLogLocalConfiguration().Options[SDBees.GuiTools.LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue == true)
+                    if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
                         SDBeesDBConnection.Current.LogfileWriter.Writeline("ExecuteCommand", "Failed: " + ex.Message, "DB.Details");
 #endif                
                 }
@@ -273,19 +271,19 @@ namespace SDBees.DB.MySQL
             return success;
         }
 
-        public override System.Data.DataSet GetReadOnlyDataSet()
+        public override DataSet GetReadOnlyDataSet()
         {
-            System.Data.DataSet _dtSet = new System.Data.DataSet();
+            var _dtSet = new DataSet();
             Error _error = null;
             //this.Open(this,true, ref _error);
-            ArrayList _lstTblNames = new ArrayList();
-            this.Database.TableNames(ref _lstTblNames,ref  _error);
+            var _lstTblNames = new ArrayList();
+            Database.TableNames(ref _lstTblNames,ref  _error);
 
             //this.DbConnection.
             foreach (string sTblName in _lstTblNames)
             {
-                string sSelect = "SELECT * FROM `" + this.Database.Name + "`.`" + sTblName + "`";
-                this.FillDataSet(sSelect,ref _dtSet, ref _error, sTblName);
+                var sSelect = "SELECT * FROM `" + Database.Name + "`.`" + sTblName + "`";
+                FillDataSet(sSelect,ref _dtSet, ref _error, sTblName);
             }
 
             return _dtSet;
@@ -293,13 +291,13 @@ namespace SDBees.DB.MySQL
 
         public override DataTable GetReadOnlyDataTable(string sTablename)
         {
-            System.Data.DataTable _dtTable = new DataTable();
-            System.Data.DataSet _dtSet = new DataSet();
+            var _dtTable = new DataTable();
+            var _dtSet = new DataSet();
             Error _error = null;
 
-            string sSelect = "SELECT * FROM `" + this.Database.Name + "`.`" + sTablename + "`";
+            var sSelect = "SELECT * FROM `" + Database.Name + "`.`" + sTablename + "`";
 
-            this.FillDataSet(sSelect, ref _dtSet, ref _error, sTablename);
+            FillDataSet(sSelect, ref _dtSet, ref _error, sTablename);
 
             foreach (DataTable tbl in _dtSet.Tables)
             {
@@ -324,14 +322,14 @@ namespace SDBees.DB.MySQL
         // Get the connection string... derived class should override this
         protected virtual string ConnectionString(Database database, bool bReadOnly)
         {
-            string connectionString = "Server=" + database.Server.Name + ";Port=" + mPort + ";Database=" + database.Name + ";Uid=" + database.User + ";Pwd=" + database.Password + ";";
+            var connectionString = "Server=" + database.Server.Name + ";Port=" + mPort + ";Database=" + database.Name + ";Uid=" + database.User + ";Pwd=" + database.Password + ";";
 
             return connectionString;
         }
 
         protected override bool FillDataSet(string query,ref DataSet ds, ref Error error, string sTablename)
         {
-            bool success = false;
+            var success = false;
 
             if (mDbConnection != null)
             {
@@ -339,40 +337,39 @@ namespace SDBees.DB.MySQL
                 {
 
 #if DEBUG
-                    bool m_logValue = false;
-                    if (Boolean.TryParse(SDBees.GuiTools.LogfileWriter.SDBeesLogLocalConfiguration().Options[SDBees.GuiTools.LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue == true)
+                    if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out var m_logValue) && m_logValue)
                         SDBeesDBConnection.Current.LogfileWriter.Writeline("FillDataSet", "Query: '" + query + "'", "DB.Details");
 #endif
 
-                    MySql.Data.MySqlClient.MySqlCommand selectCmd = new MySql.Data.MySqlClient.MySqlCommand(query, mDbConnection);
+                    var selectCmd = new MySqlCommand(query, mDbConnection);
                     // MySql doesn't support this method...
                     // selectCmd.CommandTimeout = 30;
 
                     // collect the results using an adapter
-                    MySql.Data.MySqlClient.MySqlDataAdapter da = new MySql.Data.MySqlClient.MySqlDataAdapter();
+                    var da = new MySqlDataAdapter();
                     da.SelectCommand = selectCmd;
 
                     da.Fill(ds, sTablename);
 
 #if DEBUG
-                    if (Boolean.TryParse(SDBees.GuiTools.LogfileWriter.SDBeesLogLocalConfiguration().Options[SDBees.GuiTools.LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue == true)
+                    if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
                         SDBeesDBConnection.Current.LogfileWriter.Writeline("FillDataSet", "Successful.", "DB.Details");
 #endif
 
                     success = true;
                 }
-                catch (MySql.Data.MySqlClient.MySqlException ex)
+                catch (MySqlException ex)
                 {
-                    Error myError = new Error(ex.Message, 9999, this.GetType(), error);
+                    var myError = new Error(ex.Message, 9999, GetType(), error);
                     error = myError;
 
 #if DEBUG
                     SDBeesDBConnection.Current.LogfileWriter.Writeline("FillDataSet", "Failed: " + ex.Message, "DB.Details");
 #endif
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
-                    Error myError = new Error(ex.Message, 9999, this.GetType(), error);
+                    var myError = new Error(ex.Message, 9999, GetType(), error);
                     error = myError;
 
 #if DEBUG
@@ -385,20 +382,20 @@ namespace SDBees.DB.MySQL
         }
         protected override string SQL_Label(DbType type, ref Error error)
         {
-            string label = "";
+            var label = "";
 
             switch (type)
             {
-                case DbType.eUnknown:
+                case DbType.Unknown:
                     {
-                        Error newError = new Error("Cannot determine SQL Label for unknown type", 9999, this.GetType(), error);
+                        var newError = new Error("Cannot determine SQL Label for unknown type", 9999, GetType(), error);
                         error = newError;
                     }
                     break;
 
                 default:
                     {
-                        int index = (int)type;
+                        var index = (int)type;
                         label = SQLTypeLabels[index];
                     }
                     break;
@@ -409,20 +406,20 @@ namespace SDBees.DB.MySQL
         }
         protected override string SQL_Label(DbBinaryOperator operation, ref Error error)
         {
-            string label = "";
+            var label = "";
 
             switch (operation)
             {
                 case DbBinaryOperator.eUnknown:
                     {
-                        Error newError = new Error("Cannot determine SQL Label for unknown operation", 9999, this.GetType(), error);
+                        var newError = new Error("Cannot determine SQL Label for unknown operation", 9999, GetType(), error);
                         error = newError;
                     }
                     break;
 
                 default:
                     {
-                        int index = (int)operation;
+                        var index = (int)operation;
                         label = SQLBinaryOperatorLabels[index];
                     }
                     break;
@@ -432,20 +429,20 @@ namespace SDBees.DB.MySQL
         }
         protected override string SQL_Label(DbBooleanOperator operation, ref Error error)
         {
-            string label = "";
+            var label = "";
 
             switch (operation)
             {
                 case DbBooleanOperator.eUnknown:
                     {
-                        Error newError = new Error("Cannot determine SQL Label for unknown operation", 9999, this.GetType(), error);
+                        var newError = new Error("Cannot determine SQL Label for unknown operation", 9999, GetType(), error);
                         error = newError;
                     }
                     break;
 
                 default:
                     {
-                        int index = (int)operation;
+                        var index = (int)operation;
                         label = SQLBooleanOperatorLabels[index];
                     }
                     break;
@@ -456,7 +453,7 @@ namespace SDBees.DB.MySQL
         protected override string MakeSelectQuery(string tableName, string columnName, string criteria, int topCount)
         {
             // build the query...
-            string query = "SELECT " + columnName + " FROM " + tableName;
+            var query = "SELECT " + columnName + " FROM " + tableName;
 
             if (criteria != "")
             {
@@ -472,15 +469,13 @@ namespace SDBees.DB.MySQL
         }
         protected override string GetColumnDefinition(Column column)
         {
-            string definition = "";
-
             Error error = null;
-            definition = column.Name + " " + SQL_Label(column.Type, ref error);
+            var definition = column.Name + " " + SQL_Label(column.Type, ref error);
 
             if (error != null)
             {
                 // login failed... display error message...
-                frmError dlg = new frmError(Connection._errorMsgWrongColumnDefinition, Connection._errorMsgWrongColumnDefinitionTitle, error);
+                var dlg = new frmError(_errorMsgWrongColumnDefinition, _errorMsgWrongColumnDefinitionTitle, error);
                 dlg.ShowDialog();
 
                 dlg.Dispose();

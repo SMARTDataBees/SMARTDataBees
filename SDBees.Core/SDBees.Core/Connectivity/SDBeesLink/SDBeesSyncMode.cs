@@ -6,13 +6,6 @@
 //------------------------------------------------------------------------------
 namespace SDBees.Core.Connectivity.SDBeesLink
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// Der Modus beim Synchronisieren
     /// </summary>

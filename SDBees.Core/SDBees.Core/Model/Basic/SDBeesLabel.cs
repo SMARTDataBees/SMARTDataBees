@@ -20,16 +20,11 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.Runtime.Serialization;
+
 namespace SDBees.Core.Model
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// Language dependend naming
     /// </summary>
@@ -53,7 +48,7 @@ namespace SDBees.Core.Model
 
         public static implicit operator SDBeesLabel(string text)
         {
-            SDBeesLabel label = new SDBeesLabel(text);
+            var label = new SDBeesLabel(text);
             return label;
         }
 

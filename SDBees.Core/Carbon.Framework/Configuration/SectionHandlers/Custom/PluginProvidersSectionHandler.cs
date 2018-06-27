@@ -29,10 +29,6 @@
 //
 //	============================================================================
 
-using System;
-using System.Configuration;
-using System.Xml;
-
 using Carbon.Common;
 using Carbon.Plugins.Providers;
 
@@ -43,16 +39,7 @@ namespace Carbon.Configuration.SectionHandlers.Custom
 	/// </summary>
 	public sealed class PluginProvidersSectionHandler : ProviderConfigurationSectionHandler
 	{
-        /// <summary>
-        /// Initializes a new instance of the PluginProvidersSectionHandler class.
-        /// </summary>
-		public PluginProvidersSectionHandler() : 
-            base()
-		{
-			
-		}
-		
-		/// <summary>
+	    /// <summary>
 		/// Returns a new PluginProviderCollection.
 		/// </summary>
 		/// <returns></returns>

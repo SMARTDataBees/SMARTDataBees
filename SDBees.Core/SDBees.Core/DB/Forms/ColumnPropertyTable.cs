@@ -20,12 +20,11 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
-using System.Text;
-using SDBees.Plugs.Properties;
-using System.Windows.Forms;
 using System.ComponentModel;
+using System.Windows.Forms;
+using SDBees.Plugs.Properties;
 
 namespace SDBees.DB
 {
@@ -44,70 +43,72 @@ namespace SDBees.DB
 
         protected void UpdateProperties()
         {
-            PropertySpec ps = null;
-            ps = new PropertySpec("Name", typeof(string), "General", "Name der Eigenschaft in der Datenbank (sprachunabhängug)", null);
-            ps.Attributes = new System.Attribute[] { ReadOnlyAttribute.Yes };
+            var ps = new PropertySpec("Name", typeof(string), "General",
+                "Name der Eigenschaft in der Datenbank (sprachunabhängug)", null)
+            {
+                Attributes = new System.Attribute[] {ReadOnlyAttribute.Yes}
+            };
             if (mColumn.IsSelectionListPossible())
             {
-                this.Properties.Add(new PropertySpec("Liste", typeof(string), 
+                Properties.Add(new PropertySpec("Liste", typeof(string), 
                     "General", 
                     "Mögliche Werte aus einer Liste, Werte durch Komma getrennt", 
                     null, 
                     "System.ComponentModel.Design.MultilineStringEditor, System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", 
-                    typeof(System.ComponentModel.StringConverter)));
+                    typeof(StringConverter)));
                 this["Liste"] = mColumn.SelectionListString;
             }
 
-            this.Properties.Add(ps);
+            Properties.Add(ps);
             this["Name"] = mColumn.Name;
-            this.Properties.Add(new PropertySpec("Anzeigename", typeof(string), "General", "Name der Eigenschaft für den Anwender (sprachabhängug)", null));
+            Properties.Add(new PropertySpec("Anzeigename", typeof(string), "General", "Name der Eigenschaft für den Anwender (sprachabhängug)", null));
             this["Anzeigename"] = mColumn.DisplayName;
-            this.Properties.Add(new PropertySpec("Beschreibung", typeof(string), "General", "Beschreibung der Eigenschaft für den Anwender", null));
+            Properties.Add(new PropertySpec("Beschreibung", typeof(string), "General", "Beschreibung der Eigenschaft für den Anwender", null));
             this["Beschreibung"] = mColumn.Description;
-            this.Properties.Add(new PropertySpec("Kategorie", typeof(string), "General", "Kategorie der Eigenschaft", null));
+            Properties.Add(new PropertySpec("Kategorie", typeof(string), "General", "Kategorie der Eigenschaft", null));
             this["Kategorie"] = mColumn.Category;
-            this.Properties.Add(new PropertySpec("Typ", typeof(DbType), "Typ", "Typ der Eigenschaft", null));
+            Properties.Add(new PropertySpec("Typ", typeof(DbType), "Typ", "Typ der Eigenschaft", null));
             this["Typ"] = mColumn.Type;
             if (mColumn.HasCustomSize())
             {
-                this.Properties.Add(new PropertySpec("Größe", typeof(Int32), "Typ", "Größe des Datensatzes der Eigenschaft", null));
+                Properties.Add(new PropertySpec("Größe", typeof(int), "Typ", "Größe des Datensatzes der Eigenschaft", null));
                 this["Größe"] = mColumn.Size;
             }
-            this.Properties.Add(new PropertySpec("NULL Zulassen", typeof(bool), "Flags", "Eigenschaft lässt den Wert NULL zu", null));
+            Properties.Add(new PropertySpec("NULL Zulassen", typeof(bool), "Flags", "Eigenschaft lässt den Wert NULL zu", null));
             this["NULL Zulassen"] = ((mColumn.Flags & (int)DbFlags.eAllowNull) != 0);
-            this.Properties.Add(new PropertySpec("Unique", typeof(bool), "Flags", "Wert der Eigenschaft ist in Spalte eindeutig", null));
+            Properties.Add(new PropertySpec("Unique", typeof(bool), "Flags", "Wert der Eigenschaft ist in Spalte eindeutig", null));
             this["Unique"] = ((mColumn.Flags & (int)DbFlags.eUnique) != 0);
-            this.Properties.Add(new PropertySpec("Auto Create", typeof(bool), "Flags", "Wert der Eigenschaft wird automatisch berechnet", null));
+            Properties.Add(new PropertySpec("Auto Create", typeof(bool), "Flags", "Wert der Eigenschaft wird automatisch berechnet", null));
             this["Auto Create"] = ((mColumn.Flags & (int)DbFlags.eAutoCreate) != 0);
-            this.Properties.Add(new PropertySpec("Auto Increment", typeof(bool), "Flags", "Wert der Eigenschaft wird automatisch hochgezählt", null));
+            Properties.Add(new PropertySpec("Auto Increment", typeof(bool), "Flags", "Wert der Eigenschaft wird automatisch hochgezählt", null));
             this["Auto Increment"] = ((mColumn.Flags & (int)DbFlags.eAutoIncrement) != 0);
 
-            this.Properties.Add(new PropertySpec("Editierbar", typeof(bool), "UserInterface", "Schreibschutz für Eigenschaft", null));
-            this["Editierbar"] = mColumn.Editable;
-            this.Properties.Add(new PropertySpec("Sichtbar", typeof(bool), "UserInterface", "Sichtbare Eigenschaft?", null));
-            this["Sichtbar"] = mColumn.Browsable;
-            this.Properties.Add(new PropertySpec("UITypeEditor", typeof(string), "UserInterface", "Der Editor für das Userinterface", null));
+            Properties.Add(new PropertySpec("Editierbar", typeof(bool), "UserInterface", "Schreibschutz für Eigenschaft", null));
+            this["Editierbar"] = mColumn.IsEditable;
+            Properties.Add(new PropertySpec("Sichtbar", typeof(bool), "UserInterface", "Sichtbare Eigenschaft?", null));
+            this["Sichtbar"] = mColumn.IsBrowsable;
+            Properties.Add(new PropertySpec("UITypeEditor", typeof(string), "UserInterface", "Der Editor für das Userinterface", null));
             this["UITypeEditor"] = mColumn.UITypeEditor;
 
-            this.Properties.Add(new PropertySpec("UITypeConverter", typeof(string), "UserInterface", "Der Typ für das Userinterface", null));
+            Properties.Add(new PropertySpec("UITypeConverter", typeof(string), "UserInterface", "Der Typ für das Userinterface", null));
             this["UITypeConverter"] = mColumn.UITypeConverter;
 
             if ((mColumn.Flags & (int)DbFlags.eHasDefault) != 0)
             {
-                this.Properties.Add(new PropertySpec("Standard", typeof(string), "Standard Wert", "Wert der Eigenschaft wenn kein Wert vorgegeben", null));
+                Properties.Add(new PropertySpec("Standard", typeof(string), "Standard Wert", "Wert der Eigenschaft wenn kein Wert vorgegeben", null));
                 this["Standard"] = mColumn.Default;
             }
         }
 
         protected bool ValueIsValid(string name, object value)
         {
-            bool isValid = true;
+            var isValid = true;
 
             switch (name)
             {
                 case "Name":
                     {
-                        string strValue = (string)value;
+                        var strValue = (string)value;
                         if (strValue.IndexOf(" ") >= 0)
                         {
                             isValid = false;
@@ -126,7 +127,7 @@ namespace SDBees.DB
             // First check if this is allowed...
             if (!ValueIsValid(e.Property.Name, e.Value))
             {
-                MessageBox.Show("Wert " + e.Value.ToString() + " für " + e.Property.Name + " nicht zulässig!");
+                MessageBox.Show("Wert " + e.Value + " für " + e.Property.Name + " nicht zulässig!");
 
                 // Refresh the property grid
                 mDialog.updateProperties();
@@ -135,7 +136,7 @@ namespace SDBees.DB
             }
 
             // Remember the old value...
-            object oldValue = this[e.Property.Name];
+            var oldValue = this[e.Property.Name];
 
             // Call base class first to update the value...
             base.OnSetValue(e);
@@ -167,11 +168,11 @@ namespace SDBees.DB
                     break;
 
                 case "Editierbar":
-                    mColumn.Editable = (bool)this[e.Property.Name];
+                    mColumn.IsEditable = (bool)this[e.Property.Name];
                     break;
 
                 case "Sichtbar":
-                    mColumn.Browsable = (bool)this[e.Property.Name];
+                    mColumn.IsBrowsable = (bool)this[e.Property.Name];
                     break;
 
                 case "Typ":
@@ -190,7 +191,7 @@ namespace SDBees.DB
                     break;
 
                 case "Größe":
-                    mColumn.Size = (Int32)this[e.Property.Name];
+                    mColumn.Size = (int)this[e.Property.Name];
                     break;
 
                 case "Liste":
@@ -199,7 +200,7 @@ namespace SDBees.DB
 
                 case "NULL Zulassen":
                     {
-                        bool flag = (bool)this[e.Property.Name];
+                        var flag = (bool)this[e.Property.Name];
                         if (flag)
                         {
                             mColumn.Flags |= (int)DbFlags.eAllowNull;
@@ -213,7 +214,7 @@ namespace SDBees.DB
 
                 case "Unique":
                     {
-                        bool flag = (bool)this[e.Property.Name];
+                        var flag = (bool)this[e.Property.Name];
                         if (flag)
                         {
                             mColumn.Flags |= (int)DbFlags.eUnique;
@@ -227,7 +228,7 @@ namespace SDBees.DB
 
                 case "Auto Create":
                     {
-                        bool flag = (bool)this[e.Property.Name];
+                        var flag = (bool)this[e.Property.Name];
                         if (flag)
                         {
                             mColumn.Flags |= (int)DbFlags.eAutoCreate;
@@ -241,7 +242,7 @@ namespace SDBees.DB
 
                 case "Auto Increment":
                     {
-                        bool flag = (bool)this[e.Property.Name];
+                        var flag = (bool)this[e.Property.Name];
                         if (flag)
                         {
                             mColumn.Flags |= (int)DbFlags.eAutoIncrement;
@@ -261,22 +262,19 @@ namespace SDBees.DB
             mDialog.updateProperties();
         }
         
-        private void SetStandardValue(SDBees.DB.DbType dbTyp, ref SDBees.DB.Column MyColumn)
+        private void SetStandardValue(DbType dbTyp, ref Column myColumn)
         {
-        	if(MyColumn.Default == "")
+        	if(myColumn.Default == "")
         	{
         		switch(dbTyp.ToString())
 	        	{
 	        		case "eDate":
-	        			MyColumn.Default = System.DateTime.Now.ToShortDateString();
+	        			myColumn.Default = DateTime.Now.ToShortDateString();
 	        			break;
-	        			
-	        		default:
-	        			break;
-	        	}
+		        }
         	}
         }
 
-    };
+    }
 
 }

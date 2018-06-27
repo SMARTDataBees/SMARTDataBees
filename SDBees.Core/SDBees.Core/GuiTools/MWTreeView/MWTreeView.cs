@@ -20,13 +20,13 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 /// <summary>
 ///	Mikael Wiberg 2003
@@ -150,7 +150,7 @@ namespace SDBees.GuiTools
 	/// Is there any other functionality you would like to see in the MWTreeView? Please tell me and I'll see what I can do.
 	/// 
 	/// </summary>
-	public class MWTreeView : System.Windows.Forms.TreeView
+	public class MWTreeView : TreeView
 	{
 		#region Variables
 
@@ -164,7 +164,7 @@ namespace SDBees.GuiTools
 		/// <summary>
 		/// True if multiple TreeNodes can be checked at once or false otherwise (true is standard for MS TreeView).
 		/// </summary>
-		private bool bAllowMultiCheck = false;
+		private bool bAllowMultiCheck;
 
 		/// <summary>
 		/// HashTable containing the Selected TreeNodes wrapped in MWTreeNodeWrapper objects as values and the TreeNode.GetHashCodes as keys.
@@ -179,7 +179,7 @@ namespace SDBees.GuiTools
 		/// <summary>
 		/// Last Selected TreeNode or null if no TreeNode is selected or if Last Selected TreeNode was deselected.
 		/// </summary>
-		private TreeNode tnSelNode = null;
+		private TreeNode tnSelNode;
 
 		/// <summary>
 		/// True if scrolling is done so the SelNode (Last Selected Tree Node) is always displayed or false otherwise.
@@ -189,7 +189,7 @@ namespace SDBees.GuiTools
 		/// <summary>
 		/// True if TreeNodes can be blank, i.e. contain no Text.
 		/// </summary>
-		private bool bAllowBlankNodeText = false;
+		private bool bAllowBlankNodeText;
 
 		/// <summary>
 		/// True if no TreeNode has to be selected or false otherwise (false is standard for MS TreeView).
@@ -232,67 +232,67 @@ namespace SDBees.GuiTools
 		/// <summary>
 		/// This variable is set to true if the keyboard was used for checking/unchecking a TreeNode (or group of TreeNodes).
 		/// </summary>
-		private bool bKeyCheck = false;
+		private bool bKeyCheck;
 
 		/// <summary>
 		/// This variable is set to true if the mouse was used for checking/unchecking a TreeNode (or group of TreeNodes).
 		/// </summary>
-		private bool bMouseCheck = false;
+		private bool bMouseCheck;
 
 		/// <summary>
 		/// This variable is set to true if the AllowMultiCheck property was set to false.
 		/// </summary>
-		private bool bAllowMultiCheckChanged = false;
+		private bool bAllowMultiCheckChanged;
 
 		/// <summary>
 		/// This variable is set to true if the TreeNodes should be forced to be checked/unchecked.
 		/// </summary>
-		private bool bForceCheckNode = false;
+		private bool bForceCheckNode;
 
 		/// <summary>
 		/// When this MWTreeView is selected or has focus this variable is set to true.
 		/// When the mouse is used to click inside this MWTreeView this variable is checked to see if the TreeNodes should be repainted.
 		///		This is necessary since the MouseDown event happens before the OnGotFocus and OnEnter events.
 		/// </summary>
-		private bool bActive = false;
+		private bool bActive;
 
 		/// <summary>
 		/// True if a Label is allowed to be edited.
 		/// Note that this.LabelEdit has to be true as well.
 		/// </summary>
-		private bool bLabelEditAllowed = false;
+		private bool bLabelEditAllowed;
 
 		/// <summary>
 		/// TreeNode that was in the coordinates of OnMouseDown.
 		/// Used in conjunction with the FullRowSelect property.
 		/// Note that this TreeNode is treated differently than the tnMouseDown TreeNode and they must therefore be separate variables.
 		/// </summary>
-		private TreeNode tnFullRowSelect = null;
+		private TreeNode tnFullRowSelect;
 
 		/// <summary>
 		/// The selected state of the TreeNode that was in the coordinates of OnMouseDown.
 		/// Used in conjunction with the FullRowSelect property.
 		/// </summary>
-		private bool bFullRowSelectNodeSelected = false;
+		private bool bFullRowSelectNodeSelected;
 
 		/// <summary>
 		/// The checked state of the TreeNode that was in the coordinates of OnMouseDown.
 		/// Used in conjunction with the FullRowSelect property.
 		/// </summary>
-		private bool bFullRowSelectNodeChecked = false;
+		private bool bFullRowSelectNodeChecked;
 
 		/// <summary>
 		/// The expanded state of the TreeNode that was in the coordinates of OnMouseDown.
 		/// Used in conjunction with the FullRowSelect property.
 		/// </summary>
-		private bool bFullRowSelectNodeExpanded = false;
+		private bool bFullRowSelectNodeExpanded;
 
 		/// <summary>
 		/// TreeNode that was in the coordinates of the OnMouseDown.
 		/// Used in conjunction with the AllowRubberbandSelect property.
 		/// Note that this TreeNode is treated differently than the tnFullRowSelect TreeNode and they must therefore be separate variables.
 		/// </summary>
-		private TreeNode tnMouseDown = null;
+		private TreeNode tnMouseDown;
 
 		/// <summary>
 		/// Point in the coordinates of the OnMouseDown.
@@ -327,7 +327,7 @@ namespace SDBees.GuiTools
 		/// True if a rubberband has been painted (and therefore must be cleared) or false otherwise.
 		/// Used in conjunction with the AllowRubberbandSelect property.
 		/// </summary>
-		private bool bRubberbandHasBeenPainted = false;
+		private bool bRubberbandHasBeenPainted;
 
 		/// <summary>
 		/// True if the 'next' TreeNode that enters the OnBeforeSelect EventHandler should be treated as a 'proper' selected TreeNode as far as
@@ -335,7 +335,7 @@ namespace SDBees.GuiTools
 		///		displayed.
 		///	If false the above does not happen.
 		/// </summary>
-		private bool bPaintFocusRectAndHottracking = false;
+		private bool bPaintFocusRectAndHottracking;
 
 		#endregion Help Variables
 
@@ -346,7 +346,7 @@ namespace SDBees.GuiTools
 		/// <summary> 
 		/// Required designer variable.
 		/// </summary>
-		private System.ComponentModel.Container components = null;
+		private Container components;
 
 		#endregion Component Designer generated Variables
 
@@ -363,11 +363,11 @@ namespace SDBees.GuiTools
 		{
 			//Set a few ControlStyles (note that not all are used/necessary, AllPaintingInWmPaint, DoubleBuffer and UserPaint are though).
 
-			this.SetStyle(System.Windows.Forms.ControlStyles.AllPaintingInWmPaint, true);
-			this.SetStyle(System.Windows.Forms.ControlStyles.DoubleBuffer, true);
-			this.SetStyle(System.Windows.Forms.ControlStyles.ResizeRedraw, true);
-			this.SetStyle(System.Windows.Forms.ControlStyles.Selectable, true);
-			this.SetStyle(System.Windows.Forms.ControlStyles.SupportsTransparentBackColor, true);
+			SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+			SetStyle(ControlStyles.DoubleBuffer, true);
+			SetStyle(ControlStyles.ResizeRedraw, true);
+			SetStyle(ControlStyles.Selectable, true);
+			SetStyle(ControlStyles.SupportsTransparentBackColor, true);
 			//this.SetStyle(System.Windows.Forms.ControlStyles.UserPaint, true);
 
 			InitializeComponent();
@@ -439,9 +439,9 @@ namespace SDBees.GuiTools
 		/// Standard OnGotFocus EventHandler.
 		/// </summary>
 		/// <param name="e">Standard EventArgs object.</param>
-		protected override void OnGotFocus(System.EventArgs e)
+		protected override void OnGotFocus(EventArgs e)
 		{
-			if(this.MultiSelect != TreeViewMultiSelect.Classic)
+			if(MultiSelect != TreeViewMultiSelect.Classic)
 			{
 				bLabelEditAllowed = false;
 
@@ -455,9 +455,9 @@ namespace SDBees.GuiTools
 		/// Standard OnLostFocus EventHandler.
 		/// </summary>
 		/// <param name="e">Standard EventArgs object.</param>
-		protected override void OnLostFocus(System.EventArgs e)
+		protected override void OnLostFocus(EventArgs e)
 		{
-			if(this.MultiSelect != TreeViewMultiSelect.Classic)
+			if(MultiSelect != TreeViewMultiSelect.Classic)
 			{
 				bLabelEditAllowed = false;
 
@@ -473,9 +473,9 @@ namespace SDBees.GuiTools
 		/// Standard OnEnter EventHandler.
 		/// </summary>
 		/// <param name="e">Standard EventArgs object.</param>
-		protected override void OnEnter(System.EventArgs e)
+		protected override void OnEnter(EventArgs e)
 		{
-			if(this.MultiSelect != TreeViewMultiSelect.Classic)
+			if(MultiSelect != TreeViewMultiSelect.Classic)
 			{
 				bLabelEditAllowed = false;
 
@@ -489,9 +489,9 @@ namespace SDBees.GuiTools
 		/// Standard OnLeave EventHandler.
 		/// </summary>
 		/// <param name="e">Standard EventArgs object.</param>
-		protected override void OnLeave(System.EventArgs e)
+		protected override void OnLeave(EventArgs e)
 		{
-			if(this.MultiSelect != TreeViewMultiSelect.Classic)
+			if(MultiSelect != TreeViewMultiSelect.Classic)
 			{
 				bLabelEditAllowed = false;
 
@@ -513,9 +513,9 @@ namespace SDBees.GuiTools
 		/// Standard OnBeforeLabelEdit EventHandler.
 		/// </summary>
 		/// <param name="e">Standard NodeLabelEditEventArgs object.</param>
-		protected override void OnBeforeLabelEdit(System.Windows.Forms.NodeLabelEditEventArgs e)
+		protected override void OnBeforeLabelEdit(NodeLabelEditEventArgs e)
 		{
-			if(this.MultiSelect != TreeViewMultiSelect.Classic)
+			if(MultiSelect != TreeViewMultiSelect.Classic)
 			{
 				if(IsDisallowLabelEditRegExSatisfied(e.Node.Text))
 				{
@@ -530,13 +530,13 @@ namespace SDBees.GuiTools
 		/// Standard OnAfterLabelEdit EventHandler.
 		/// </summary>
 		/// <param name="e">Standard NodeLabelEditEventArgs object.</param>
-		protected override void OnAfterLabelEdit(System.Windows.Forms.NodeLabelEditEventArgs e)
+		protected override void OnAfterLabelEdit(NodeLabelEditEventArgs e)
 		{
-			if(this.MultiSelect != TreeViewMultiSelect.Classic)
+			if(MultiSelect != TreeViewMultiSelect.Classic)
 			{
 				bLabelEditAllowed = false;
 
-				if(	(this.AllowBlankNodeText && e.Label == string.Empty) ||
+				if(	(AllowBlankNodeText && e.Label == string.Empty) ||
 					((e.Label != null && e.Label != string.Empty) &&
 					IsLabelEditRegExSatisfied(e.Label)))
 				{
@@ -563,18 +563,18 @@ namespace SDBees.GuiTools
 		/// Standard OnBeforeSelect EventHandler.
 		/// </summary>
 		/// <param name="e">Standard TreeViewCancelEventArgs object.</param>
-		protected override void OnBeforeSelect(System.Windows.Forms.TreeViewCancelEventArgs e)
+		protected override void OnBeforeSelect(TreeViewCancelEventArgs e)
 		{
-			if(this.MultiSelect != TreeViewMultiSelect.Classic)
+			if(MultiSelect != TreeViewMultiSelect.Classic)
 			{
 				if(!bPaintFocusRectAndHottracking)
 				{
-					if(e.Action != TreeViewAction.Unknown && e.Action != TreeViewAction.ByKeyboard && this.MultiSelect != TreeViewMultiSelect.NoMulti)
+					if(e.Action != TreeViewAction.Unknown && e.Action != TreeViewAction.ByKeyboard && MultiSelect != TreeViewMultiSelect.NoMulti)
 					{
 						BeforeSelectMethod(e.Node);
 					}
 
-					if(this.MultiSelect != TreeViewMultiSelect.NoMulti)
+					if(MultiSelect != TreeViewMultiSelect.NoMulti)
 					{
 						e.Cancel = true;
 
@@ -595,9 +595,9 @@ namespace SDBees.GuiTools
 		/// <param name="tnMain">Node to be selected/deselected.</param>
 		private void BeforeSelectMethod(TreeNode tnMain)
 		{
-			if((Control.ModifierKeys & Keys.Control) != 0 && (Control.ModifierKeys & Keys.Shift) == 0)
+			if((ModifierKeys & Keys.Control) != 0 && (ModifierKeys & Keys.Shift) == 0)
 			{
-				if((Control.ModifierKeys & Keys.Alt) != 0)
+				if((ModifierKeys & Keys.Alt) != 0)
 				{
 					if(IsTreeNodeSelected(tnMain))
 					{
@@ -615,20 +615,20 @@ namespace SDBees.GuiTools
 			}
 			else
 			{
-				if((Control.ModifierKeys & Keys.Shift) != 0)
+				if((ModifierKeys & Keys.Shift) != 0)
 				{
-					if((Control.ModifierKeys & Keys.Control) == 0)
+					if((ModifierKeys & Keys.Control) == 0)
 					{
 						ClearSelNodes();
 					}
 
-					TreeNode tn = this.SelNode;
+					var tn = SelNode;
 
-					SelectNode(this.SelNode, false);
-					int iSelNodeTreeNodeLevel = GetTreeNodeLevel(this.SelNode);
+					SelectNode(SelNode, false);
+					var iSelNodeTreeNodeLevel = GetTreeNodeLevel(SelNode);
 
-					bool bPrevious = false;
-					TreeNode tnTemp = this.SelNode;
+					var bPrevious = false;
+					var tnTemp = SelNode;
 					while(tnTemp != null && tnTemp.PrevVisibleNode != null && tnTemp != tnMain)
 					{
 						if(tnTemp.PrevVisibleNode == tnMain)
@@ -643,23 +643,23 @@ namespace SDBees.GuiTools
 					{
 						while(tn != null && tn.PrevVisibleNode != null && tn != tnMain)
 						{
-							if(this.MultiSelect == TreeViewMultiSelect.MultiSameLevel)
+							if(MultiSelect == TreeViewMultiSelect.MultiSameLevel)
 							{
 								if(iSelNodeTreeNodeLevel == GetTreeNodeLevel(tn.PrevVisibleNode))
 								{
 									SelectNode(tn.PrevVisibleNode, false);
 								}
 							}
-							else if(this.MultiSelect == TreeViewMultiSelect.MultiPathToParent ||
-								this.MultiSelect == TreeViewMultiSelect.MultiPathToParents ||
-								this.MultiSelect == TreeViewMultiSelect.SinglePathToParent ||
-								this.MultiSelect == TreeViewMultiSelect.SinglePathToParents)
+							else if(MultiSelect == TreeViewMultiSelect.MultiPathToParent ||
+								MultiSelect == TreeViewMultiSelect.MultiPathToParents ||
+								MultiSelect == TreeViewMultiSelect.SinglePathToParent ||
+								MultiSelect == TreeViewMultiSelect.SinglePathToParents)
 							{
 								SelectNode(tn.PrevVisibleNode, false);
 							}
 							else
 							{
-								if((Control.ModifierKeys & Keys.Alt) != 0)
+								if((ModifierKeys & Keys.Alt) != 0)
 								{
 									SelectBranch(tn.PrevVisibleNode, true, bPrevious, false);
 								}
@@ -676,23 +676,23 @@ namespace SDBees.GuiTools
 					{
 						while(tn != null && tn.NextVisibleNode != null && tn != tnMain)
 						{
-							if(this.MultiSelect == TreeViewMultiSelect.MultiSameLevel)
+							if(MultiSelect == TreeViewMultiSelect.MultiSameLevel)
 							{
 								if(iSelNodeTreeNodeLevel == GetTreeNodeLevel(tn.NextVisibleNode))
 								{
 									SelectNode(tn.NextVisibleNode, false);
 								}
 							}
-							else if(this.MultiSelect == TreeViewMultiSelect.MultiPathToParent ||
-								this.MultiSelect == TreeViewMultiSelect.MultiPathToParents ||
-								this.MultiSelect == TreeViewMultiSelect.SinglePathToParent ||
-								this.MultiSelect == TreeViewMultiSelect.SinglePathToParents)
+							else if(MultiSelect == TreeViewMultiSelect.MultiPathToParent ||
+								MultiSelect == TreeViewMultiSelect.MultiPathToParents ||
+								MultiSelect == TreeViewMultiSelect.SinglePathToParent ||
+								MultiSelect == TreeViewMultiSelect.SinglePathToParents)
 							{
 								SelectNode(tn.NextVisibleNode, false);
 							}
 							else
 							{
-								if((Control.ModifierKeys & Keys.Alt) != 0)
+								if((ModifierKeys & Keys.Alt) != 0)
 								{
 									SelectBranch(tn.NextVisibleNode, true, bPrevious, false);
 								}
@@ -706,7 +706,7 @@ namespace SDBees.GuiTools
 						}
 					}
 
-					if(this.MultiSelect == TreeViewMultiSelect.MultiSameLevel)
+					if(MultiSelect == TreeViewMultiSelect.MultiSameLevel)
 					{
 						if(iSelNodeTreeNodeLevel == GetTreeNodeLevel(tnMain))
 						{
@@ -722,7 +722,7 @@ namespace SDBees.GuiTools
 				{
 					ClearSelNodes();
 
-					if((Control.ModifierKeys & Keys.Alt) != 0 && this.MultiSelect != TreeViewMultiSelect.MultiSameLevel)
+					if((ModifierKeys & Keys.Alt) != 0 && MultiSelect != TreeViewMultiSelect.MultiSameLevel)
 					{
 						SelectBranch(tnMain, true, true, true);
 					}
@@ -744,9 +744,9 @@ namespace SDBees.GuiTools
 		/// Standard OnBeforeCheck EventHandler.
 		/// </summary>
 		/// <param name="e">Standard TreeViewCancelEventArgs object.</param>
-		protected override void OnBeforeCheck(System.Windows.Forms.TreeViewCancelEventArgs e)
+		protected override void OnBeforeCheck(TreeViewCancelEventArgs e)
 		{
-			if(this.MultiSelect != TreeViewMultiSelect.Classic)
+			if(MultiSelect != TreeViewMultiSelect.Classic)
 			{
 				if(e.Action == TreeViewAction.Unknown && !bKeyCheck && !bMouseCheck && !bAllowMultiCheckChanged && !bForceCheckNode)
 				{
@@ -761,27 +761,27 @@ namespace SDBees.GuiTools
 
 					bLabelEditAllowed = false;
 
-					if(this.AllowMultiCheck)
+					if(AllowMultiCheck)
 					{
 						if(IsTreeNodeChecked(e.Node))
 						{
 							//Opposite, since the TreeNode hasn't been unchecked yet.
 							if(e.Node.Checked)
 							{
-								this.CheckedNodes.Remove(e.Node.GetHashCode());
+								CheckedNodes.Remove(e.Node.GetHashCode());
 							}
 						}
 						else
 						{
-							if(this.CheckedNodes == null)
+							if(CheckedNodes == null)
 							{
-								this.CheckedNodes = new Hashtable();
+								CheckedNodes = new Hashtable();
 							}
 
 							//Opposite, since the TreeNode hasn't been checked yet.
 							if(!e.Node.Checked && IsCheckNodeRegExSatisfied(e.Node.Text))
 							{
-								this.CheckedNodes.Add(e.Node.GetHashCode(), e.Node);
+								CheckedNodes.Add(e.Node.GetHashCode(), e.Node);
 							}
 						}
 					}
@@ -790,18 +790,18 @@ namespace SDBees.GuiTools
 						//Opposite, since the TreeNode hasn't been unchecked yet.
 						if(e.Node.Checked)
 						{
-							this.CheckedNodes.Remove(e.Node.GetHashCode());
+							CheckedNodes.Remove(e.Node.GetHashCode());
 						}
 						else if(IsCheckNodeRegExSatisfied(e.Node.Text))
 						{
-							if(this.CheckedNodes == null)
+							if(CheckedNodes == null)
 							{
-								this.CheckedNodes = new Hashtable();
+								CheckedNodes = new Hashtable();
 							}
 
-							this.ClearCheckedNodes();
+							ClearCheckedNodes();
 
-							this.CheckedNodes.Add(e.Node.GetHashCode(), e.Node);
+							CheckedNodes.Add(e.Node.GetHashCode(), e.Node);
 						}
 					}
 
@@ -831,43 +831,43 @@ namespace SDBees.GuiTools
 		/// <param name="bUpdate">True if the TreeNode's Checked property should be updated or false otherwise.</param>
 		private void BeforeCheckMethod(TreeNode tn, bool bUpdate)
 		{
-			if(	(Control.ModifierKeys & Keys.Shift) != 0 ||
-				(Control.ModifierKeys & Keys.Control) != 0 ||
-				(Control.ModifierKeys & Keys.Alt) != 0)
+			if(	(ModifierKeys & Keys.Shift) != 0 ||
+				(ModifierKeys & Keys.Control) != 0 ||
+				(ModifierKeys & Keys.Alt) != 0)
 			{
 				bAllowMultiCheckChanged = true;
 
 				if(tn.Parent != null)
 				{
-					if(	!((Control.ModifierKeys & Keys.Shift) != 0 && (Control.ModifierKeys & Keys.Control) != 0) &&
-						(Control.ModifierKeys & Keys.Alt) == 0)
+					if(	!((ModifierKeys & Keys.Shift) != 0 && (ModifierKeys & Keys.Control) != 0) &&
+						(ModifierKeys & Keys.Alt) == 0)
 					{
 						ToggleCheckNode(tn.Parent, bUpdate);
 					}
 
-					if((Control.ModifierKeys & Keys.Control) != 0)
+					if((ModifierKeys & Keys.Control) != 0)
 					{
 						ToggleCheckBranch(tn.Parent, true, tn, bUpdate);
 					}
-					else if((Control.ModifierKeys & Keys.Shift) != 0 && (Control.ModifierKeys & Keys.Alt) != 0)
+					else if((ModifierKeys & Keys.Shift) != 0 && (ModifierKeys & Keys.Alt) != 0)
 					{
 						ToggleCheckBranch(tn.Parent, false, tn, bUpdate);
 						ToggleCheckBranch(tn, true, bUpdate);
 					}
-					else if((Control.ModifierKeys & Keys.Shift) != 0)
+					else if((ModifierKeys & Keys.Shift) != 0)
 					{
 						ToggleCheckBranch(tn.Parent, false, tn, bUpdate);
 					}
-					else if((Control.ModifierKeys & Keys.Alt) != 0)
+					else if((ModifierKeys & Keys.Alt) != 0)
 					{
 						ToggleCheckBranch(tn, true, bUpdate);
 					}
 				}
 				else
 				{
-					if((Control.ModifierKeys & Keys.Control) != 0)
+					if((ModifierKeys & Keys.Control) != 0)
 					{
-						foreach(TreeNode tn2 in this.Nodes)
+						foreach(TreeNode tn2 in Nodes)
 						{
 							if(tn != tn2)
 							{
@@ -877,9 +877,9 @@ namespace SDBees.GuiTools
 							ToggleCheckBranch(tn2, true, tn, bUpdate);
 						}
 					}
-					else if((Control.ModifierKeys & Keys.Shift) != 0 && (Control.ModifierKeys & Keys.Alt) != 0)
+					else if((ModifierKeys & Keys.Shift) != 0 && (ModifierKeys & Keys.Alt) != 0)
 					{
-						foreach(TreeNode tn2 in this.Nodes)
+						foreach(TreeNode tn2 in Nodes)
 						{
 							if(tn != tn2)
 							{
@@ -889,9 +889,9 @@ namespace SDBees.GuiTools
 
 						ToggleCheckBranch(tn, true, bUpdate);
 					}
-					else if((Control.ModifierKeys & Keys.Shift) != 0)
+					else if((ModifierKeys & Keys.Shift) != 0)
 					{
-						foreach(TreeNode tn2 in this.Nodes)
+						foreach(TreeNode tn2 in Nodes)
 						{
 							if(tn != tn2)
 							{
@@ -899,7 +899,7 @@ namespace SDBees.GuiTools
 							}
 						}
 					}
-					else if((Control.ModifierKeys & Keys.Alt) != 0)
+					else if((ModifierKeys & Keys.Alt) != 0)
 					{
 						ToggleCheckBranch(tn, true, bUpdate);
 					}
@@ -919,26 +919,26 @@ namespace SDBees.GuiTools
 		/// Standard OnKeyDown EventHandler.
 		/// </summary>
 		/// <param name="e">Standard KeyEventArgs object.</param>
-		protected override void OnKeyDown(System.Windows.Forms.KeyEventArgs e)
+		protected override void OnKeyDown(KeyEventArgs e)
 		{
-			if(this.MultiSelect != TreeViewMultiSelect.Classic)
+			if(MultiSelect != TreeViewMultiSelect.Classic)
 			{
-				bool bThisSelNodeIsNull = false;
+				var bThisSelNodeIsNull = false;
 
 				switch(e.KeyCode)
 				{
 					#region F2 Key
 
 					case Keys.F2:
-						if(this.LabelEdit)
+						if(LabelEdit)
 						{
-							if(this.SelNode != null)
+							if(SelNode != null)
 							{
-								this.SelNode.BeginEdit();
+								SelNode.BeginEdit();
 							}
-							else if(this.SelNodes.Count > 0)
+							else if(SelNodes.Count > 0)
 							{
-								foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+								foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 								{
 									mwtnw.Node.BeginEdit();
 									break;
@@ -955,39 +955,39 @@ namespace SDBees.GuiTools
 					#region Space Key
 
 					case Keys.Space:
-						if(this.CheckBoxes)
+						if(CheckBoxes)
 						{
 							bKeyCheck = true;
 
-							if(((e.Modifiers & Keys.Shift) != 0 || (e.Modifiers & Keys.Control) != 0) && this.AllowMultiCheck)
+							if(((e.Modifiers & Keys.Shift) != 0 || (e.Modifiers & Keys.Control) != 0) && AllowMultiCheck)
 							{
-								if(this.SelectedNode != null)
+								if(SelectedNode != null)
 								{
-									if(this.SelectedNode.Parent != null)
+									if(SelectedNode.Parent != null)
 									{
 										if(!((e.Modifiers & Keys.Shift) != 0 && (e.Modifiers & Keys.Control) != 0))
 										{
-											ToggleCheckNode(this.SelectedNode.Parent, true);
+											ToggleCheckNode(SelectedNode.Parent, true);
 										}
 
 										if((e.Modifiers & Keys.Control) != 0)
 										{
-											ToggleCheckBranch(this.SelectedNode.Parent, true, this.SelectedNode, true);
-											ToggleCheckNode(this.SelectedNode, false);
+											ToggleCheckBranch(SelectedNode.Parent, true, SelectedNode, true);
+											ToggleCheckNode(SelectedNode, false);
 										}
 										else
 										{
-											ToggleCheckBranch(this.SelectedNode.Parent, false, this.SelectedNode, true);
-											ToggleCheckNode(this.SelectedNode, false);
+											ToggleCheckBranch(SelectedNode.Parent, false, SelectedNode, true);
+											ToggleCheckNode(SelectedNode, false);
 										}
 									}
 									else
 									{
 										if((e.Modifiers & Keys.Control) != 0)
 										{
-											foreach(TreeNode tn in this.Nodes)
+											foreach(TreeNode tn in Nodes)
 											{
-												if(tn != this.SelectedNode)
+												if(tn != SelectedNode)
 												{
 													ToggleCheckNode(tn, true);
 												}
@@ -997,9 +997,9 @@ namespace SDBees.GuiTools
 										}
 										else
 										{
-											foreach(TreeNode tn in this.Nodes)
+											foreach(TreeNode tn in Nodes)
 											{
-												if(tn != this.SelectedNode)
+												if(tn != SelectedNode)
 												{
 													ToggleCheckNode(tn, true);
 												}
@@ -1008,9 +1008,9 @@ namespace SDBees.GuiTools
 									}
 								}
 							}
-							else if(this.SelectedNode != null)
+							else if(SelectedNode != null)
 							{
-								ToggleCheckNode(this.SelectedNode, false);
+								ToggleCheckNode(SelectedNode, false);
 							}
 
 							bKeyCheck = false;
@@ -1025,11 +1025,11 @@ namespace SDBees.GuiTools
 					#region Down Key
 
 					case Keys.Down:
-						if(this.MultiSelect != TreeViewMultiSelect.NoMulti)
+						if(MultiSelect != TreeViewMultiSelect.NoMulti)
 						{
-							if(this.SelNode != null && this.SelNode.NextVisibleNode != null && (e.Modifiers & Keys.Control) == 0)
+							if(SelNode != null && SelNode.NextVisibleNode != null && (e.Modifiers & Keys.Control) == 0)
 							{
-								TreeNode tnTemp = this.SelNode;
+								var tnTemp = SelNode;
 
 								if((e.Modifiers & Keys.Shift) == 0)
 								{
@@ -1042,7 +1042,7 @@ namespace SDBees.GuiTools
 								}
 								else
 								{
-									TreeNode tnTempNextVisibleNode = tnTemp.NextVisibleNode;
+									var tnTempNextVisibleNode = tnTemp.NextVisibleNode;
 									if((e.Modifiers & Keys.Shift) != 0)
 									{
 										SelectBranch(tnTemp, true, false, true);
@@ -1061,11 +1061,11 @@ namespace SDBees.GuiTools
 					#region Up Key
 
 					case Keys.Up:
-						if(this.MultiSelect != TreeViewMultiSelect.NoMulti)
+						if(MultiSelect != TreeViewMultiSelect.NoMulti)
 						{
-							if(this.SelNode != null && this.SelNode.PrevVisibleNode != null && (e.Modifiers & Keys.Control) == 0)
+							if(SelNode != null && SelNode.PrevVisibleNode != null && (e.Modifiers & Keys.Control) == 0)
 							{
-								TreeNode tnTemp = this.SelNode;
+								var tnTemp = SelNode;
 
 								if((e.Modifiers & Keys.Shift) == 0)
 								{
@@ -1078,7 +1078,7 @@ namespace SDBees.GuiTools
 								}
 								else
 								{
-									TreeNode tnTempPrevVisibleNode = tnTemp.PrevVisibleNode;
+									var tnTempPrevVisibleNode = tnTemp.PrevVisibleNode;
 									if((e.Modifiers & Keys.Shift) != 0)
 									{
 										SelectBranch(tnTemp, true, false, true);
@@ -1097,20 +1097,20 @@ namespace SDBees.GuiTools
 					#region Right Key
 
 					case Keys.Right:
-						if(this.MultiSelect != TreeViewMultiSelect.NoMulti)
+						if(MultiSelect != TreeViewMultiSelect.NoMulti)
 						{
-							if(this.SelNode != null && (e.Modifiers & Keys.Control) == 0)
+							if(SelNode != null && (e.Modifiers & Keys.Control) == 0)
 							{
-								if(!this.SelNode.IsExpanded)
+								if(!SelNode.IsExpanded)
 								{
-									this.SelNode.Expand();
+									SelNode.Expand();
 
 									if((e.Modifiers & Keys.Shift) == 0)
 									{
 										ClearSelNodes();
 									}
 
-									SelectNode(this.SelNode, true);
+									SelectNode(SelNode, true);
 								}
 								else
 								{
@@ -1119,7 +1119,7 @@ namespace SDBees.GuiTools
 										ClearSelNodes();
 									}
 
-									SelectNode(this.SelNode.FirstNode, true);
+									SelectNode(SelNode.FirstNode, true);
 								}
 							}
 						}
@@ -1133,31 +1133,31 @@ namespace SDBees.GuiTools
 					#region Left Key
 
 					case Keys.Left:
-						if(this.MultiSelect != TreeViewMultiSelect.NoMulti)
+						if(MultiSelect != TreeViewMultiSelect.NoMulti)
 						{
-							if(this.SelNode != null && (e.Modifiers & Keys.Control) == 0)
+							if(SelNode != null && (e.Modifiers & Keys.Control) == 0)
 							{
-								if(this.SelNode.IsExpanded)
+								if(SelNode.IsExpanded)
 								{
-									this.SelNode.Collapse();
+									SelNode.Collapse();
 
 									if((e.Modifiers & Keys.Shift) == 0)
 									{
 										ClearSelNodes();
 									}
 
-									SelectNode(this.SelNode, true);
+									SelectNode(SelNode, true);
 								}
 								else
 								{
-									if(this.SelNode.Parent != null)
+									if(SelNode.Parent != null)
 									{
 										if((e.Modifiers & Keys.Shift) == 0)
 										{
 											ClearSelNodes();
 										}
 
-										SelectNode(this.SelNode.Parent, true);
+										SelectNode(SelNode.Parent, true);
 									}
 								}
 							}
@@ -1172,21 +1172,21 @@ namespace SDBees.GuiTools
 					#region Home Key
 
 					case Keys.Home:
-						if(this.MultiSelect != TreeViewMultiSelect.NoMulti)
+						if(MultiSelect != TreeViewMultiSelect.NoMulti)
 						{
-							if(this.SelNode != null && (e.Modifiers & Keys.Control) == 0)
+							if(SelNode != null && (e.Modifiers & Keys.Control) == 0)
 							{
 								if((e.Modifiers & Keys.Shift) == 0 && (e.Modifiers & Keys.Alt) == 0)
 								{
 									ClearSelNodes();
 
-									SelectNode(this.Nodes[0], true);
+									SelectNode(Nodes[0], true);
 								}
 								else
 								{
 									if((e.Modifiers & Keys.Alt) == 0)
 									{
-										TreeNode tn = this.SelNode;
+										var tn = SelNode;
 										while(tn != null && tn.PrevVisibleNode != null)
 										{
 											tn = tn.PrevVisibleNode;
@@ -1195,7 +1195,7 @@ namespace SDBees.GuiTools
 									}
 									else
 									{
-										TreeNode tn = this.SelNode;
+										var tn = SelNode;
 
 										if((e.Modifiers & Keys.Shift) != 0)
 										{
@@ -1221,15 +1221,15 @@ namespace SDBees.GuiTools
 					#region End Key
 
 					case Keys.End:
-						if(this.MultiSelect != TreeViewMultiSelect.NoMulti)
+						if(MultiSelect != TreeViewMultiSelect.NoMulti)
 						{
-							if(this.SelNode != null && (e.Modifiers & Keys.Control) == 0)
+							if(SelNode != null && (e.Modifiers & Keys.Control) == 0)
 							{
 								if((e.Modifiers & Keys.Shift) == 0 && (e.Modifiers & Keys.Alt) == 0)
 								{
 									ClearSelNodes();
 
-									TreeNode tn = this.SelNode;
+									var tn = SelNode;
 									while(tn != null && tn.NextVisibleNode != null)
 									{
 										tn = tn.NextVisibleNode;
@@ -1240,7 +1240,7 @@ namespace SDBees.GuiTools
 								{
 									if((e.Modifiers & Keys.Alt) == 0)
 									{
-										TreeNode tn = this.SelNode;
+										var tn = SelNode;
 										while(tn != null && tn.NextVisibleNode != null)
 										{
 											tn = tn.NextVisibleNode;
@@ -1249,7 +1249,7 @@ namespace SDBees.GuiTools
 									}
 									else
 									{
-										TreeNode tn = this.SelNode;
+										var tn = SelNode;
 
 										if((e.Modifiers & Keys.Shift) != 0)
 										{
@@ -1280,18 +1280,18 @@ namespace SDBees.GuiTools
 					#region PageUp Key
 
 					case Keys.PageUp:
-						if(this.MultiSelect != TreeViewMultiSelect.NoMulti)
+						if(MultiSelect != TreeViewMultiSelect.NoMulti)
 						{
-							if(this.SelNode != null && (e.Modifiers & Keys.Control) == 0)
+							if(SelNode != null && (e.Modifiers & Keys.Control) == 0)
 							{
-								TreeNode tnMax = this.GetNodeAt(0, 0);
-								TreeNode tnTemp = this.SelNode;
+								var tnMax = GetNodeAt(0, 0);
+								var tnTemp = SelNode;
 
 								if((e.Modifiers & Keys.Shift) == 0)
 								{
 									ClearSelNodes();
-									DeselectNode(this.SelNode, true);
-									this.SelNode = null;
+									DeselectNode(SelNode, true);
+									SelNode = null;
 
 									if((e.Modifiers & Keys.Alt) == 0)
 									{
@@ -1299,11 +1299,11 @@ namespace SDBees.GuiTools
 									}
 								}
 
-								if(tnMax != this.SelNode && !bThisSelNodeIsNull)
+								if(tnMax != SelNode && !bThisSelNodeIsNull)
 								{
 									if(tnMax != null)
 									{
-										TreeNode tn = tnTemp;
+										var tn = tnTemp;
 
 										if((e.Modifiers & Keys.Alt) != 0 && (e.Modifiers & Keys.Shift) != 0)
 										{
@@ -1340,9 +1340,9 @@ namespace SDBees.GuiTools
 								}
 								else
 								{
-									TreeNode tn = tnTemp;
-									int iMax = this.ClientRectangle.Height / this.ItemHeight;
-									for(int i = 0; i < iMax; i++)
+									var tn = tnTemp;
+									var iMax = ClientRectangle.Height / ItemHeight;
+									for(var i = 0; i < iMax; i++)
 									{
 										if(tn.PrevVisibleNode != null)
 										{
@@ -1383,18 +1383,18 @@ namespace SDBees.GuiTools
 					#region PageDown Key
 
 					case Keys.PageDown:
-						if(this.MultiSelect != TreeViewMultiSelect.NoMulti)
+						if(MultiSelect != TreeViewMultiSelect.NoMulti)
 						{
-							if(this.SelNode != null && (e.Modifiers & Keys.Control) == 0)
+							if(SelNode != null && (e.Modifiers & Keys.Control) == 0)
 							{
-								TreeNode tnMax = this.GetNodeAt(0, this.ClientRectangle.Height - this.ItemHeight);
-								TreeNode tnTemp = this.SelNode;
+								var tnMax = GetNodeAt(0, ClientRectangle.Height - ItemHeight);
+								var tnTemp = SelNode;
 
 								if((e.Modifiers & Keys.Shift) == 0)
 								{
 									ClearSelNodes();
-									DeselectNode(this.SelNode, true);
-									this.SelNode = null;
+									DeselectNode(SelNode, true);
+									SelNode = null;
 
 									if((e.Modifiers & Keys.Alt) == 0)
 									{
@@ -1406,18 +1406,18 @@ namespace SDBees.GuiTools
 								{
 									SelectNode(tnMax, true);
 
-									tnMax = this.Nodes[this.Nodes.Count - 1];
+									tnMax = Nodes[Nodes.Count - 1];
 									while(tnMax != null && tnMax.NextVisibleNode != null)
 									{
 										tnMax = tnMax.NextVisibleNode;
 									}
 								}
 
-								if(tnMax != this.SelNode && !bThisSelNodeIsNull)
+								if(tnMax != SelNode && !bThisSelNodeIsNull)
 								{
 									if(tnMax != null)
 									{
-										TreeNode tn = tnTemp;
+										var tn = tnTemp;
 
 										if((e.Modifiers & Keys.Alt) != 0 && (e.Modifiers & Keys.Shift) != 0)
 										{
@@ -1454,9 +1454,9 @@ namespace SDBees.GuiTools
 								}
 								else
 								{
-									TreeNode tn = tnTemp;
-									int iMax = this.ClientRectangle.Height / this.ItemHeight;
-									for(int i = 0; i < iMax; i++)
+									var tn = tnTemp;
+									var iMax = ClientRectangle.Height / ItemHeight;
+									for(var i = 0; i < iMax; i++)
 									{
 										if(tn.NextVisibleNode != null)
 										{
@@ -1502,31 +1502,31 @@ namespace SDBees.GuiTools
 					#region A Key
 
 					case Keys.A:
-						if(this.MultiSelect != TreeViewMultiSelect.NoMulti && (e.Modifiers & Keys.Control) != 0)
+						if(MultiSelect != TreeViewMultiSelect.NoMulti && (e.Modifiers & Keys.Control) != 0)
 						{
-							switch(this.MultiSelect)
+							switch(MultiSelect)
 							{
 								case TreeViewMultiSelect.Multi:
-									if((e.Modifiers & Keys.Alt) != 0 && (e.Modifiers & Keys.Shift) != 0 && this.SelNode != null)
+									if((e.Modifiers & Keys.Alt) != 0 && (e.Modifiers & Keys.Shift) != 0 && SelNode != null)
 									{
-										if(this.SelNode.Parent != null)
+										if(SelNode.Parent != null)
 										{
-											SelectBranch(this.SelNode, true, true, false);
+											SelectBranch(SelNode, true, true, false);
 
-											SelectAllParentNodes(this.SelNode, false);
+											SelectAllParentNodes(SelNode, false);
 										}
 										else
 										{
-											SelectBranch(this.SelNode, true, true, false);
+											SelectBranch(SelNode, true, true, false);
 										}
 									}
-									else if((e.Modifiers & Keys.Alt) != 0 && this.SelNode != null)
+									else if((e.Modifiers & Keys.Alt) != 0 && SelNode != null)
 									{
-										if(this.SelNode.Parent != null)
+										if(SelNode.Parent != null)
 										{
-											TreeNode tnTemp = this.SelNode;
+											var tnTemp = SelNode;
 
-											foreach(TreeNode tn in this.SelNode.Parent.Nodes)
+											foreach(TreeNode tn in SelNode.Parent.Nodes)
 											{
 												SelectBranch(tn, true, true, true);
 											}
@@ -1535,9 +1535,9 @@ namespace SDBees.GuiTools
 										}
 										else
 										{
-											TreeNode tnTemp = this.SelNode;
+											var tnTemp = SelNode;
 
-											foreach(TreeNode tn in this.Nodes)
+											foreach(TreeNode tn in Nodes)
 											{
 												SelectBranch(tn, true, true, true);
 											}
@@ -1545,13 +1545,13 @@ namespace SDBees.GuiTools
 											SelectNode(tnTemp, true);
 										}
 									}
-									else if((e.Modifiers & Keys.Shift) != 0 && this.SelNode != null)
+									else if((e.Modifiers & Keys.Shift) != 0 && SelNode != null)
 									{
-										if(this.SelNode.Parent != null)
+										if(SelNode.Parent != null)
 										{
-											TreeNode tnTemp = this.SelNode;
+											var tnTemp = SelNode;
 
-											foreach(TreeNode tn in this.SelNode.Parent.Nodes)
+											foreach(TreeNode tn in SelNode.Parent.Nodes)
 											{
 												SelectNode(tn, true);
 											}
@@ -1560,9 +1560,9 @@ namespace SDBees.GuiTools
 										}
 										else
 										{
-											TreeNode tnTemp = this.SelNode;
+											var tnTemp = SelNode;
 
-											foreach(TreeNode tn in this.Nodes)
+											foreach(TreeNode tn in Nodes)
 											{
 												SelectNode(tn, true);
 											}
@@ -1579,9 +1579,9 @@ namespace SDBees.GuiTools
 									break;
 
 								case TreeViewMultiSelect.MultiSameBranchAndLevel:
-									if(this.SelNode.Parent != null)
+									if(SelNode.Parent != null)
 									{
-										foreach(TreeNode tn in this.SelNode.Parent.Nodes)
+										foreach(TreeNode tn in SelNode.Parent.Nodes)
 										{
 											SelectNode(tn, false);
 										}
@@ -1589,26 +1589,26 @@ namespace SDBees.GuiTools
 									break;
 
 								case TreeViewMultiSelect.MultiSameBranch:
-									if(this.SelNode.Parent != null)
+									if(SelNode.Parent != null)
 									{
 										if((e.Modifiers & Keys.Shift) != 0 && (e.Modifiers & Keys.Alt) != 0)
 										{
-											SelectBranch(this.SelNode, true, true, false);
+											SelectBranch(SelNode, true, true, false);
 
-											SelectAllParentNodes(this.SelNode, false);
+											SelectAllParentNodes(SelNode, false);
 										}
 										else if((e.Modifiers & Keys.Shift) != 0 || (e.Modifiers & Keys.Alt) != 0)
 										{
 											if((e.Modifiers & Keys.Shift) != 0)
 											{
-												foreach(TreeNode tn in this.SelNode.Parent.Nodes)
+												foreach(TreeNode tn in SelNode.Parent.Nodes)
 												{
 													SelectNode(tn, false);
 												}
 											}
 											else if((e.Modifiers & Keys.Alt) != 0)
 											{
-												foreach(TreeNode tn in this.SelNode.Parent.Nodes)
+												foreach(TreeNode tn in SelNode.Parent.Nodes)
 												{
 													SelectBranch(tn, true, true, false);
 												}
@@ -1616,36 +1616,36 @@ namespace SDBees.GuiTools
 										}
 										else
 										{
-											SelectBranch(GetTreeNodeGrandParent(this.SelNode), true, true, false);
+											SelectBranch(GetTreeNodeGrandParent(SelNode), true, true, false);
 										}
 									}
 									else
 									{
 										if((e.Modifiers & Keys.Shift) == 0 || ((e.Modifiers & Keys.Shift) != 0 && (e.Modifiers & Keys.Alt) != 0))
 										{
-											SelectBranch(this.SelNode, true, true, false);
+											SelectBranch(SelNode, true, true, false);
 										}
 									}
 									break;
 
 								case TreeViewMultiSelect.MultiSameLevel:
-									if(this.SelNode.Parent != null)
+									if(SelNode.Parent != null)
 									{
 										if((e.Modifiers & Keys.Shift) != 0)
 										{
-											foreach(TreeNode tn in this.SelNode.Parent.Nodes)
+											foreach(TreeNode tn in SelNode.Parent.Nodes)
 											{
 												SelectNode(tn, false);
 											}
 										}
 										else
 										{
-											SelectAllNodes(GetTreeNodeLevel(this.SelNode), false);
+											SelectAllNodes(GetTreeNodeLevel(SelNode), false);
 										}
 									}
 									else
 									{
-										foreach(TreeNode tn in this.Nodes)
+										foreach(TreeNode tn in Nodes)
 										{
 											SelectNode(tn, false);
 										}
@@ -1654,20 +1654,20 @@ namespace SDBees.GuiTools
 
 								case TreeViewMultiSelect.MultiPathToParents:
 								case TreeViewMultiSelect.MultiPathToParent:
-									if(this.SelNode != null)
+									if(SelNode != null)
 									{
-										SelectAllParentNodes(this.SelNode, false);
+										SelectAllParentNodes(SelNode, false);
 
-										if(this.SelNode.Parent != null)
+										if(SelNode.Parent != null)
 										{
-											foreach(TreeNode tn in this.SelNode.Parent.Nodes)
+											foreach(TreeNode tn in SelNode.Parent.Nodes)
 											{
 												SelectNode(tn, false);
 											}
 										}
-										else if(this.MultiSelect == TreeViewMultiSelect.MultiPathToParents)
+										else if(MultiSelect == TreeViewMultiSelect.MultiPathToParents)
 										{
-											foreach(TreeNode tn in this.Nodes)
+											foreach(TreeNode tn in Nodes)
 											{
 												SelectNode(tn, false);
 											}
@@ -1675,9 +1675,9 @@ namespace SDBees.GuiTools
 									}
 									else
 									{
-										if(this.Nodes.Count > 0)
+										if(Nodes.Count > 0)
 										{
-											SelectBranch(this.Nodes[0], true, true, false);
+											SelectBranch(Nodes[0], true, true, false);
 										}
 									}
 									break;
@@ -1697,19 +1697,19 @@ namespace SDBees.GuiTools
 					#region Escape Key
 
 					case Keys.Escape:
-						if(this.MultiSelect != TreeViewMultiSelect.NoMulti)
+						if(MultiSelect != TreeViewMultiSelect.NoMulti)
 						{
-							if((e.Modifiers & Keys.Shift) != 0 && this.SelNode != null)
+							if((e.Modifiers & Keys.Shift) != 0 && SelNode != null)
 							{
-								if(this.SelNode != null)
+								if(SelNode != null)
 								{
-									if(this.SelNode.Parent != null)
+									if(SelNode.Parent != null)
 									{
-										DeselectBranch(this.SelNode.Parent, true, true);
+										DeselectBranch(SelNode.Parent, true, true);
 									}
 									else
 									{
-										foreach(TreeNode tn in this.Nodes)
+										foreach(TreeNode tn in Nodes)
 										{
 											DeselectBranch(tn, true, true);
 										}
@@ -1718,7 +1718,7 @@ namespace SDBees.GuiTools
 							}
 							else
 							{
-								this.SelNode = null;
+								SelNode = null;
 								ClearSelNodes();
 							}
 						}
@@ -1734,24 +1734,24 @@ namespace SDBees.GuiTools
 					case Keys.Q:
 						if((e.Modifiers & Keys.Control) != 0)
 						{
-							if(this.MultiSelect != TreeViewMultiSelect.NoMulti)
+							if(MultiSelect != TreeViewMultiSelect.NoMulti)
 							{
-								if((e.Modifiers & Keys.Alt) != 0 && this.SelNode != null)
+								if((e.Modifiers & Keys.Alt) != 0 && SelNode != null)
 								{
-									this.SelNode.Collapse();
+									SelNode.Collapse();
 								}
-								else if((e.Modifiers & Keys.Shift) != 0 && this.SelNode != null)
+								else if((e.Modifiers & Keys.Shift) != 0 && SelNode != null)
 								{
-									this.SelNode.Collapse();
+									SelNode.Collapse();
 								}
 								else
 								{
-									this.CollapseAll();
+									CollapseAll();
 								}
 							}
 							else
 							{
-								this.CollapseAll();
+								CollapseAll();
 							}
 						}
 
@@ -1766,24 +1766,24 @@ namespace SDBees.GuiTools
 					case Keys.E:
 						if((e.Modifiers & Keys.Control) != 0)
 						{
-							if(this.MultiSelect != TreeViewMultiSelect.NoMulti)
+							if(MultiSelect != TreeViewMultiSelect.NoMulti)
 							{
-								if((e.Modifiers & Keys.Alt) != 0 && this.SelNode != null)
+								if((e.Modifiers & Keys.Alt) != 0 && SelNode != null)
 								{
-									this.SelNode.ExpandAll();
+									SelNode.ExpandAll();
 								}
-								else if((e.Modifiers & Keys.Shift) != 0 && this.SelNode != null)
+								else if((e.Modifiers & Keys.Shift) != 0 && SelNode != null)
 								{
-									this.SelNode.Expand();
+									SelNode.Expand();
 								}
 								else
 								{
-									this.ExpandAll();
+									ExpandAll();
 								}
 							}
 							else
 							{
-								this.ExpandAll();
+								ExpandAll();
 							}
 						}
 
@@ -1793,7 +1793,7 @@ namespace SDBees.GuiTools
 
 				}
 
-				if(this.MultiSelect != TreeViewMultiSelect.NoMulti)
+				if(MultiSelect != TreeViewMultiSelect.NoMulti)
 				{
 					EnsureSelNodeNotNull();
 				}
@@ -1814,29 +1814,29 @@ namespace SDBees.GuiTools
 		/// Standard OnMouseDown EventHandler.
 		/// </summary>
 		/// <param name="e">Standard MouseEventArgs object.</param>
-		protected override void OnMouseDown(System.Windows.Forms.MouseEventArgs e)
+		protected override void OnMouseDown(MouseEventArgs e)
 		{
-			if(this.MultiSelect != TreeViewMultiSelect.Classic)
+			if(MultiSelect != TreeViewMultiSelect.Classic)
 			{
-				if(this.MultiSelect != TreeViewMultiSelect.NoMulti)
+				if(MultiSelect != TreeViewMultiSelect.NoMulti)
 				{
-					this.SelectedNode = null;
+					SelectedNode = null;
 				}
 
 				if(!bActive)
 				{
-					this.Focus();
+					Focus();
 					ActivateSelNodes();
 					bActive = true;
 				}
 
-				tnMouseDown = this.GetNodeAt(e.X, e.Y);
+				tnMouseDown = GetNodeAt(e.X, e.Y);
 				ptMouseDown = new Point(e.X, e.Y);
 				ptMouseDownOrig = new Point(e.X, e.Y);
 
-				if(tnMouseDown == null && this.Nodes.Count > 0)
+				if(tnMouseDown == null && Nodes.Count > 0)
 				{
-					tnMouseDown = this.Nodes[this.Nodes.Count - 1];
+					tnMouseDown = Nodes[Nodes.Count - 1];
 
 					while(tnMouseDown.NextVisibleNode != null)
 					{
@@ -1844,19 +1844,19 @@ namespace SDBees.GuiTools
 					}
 				}
 
-				TreeNode tn = this.GetNodeAt(e.X, e.Y);
-				TreeNode tnSel = this.SelNode;
+				var tn = GetNodeAt(e.X, e.Y);
+				var tnSel = SelNode;
 
 				if(tn != null)
 				{
-					if(this.MultiSelect != TreeViewMultiSelect.NoMulti)
+					if(MultiSelect != TreeViewMultiSelect.NoMulti)
 					{
 						HighlightNode(tn);
 					}
 
 					if(e.Button == MouseButtons.Left)
 					{
-						if(this.FullRowSelect)
+						if(FullRowSelect)
 						{
 							tnFullRowSelect = tn;
 							bFullRowSelectNodeSelected = IsTreeNodeSelected(tn);
@@ -1874,14 +1874,14 @@ namespace SDBees.GuiTools
 					base.OnMouseDown(e);
 				}
 
-				if(tnSel != this.SelNode)
+				if(tnSel != SelNode)
 				{
 					bLabelEditAllowed = false;
 				}
 
-				if(this.MultiSelect != TreeViewMultiSelect.NoMulti)
+				if(MultiSelect != TreeViewMultiSelect.NoMulti)
 				{
-					this.SelectedNode = this.SelNode;
+					SelectedNode = SelNode;
 				}
 			}
 			else
@@ -1900,22 +1900,22 @@ namespace SDBees.GuiTools
 		/// Standard OnMouseUp EventHandler.
 		/// </summary>
 		/// <param name="e">Standard MouseEventArgs object.</param>
-		protected override void OnMouseUp(System.Windows.Forms.MouseEventArgs e)
+		protected override void OnMouseUp(MouseEventArgs e)
 		{
-			if(this.MultiSelect != TreeViewMultiSelect.Classic)
+			if(MultiSelect != TreeViewMultiSelect.Classic)
 			{
-				TreeNode tn = this.GetNodeAt(e.X, e.Y);
+				var tn = GetNodeAt(e.X, e.Y);
 
 				if(tn != null)
 				{
-					if(!IsTreeNodeSelected(tnMouseDown) || this.MultiSelect == TreeViewMultiSelect.NoMulti)
+					if(!IsTreeNodeSelected(tnMouseDown) || MultiSelect == TreeViewMultiSelect.NoMulti)
 					{
 						LowlightNode(tnMouseDown);
 					}
 
-					if(tn == this.SelNode && bLabelEditAllowed)
+					if(tn == SelNode && bLabelEditAllowed)
 					{
-						if(this.LabelEdit)
+						if(LabelEdit)
 						{
 							tn.BeginEdit();
 						}
@@ -1928,7 +1928,7 @@ namespace SDBees.GuiTools
 
 				if(tnFullRowSelect != null)
 				{
-					if(	this.FullRowSelect &&
+					if(	FullRowSelect &&
 						bFullRowSelectNodeSelected == IsTreeNodeSelected(tnFullRowSelect) &&
 						bFullRowSelectNodeChecked == tnFullRowSelect.Checked &&
 						bFullRowSelectNodeExpanded == tnFullRowSelect.IsExpanded)
@@ -1953,37 +1953,37 @@ namespace SDBees.GuiTools
 		/// Standard OnMouseMove EventHandler.
 		/// </summary>
 		/// <param name="e">Standard MouseEventArgs object.</param>
-		protected override void OnMouseMove(System.Windows.Forms.MouseEventArgs e)
+		protected override void OnMouseMove(MouseEventArgs e)
 		{
-			if(this.MultiSelect != TreeViewMultiSelect.Classic)
+			if(MultiSelect != TreeViewMultiSelect.Classic)
 			{
-				int iMouseDownTreeNodeLevel = GetTreeNodeLevel(tnMouseDown);
+				var iMouseDownTreeNodeLevel = GetTreeNodeLevel(tnMouseDown);
 
-				bool bStartRubberbandPainting = Math.Abs(ptMouseDown.Y - e.Y) > this.ItemHeight;
+				var bStartRubberbandPainting = Math.Abs(ptMouseDown.Y - e.Y) > ItemHeight;
 
-				TreeNode tn = this.GetNodeAt(e.X, e.Y);
+				var tn = GetNodeAt(e.X, e.Y);
 
-				if(this.MultiSelect != TreeViewMultiSelect.NoMulti && this.HotTracking && IsTreeNodeSelected(tn))
+				if(MultiSelect != TreeViewMultiSelect.NoMulti && HotTracking && IsTreeNodeSelected(tn))
 				{
 					bPaintFocusRectAndHottracking = true;
-					this.SelectedNode = tn;
+					SelectedNode = tn;
 					bPaintFocusRectAndHottracking = false;
 				}
 
-				if(this.AllowRubberbandSelect)
+				if(AllowRubberbandSelect)
 				{
 					if(	e.Button == MouseButtons.Left &&
-						this.MultiSelect != TreeViewMultiSelect.NoMulti &&
+						MultiSelect != TreeViewMultiSelect.NoMulti &&
 						(bStartRubberbandPainting || bRubberbandHasBeenPainted || (tn != tnMouseDown && tn != null)) &&
 						IsMouseMoveSelect)
 					{
 						if(tnMouseDown != null && tn != null)
 						{
-							TreeNode tnTemp = tnMouseDown;
+							var tnTemp = tnMouseDown;
 
 							if(tnTemp != tn)
 							{
-								bool bPrevious = false;
+								var bPrevious = false;
 
 								while(tnTemp != null && tnTemp.PrevVisibleNode != null && tnTemp != tn)
 								{
@@ -1998,24 +1998,24 @@ namespace SDBees.GuiTools
 
 								tnTemp = tnMouseDown;
 
-								if((Control.ModifierKeys & Keys.Control) == 0)
+								if((ModifierKeys & Keys.Control) == 0)
 								{
 									if(bPrevious)
 									{
-										this.ClearSelNodes(tn, tnMouseDown);
+										ClearSelNodes(tn, tnMouseDown);
 									}
 									else
 									{
-										this.ClearSelNodes(tnMouseDown, tn);
+										ClearSelNodes(tnMouseDown, tn);
 									}
 								}
 
-								if(	(Control.ModifierKeys & Keys.Alt) != 0 &&
-									this.MultiSelect != TreeViewMultiSelect.MultiSameLevel &&
-									this.MultiSelect != TreeViewMultiSelect.MultiPathToParent &&
-									this.MultiSelect != TreeViewMultiSelect.MultiPathToParents &&
-									this.MultiSelect != TreeViewMultiSelect.SinglePathToParent &&
-									this.MultiSelect != TreeViewMultiSelect.SinglePathToParents)
+								if(	(ModifierKeys & Keys.Alt) != 0 &&
+									MultiSelect != TreeViewMultiSelect.MultiSameLevel &&
+									MultiSelect != TreeViewMultiSelect.MultiPathToParent &&
+									MultiSelect != TreeViewMultiSelect.MultiPathToParents &&
+									MultiSelect != TreeViewMultiSelect.SinglePathToParent &&
+									MultiSelect != TreeViewMultiSelect.SinglePathToParents)
 								{
 									SelectBranch(tnMouseDown, true, true, true);
 								}
@@ -2028,23 +2028,23 @@ namespace SDBees.GuiTools
 								{
 									while(tnTemp.PrevVisibleNode != null && tnTemp != tn)
 									{
-										if(	this.MultiSelect == TreeViewMultiSelect.MultiSameLevel)
+										if(	MultiSelect == TreeViewMultiSelect.MultiSameLevel)
 										{
 											if(iMouseDownTreeNodeLevel == GetTreeNodeLevel(tnTemp.PrevVisibleNode))
 											{
 												SelectNode(tnTemp.PrevVisibleNode, true);
 											}
 										}
-										else if(this.MultiSelect == TreeViewMultiSelect.MultiPathToParent ||
-											this.MultiSelect == TreeViewMultiSelect.MultiPathToParents ||
-											this.MultiSelect == TreeViewMultiSelect.SinglePathToParent ||
-											this.MultiSelect == TreeViewMultiSelect.SinglePathToParents)
+										else if(MultiSelect == TreeViewMultiSelect.MultiPathToParent ||
+											MultiSelect == TreeViewMultiSelect.MultiPathToParents ||
+											MultiSelect == TreeViewMultiSelect.SinglePathToParent ||
+											MultiSelect == TreeViewMultiSelect.SinglePathToParents)
 										{
 											SelectNode(tnTemp.PrevVisibleNode, true);
 										}
 										else
 										{
-											if((Control.ModifierKeys & Keys.Alt) != 0)
+											if((ModifierKeys & Keys.Alt) != 0)
 											{
 												SelectBranch(tnTemp.PrevVisibleNode, true, false, true);
 											}
@@ -2061,23 +2061,23 @@ namespace SDBees.GuiTools
 								{
 									while(tnTemp.NextVisibleNode != null && tnTemp != tn)
 									{
-										if(	this.MultiSelect == TreeViewMultiSelect.MultiSameLevel)
+										if(	MultiSelect == TreeViewMultiSelect.MultiSameLevel)
 										{
 											if(iMouseDownTreeNodeLevel == GetTreeNodeLevel(tnTemp.NextVisibleNode))
 											{
 												SelectNode(tnTemp.NextVisibleNode, true);
 											}
 										}
-										else if(this.MultiSelect == TreeViewMultiSelect.MultiPathToParent ||
-											this.MultiSelect == TreeViewMultiSelect.MultiPathToParents ||
-											this.MultiSelect == TreeViewMultiSelect.SinglePathToParent ||
-											this.MultiSelect == TreeViewMultiSelect.SinglePathToParents)
+										else if(MultiSelect == TreeViewMultiSelect.MultiPathToParent ||
+											MultiSelect == TreeViewMultiSelect.MultiPathToParents ||
+											MultiSelect == TreeViewMultiSelect.SinglePathToParent ||
+											MultiSelect == TreeViewMultiSelect.SinglePathToParents)
 										{
 											SelectNode(tnTemp.NextVisibleNode, true);
 										}
 										else
 										{
-											if((Control.ModifierKeys & Keys.Alt) != 0)
+											if((ModifierKeys & Keys.Alt) != 0)
 											{
 												SelectBranch(tnTemp.NextVisibleNode, true, true, true);
 											}
@@ -2093,29 +2093,29 @@ namespace SDBees.GuiTools
 							}
 							else
 							{
-								if((Control.ModifierKeys & Keys.Control) == 0)
+								if((ModifierKeys & Keys.Control) == 0)
 								{
 									ClearSelNodes();
 								}
 							}
 
-							if(this.MultiSelect == TreeViewMultiSelect.MultiSameLevel)
+							if(MultiSelect == TreeViewMultiSelect.MultiSameLevel)
 							{
 								if(iMouseDownTreeNodeLevel == GetTreeNodeLevel(tn))
 								{
 									SelectNode(tn, true);
 								}
 							}
-							else if(this.MultiSelect == TreeViewMultiSelect.MultiPathToParent ||
-								this.MultiSelect == TreeViewMultiSelect.MultiPathToParents ||
-								this.MultiSelect == TreeViewMultiSelect.SinglePathToParent ||
-								this.MultiSelect == TreeViewMultiSelect.SinglePathToParents)
+							else if(MultiSelect == TreeViewMultiSelect.MultiPathToParent ||
+								MultiSelect == TreeViewMultiSelect.MultiPathToParents ||
+								MultiSelect == TreeViewMultiSelect.SinglePathToParent ||
+								MultiSelect == TreeViewMultiSelect.SinglePathToParents)
 							{
 								SelectNode(tn, true);
 							}
 							else
 							{
-								if((Control.ModifierKeys & Keys.Alt) != 0)
+								if((ModifierKeys & Keys.Alt) != 0)
 								{
 									SelectBranch(tn, true, true, true);
 								}
@@ -2128,54 +2128,54 @@ namespace SDBees.GuiTools
 
 						MoveRubberbandStart();
 
-						Point ptMouseMoveClient = this.PointToClient(ptMouseMoveScreen);
+						var ptMouseMoveClient = PointToClient(ptMouseMoveScreen);
 
 						//The next line is not used because if the Control is scrolled horizontally while the rubberband is painted it is not cleared properly.
 						//Rectangle rctInvalidate1 = new Rectangle(ptMouseDown.X, ptMouseDown.Y, ptMouseMoveClient.X - ptMouseDown.X, ptMouseMoveClient.Y - ptMouseDown.Y);
-						Rectangle rctInvalidate1 = new Rectangle(this.ClientRectangle.Left, ptMouseDown.Y, this.ClientRectangle.Width, ptMouseMoveClient.Y - ptMouseDown.Y);
+						var rctInvalidate1 = new Rectangle(ClientRectangle.Left, ptMouseDown.Y, ClientRectangle.Width, ptMouseMoveClient.Y - ptMouseDown.Y);
 
-						ptMouseDownScreen = this.PointToScreen(ptMouseDown);
-						ptMouseMoveScreen = this.PointToScreen(new Point(e.X, e.Y));
+						ptMouseDownScreen = PointToScreen(ptMouseDown);
+						ptMouseMoveScreen = PointToScreen(new Point(e.X, e.Y));
 
-						Rectangle rctSelection = new Rectangle(ptMouseDownScreen.X, ptMouseDownScreen.Y, ptMouseMoveScreen.X - ptMouseDownScreen.X, ptMouseMoveScreen.Y - ptMouseDownScreen.Y);
+						var rctSelection = new Rectangle(ptMouseDownScreen.X, ptMouseDownScreen.Y, ptMouseMoveScreen.X - ptMouseDownScreen.X, ptMouseMoveScreen.Y - ptMouseDownScreen.Y);
 
 						//The next line is not used because if the Control is scrolled horizontally while the rubberband is painted it is not cleared properly.
 						//Rectangle rctInvalidate2 = new Rectangle(ptMouseDown.X, ptMouseDown.Y, e.X - ptMouseDown.X, e.Y - ptMouseDown.Y);
-						Rectangle rctInvalidate2 = new Rectangle(this.ClientRectangle.Left, ptMouseDown.Y, this.ClientRectangle.Width, e.Y - ptMouseDown.Y);
+						var rctInvalidate2 = new Rectangle(ClientRectangle.Left, ptMouseDown.Y, ClientRectangle.Width, e.Y - ptMouseDown.Y);
 
 						//Two Rectangles need to be Invalidated because the new Rectangle could be bigger than the old one or smaller.
-						this.Invalidate(rctInvalidate1, false);
-						this.Invalidate(rctInvalidate2, false);
-						this.Update();
+						Invalidate(rctInvalidate1, false);
+						Invalidate(rctInvalidate2, false);
+						Update();
 
-						ControlPaint.DrawReversibleFrame(rctSelection, this.BackColor, FrameStyle.Dashed);
+						ControlPaint.DrawReversibleFrame(rctSelection, BackColor, FrameStyle.Dashed);
 						bRubberbandHasBeenPainted = true;
 
 					}
-					else if(e.Button == MouseButtons.Left && this.FullRowSelect)
+					else if(e.Button == MouseButtons.Left && FullRowSelect)
 					{
-						if((Control.ModifierKeys & Keys.Control) == 0)
+						if((ModifierKeys & Keys.Control) == 0)
 						{
-							this.ClearSelNodes(tnMouseDown);
+							ClearSelNodes(tnMouseDown);
 						}
 
-						if(this.MultiSelect == TreeViewMultiSelect.MultiSameLevel)
+						if(MultiSelect == TreeViewMultiSelect.MultiSameLevel)
 						{
 							if(iMouseDownTreeNodeLevel == GetTreeNodeLevel(tnMouseDown))
 							{
 								SelectNode(tnMouseDown, true);
 							}
 						}
-						else if(this.MultiSelect == TreeViewMultiSelect.MultiPathToParent ||
-							this.MultiSelect == TreeViewMultiSelect.MultiPathToParents ||
-							this.MultiSelect == TreeViewMultiSelect.SinglePathToParent ||
-							this.MultiSelect == TreeViewMultiSelect.SinglePathToParents)
+						else if(MultiSelect == TreeViewMultiSelect.MultiPathToParent ||
+							MultiSelect == TreeViewMultiSelect.MultiPathToParents ||
+							MultiSelect == TreeViewMultiSelect.SinglePathToParent ||
+							MultiSelect == TreeViewMultiSelect.SinglePathToParents)
 						{
 							SelectNode(tnMouseDown, true);
 						}
 						else
 						{
-							if((Control.ModifierKeys & Keys.Alt) != 0)
+							if((ModifierKeys & Keys.Alt) != 0)
 							{
 								SelectBranch(tnMouseDown, true, true, true);
 							}
@@ -2187,13 +2187,13 @@ namespace SDBees.GuiTools
 					}
 					else if(bRubberbandHasBeenPainted)
 					{
-						ControlPaint.DrawReversibleFrame(new Rectangle(ptMouseDownScreen.X, ptMouseDownScreen.Y, ptMouseMoveScreen.X - ptMouseDownScreen.X, ptMouseMoveScreen.Y - ptMouseDownScreen.Y), this.BackColor, FrameStyle.Dashed);
+						ControlPaint.DrawReversibleFrame(new Rectangle(ptMouseDownScreen.X, ptMouseDownScreen.Y, ptMouseMoveScreen.X - ptMouseDownScreen.X, ptMouseMoveScreen.Y - ptMouseDownScreen.Y), BackColor, FrameStyle.Dashed);
 						bRubberbandHasBeenPainted = false;
 					}
 				}
 				else if(bRubberbandHasBeenPainted)
 				{
-					ControlPaint.DrawReversibleFrame(new Rectangle(ptMouseDownScreen.X, ptMouseDownScreen.Y, ptMouseMoveScreen.X - ptMouseDownScreen.X, ptMouseMoveScreen.Y - ptMouseDownScreen.Y), this.BackColor, FrameStyle.Dashed);
+					ControlPaint.DrawReversibleFrame(new Rectangle(ptMouseDownScreen.X, ptMouseDownScreen.Y, ptMouseMoveScreen.X - ptMouseDownScreen.X, ptMouseMoveScreen.Y - ptMouseDownScreen.Y), BackColor, FrameStyle.Dashed);
 					bRubberbandHasBeenPainted = false;
 				}
 			}
@@ -2209,19 +2209,19 @@ namespace SDBees.GuiTools
 		/// </summary>
 		private void MoveRubberbandStart()
 		{
-			Graphics g = this.CreateGraphics();
+			var g = CreateGraphics();
 
 			ptMouseDown = ptMouseDownOrig;
-			TreeNode tnOldMouseDown = this.GetNodeAt(ptMouseDown);
+			var tnOldMouseDown = GetNodeAt(ptMouseDown);
 
-			bool bPrev = false;
-			int iY = 0;
+			var bPrev = false;
+			var iY = 0;
 
 			if(tnOldMouseDown != tnMouseDown)
 			{
 				while(tnOldMouseDown != null && tnOldMouseDown.PrevVisibleNode != null)
 				{
-					iY += this.ItemHeight;
+					iY += ItemHeight;
 
 					if(tnOldMouseDown.PrevVisibleNode == tnMouseDown)
 					{
@@ -2235,16 +2235,16 @@ namespace SDBees.GuiTools
 
 				if(!bPrev)
 				{
-					tnOldMouseDown = this.GetNodeAt(ptMouseDown);
+					tnOldMouseDown = GetNodeAt(ptMouseDown);
 					iY = 0;
 
 					while(tnOldMouseDown != null && tnOldMouseDown.NextVisibleNode != null)
 					{
-						iY += this.ItemHeight;
+						iY += ItemHeight;
 
 						if(tnOldMouseDown.NextVisibleNode == tnMouseDown)
 						{
-							ptMouseDown = new Point(ptMouseDown.X, Math.Min(ptMouseDown.Y + iY, this.ClientRectangle.Height));
+							ptMouseDown = new Point(ptMouseDown.X, Math.Min(ptMouseDown.Y + iY, ClientRectangle.Height));
 							break;
 						}
 
@@ -2264,13 +2264,13 @@ namespace SDBees.GuiTools
 		/// Standard OnMouseLeave EventHandler.
 		/// </summary>
 		/// <param name="e">Standard EventArgs object.</param>
-		protected override void OnMouseLeave(System.EventArgs e)
+		protected override void OnMouseLeave(EventArgs e)
 		{
-			if(this.MultiSelect != TreeViewMultiSelect.Classic)
+			if(MultiSelect != TreeViewMultiSelect.Classic)
 			{
 				if(bRubberbandHasBeenPainted)
 				{
-					ControlPaint.DrawReversibleFrame(new Rectangle(ptMouseDownScreen.X, ptMouseDownScreen.Y, ptMouseMoveScreen.X - ptMouseDownScreen.X, ptMouseMoveScreen.Y - ptMouseDownScreen.Y), this.BackColor, FrameStyle.Dashed);
+					ControlPaint.DrawReversibleFrame(new Rectangle(ptMouseDownScreen.X, ptMouseDownScreen.Y, ptMouseMoveScreen.X - ptMouseDownScreen.X, ptMouseMoveScreen.Y - ptMouseDownScreen.Y), BackColor, FrameStyle.Dashed);
 					bRubberbandHasBeenPainted = false;
 				}
 			}
@@ -2309,7 +2309,7 @@ namespace SDBees.GuiTools
 			{
 				if(tvmsMultiSelect != value)
 				{
-					MWCancelEventArgs e = new MWCancelEventArgs(tvmsMultiSelect, value);
+					var e = new MWCancelEventArgs(tvmsMultiSelect, value);
 					OnBeforeMultiSelectChanged(e);
 
 					if(!e.Cancel)
@@ -2318,9 +2318,9 @@ namespace SDBees.GuiTools
 						{
 							tvmsMultiSelect = value;
 
-							this.SelectedNode = this.SelNode;
+							SelectedNode = SelNode;
 
-							this.SelNodeInt = null;
+							SelNodeInt = null;
 
 							ClearSelNodes();
 						}
@@ -2328,9 +2328,9 @@ namespace SDBees.GuiTools
 						{
 							tvmsMultiSelect = value;
 
-							this.SelectedNode = this.SelNode;
+							SelectedNode = SelNode;
 
-							this.SelNodeInt = null;
+							SelNodeInt = null;
 
 							ClearSelNodes();
 						}
@@ -2338,20 +2338,20 @@ namespace SDBees.GuiTools
 						{
 							tvmsMultiSelect = value;
 
-							SelectNode(this.SelectedNode, true);
+							SelectNode(SelectedNode, true);
 
-							this.SelectedNode = null;
+							SelectedNode = null;
 						}
 						else if(value == TreeViewMultiSelect.MultiSameBranchAndLevel && value != tvmsMultiSelect)
 						{
 							tvmsMultiSelect = value;
 
-							TreeNode tnGrandParent = GetTreeNodeGrandParent(this.SelNode);
-							int iLevel = GetTreeNodeLevel(this.SelNode);
+							var tnGrandParent = GetTreeNodeGrandParent(SelNode);
+							var iLevel = GetTreeNodeLevel(SelNode);
 
-							Hashtable ht = new Hashtable();
+							var ht = new Hashtable();
 
-							foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+							foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 							{
 								if(tnGrandParent == GetTreeNodeGrandParent(mwtnw.Node) && iLevel == GetTreeNodeLevel(mwtnw.Node))
 								{
@@ -2359,17 +2359,17 @@ namespace SDBees.GuiTools
 								}
 							}
 
-							this.SelNodes = ht;
+							SelNodes = ht;
 						}
 						else if(value == TreeViewMultiSelect.MultiSameBranch && value != tvmsMultiSelect)
 						{
 							tvmsMultiSelect = value;
 
-							TreeNode tnGrandParent = GetTreeNodeGrandParent(this.SelNode);
+							var tnGrandParent = GetTreeNodeGrandParent(SelNode);
 
-							Hashtable ht = new Hashtable();
+							var ht = new Hashtable();
 
-							foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+							foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 							{
 								if(tnGrandParent == GetTreeNodeGrandParent(mwtnw.Node))
 								{
@@ -2377,17 +2377,17 @@ namespace SDBees.GuiTools
 								}
 							}
 
-							this.SelNodes = ht;
+							SelNodes = ht;
 						}
 						else if(value == TreeViewMultiSelect.MultiSameLevel && value != tvmsMultiSelect)
 						{
 							tvmsMultiSelect = value;
 
-							int iLevel = GetTreeNodeLevel(this.SelNode);
+							var iLevel = GetTreeNodeLevel(SelNode);
 
-							Hashtable ht = new Hashtable();
+							var ht = new Hashtable();
 
-							foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+							foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 							{
 								if(iLevel == GetTreeNodeLevel(mwtnw.Node))
 								{
@@ -2395,21 +2395,21 @@ namespace SDBees.GuiTools
 								}
 							}
 
-							this.SelNodes = ht;
+							SelNodes = ht;
 						}
 						else if(value == TreeViewMultiSelect.MultiPathToParents && value != tvmsMultiSelect ||
 							value == TreeViewMultiSelect.SinglePathToParents && value != tvmsMultiSelect)
 						{
 							tvmsMultiSelect = value;
 
-							ArrayList alTreeNodeGrandParent = new ArrayList();
-							ArrayList alTreeNodeLevel = new ArrayList();
+							var alTreeNodeGrandParent = new ArrayList();
+							var alTreeNodeLevel = new ArrayList();
 
-							foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+							foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 							{
-								TreeNode tnGrandParent = GetTreeNodeGrandParent(mwtnw.Node);
+								var tnGrandParent = GetTreeNodeGrandParent(mwtnw.Node);
 
-								int iIndex = alTreeNodeGrandParent.IndexOf(tnGrandParent);
+								var iIndex = alTreeNodeGrandParent.IndexOf(tnGrandParent);
 
 								if(iIndex == -1)
 								{
@@ -2422,11 +2422,11 @@ namespace SDBees.GuiTools
 								}
 							}
 
-							Hashtable ht = new Hashtable();
+							var ht = new Hashtable();
 
-							for(int i = 0; i < alTreeNodeGrandParent.Count; i++)
+							for(var i = 0; i < alTreeNodeGrandParent.Count; i++)
 							{
-								foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+								foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 								{
 									if(	(int)alTreeNodeLevel[i] == GetTreeNodeLevel(mwtnw.Node) &&
 										alTreeNodeGrandParent[i] == GetTreeNodeGrandParent(mwtnw.Node) &&
@@ -2442,16 +2442,16 @@ namespace SDBees.GuiTools
 								}
 							}
 
-							this.SelNodes = ht;
+							SelNodes = ht;
 
-							ArrayList al = new ArrayList();
+							var al = new ArrayList();
 
-							foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+							foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 							{
 								al.Add(mwtnw.Node);
 							}
 
-							for(int i = 0; i < al.Count; i++)
+							for(var i = 0; i < al.Count; i++)
 							{
 								SelectNode(al[i] as TreeNode, false);
 							}
@@ -2460,13 +2460,13 @@ namespace SDBees.GuiTools
 						{
 							tvmsMultiSelect = value;
 
-							TreeNode tnGrandParent = GetTreeNodeGrandParent(this.SelNode);
+							var tnGrandParent = GetTreeNodeGrandParent(SelNode);
 
-							int iSelNodeLevel = GetTreeNodeLevel(this.SelNode);
+							var iSelNodeLevel = GetTreeNodeLevel(SelNode);
 
-							Hashtable ht = new Hashtable();
+							var ht = new Hashtable();
 
-							foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+							foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 							{
 								if(tnGrandParent == GetTreeNodeGrandParent(mwtnw.Node) && iSelNodeLevel == GetTreeNodeLevel(mwtnw.Node))
 								{
@@ -2474,16 +2474,16 @@ namespace SDBees.GuiTools
 								}
 							}
 
-							this.SelNodes = ht;
+							SelNodes = ht;
 
-							ArrayList al = new ArrayList();
+							var al = new ArrayList();
 
-							foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+							foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 							{
 								al.Add(mwtnw.Node);
 							}
 
-							for(int i = 0; i < al.Count; i++)
+							for(var i = 0; i < al.Count; i++)
 							{
 								SelectNode(al[i] as TreeNode, true);
 							}
@@ -2492,7 +2492,7 @@ namespace SDBees.GuiTools
 						{
 							tvmsMultiSelect = value;
 
-							TreeNode tn = this.SelNode;
+							var tn = SelNode;
 
 							ClearSelNodes();
 
@@ -2503,11 +2503,11 @@ namespace SDBees.GuiTools
 							tvmsMultiSelect = value;
 						}
 
-						if(!IsTreeNodeSelected(this.SelNode))
+						if(!IsTreeNodeSelected(SelNode))
 						{
-							this.SelNode = null;
+							SelNode = null;
 
-							foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+							foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 							{
 								SelectNode(mwtnw.Node, true);
 								break;
@@ -2589,7 +2589,7 @@ namespace SDBees.GuiTools
 			{
 				if(bAllowMultiCheck != value)
 				{
-					MWCancelEventArgs e = new MWCancelEventArgs(bAllowMultiCheck, value);
+					var e = new MWCancelEventArgs(bAllowMultiCheck, value);
 					OnBeforeAllowMultiCheckChanged(e);
 
 					if(!e.Cancel)
@@ -2600,16 +2600,16 @@ namespace SDBees.GuiTools
 
 							TreeNode tn = null;
 
-							if(this.CheckedNodes != null)
+							if(CheckedNodes != null)
 							{
-								foreach(TreeNode tn2 in this.CheckedNodes.Values)
+								foreach(TreeNode tn2 in CheckedNodes.Values)
 								{
 									tn = tn2;
 									break;
 								}
 							}
 
-							this.ClearCheckedNodes();
+							ClearCheckedNodes();
 
 							if(tn != null)
 							{
@@ -2697,14 +2697,14 @@ namespace SDBees.GuiTools
 			{
 				if(bAllowNoSelNode != value)
 				{
-					MWCancelEventArgs e = new MWCancelEventArgs(bAllowNoSelNode, value);
+					var e = new MWCancelEventArgs(bAllowNoSelNode, value);
 					OnBeforeAllowNoSelNodeChanged(e);
 
 					if(!e.Cancel)
 					{
 						bAllowNoSelNode = value;
 
-						if(this.MultiSelect != TreeViewMultiSelect.NoMulti)
+						if(MultiSelect != TreeViewMultiSelect.NoMulti)
 						{
 							if(!bAllowNoSelNode)
 							{
@@ -2788,7 +2788,7 @@ namespace SDBees.GuiTools
 			{
 				if(bAllowBlankNodeText != value)
 				{
-					MWCancelEventArgs e = new MWCancelEventArgs(bAllowBlankNodeText, value);
+					var e = new MWCancelEventArgs(bAllowBlankNodeText, value);
 					OnBeforeAllowBlankNodeTextChanged(e);
 
 					if(!e.Cancel)
@@ -2871,21 +2871,21 @@ namespace SDBees.GuiTools
 			{
 				if(htSelNodes != value)
 				{
-					MWCancelEventArgs e = new MWCancelEventArgs(htSelNodes, value);
+					var e = new MWCancelEventArgs(htSelNodes, value);
 					OnBeforeSelNodesChanged(e);
 
 					if(!e.Cancel)
 					{
 						if(value == null)
 						{
-							this.SelNode = null;
+							SelNode = null;
 
-							if(this.SelNodes == null)
+							if(SelNodes == null)
 							{
 								htSelNodes = new Hashtable();
 							}
 
-							foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+							foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 							{
 								MWTreeNodeWrapper.Deselect(mwtnw);
 								LowlightNode(mwtnw.Node);
@@ -2895,7 +2895,7 @@ namespace SDBees.GuiTools
 						}
 						else
 						{
-							if(this.SelNodes == null)
+							if(SelNodes == null)
 							{
 								htSelNodes = new Hashtable();
 							}
@@ -2921,9 +2921,9 @@ namespace SDBees.GuiTools
 							}
 						}
 
-						if(this.SelNode != null && !value.Contains(this.SelNode.GetHashCode()))
+						if(SelNode != null && !value.Contains(SelNode.GetHashCode()))
 						{
-							this.SelNode = null;
+							SelNode = null;
 						}
 
 						ActivateOrDeactivateSelNodes();
@@ -3041,7 +3041,7 @@ namespace SDBees.GuiTools
 			{
 				if(tnSelNode != value)
 				{
-					MWCancelEventArgs e = new MWCancelEventArgs(tnSelNode, value);
+					var e = new MWCancelEventArgs(tnSelNode, value);
 					OnBeforeSelNodeChanged(e);
 
 					if(!e.Cancel)
@@ -3059,12 +3059,12 @@ namespace SDBees.GuiTools
 						{
 							tnSelNode = value;
 
-							if(	(Control.MouseButtons & MouseButtons.Left) == 0 &&
-								this.MultiSelect != TreeViewMultiSelect.NoMulti &&
-								this.MultiSelect != TreeViewMultiSelect.Classic)
+							if(	(MouseButtons & MouseButtons.Left) == 0 &&
+								MultiSelect != TreeViewMultiSelect.NoMulti &&
+								MultiSelect != TreeViewMultiSelect.Classic)
 							{
 								bPaintFocusRectAndHottracking = true;
-								this.SelectedNode = value;
+								SelectedNode = value;
 								bPaintFocusRectAndHottracking = false;
 							}
 						}
@@ -3074,12 +3074,12 @@ namespace SDBees.GuiTools
 				}
 				else if(value == null || IsSelectNodeRegExSatisfied(value.Text))
 				{
-					if(	(Control.MouseButtons & MouseButtons.Left) == 0 &&
-						this.MultiSelect != TreeViewMultiSelect.NoMulti &&
-						this.MultiSelect != TreeViewMultiSelect.Classic)
+					if(	(MouseButtons & MouseButtons.Left) == 0 &&
+						MultiSelect != TreeViewMultiSelect.NoMulti &&
+						MultiSelect != TreeViewMultiSelect.Classic)
 					{
 						bPaintFocusRectAndHottracking = true;
-						this.SelectedNode = value;
+						SelectedNode = value;
 						bPaintFocusRectAndHottracking = false;
 					}
 
@@ -3157,19 +3157,19 @@ namespace SDBees.GuiTools
 			{
 				if(htCheckedNodes != value)
 				{
-					MWCancelEventArgs e = new MWCancelEventArgs(htCheckedNodes, value);
+					var e = new MWCancelEventArgs(htCheckedNodes, value);
 					OnBeforeCheckedNodesChanged(e);
 
 					if(!e.Cancel)
 					{
 						if(value == null)
 						{
-							if(this.CheckedNodes == null)
+							if(CheckedNodes == null)
 							{
 								htCheckedNodes = new Hashtable();
 							}
 
-							foreach(TreeNode tn in this.CheckedNodes.Values)
+							foreach(TreeNode tn in CheckedNodes.Values)
 							{
 								bForceCheckNode = true;
 								tn.Checked = false;
@@ -3180,12 +3180,12 @@ namespace SDBees.GuiTools
 						}
 						else
 						{
-							if(this.CheckedNodes == null)
+							if(CheckedNodes == null)
 							{
 								htCheckedNodes = new Hashtable();
 							}
 
-							foreach(TreeNode tn in this.CheckedNodes.Values)
+							foreach(TreeNode tn in CheckedNodes.Values)
 							{
 								bForceCheckNode = true;
 								tn.Checked = false;
@@ -3279,25 +3279,25 @@ namespace SDBees.GuiTools
 			{
 				if(bScrollToSelNode != value)
 				{
-					MWCancelEventArgs e = new MWCancelEventArgs(bScrollToSelNode, value);
+					var e = new MWCancelEventArgs(bScrollToSelNode, value);
 					OnBeforeScrollToSelNodeChanged(e);
 
 					if(!e.Cancel)
 					{
 						if(bScrollToSelNode != value && value)
 						{
-							if(this.MultiSelect == TreeViewMultiSelect.NoMulti)
+							if(MultiSelect == TreeViewMultiSelect.NoMulti)
 							{
-								if(this.SelectedNode != null)
+								if(SelectedNode != null)
 								{
-									this.SelectedNode.EnsureVisible();
+									SelectedNode.EnsureVisible();
 								}
 							}
 							else
 							{
-								if(this.SelNode != null)
+								if(SelNode != null)
 								{
-									this.SelNode.EnsureVisible();
+									SelNode.EnsureVisible();
 								}
 							}
 						}
@@ -3379,7 +3379,7 @@ namespace SDBees.GuiTools
 			{
 				if(bAllowRubberbandSelect != value)
 				{
-					MWCancelEventArgs e = new MWCancelEventArgs(bAllowRubberbandSelect, value);
+					var e = new MWCancelEventArgs(bAllowRubberbandSelect, value);
 					OnBeforeAllowRubberbandSelectChanged(e);
 
 					if(!e.Cancel)
@@ -3461,7 +3461,7 @@ namespace SDBees.GuiTools
 			{
 				if(strLabelEditRegEx != value)
 				{
-					MWCancelEventArgs e = new MWCancelEventArgs(strLabelEditRegEx, value);
+					var e = new MWCancelEventArgs(strLabelEditRegEx, value);
 					OnBeforeLabelEditRegExChanged(e);
 
 					if(!e.Cancel)
@@ -3543,7 +3543,7 @@ namespace SDBees.GuiTools
 			{
 				if(strDisallowLabelEditRegEx != value)
 				{
-					MWCancelEventArgs e = new MWCancelEventArgs(strDisallowLabelEditRegEx, value);
+					var e = new MWCancelEventArgs(strDisallowLabelEditRegEx, value);
 					OnBeforeDisallowLabelEditRegExChanged(e);
 
 					if(!e.Cancel)
@@ -3626,7 +3626,7 @@ namespace SDBees.GuiTools
 			{
 				if(strSelectNodeRegEx != value)
 				{
-					MWCancelEventArgs e = new MWCancelEventArgs(strSelectNodeRegEx, value);
+					var e = new MWCancelEventArgs(strSelectNodeRegEx, value);
 					OnBeforeSelectNodeRegExChanged(e);
 
 					if(!e.Cancel)
@@ -3711,7 +3711,7 @@ namespace SDBees.GuiTools
 			{
 				if(strCheckNodeRegEx != value)
 				{
-					MWCancelEventArgs e = new MWCancelEventArgs(strCheckNodeRegEx, value);
+					var e = new MWCancelEventArgs(strCheckNodeRegEx, value);
 					OnBeforeCheckNodeRegExChanged(e);
 
 					if(!e.Cancel)
@@ -3788,22 +3788,22 @@ namespace SDBees.GuiTools
 		/// <returns>True if supplied TreeNode is selected or false otherwise.</returns>
 		public bool IsTreeNodeSelected(TreeNode tn)
 		{
-			bool bRetVal = false;
+			var bRetVal = false;
 
 			if(tn != null)
 			{
-				if(this.MultiSelect == TreeViewMultiSelect.NoMulti)
+				if(MultiSelect == TreeViewMultiSelect.NoMulti)
 				{
-					if(this.SelectedNode == tn)
+					if(SelectedNode == tn)
 					{
 						bRetVal = true;
 					}
 				}
 				else
 				{
-					if(this.SelNodes != null)
+					if(SelNodes != null)
 					{
-						if(this.SelNodes.Contains(tn.GetHashCode()))
+						if(SelNodes.Contains(tn.GetHashCode()))
 						{
 							bRetVal = true;
 						}
@@ -3827,13 +3827,13 @@ namespace SDBees.GuiTools
 		/// <returns>True if any Child TreeNode of the supplied TreeNode is selected or false otherwise.</returns>
 		public bool IsAnyChildTreeNodeSelected(TreeNode tn)
 		{
-			bool bRetVal = false;
-			int iLevel = GetTreeNodeLevel(tn);
-			TreeNode tnGrandParent = GetTreeNodeGrandParent(tn);
+			var bRetVal = false;
+			var iLevel = GetTreeNodeLevel(tn);
+			var tnGrandParent = GetTreeNodeGrandParent(tn);
 
-			foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+			foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 			{
-				int iLvl = GetTreeNodeLevel(mwtnw.Node);
+				var iLvl = GetTreeNodeLevel(mwtnw.Node);
 				if(mwtnw.Node != tn && GetTreeNodeGrandParent(mwtnw.Node) == tnGrandParent && GetTreeNodeLevel(mwtnw.Node) > iLevel)
 				{
 					bRetVal = true;
@@ -3858,13 +3858,13 @@ namespace SDBees.GuiTools
 		/// <returns>True if supplied TreeNode is checked or false otherwise.</returns>
 		public bool IsTreeNodeChecked(TreeNode tn)
 		{
-			bool bRetVal = false;
+			var bRetVal = false;
 
 			if(tn != null)
 			{
-				if(this.CheckedNodes != null)
+				if(CheckedNodes != null)
 				{
-					if(this.CheckedNodes.Contains(tn.GetHashCode()))
+					if(CheckedNodes.Contains(tn.GetHashCode()))
 					{
 						bRetVal = true;
 					}
@@ -3888,17 +3888,17 @@ namespace SDBees.GuiTools
 		/// <returns>True if SelNode is not null or if it was changed or false otherwise.</returns>
 		public bool EnsureSelNodeNotNull()
 		{
-			bool bRetVal = false;
+			var bRetVal = false;
 
-			if(this.SelNode == null)
+			if(SelNode == null)
 			{
-				if(this.SelNodes != null)
+				if(SelNodes != null)
 				{
-					if(this.SelNodes.Count > 0)
+					if(SelNodes.Count > 0)
 					{
-						if(this.SelNode == null)
+						if(SelNode == null)
 						{
-							foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+							foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 							{
 								bRetVal = true;
 								SelectNode(mwtnw.Node, true);
@@ -3906,10 +3906,10 @@ namespace SDBees.GuiTools
 							}
 						}
 					}
-					else if(this.Nodes.Count > 0 && !this.AllowNoSelNode)
+					else if(Nodes.Count > 0 && !AllowNoSelNode)
 					{
 						bRetVal = true;
-						SelectNode(this.Nodes[0], true);
+						SelectNode(Nodes[0], true);
 					}
 				}
 			}
@@ -3962,9 +3962,9 @@ namespace SDBees.GuiTools
 					tn.BackColor = SystemColors.Control;
 				}
 
-				if(tn.ForeColor != this.ForeColor)
+				if(tn.ForeColor != ForeColor)
 				{
-					tn.ForeColor = this.ForeColor;
+					tn.ForeColor = ForeColor;
 				}
 			}
 		}
@@ -3975,14 +3975,14 @@ namespace SDBees.GuiTools
 		/// <param name="tn">TreeNode to remove highlight from.</param>
 		public void LowlightNode(TreeNode tn)
 		{
-			if(tn.BackColor != this.BackColor)
+			if(tn.BackColor != BackColor)
 			{
-				tn.BackColor = this.BackColor;
+				tn.BackColor = BackColor;
 			}
 
-			if(tn.ForeColor != this.ForeColor)
+			if(tn.ForeColor != ForeColor)
 			{
-				tn.ForeColor = this.ForeColor;
+				tn.ForeColor = ForeColor;
 			}
 		}
 
@@ -4001,32 +4001,32 @@ namespace SDBees.GuiTools
 		/// <returns>True if the SelNode property was changed to the TreeNode supplied (even if the SelNode property was already set to the TreeNode supplied before this method was called).</returns>
 		public bool SelectNode(TreeNode tn, bool bChangeSelNode)
 		{
-			bool bRetVal = false;
+			var bRetVal = false;
 
 			if(tn != null)
 			{
-				switch(this.MultiSelect)
+				switch(MultiSelect)
 				{
 					case TreeViewMultiSelect.NoMulti:
-						if(this.SelNodes.Count > 1)
+						if(SelNodes.Count > 1)
 						{
 							ClearSelNodes();
 						}
 
-						this.SelectedNode = tn;
+						SelectedNode = tn;
 
-						this.SelNodeInt = this.SelectedNode;
+						SelNodeInt = SelectedNode;
 						break;
 
 					case TreeViewMultiSelect.Multi:
 						if(!IsTreeNodeSelected(tn) && IsSelectNodeRegExSatisfied(tn.Text))
 						{
-							if(this.SelNodes == null)
+							if(SelNodes == null)
 							{
-								this.SelNodes = new Hashtable();
+								SelNodes = new Hashtable();
 							}
 
-							this.SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
+							SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
 
 							HighlightNode(tn);
 						}
@@ -4038,12 +4038,12 @@ namespace SDBees.GuiTools
 						break;
 
 					case TreeViewMultiSelect.MultiSameBranchAndLevel:
-						if(this.SelNodes != null && this.SelNodes.Count > 0)
+						if(SelNodes != null && SelNodes.Count > 0)
 						{
 							TreeNode tnGrandParentSelNodes = null;
-							int iLevel = 0;
+							var iLevel = 0;
 
-							foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+							foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 							{
 								tnGrandParentSelNodes = GetTreeNodeGrandParent(mwtnw.Node);
 								iLevel = GetTreeNodeLevel(mwtnw.Node);
@@ -4054,7 +4054,7 @@ namespace SDBees.GuiTools
 							{
 								if(!IsTreeNodeSelected(tn) && IsSelectNodeRegExSatisfied(tn.Text))
 								{
-									this.SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
+									SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
 
 									HighlightNode(tn);
 								}
@@ -4063,19 +4063,19 @@ namespace SDBees.GuiTools
 							{
 								ClearSelNodes();
 
-								this.SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
+								SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
 
 								HighlightNode(tn);
 							}
 						}
 						else if(IsSelectNodeRegExSatisfied(tn.Text))
 						{
-							if(this.SelNodes == null)
+							if(SelNodes == null)
 							{
-								this.SelNodes = new Hashtable();
+								SelNodes = new Hashtable();
 							}
 
-							this.SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
+							SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
 
 							HighlightNode(tn);
 						}
@@ -4087,11 +4087,11 @@ namespace SDBees.GuiTools
 						break;
 
 					case TreeViewMultiSelect.MultiSameBranch:
-						if(this.SelNodes != null && this.SelNodes.Count > 0)
+						if(SelNodes != null && SelNodes.Count > 0)
 						{
 							TreeNode tnGrandParentSelNodes = null;
 
-							foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+							foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 							{
 								tnGrandParentSelNodes = GetTreeNodeGrandParent(mwtnw.Node);
 								break;
@@ -4101,7 +4101,7 @@ namespace SDBees.GuiTools
 							{
 								if(!IsTreeNodeSelected(tn) && IsSelectNodeRegExSatisfied(tn.Text))
 								{
-									this.SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
+									SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
 
 									HighlightNode(tn);
 								}
@@ -4110,19 +4110,19 @@ namespace SDBees.GuiTools
 							{
 								ClearSelNodes();
 
-								this.SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
+								SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
 
 								HighlightNode(tn);
 							}
 						}
 						else if(IsSelectNodeRegExSatisfied(tn.Text))
 						{
-							if(this.SelNodes == null)
+							if(SelNodes == null)
 							{
-								this.SelNodes = new Hashtable();
+								SelNodes = new Hashtable();
 							}
 
-							this.SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
+							SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
 
 							HighlightNode(tn);
 						}
@@ -4134,11 +4134,11 @@ namespace SDBees.GuiTools
 						break;
 
 					case TreeViewMultiSelect.MultiSameLevel:
-						if(this.SelNodes != null && this.SelNodes.Count > 0)
+						if(SelNodes != null && SelNodes.Count > 0)
 						{
-							int iLevel = 0;
+							var iLevel = 0;
 
-							foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+							foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 							{
 								iLevel = GetTreeNodeLevel(mwtnw.Node);
 								break;
@@ -4148,7 +4148,7 @@ namespace SDBees.GuiTools
 							{
 								if(!IsTreeNodeSelected(tn) && IsSelectNodeRegExSatisfied(tn.Text))
 								{
-									this.SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
+									SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
 
 									HighlightNode(tn);
 								}
@@ -4157,19 +4157,19 @@ namespace SDBees.GuiTools
 							{
 								ClearSelNodes();
 
-								this.SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
+								SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
 
 								HighlightNode(tn);
 							}
 						}
 						else if(IsSelectNodeRegExSatisfied(tn.Text))
 						{
-							if(this.SelNodes == null)
+							if(SelNodes == null)
 							{
-								this.SelNodes = new Hashtable();
+								SelNodes = new Hashtable();
 							}
 
-							this.SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
+							SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
 
 							HighlightNode(tn);
 						}
@@ -4182,53 +4182,53 @@ namespace SDBees.GuiTools
 
 					case TreeViewMultiSelect.MultiPathToParents:
 					case TreeViewMultiSelect.MultiPathToParent:
-						if(this.SelNodes != null && this.SelNodes.Count > 0)
+						if(SelNodes != null && SelNodes.Count > 0)
 						{
 							TreeNode tnGrandParentSelNodes = null;
 
-							foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+							foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 							{
 								tnGrandParentSelNodes = GetTreeNodeGrandParent(mwtnw.Node);
 								break;
 							}
 
-							if(GetTreeNodeGrandParent(tn) == tnGrandParentSelNodes || this.MultiSelect == TreeViewMultiSelect.MultiPathToParents)
+							if(GetTreeNodeGrandParent(tn) == tnGrandParentSelNodes || MultiSelect == TreeViewMultiSelect.MultiPathToParents)
 							{
 								if(!IsTreeNodeSelected(tn))
 								{
-									int iTNLevel = GetTreeNodeLevel(tn);
-									TreeNode tnTNGrandParent = GetTreeNodeGrandParent(tn);
+									var iTNLevel = GetTreeNodeLevel(tn);
+									var tnTNGrandParent = GetTreeNodeGrandParent(tn);
 
-									int iMaxLevel = 0;
-									foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+									var iMaxLevel = 0;
+									foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 									{
 										iMaxLevel = Math.Max(iMaxLevel, GetTreeNodeLevel(mwtnw.Node));
 									}
 
 									if(iMaxLevel < iTNLevel)
 									{
-										if(this.MultiSelect == TreeViewMultiSelect.MultiPathToParent)
+										if(MultiSelect == TreeViewMultiSelect.MultiPathToParent)
 										{
 											ClearSelNodes();
 										}
-										else if(this.MultiSelect == TreeViewMultiSelect.MultiPathToParents)
+										else if(MultiSelect == TreeViewMultiSelect.MultiPathToParents)
 										{
 											DeselectBranch(tnTNGrandParent, true, false);
 										}
 									}
 									else
 									{
-										foreach(TreeNode tnRoot in this.Nodes)
+										foreach(TreeNode tnRoot in Nodes)
 										{
 											if(GetTreeNodeGrandParent(tn) == tnRoot)
 											{
-												ArrayList al = new ArrayList();
+												var al = new ArrayList();
 
-												foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+												foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 												{
 													if(tnRoot == GetTreeNodeGrandParent(mwtnw.Node))
 													{
-														int iLevel = GetTreeNodeLevel(mwtnw.Node);
+														var iLevel = GetTreeNodeLevel(mwtnw.Node);
 
 														if(iLevel > iTNLevel)
 														{
@@ -4237,7 +4237,7 @@ namespace SDBees.GuiTools
 													}
 												}
 
-												for(int i = 0; i < al.Count; i++)
+												for(var i = 0; i < al.Count; i++)
 												{
 													DeselectNode(al[i] as TreeNode, false);
 												}
@@ -4247,16 +4247,16 @@ namespace SDBees.GuiTools
 
 									if(IsSelectNodeRegExSatisfied(tn.Text))
 									{
-										this.SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
+										SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
 
 										HighlightNode(tn);
 
-										TreeNode tnTemp = tn;
+										var tnTemp = tn;
 										while(tnTemp.Parent != null)
 										{
 											if(!IsTreeNodeSelected(tnTemp.Parent))
 											{
-												this.SelNodes.Add(tnTemp.Parent.GetHashCode(), new MWTreeNodeWrapper(tnTemp.Parent));
+												SelNodes.Add(tnTemp.Parent.GetHashCode(), new MWTreeNodeWrapper(tnTemp.Parent));
 											}
 
 											HighlightNode(tnTemp.Parent);
@@ -4267,14 +4267,14 @@ namespace SDBees.GuiTools
 								}
 								else
 								{
-									TreeNode tnTemp = tn;
+									var tnTemp = tn;
 									while(tnTemp.Parent != null)
 									{
 										if(IsSelectNodeRegExSatisfied(tn.Text))
 										{
 											if(!IsTreeNodeSelected(tnTemp.Parent))
 											{
-												this.SelNodes.Add(tnTemp.Parent.GetHashCode(), new MWTreeNodeWrapper(tnTemp.Parent));
+												SelNodes.Add(tnTemp.Parent.GetHashCode(), new MWTreeNodeWrapper(tnTemp.Parent));
 											}
 
 											HighlightNode(tnTemp.Parent);
@@ -4288,16 +4288,16 @@ namespace SDBees.GuiTools
 							{
 								ClearSelNodes();
 
-								this.SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
+								SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
 
 								HighlightNode(tn);
 
-								TreeNode tnTemp = tn;
+								var tnTemp = tn;
 								while(tnTemp.Parent != null)
 								{
 									if(!IsTreeNodeSelected(tnTemp.Parent))
 									{
-										this.SelNodes.Add(tnTemp.Parent.GetHashCode(), new MWTreeNodeWrapper(tnTemp.Parent));
+										SelNodes.Add(tnTemp.Parent.GetHashCode(), new MWTreeNodeWrapper(tnTemp.Parent));
 									}
 
 									HighlightNode(tnTemp.Parent);
@@ -4308,21 +4308,21 @@ namespace SDBees.GuiTools
 						}
 						else if(IsSelectNodeRegExSatisfied(tn.Text))
 						{
-							if(this.SelNodes == null)
+							if(SelNodes == null)
 							{
-								this.SelNodes = new Hashtable();
+								SelNodes = new Hashtable();
 							}
 
-							this.SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
+							SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
 
 							HighlightNode(tn);
 
-							TreeNode tnTemp = tn;
+							var tnTemp = tn;
 							while(tnTemp.Parent != null)
 							{
 								if(!IsTreeNodeSelected(tnTemp.Parent))
 								{
-									this.SelNodes.Add(tnTemp.Parent.GetHashCode(), new MWTreeNodeWrapper(tnTemp.Parent));
+									SelNodes.Add(tnTemp.Parent.GetHashCode(), new MWTreeNodeWrapper(tnTemp.Parent));
 								}
 
 								HighlightNode(tnTemp.Parent);
@@ -4342,21 +4342,21 @@ namespace SDBees.GuiTools
 						{
 							ClearSelNodes();
 
-							if(this.SelNodes == null)
+							if(SelNodes == null)
 							{
-								this.SelNodes = new Hashtable();
+								SelNodes = new Hashtable();
 							}
 
-							this.SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
+							SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
 
 							HighlightNode(tn);
 
-							TreeNode tnTemp = tn;
+							var tnTemp = tn;
 							while(tnTemp.Parent != null)
 							{
 								if(!IsTreeNodeSelected(tnTemp.Parent))
 								{
-									this.SelNodes.Add(tnTemp.Parent.GetHashCode(), new MWTreeNodeWrapper(tnTemp.Parent));
+									SelNodes.Add(tnTemp.Parent.GetHashCode(), new MWTreeNodeWrapper(tnTemp.Parent));
 								}
 
 								HighlightNode(tnTemp.Parent);
@@ -4372,12 +4372,12 @@ namespace SDBees.GuiTools
 						break;
 
 					case TreeViewMultiSelect.SinglePathToParents:
-						if(this.SelNodes != null && this.SelNodes.Count > 0)
+						if(SelNodes != null && SelNodes.Count > 0)
 						{
-							int iTNLevel = GetTreeNodeLevel(tn);
-							TreeNode tnTNGrandParent = GetTreeNodeGrandParent(tn);
+							var iTNLevel = GetTreeNodeLevel(tn);
+							var tnTNGrandParent = GetTreeNodeGrandParent(tn);
 
-							foreach(TreeNode tnRoot in this.Nodes)
+							foreach(TreeNode tnRoot in Nodes)
 							{
 								if(GetTreeNodeGrandParent(tn) == tnRoot)
 								{
@@ -4387,17 +4387,17 @@ namespace SDBees.GuiTools
 
 										if(!IsTreeNodeSelected(tn))
 										{
-											this.SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
+											SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
 										}
 
 										HighlightNode(tn);
 
-										TreeNode tnTemp = tn;
+										var tnTemp = tn;
 										while(tnTemp.Parent != null)
 										{
 											if(!IsTreeNodeSelected(tnTemp.Parent))
 											{
-												this.SelNodes.Add(tnTemp.Parent.GetHashCode(), new MWTreeNodeWrapper(tnTemp.Parent));
+												SelNodes.Add(tnTemp.Parent.GetHashCode(), new MWTreeNodeWrapper(tnTemp.Parent));
 											}
 
 											HighlightNode(tnTemp.Parent);
@@ -4416,24 +4416,24 @@ namespace SDBees.GuiTools
 							{
 								ClearSelNodes();
 
-								if(this.SelNodes == null)
+								if(SelNodes == null)
 								{
-									this.SelNodes = new Hashtable();
+									SelNodes = new Hashtable();
 								}
 
 								if(!IsTreeNodeSelected(tn))
 								{
-									this.SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
+									SelNodes.Add(tn.GetHashCode(), new MWTreeNodeWrapper(tn));
 								}
 
 								HighlightNode(tn);
 
-								TreeNode tnTemp = tn;
+								var tnTemp = tn;
 								while(tnTemp.Parent != null)
 								{
 									if(!IsTreeNodeSelected(tnTemp.Parent))
 									{
-										this.SelNodes.Add(tnTemp.Parent.GetHashCode(), new MWTreeNodeWrapper(tnTemp.Parent));
+										SelNodes.Add(tnTemp.Parent.GetHashCode(), new MWTreeNodeWrapper(tnTemp.Parent));
 									}
 
 									HighlightNode(tnTemp.Parent);
@@ -4454,7 +4454,7 @@ namespace SDBees.GuiTools
 						break;
 				}
 
-				if(this.SelNode == tn)
+				if(SelNode == tn)
 				{
 					bRetVal = true;
 				}
@@ -4469,9 +4469,9 @@ namespace SDBees.GuiTools
 		/// <param name="tn">TreeNode to change SelNode into.</param>
 		private void ChangeSelNode(TreeNode tn)
 		{
-			this.SelNodeInt = tn;
+			SelNodeInt = tn;
 
-			if(this.ScrollToSelNode && !bRubberbandHasBeenPainted)
+			if(ScrollToSelNode && !bRubberbandHasBeenPainted)
 			{
 				if(tn != null)
 				{
@@ -4489,16 +4489,16 @@ namespace SDBees.GuiTools
 		/// <returns>True if the TreeNode supplied was successfully removed from the SelNodes property.</returns>
 		public bool DeselectNode(TreeNode tn, bool bChangeSelNode)
 		{
-			bool bRetVal = false;
+			var bRetVal = false;
 
-			bool bDeselectNode = false;
+			var bDeselectNode = false;
 
-			if(tn != null && this.SelNodes.Count > 0 && IsTreeNodeSelected(tn))
+			if(tn != null && SelNodes.Count > 0 && IsTreeNodeSelected(tn))
 			{
-				if(	this.MultiSelect == TreeViewMultiSelect.MultiPathToParent ||
-					this.MultiSelect == TreeViewMultiSelect.MultiPathToParents ||
-					this.MultiSelect == TreeViewMultiSelect.SinglePathToParent ||
-					this.MultiSelect == TreeViewMultiSelect.SinglePathToParents)
+				if(	MultiSelect == TreeViewMultiSelect.MultiPathToParent ||
+					MultiSelect == TreeViewMultiSelect.MultiPathToParents ||
+					MultiSelect == TreeViewMultiSelect.SinglePathToParent ||
+					MultiSelect == TreeViewMultiSelect.SinglePathToParents)
 				{
 					if(tn.Nodes.Count == 0 || !IsAnyChildTreeNodeSelected(tn))
 					{
@@ -4511,15 +4511,15 @@ namespace SDBees.GuiTools
 				}
 			}
 
-			if(!this.AllowNoSelNode && this.SelNodes.Count == 1)
+			if(!AllowNoSelNode && SelNodes.Count == 1)
 			{
 				bDeselectNode = false;
 			}
 
 			if(bDeselectNode)
 			{
-				MWTreeNodeWrapper.Deselect(this.SelNodes[tn.GetHashCode()] as MWTreeNodeWrapper);
-				this.SelNodes.Remove(tn.GetHashCode());
+				MWTreeNodeWrapper.Deselect(SelNodes[tn.GetHashCode()] as MWTreeNodeWrapper);
+				SelNodes.Remove(tn.GetHashCode());
 
 				LowlightNode(tn);
 
@@ -4531,12 +4531,12 @@ namespace SDBees.GuiTools
 
 			if(bChangeSelNode)
 			{
-				if(this.SelNode != null)
+				if(SelNode != null)
 				{
 					bRetVal = true;
 				}
 
-				this.SelNodeInt = null;
+				SelNodeInt = null;
 			}
 
 			return bRetVal;
@@ -4551,9 +4551,9 @@ namespace SDBees.GuiTools
 		/// <returns>True if supplied TreeNode got selected or false otherwise.</returns>
 		public bool ToggleNode(TreeNode tn, bool bChangeSelNode)
 		{
-			bool bRetVal = true;
+			var bRetVal = true;
 
-			if(this.SelNodes != null && IsTreeNodeSelected(tn))
+			if(SelNodes != null && IsTreeNodeSelected(tn))
 			{
 				DeselectNode(tn, bChangeSelNode);
 			}
@@ -4585,7 +4585,7 @@ namespace SDBees.GuiTools
 		/// <returns>True if the TreeNode itself and/or its child TreeNodes got selected.</returns>
 		public bool SelectBranch(TreeNode tn, bool bChangeSubBranches, bool bTopSelNode, bool bchangeSelNode)
 		{
-			bool bRetVal = false;
+			var bRetVal = false;
 
 			if(tn != null)
 			{
@@ -4628,13 +4628,13 @@ namespace SDBees.GuiTools
 		/// <returns>True if the TreeNode itself and/or its child TreeNodes got selected.</returns>
 		public bool DeselectBranch(TreeNode tn, bool bChangeSubBranches, bool bChangeSelNode)
 		{
-			bool bRetVal = false;
+			var bRetVal = false;
 
 			if(tn != null)
 			{
-				if(tn == this.SelNode && bChangeSelNode)
+				if(tn == SelNode && bChangeSelNode)
 				{
-					this.SelNode = null;
+					SelNode = null;
 				}
 
 				DeselectNode(tn, bChangeSelNode);
@@ -4708,13 +4708,13 @@ namespace SDBees.GuiTools
 		/// </summary>
 		public void SelectAllNodes()
 		{
-			foreach(TreeNode tn in this.Nodes)
+			foreach(TreeNode tn in Nodes)
 			{
 				SelectAllNodes(tn);
 				SelectNode(tn, false);
 			}
 
-			SelectNode(this.Nodes[0], true);
+			SelectNode(Nodes[0], true);
 		}
 
 		/// <summary>
@@ -4738,7 +4738,7 @@ namespace SDBees.GuiTools
 		/// <param name="bChangeSelNode">True if the SelNode property should be changed when selecting TreeNodes.</param>
 		public void SelectAllNodes(int iLevel, bool bChangeSelNode)
 		{
-			foreach(TreeNode tn in this.Nodes)
+			foreach(TreeNode tn in Nodes)
 			{
 				if(GetTreeNodeLevel(tn) == iLevel)
 				{
@@ -4798,9 +4798,9 @@ namespace SDBees.GuiTools
 		/// </summary>
 		public void ClearSelNodes()
 		{
-			if(this.SelNodes != null)
+			if(SelNodes != null)
 			{
-				foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+				foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 				{
 					try
 					{
@@ -4812,11 +4812,11 @@ namespace SDBees.GuiTools
 					}
 				}
 
-				this.SelNodes.Clear();
+				SelNodes.Clear();
 			}
 			else
 			{
-				this.SelNodes = new Hashtable();
+				SelNodes = new Hashtable();
 			}
 		}
 
@@ -4830,19 +4830,19 @@ namespace SDBees.GuiTools
 			{
 				ClearSelNodes();
 			}
-			else if(this.SelNodes != null)
+			else if(SelNodes != null)
 			{
-				int iMax = this.SelNodes.Count;
+				var iMax = SelNodes.Count;
 
-				for(int i = 0; i < iMax; i++)
+				for(var i = 0; i < iMax; i++)
 				{
-					foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+					foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 					{
 						if(mwtnw.Node != tn)
 						{
 							MWTreeNodeWrapper.Deselect(mwtnw);
 							LowlightNode(mwtnw.Node);
-							this.SelNodes.Remove(mwtnw.Node.GetHashCode());
+							SelNodes.Remove(mwtnw.Node.GetHashCode());
 
 							break;
 						}
@@ -4882,11 +4882,11 @@ namespace SDBees.GuiTools
 					ClearSelNodes();
 				}
 			}
-			else if(this.SelNodes != null)
+			else if(SelNodes != null)
 			{
 				if(tnTo == null)
 				{
-					tnTo = this.Nodes[this.Nodes.Count - 1];
+					tnTo = Nodes[Nodes.Count - 1];
 
 					if(bOnlyVisible)
 					{
@@ -4904,9 +4904,9 @@ namespace SDBees.GuiTools
 					}
 				}
 
-				Hashtable ht = new Hashtable();
+				var ht = new Hashtable();
 
-				TreeNode tn = tnFrom;
+				var tn = tnFrom;
 
 				while(tn != null && tn != tnTo)
 				{
@@ -4924,17 +4924,17 @@ namespace SDBees.GuiTools
 
 				ht.Add(tnTo.GetHashCode(), tnTo);
 
-				int iMax = this.SelNodes.Count;
+				var iMax = SelNodes.Count;
 
-				for(int i = 0; i < iMax; i++)
+				for(var i = 0; i < iMax; i++)
 				{
-					foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+					foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 					{
 						if(!ht.Contains(mwtnw.Node.GetHashCode()))
 						{
 							MWTreeNodeWrapper.Deselect(mwtnw);
 							LowlightNode(mwtnw.Node);
-							this.SelNodes.Remove(mwtnw.Node.GetHashCode());
+							SelNodes.Remove(mwtnw.Node.GetHashCode());
 
 							break;
 						}
@@ -4956,13 +4956,13 @@ namespace SDBees.GuiTools
 		/// <param name="tn">TreeNode whose whole Branch should be cleared.</param>
 		public void ClearSelBranch(TreeNode tn)
 		{
-			if(this.SelNodes != null)
+			if(SelNodes != null)
 			{
-				ArrayList al = new ArrayList();
+				var al = new ArrayList();
 
-				foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+				foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 				{
-					TreeNode tnGrandParent = GetTreeNodeGrandParent(mwtnw.Node);
+					var tnGrandParent = GetTreeNodeGrandParent(mwtnw.Node);
 
 					if(tnGrandParent == tn)
 					{
@@ -4970,17 +4970,17 @@ namespace SDBees.GuiTools
 					}
 				}
 
-				for(int i = 0; i < al.Count; i++)
+				for(var i = 0; i < al.Count; i++)
 				{
-					if((al[i] as MWTreeNodeWrapper).Node == this.SelNode)
+					if((al[i] as MWTreeNodeWrapper).Node == SelNode)
 					{
-						this.SelNode = null;
+						SelNode = null;
 					}
 
 					MWTreeNodeWrapper.Deselect(al[i] as MWTreeNodeWrapper);
 					LowlightNode((al[i] as MWTreeNodeWrapper).Node);
 
-					this.SelNodes.Remove((al[i] as MWTreeNodeWrapper).Node.GetHashCode());
+					SelNodes.Remove((al[i] as MWTreeNodeWrapper).Node.GetHashCode());
 				}
 			}
 		}
@@ -4999,13 +4999,13 @@ namespace SDBees.GuiTools
 		/// <returns>True if the TreeNodes was checked (Checked property set to true) or false otherwise.</returns>
 		public bool CheckNode(TreeNode tn, bool bUpdate)
 		{
-			bool bRetVal = false;
+			var bRetVal = false;
 
-			bool bOldChecked = tn.Checked;
+			var bOldChecked = tn.Checked;
 
 			if(tn != null)
 			{
-				if(this.AllowMultiCheck)
+				if(AllowMultiCheck)
 				{
 					if(IsTreeNodeChecked(tn))
 					{
@@ -5025,7 +5025,7 @@ namespace SDBees.GuiTools
 
 							if(!IsTreeNodeChecked(tn) && IsCheckNodeRegExSatisfied(tn.Text))
 							{
-								this.CheckedNodes.Add(tn.GetHashCode(), tn);
+								CheckedNodes.Add(tn.GetHashCode(), tn);
 							}
 						}
 					}
@@ -5041,7 +5041,7 @@ namespace SDBees.GuiTools
 
 					if(!IsTreeNodeChecked(tn) && IsCheckNodeRegExSatisfied(tn.Text))
 					{
-						this.CheckedNodes.Add(tn.GetHashCode(), tn);
+						CheckedNodes.Add(tn.GetHashCode(), tn);
 					}
 				}
 
@@ -5062,9 +5062,9 @@ namespace SDBees.GuiTools
 		/// <returns>True if the TreeNodes was unchecked (Checked property set to false) or false otherwise.</returns>
 		public bool UncheckNode(TreeNode tn, bool bUpdate)
 		{
-			bool bRetVal = false;
+			var bRetVal = false;
 
-			bool bOldChecked = tn.Checked;
+			var bOldChecked = tn.Checked;
 
 			if(tn != null)
 			{
@@ -5077,7 +5077,7 @@ namespace SDBees.GuiTools
 							tn.Checked = false;
 						}
 
-						this.CheckedNodes.Remove(tn.GetHashCode());
+						CheckedNodes.Remove(tn.GetHashCode());
 					}
 				}
 				else
@@ -5105,9 +5105,9 @@ namespace SDBees.GuiTools
 		/// <returns>True if the Checked property has been toggled or false otherwise.</returns>
 		public bool ToggleCheckNode(TreeNode tn, bool bUpdate)
 		{
-			bool bRetVal = false;
+			var bRetVal = false;
 
-			bool bOldChecked = tn.Checked;
+			var bOldChecked = tn.Checked;
 
 			if(tn != null)
 			{
@@ -5160,7 +5160,7 @@ namespace SDBees.GuiTools
 		/// <returns>True if TreeNodes got checked or false otherwise.</returns>
 		public bool CheckBranch(TreeNode tn, bool bChangeSubBranches, TreeNode tnExcluded, bool bUpdate)
 		{
-			bool bRetVal = false;
+			var bRetVal = false;
 
 			if(tn != null)
 			{
@@ -5208,7 +5208,7 @@ namespace SDBees.GuiTools
 		/// <returns>True if TreeNodes got unchecked or false otherwise.</returns>
 		public bool UncheckBranch(TreeNode tn, bool bChangeSubBranches, TreeNode tnExcluded, bool bUpdate)
 		{
-			bool bRetVal = false;
+			var bRetVal = false;
 
 			if(tn != null)
 			{
@@ -5256,7 +5256,7 @@ namespace SDBees.GuiTools
 		/// <returns>True if TreeNodes' Checked property got toggled or false otherwise.</returns>
 		public bool ToggleCheckBranch(TreeNode tn, bool bChangeSubBranches, TreeNode tnExcluded, bool bUpdate)
 		{
-			bool bRetVal = false;
+			var bRetVal = false;
 
 			if(tn != null)
 			{
@@ -5290,14 +5290,14 @@ namespace SDBees.GuiTools
 		/// </summary>
 		public void ClearCheckedNodes()
 		{
-			if(this.CheckedNodes != null)
+			if(CheckedNodes != null)
 			{
-				foreach(TreeNode tn in this.CheckedNodes.Values)
+				foreach(TreeNode tn in CheckedNodes.Values)
 				{
 					tn.Checked = false;
 				}
 
-				this.CheckedNodes.Clear();
+				CheckedNodes.Clear();
 			}
 		}
 
@@ -5306,7 +5306,7 @@ namespace SDBees.GuiTools
 		/// </summary>
 		public void CheckAllNodes()
 		{
-			foreach(TreeNode tn in this.Nodes)
+			foreach(TreeNode tn in Nodes)
 			{
 				CheckAllNodes(tn);
 				CheckNode(tn, true);
@@ -5338,11 +5338,11 @@ namespace SDBees.GuiTools
 		/// </summary>
 		private void ActivateSelNodes()
 		{
-			if(this.SelNodes != null && this.SelNodes.Count > 0)
+			if(SelNodes != null && SelNodes.Count > 0)
 			{
 				bActive = true;
 
-				foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+				foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 				{
 					HighlightNode(mwtnw.Node);
 				}
@@ -5355,20 +5355,20 @@ namespace SDBees.GuiTools
 		/// </summary>
 		private void DeactivateSelNodes()
 		{
-			if(this.SelNodes != null && this.SelNodes.Count > 0)
+			if(SelNodes != null && SelNodes.Count > 0)
 			{
 				bActive = false;
 
-				if(this.HideSelection)
+				if(HideSelection)
 				{
-					foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+					foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 					{
 						LowlightNode(mwtnw.Node);
 					}
 				}
 				else
 				{
-					foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+					foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 					{
 						HighlightNode(mwtnw.Node, false);
 					}
@@ -5382,9 +5382,9 @@ namespace SDBees.GuiTools
 		/// </summary>
 		private void ForceDeactivateSelNodes()
 		{
-			if(this.SelNodes != null && this.SelNodes.Count > 0)
+			if(SelNodes != null && SelNodes.Count > 0)
 			{
-				foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+				foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 				{
 					LowlightNode(mwtnw.Node);
 				}
@@ -5411,7 +5411,7 @@ namespace SDBees.GuiTools
 		{
 			get
 			{
-				Point ptMouseNow = this.PointToClient(Control.MousePosition);
+				var ptMouseNow = PointToClient(MousePosition);
 
 				return Math.Abs(ptMouseDownOrig.X - ptMouseNow.X) > SystemInformation.DoubleClickSize.Width || Math.Abs(ptMouseDownOrig.Y - ptMouseNow.Y) > SystemInformation.DoubleClickSize.Height;
 			}
@@ -5430,7 +5430,7 @@ namespace SDBees.GuiTools
 		/// <returns>True if the proposed Label Text satisfies the regular expression or false otherwise.</returns>
 		private bool IsLabelEditRegExSatisfied(string strLabelText)
 		{
-			return Regex.IsMatch(strLabelText, this.LabelEditRegEx);
+			return Regex.IsMatch(strLabelText, LabelEditRegEx);
 		}
 
 		#endregion IsLabelEditRegExSatisfied
@@ -5447,15 +5447,15 @@ namespace SDBees.GuiTools
 		/// <returns>True if the proposed Label Text satisfies the regular expression or false otherwise.</returns>
 		private bool IsDisallowLabelEditRegExSatisfied(string strLabelText)
 		{
-			bool bRetVal = true;
+			var bRetVal = true;
 
-			if(this.DisallowLabelEditRegEx == string.Empty)
+			if(DisallowLabelEditRegEx == string.Empty)
 			{
 				bRetVal = false;
 			}
 			else
 			{
-				bRetVal = Regex.IsMatch(strLabelText, this.DisallowLabelEditRegEx);
+				bRetVal = Regex.IsMatch(strLabelText, DisallowLabelEditRegEx);
 			}
 
 			return bRetVal;
@@ -5474,7 +5474,7 @@ namespace SDBees.GuiTools
 		/// <returns>True if the TreeNode's Text satisfies the regular expression or false otherwise.</returns>
 		private bool IsSelectNodeRegExSatisfied(string strText)
 		{
-			return Regex.IsMatch(strText, this.SelectNodeRegEx);
+			return Regex.IsMatch(strText, SelectNodeRegEx);
 		}
 
 		#endregion IsSelectNodeRegExSatisfied
@@ -5490,7 +5490,7 @@ namespace SDBees.GuiTools
 		/// <returns>True if the TreeNode's Text satisfies the regular expression or false otherwise.</returns>
 		private bool IsCheckNodeRegExSatisfied(string strText)
 		{
-			return Regex.IsMatch(strText, this.CheckNodeRegEx);
+			return Regex.IsMatch(strText, CheckNodeRegEx);
 		}
 
 		#endregion IsCheckNodeRegExSatisfied
@@ -5504,11 +5504,11 @@ namespace SDBees.GuiTools
 		/// </summary>
 		private void EnsureAllSelectedNodesAreAllowed()
 		{
-			ArrayList al = new ArrayList();
+			var al = new ArrayList();
 
-			if(this.SelNodes != null)
+			if(SelNodes != null)
 			{
-				foreach(MWTreeNodeWrapper mwtnw in this.SelNodes.Values)
+				foreach(MWTreeNodeWrapper mwtnw in SelNodes.Values)
 				{
 					if(!IsSelectNodeRegExSatisfied(mwtnw.Node.Text))
 					{
@@ -5517,14 +5517,14 @@ namespace SDBees.GuiTools
 				}
 			}
 
-			for(int i = 0; i < al.Count; i++)
+			for(var i = 0; i < al.Count; i++)
 			{
 				DeselectNode(al[i] as TreeNode, false);
 			}
 
-			if(this.SelNode != null && !IsSelectNodeRegExSatisfied(this.SelNode.Text))
+			if(SelNode != null && !IsSelectNodeRegExSatisfied(SelNode.Text))
 			{
-				DeselectNode(this.SelNode, true);
+				DeselectNode(SelNode, true);
 			}
 		}
 
@@ -5539,11 +5539,11 @@ namespace SDBees.GuiTools
 		/// </summary>
 		private void EnsureAllCheckedNodesAreAllowed()
 		{
-			ArrayList al = new ArrayList();
+			var al = new ArrayList();
 
-			if(this.CheckedNodes != null)
+			if(CheckedNodes != null)
 			{
-				foreach(TreeNode tn in this.CheckedNodes.Values)
+				foreach(TreeNode tn in CheckedNodes.Values)
 				{
 					if(!IsCheckNodeRegExSatisfied(tn.Text))
 					{
@@ -5554,7 +5554,7 @@ namespace SDBees.GuiTools
 
 			bForceCheckNode = true;
 
-			for(int i = 0; i < al.Count; i++)
+			for(var i = 0; i < al.Count; i++)
 			{
 				UncheckNode(al[i] as TreeNode, true);
 			}
@@ -5573,7 +5573,7 @@ namespace SDBees.GuiTools
 		/// </summary>
 		public void ActivateOrDeactivateSelNodes()
 		{
-			if(!this.HideSelection)
+			if(!HideSelection)
 			{
 				if(bActive)
 				{
@@ -5607,7 +5607,7 @@ namespace SDBees.GuiTools
 		/// <returns>True if the TreeNode in the MWTreeNodeWrapper was removed or false otherwise.</returns>
 		public bool RemoveNode(MWTreeNodeWrapper mwtnw)
 		{
-			bool bRetVal = false;
+			var bRetVal = false;
 
 			if(mwtnw != null)
 			{
@@ -5624,7 +5624,7 @@ namespace SDBees.GuiTools
 		/// <returns>True if the TreeNode was removed or false otherwise.</returns>
 		public bool RemoveNode(TreeNode tn)
 		{
-			bool bRetVal = false;
+			var bRetVal = false;
 
 			if(tn != null)
 			{
@@ -5634,7 +5634,7 @@ namespace SDBees.GuiTools
 				{
 					tn.Remove();
 
-					if(tn.TreeView == null && !IsTreeNodeSelected(tn) && !IsTreeNodeChecked(tn) && tn != this.SelNode)
+					if(tn.TreeView == null && !IsTreeNodeSelected(tn) && !IsTreeNodeChecked(tn) && tn != SelNode)
 					{
 						bRetVal = true;
 					}
@@ -5662,23 +5662,23 @@ namespace SDBees.GuiTools
 			{
 				if(IsTreeNodeSelected(tn))
 				{
-					if(this.SelNodes != null)
+					if(SelNodes != null)
 					{
-						this.SelNodes.Remove(tn.GetHashCode());
+						SelNodes.Remove(tn.GetHashCode());
 					}
 				}
 
 				if(IsTreeNodeChecked(tn))
 				{
-					if(this.CheckedNodes != null)
+					if(CheckedNodes != null)
 					{
-						this.CheckedNodes.Remove(tn.GetHashCode());
+						CheckedNodes.Remove(tn.GetHashCode());
 					}
 				}
 
-				if(this.SelNode != null && this.SelNode == tn)
+				if(SelNode != null && SelNode == tn)
 				{
-					this.SelNode = null;
+					SelNode = null;
 				}
 			}
 		}
@@ -5691,11 +5691,11 @@ namespace SDBees.GuiTools
 		/// <returns>True if at least one TreeNode was removed or false if no TreeNodes were removed.</returns>
 		public bool RemoveNodes(TreeNode[] atn)
 		{
-			bool bRetVal = false;
+			var bRetVal = false;
 
 			if(atn != null)
 			{
-				foreach(TreeNode tn in atn)
+				foreach(var tn in atn)
 				{
 					if(RemoveNode(tn))
 					{
@@ -5715,11 +5715,11 @@ namespace SDBees.GuiTools
 		/// <returns>True if at least one TreeNode from the MWTreeNodeWrappers was removed or false if no TreeNodes were removed.</returns>
 		public bool RemoveNodes(MWTreeNodeWrapper[] amwtnw)
 		{
-			bool bRetVal = false;
+			var bRetVal = false;
 
 			if(amwtnw != null)
 			{
-				foreach(MWTreeNodeWrapper mwtnw in amwtnw)
+				foreach(var mwtnw in amwtnw)
 				{
 					if(RemoveNode(mwtnw))
 					{
@@ -5739,11 +5739,11 @@ namespace SDBees.GuiTools
 		/// <returns>True if at least one TreeNode or one TreeNode from the MWTreeNodeWrappers was removed or false if no TreeNodes were removed.</returns>
 		public bool RemoveNodes(ArrayList altn)
 		{
-			bool bRetVal = false;
+			var bRetVal = false;
 
 			if(altn != null)
 			{
-				for(int i = 0; i < altn.Count; i++)
+				for(var i = 0; i < altn.Count; i++)
 				{
 					if(altn[i] is TreeNode)
 					{
@@ -5783,16 +5783,13 @@ namespace SDBees.GuiTools
 		/// <returns>The TreeNodeLevel of the TreeNode supplied.</returns>
 		public static int GetTreeNodeLevel(TreeNode tn)
 		{
-			int i = 0;
+			var i = 0;
 
 			if(tn != null && tn.Parent != null)
 			{
 				return GetTreeNodeLevel(tn.Parent) + 1;
 			}
-			else
-			{
-				return i;
-			}
+		    return i;
 		}
 
 		#endregion GetTreeNodeLevel
@@ -5809,14 +5806,11 @@ namespace SDBees.GuiTools
 		/// <returns>The GrandParent of the TreeNode supplied.</returns>
 		public static TreeNode GetTreeNodeGrandParent(TreeNode tn)
 		{
-			if(tn != null && tn.Parent != null)
+		    if(tn != null && tn.Parent != null)
 			{
 				return GetTreeNodeGrandParent(tn.Parent);
 			}
-			else
-			{
-				return tn;
-			}
+		    return tn;
 		}
 
 		#endregion GetTreeNodeGrandParent

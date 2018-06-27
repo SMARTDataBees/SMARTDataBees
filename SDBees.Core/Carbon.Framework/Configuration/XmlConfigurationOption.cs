@@ -31,7 +31,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Drawing;
 
 namespace Carbon.Configuration 
 {
@@ -56,7 +55,7 @@ namespace Carbon.Configuration
 		/// <summary>
 		/// Initializes a new instance of the XmlConfigurationOption class
 		/// </summary>
-		public XmlConfigurationOption() : base() 
+		public XmlConfigurationOption()
 		{
 			_valueAssemblyQualifiedName = _value.GetType().AssemblyQualifiedName;			
 		}
@@ -105,7 +104,7 @@ namespace Carbon.Configuration
 		/// Initializes a new instance of the XmlConfigurationOption class
 		/// </summary>
 		/// <param name="option">The option to base this option on</param>
-		public XmlConfigurationOption(XmlConfigurationOption option) : base((XmlConfigurationElement)option)
+		public XmlConfigurationOption(XmlConfigurationOption option) : base(option)
 		{
 			_valueAssemblyQualifiedName = _value.GetType().AssemblyQualifiedName;
 			if (option != null)
@@ -148,7 +147,7 @@ namespace Carbon.Configuration
 				
 //				_hasChanges = true;
 				_shouldSerializeValue = value;
-				base.OnChanged(this, new XmlConfigurationOptionEventArgs(this, XmlConfigurationElementActions.Changed));				
+				OnChanged(this, new XmlConfigurationOptionEventArgs(this, XmlConfigurationElementActions.Changed));				
 			}
 		}
 
@@ -212,7 +211,7 @@ namespace Carbon.Configuration
 				
 //				_hasChanges = true;
 				_valueAssemblyQualifiedName = value;
-				base.OnChanged(this, new XmlConfigurationOptionEventArgs(this, XmlConfigurationElementActions.Changed));			
+				OnChanged(this, new XmlConfigurationOptionEventArgs(this, XmlConfigurationElementActions.Changed));			
 			}
 		}
 
@@ -247,7 +246,7 @@ namespace Carbon.Configuration
 				
 //				_hasChanges = true;
 				_editorAssemblyQualifiedName = value;
-				base.OnChanged(this, new XmlConfigurationOptionEventArgs(this, XmlConfigurationElementActions.Changed));				
+				OnChanged(this, new XmlConfigurationOptionEventArgs(this, XmlConfigurationElementActions.Changed));				
 			}
 		}
 
@@ -282,7 +281,7 @@ namespace Carbon.Configuration
 
                 //				_hasChanges = true;
                 _typeConverterAssemblyQualifiedName = value;
-                base.OnChanged(this, new XmlConfigurationOptionEventArgs(this, XmlConfigurationElementActions.Changed));
+                OnChanged(this, new XmlConfigurationOptionEventArgs(this, XmlConfigurationElementActions.Changed));
             }
         }
 
@@ -312,12 +311,12 @@ namespace Carbon.Configuration
 					}
 				}
 				
-				bool compared = false;
+				var compared = false;
 				// try using the IComparable interface first
-				System.IComparable existingValue = _value as System.IComparable;
+				var existingValue = _value as IComparable;
 				if (existingValue != null) 
 				{
-					System.IComparable newValue = value as System.IComparable;
+					var newValue = value as IComparable;
 					if (newValue != null) 
 					{
 						if (existingValue.GetType() == newValue.GetType()) 
@@ -328,21 +327,21 @@ namespace Carbon.Configuration
 									return;
 								compared = true;
 							}
-							catch(System.Exception) { /* fuck it */ }
+							catch(Exception) { /* fuck it */ }
 						}
 					}
 				}
 				
 				// then try operator equality
 				if (!compared)					
-					if (Object.Equals(_value, value))
+					if (Equals(_value, value))
 						return;
 
 //				_hasChanges = true;
 				_value = value;
 				if (_value != null)
 					_valueAssemblyQualifiedName = _value.GetType().AssemblyQualifiedName;
-				base.OnChanged(this, new XmlConfigurationOptionEventArgs(this, XmlConfigurationElementActions.Changed));				
+				OnChanged(this, new XmlConfigurationOptionEventArgs(this, XmlConfigurationElementActions.Changed));				
 			}
 		}
 
@@ -351,7 +350,7 @@ namespace Carbon.Configuration
 		/// </summary>
 		public override void TriggerChange()
 		{
-			base.OnChanged(this, new XmlConfigurationOptionEventArgs(this, XmlConfigurationElementActions.Changed));
+			OnChanged(this, new XmlConfigurationOptionEventArgs(this, XmlConfigurationElementActions.Changed));
 		}
 
 //		public void SetValue(object value, bool setValueAssemblyQualifiedName)
@@ -420,12 +419,9 @@ namespace Carbon.Configuration
 			{
 				if (_parent == null)
                     return base.Fullpath;
-				else
-				{
-					string path = _parent.Fullpath;
-					path = (path != null ? path + @"\" + base.Fullpath : base.Fullpath);
-					return path;
-				}
+			    var path = _parent.Fullpath;
+			    path = (path != null ? path + @"\" + base.Fullpath : base.Fullpath);
+			    return path;
 			}
 		}
 
@@ -454,7 +450,7 @@ namespace Carbon.Configuration
 		
 		public override object Clone()
 		{
-			object clone = CloningEngine.Clone(this, CloningEngine.DefaultBindingFlags);
+			var clone = CloningEngine.Clone(this, CloningEngine.DefaultBindingFlags);
 			if (clone != null)
 			{
 				((XmlConfigurationOption)clone).ResetBeforeEdit();
@@ -468,26 +464,26 @@ namespace Carbon.Configuration
 
 		protected override XmlConfigurationElement GetElementToEdit()
 		{
-			XmlConfigurationOption option = (XmlConfigurationOption)this.Clone();
-			option.Parent = this.Parent;
-			return (XmlConfigurationElement)option;
+			var option = (XmlConfigurationOption)Clone();
+			option.Parent = Parent;
+			return option;
 		}
 
 
 		public override bool ApplyChanges(ISupportsEditing editableObject, SupportedEditingActions actions)
 		{
-			/// if we can apply changes to the base then keep going
+			// if we can apply changes to the base then keep going
 			if (base.ApplyChanges (editableObject, actions))
 			{
-				XmlConfigurationOption option = editableObject as XmlConfigurationOption;			
+				var option = editableObject as XmlConfigurationOption;			
 				if (option != null)
 				{										
 					if (option.HasChanges)
 					{
-						this.Value = option.Value;
-						this.ValueAssemblyQualifiedName = option.ValueAssemblyQualifiedName;
-						this.EditorAssemblyQualifiedName = option.EditorAssemblyQualifiedName;
-                        this.TypeConverterAssemblyQualifiedName = option.TypeConverterAssemblyQualifiedName;
+						Value = option.Value;
+						ValueAssemblyQualifiedName = option.ValueAssemblyQualifiedName;
+						EditorAssemblyQualifiedName = option.EditorAssemblyQualifiedName;
+                        TypeConverterAssemblyQualifiedName = option.TypeConverterAssemblyQualifiedName;
 					}				
 				}
 				return true;
@@ -499,15 +495,15 @@ namespace Carbon.Configuration
 		{			
 			if (base.ApplyToSelf(editableObject, actions))
 			{
-				XmlConfigurationOption option = editableObject as XmlConfigurationOption;			
+				var option = editableObject as XmlConfigurationOption;			
 				if (option != null)
 				{				
 					if (option.HasChanges)
 					{
-						this.Value = option.Value;
-						this.ValueAssemblyQualifiedName = option.ValueAssemblyQualifiedName;
-						this.EditorAssemblyQualifiedName = option.EditorAssemblyQualifiedName;
-                        this.TypeConverterAssemblyQualifiedName = option.TypeConverterAssemblyQualifiedName;
+						Value = option.Value;
+						ValueAssemblyQualifiedName = option.ValueAssemblyQualifiedName;
+						EditorAssemblyQualifiedName = option.EditorAssemblyQualifiedName;
+                        TypeConverterAssemblyQualifiedName = option.TypeConverterAssemblyQualifiedName;
                     }
                 }
 				return true;

@@ -20,18 +20,11 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using System.Runtime.Serialization;
 
 namespace SDBees.Core.Model
 {
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// Der Typ der Entity Beziehung
     /// </summary>

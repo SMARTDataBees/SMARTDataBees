@@ -20,34 +20,38 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using SDBees.Core.Admin;
+using SDBees.Core.Connectivity;
+using SDBees.Core.Connectivity.SDBeesLink;
+using SDBees.Core.Model.Basic;
+using SDBees.Core.Model.Instances;
+using SDBees.DB;
+using SDBees.Plugs.TemplateBase;
+using Object = SDBees.DB.Object;
+
 namespace SDBees.Core.Model
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
-    using System.Runtime.Serialization;
-    using System.IO;
-    using System.Xml;
-    using System.Collections;
-    using Instances;
     /// <summary>
     /// SDBees Datenaustauschklasse
     /// </summary>
     [DataContract(Name = "sdbeesdataset", Namespace = "http://www.smartdatabees.de")]
-    public class SDBeesDataSet : SDBees.Core.Model.Basic.SDBeesSetBase
+    public class SDBeesDataSet : SDBeesSetBase
     {
         public SDBeesDataSet()
-            : base()
         {
-            this.m_pluginId = new SDBeesPluginId();
-            this.m_documentId = new SDBeesDocumentId();
-            this.m_pluginRoleId = new SDBeesPluginRoleId();
-            this.m_documents = new List<SDBeesCADDocument>();
-            this.m_entityDefinitions = null;
+            m_pluginId = new SDBeesPluginId();
+            m_documentId = new SDBeesDocumentId();
+            m_pluginRoleId = new SDBeesPluginRoleId();
+            m_documents = new List<SDBeesCADDocument>();
+            m_entityDefinitions = null;
             //m_externalDocuments = new List<Connectivity.SDBeesLink.SDBeesExternalDocument>();
-            this.m_explorerPlugin = null;
+            m_explorerPlugin = null;
         }
 
         private string m_explorerPlugin;
@@ -150,7 +154,7 @@ namespace SDBees.Core.Model
 
         internal List<SDBeesRelation> GetRelationsForEntityIsSource(SDBeesEntity ent)
         {
-            List<SDBeesRelation> lst = new List<SDBeesRelation>();
+            var lst = new List<SDBeesRelation>();
             //Linq query for all products
             var entQuery = from rel in Relations
                            where rel.SourceId.Id == ent.Id.Id
@@ -164,7 +168,7 @@ namespace SDBees.Core.Model
 
         internal List<SDBeesRelation> GetRelationsForEntityIsTarget(SDBeesEntity ent)
         {
-            List<SDBeesRelation> lst = new List<SDBeesRelation>();
+            var lst = new List<SDBeesRelation>();
             //Linq query for all products
             var entQuery = from rel in Relations
                            where rel.TargetId.Id == ent.Id.Id
@@ -176,7 +180,7 @@ namespace SDBees.Core.Model
             return lst;
         }
 
-        public static SDBeesDataSet CreateExportDataset(SDBees.Core.Connectivity.SDBeesLink.SDBeesExternalDocument doc)
+        public static SDBeesDataSet CreateExportDataset(SDBeesExternalDocument doc)
         {
 #if PROFILER
             SDBees.Profiler.Start("SDBeesSetBase.CreateExportDataset");
@@ -186,31 +190,31 @@ namespace SDBees.Core.Model
 
             dset = new SDBeesDataSet();
             dset.DocumentId = doc.DocumentId;
-            SDBees.DB.Error _error = null;
+            Error _error = null;
 
-            SDBees.Core.Connectivity.ConnectivityManager.Current.MyDBManager.Database.Open(false, ref _error);
+            ConnectivityManager.Current.MyDBManager.Database.Open(false, ref _error);
 
             try
             {
-                SDBees.ViewAdmin.ViewCache.Enable();
+                ViewCache.Enable();
 
-                List<SDBeesDocumentId> ids = new List<SDBeesDocumentId>();
-                SDBees.Core.Connectivity.ConnectivityManagerDocumentBaseData docdata = new Connectivity.ConnectivityManagerDocumentBaseData();
-                ArrayList _objLst = new ArrayList();
-                if (SDBees.Plugs.TemplateTreeNode.TemplateTreenodeBaseData.ObjectExistsInDbWithSDBeesId(docdata.Table, doc.DocumentId.Id, ref _error, ref _objLst))
+                var ids = new List<SDBeesDocumentId>();
+                var docdata = new ConnectivityManagerDocumentBaseData();
+                var _objLst = new ArrayList();
+                if (TemplateDBBaseData.ObjectExistsInDbWithSDBeesId(docdata.Table, doc.DocumentId.Id, ref _error, ref _objLst))
                 {
-                    if (docdata.Load(SDBees.Core.Connectivity.ConnectivityManager.Current.MyDBManager.Database, _objLst[0], ref _error))
+                    if (docdata.Load(ConnectivityManager.Current.MyDBManager.Database, _objLst[0], ref _error))
                     {
-                        SDBeesDocumentId docid = new SDBeesDocumentId()
+                        var docid = new SDBeesDocumentId
                         {
-                            Id = docdata.GetPropertyByColumn(SDBees.Core.Connectivity.ConnectivityManagerDocumentBaseData.m_IdSDBeesColumnName).ToString(),
+                            Id = docdata.GetPropertyByColumn(Object.m_IdSDBeesColumnName).ToString()
                         };
 
                         ids.Add(docid);
 
                         try
                         {
-                            SDBeesCADDocument cadDoc = SDBeesCADDocument.CreateFromDBRecord(docdata);
+                            var cadDoc = SDBeesCADDocument.CreateFromDBRecord(docdata);
                             if (doc != null)
                             {
                                 dset.Documents.Add(cadDoc);
@@ -227,9 +231,9 @@ namespace SDBees.Core.Model
             }
             finally
             {
-                SDBees.ViewAdmin.ViewCache.Disable();
+                ViewCache.Disable();
 
-                SDBees.Core.Connectivity.ConnectivityManager.Current.MyDBManager.Database.Close(ref _error);
+                ConnectivityManager.Current.MyDBManager.Database.Close(ref _error);
 
 #if PROFILER
                 SDBees.Profiler.Stop();
@@ -250,7 +254,7 @@ namespace SDBees.Core.Model
         internal SDBeesEntity GetEntityByDbId(string id)
         {
             SDBeesEntity res = null;
-            foreach (SDBeesEntity ent in this.Entities)
+            foreach (var ent in Entities)
             {
                 if (ent.Id.Id == id)
                 {
@@ -264,7 +268,7 @@ namespace SDBees.Core.Model
         internal SDBeesEntity GetEntityBySDBeesId(string sdbeesIdSource)
         {
             SDBeesEntity res = null;
-            foreach (SDBeesEntity ent in this.Entities)
+            foreach (var ent in Entities)
             {
                 if (ent.InstanceId.Id == sdbeesIdSource)
                 {
@@ -277,10 +281,10 @@ namespace SDBees.Core.Model
 
         internal bool HasRelationToDocsSub(SDBeesEntity ent, SDBeesDBDocument docitem)
         {
-            bool hasRelation = false;
+            var hasRelation = false;
 
             //Check direct relations
-            foreach (SDBeesAlienId aId in ent.AlienIds)
+            foreach (var aId in ent.AlienIds)
             {
                 if (aId.DocumentId.Id == docitem.InstanceId.ToString())
                 {

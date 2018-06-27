@@ -20,21 +20,28 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using SDBees.DB;
 using System.ComponentModel;
+using System.Data;
+using System.Linq;
+using System.Windows.Forms;
 using Carbon.Plugins;
+using SDBees.Core.Connectivity;
+using SDBees.DB;
+using SDBees.Plugs.Properties;
 using SDBees.Plugs.TemplateTreeNode;
+using Attribute = SDBees.DB.Attribute;
+using DbType = SDBees.DB.DbType;
+using Object = SDBees.DB.Object;
 
 namespace SDBees.Plugs.TemplateBase
 {
     /// <summary>
     /// Base class for persistent objects in TemplateTreenodes
     /// </summary>
-    public abstract class TemplateDBBaseData : SDBees.DB.Object
+    public abstract class TemplateDBBaseData : Object
     {
         #region Private Data Members
 
@@ -106,26 +113,26 @@ namespace SDBees.Plugs.TemplateBase
         #endregion
 
         #region Public Methods
-        public static BindingList<SDBees.Plugs.TemplateTreeNode.TreenodePropertyRow> GetTreeNodePropertyRowBindingList(DB.Table tbl, SDBees.Plugs.TemplateBase.TemplatePlugin basePlugin)
+        public static BindingList<TreenodePropertyRow> GetTreeNodePropertyRowBindingList(Table tbl, TemplatePlugin basePlugin)
         {
-            BindingList<SDBees.Plugs.TemplateTreeNode.TreenodePropertyRow> m_dataList = new BindingList<Plugs.TemplateTreeNode.TreenodePropertyRow>();
+            var m_dataList = new BindingList<TreenodePropertyRow>();
             Error error = null;
 
-            SDBees.DB.SDBeesDBConnection.Current.MyDBManager.Database.Open(false, ref error);
+            SDBeesDBConnection.Current.MyDBManager.Database.Open(false, ref error);
 
-            ArrayList objectIds = new ArrayList();
-            int count = SDBees.DB.SDBeesDBConnection.Current.MyDBManager.Database.Select(tbl, tbl.PrimaryKey, ref objectIds, ref error);
+            var objectIds = new ArrayList();
+            var count = SDBeesDBConnection.Current.MyDBManager.Database.Select(tbl, tbl.PrimaryKey, ref objectIds, ref error);
             foreach (string item in objectIds)
             {
-                Plugs.TemplateBase.TemplateDBBaseData baseData = basePlugin.CreateDataObject();
-                if (baseData.Load(SDBees.DB.SDBeesDBConnection.Current.MyDBManager.Database, item, ref error))
+                var baseData = basePlugin.CreateDataObject();
+                if (baseData.Load(SDBeesDBConnection.Current.MyDBManager.Database, item, ref error))
                 {
-                    SDBees.Plugs.TemplateTreeNode.TreenodePropertyRow propTableRow = new SDBees.Plugs.TemplateTreeNode.TreenodePropertyRow(SDBees.DB.SDBeesDBConnection.Current.MyDBManager, baseData, item);
+                    var propTableRow = new TreenodePropertyRow(SDBeesDBConnection.Current.MyDBManager, baseData, item);
                     m_dataList.Add(propTableRow);
                     //baseData
                 }
             }
-            SDBees.DB.SDBeesDBConnection.Current.MyDBManager.Database.Close(ref error);
+            SDBeesDBConnection.Current.MyDBManager.Database.Close(ref error);
 
             return m_dataList;
         }
@@ -138,13 +145,14 @@ namespace SDBees.Plugs.TemplateBase
         /// <param name="_error">error provider</param>
         /// <param name="_lstDbIds">arraylist of id's for found records</param>
         /// <returns>true, if one or more records found. Otherwise false</returns>
-        public static bool ObjectExistsInDbWithSDBeesId(DB.Table tbl, object sdbeesid, ref Error _error, ref ArrayList _lstDbIds)
+        public static bool ObjectExistsInDbWithSDBeesId(Table tbl, object sdbeesid, ref Error _error, ref ArrayList _lstDbIds)
         {
-            bool exists = false;
-            SDBees.DB.Attribute attParent = new SDBees.DB.Attribute(tbl.Columns[m_IdSDBeesColumnName], sdbeesid);
-            string criteria = SDBees.DB.SDBeesDBConnection.Current.MyDBManager.Database.FormatCriteria(attParent, DbBinaryOperator.eIsEqual, ref _error);
+            var exists = false;
+            var column = tbl.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_IdSDBeesColumnName));
+            var attParent = new Attribute(column, sdbeesid);
+            var criteria = SDBeesDBConnection.Current.MyDBManager.Database.FormatCriteria(attParent, DbBinaryOperator.eIsEqual, ref _error);
 
-            int count = SDBees.DB.SDBeesDBConnection.Current.MyDBManager.Database.Select(tbl, tbl.PrimaryKey, criteria, ref _lstDbIds, ref _error);
+            var count = SDBeesDBConnection.Current.MyDBManager.Database.Select(tbl, tbl.PrimaryKey, criteria, ref _lstDbIds, ref _error);
             if (count > 0)
                 exists = true;
 
@@ -168,7 +176,7 @@ namespace SDBees.Plugs.TemplateBase
             // Add the number column
             //this.AddColumn(new Column(m_NumberColumnName, DbType.eInt32, m_NumberColumnDisplayName, "Indexnumber for this element", mCategory, 20, "", 0), database);
             // Now add the name column
-            this.AddColumn(new Column(m_NameColumnName, DbType.eString, m_NameDisplayName, mDescription, mCategory, 100, mDefault, 0), database);
+            AddColumn(new Column(m_NameColumnName, DbType.String, m_NameDisplayName, mDescription, mCategory, 100, mDefault, 0), database);
         }
 
         /// <summary>
@@ -179,20 +187,20 @@ namespace SDBees.Plugs.TemplateBase
         {
             base.SetDefaults(database);
 
-            this.Name = mDefault;
-            this.SetPropertyByColumn(SDBees.DB.Object.m_IdSDBeesColumnName, Guid.NewGuid().ToString());
+            Name = mDefault;
+            SetPropertyByColumn(m_IdSDBeesColumnName, Guid.NewGuid().ToString());
         }
 
         public static TemplateTreenode GetPluginForBaseData(TemplateDBBaseData baseData)
         {
             TemplateTreenode result = null;
 
-            foreach (PluginDescriptor desc in SDBees.DB.SDBeesDBConnection.Current.MyPluginContext.PluginDescriptors)
+            foreach (PluginDescriptor desc in SDBeesDBConnection.Current.MyPluginContext.PluginDescriptors)
             {
-                TemplateTreenode temp = desc.PluginInstance as TemplateTreenode;
+                var temp = desc.PluginInstance as TemplateTreenode;
                 if (temp != null)
                 {
-                    TemplateDBBaseData tempBaseData = temp.CreateDataObject();
+                    var tempBaseData = temp.CreateDataObject();
                     if (tempBaseData.GetType() == baseData.GetType())
                     {
                         result = temp;
@@ -206,18 +214,18 @@ namespace SDBees.Plugs.TemplateBase
 
         public bool IsNameUnique(string tablename, string value)
         {
-            bool result = true;
+            var result = true;
 
 
-            System.Data.DataTable tbl = SDBees.DB.SDBeesDBConnection.Current.GetDataTableForPlugin(tablename);
+            var tbl = SDBeesDBConnection.Current.GetDataTableForPlugin(tablename);
             if (tbl != null)
             {
-                foreach (System.Data.DataRow row in tbl.Rows)
+                foreach (DataRow row in tbl.Rows)
                 {
                     if (row[m_NameColumnName].ToString() == value)
                     {
                         result = false;
-                        System.Windows.Forms.MessageBox.Show("The object requires a unique name! Please modify the name to be unique and try it again.", "Naming", System.Windows.Forms.MessageBoxButtons.OK);
+                        MessageBox.Show("The object requires a unique name! Please modify the name to be unique and try it again.", "Naming", MessageBoxButtons.OK);
 
                         break;
                     }
@@ -273,10 +281,10 @@ namespace SDBees.Plugs.TemplateBase
 
         public bool IsManuallyCreated(ref Error _error)
         {
-            bool result = true;
+            var result = true;
 
-            ArrayList _lst = new ArrayList();
-            if(SDBees.Core.Connectivity.ConnectivityManagerAlienBaseData.GetAlienIdsByDbId(this.GetPropertyByColumn(m_IdColumnName).ToString(), ref _error, ref _lst))
+            var _lst = new ArrayList();
+            if(ConnectivityManagerAlienBaseData.GetAlienIdsByDbId(GetPropertyByColumn(m_IdColumnName).ToString(), ref _error, ref _lst))
             {
                 if (_lst.Count > 0)
                 {
@@ -287,7 +295,7 @@ namespace SDBees.Plugs.TemplateBase
             return result;
         }
 
-        public virtual void SetReadWriteVisibility(ref Properties.PropertySpec ps, ref Error _error)
+        public virtual void SetReadWriteVisibility(ref PropertySpec ps, ref Error _error)
         {
             // Set all properties to read only if not manually created ...
 

@@ -20,6 +20,11 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+
 namespace SDBees.Plugs.TemplateTreeNode
 {
   partial class UserControlTempTreenode
@@ -27,7 +32,7 @@ namespace SDBees.Plugs.TemplateTreeNode
     /// <summary> 
     /// Erforderliche Designervariable.
     /// </summary>
-    private System.ComponentModel.IContainer components = null;
+    private IContainer components = null;
 
     /// <summary> 
     /// Verwendete Ressourcen bereinigen.
@@ -50,32 +55,32 @@ namespace SDBees.Plugs.TemplateTreeNode
     /// </summary>
     private void InitializeComponent()
     {
-      this.propertyGridUserControl = new System.Windows.Forms.PropertyGrid();
+      this.propertyGridUserControl = new PropertyGrid();
       this.SuspendLayout();
       // 
       // propertyGridUserControl
       // 
-      this.propertyGridUserControl.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.propertyGridUserControl.Location = new System.Drawing.Point(0, 0);
+      this.propertyGridUserControl.Dock = DockStyle.Fill;
+      this.propertyGridUserControl.Location = new Point(0, 0);
       this.propertyGridUserControl.Name = "propertyGridUserControl";
-      this.propertyGridUserControl.Size = new System.Drawing.Size(316, 304);
+      this.propertyGridUserControl.Size = new Size(316, 304);
       this.propertyGridUserControl.TabIndex = 0;
-      this.propertyGridUserControl.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.m_propertyGrid_PropertyValueChanged);
+      this.propertyGridUserControl.PropertyValueChanged += new PropertyValueChangedEventHandler(this.m_propertyGrid_PropertyValueChanged);
 
       // 
       // UserControlTempTreenode
       // 
-      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.AutoScaleDimensions = new SizeF(6F, 13F);
+      this.AutoScaleMode = AutoScaleMode.Font;
       this.Controls.Add(this.propertyGridUserControl);
       this.Name = "UserControlTempTreenode";
-      this.Size = new System.Drawing.Size(316, 304);
+      this.Size = new Size(316, 304);
       this.ResumeLayout(false);
 
     }
 
     #endregion
 
-    private System.Windows.Forms.PropertyGrid propertyGridUserControl;
+    private PropertyGrid propertyGridUserControl;
   }
 }

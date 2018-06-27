@@ -30,9 +30,6 @@
 //	============================================================================
 
 using System;
-using System.Collections;
-using System.Diagnostics;
-
 using Carbon.Common;
 
 namespace Carbon.AutoUpdate.Common
@@ -43,15 +40,7 @@ namespace Carbon.AutoUpdate.Common
 	/// </summary>
 	public class AutoUpdateChangeSummaryList : DisposableCollection 		
 	{
-		/// <summary>
-		/// Initializes a new instance of the AutoUpdateChangeSummaryList class.
-		/// </summary>
-		public AutoUpdateChangeSummaryList()
-		{
-			
-		}
-
-		/// <summary>
+	    /// <summary>
 		/// Adds a change summary to the collection.
 		/// </summary>
 		/// <param name="summary">The collection to add.</param>
@@ -60,12 +49,12 @@ namespace Carbon.AutoUpdate.Common
 			if (summary == null)
 				throw new ArgumentNullException("summary");
 
-			if (this.Contains(summary))
+			if (Contains(summary))
 				throw new AutoUpdateChangeSummaryAlreadyExistsException(summary);
 
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
-				base.InnerList.Add(summary);
+				InnerList.Add(summary);
 			}
 		}
 
@@ -78,8 +67,8 @@ namespace Carbon.AutoUpdate.Common
 			if (summaries == null)
 				throw new ArgumentNullException("summaries");
 
-			foreach(AutoUpdateChangeSummary summary in summaries)
-				this.Add(summary);
+			foreach(var summary in summaries)
+				Add(summary);
 		}	
 
 		/// <summary>
@@ -91,11 +80,11 @@ namespace Carbon.AutoUpdate.Common
 			if (summary == null)
 				throw new ArgumentNullException("summary");
 
-			if (this.Contains(summary))
+			if (Contains(summary))
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
-					base.InnerList.Remove(summary);
+					InnerList.Remove(summary);
 				}
 			}
 		}
@@ -110,9 +99,9 @@ namespace Carbon.AutoUpdate.Common
 			if (summary == null)
 				throw new ArgumentNullException("summary");
 
-			lock (base.SyncRoot)
+			lock (SyncRoot)
 			{
-				foreach (AutoUpdateChangeSummary existingSummary in base.InnerList)
+				foreach (AutoUpdateChangeSummary existingSummary in InnerList)
 					if (string.Compare(existingSummary.Id, summary.Id, true) == 0)
 						return true;
 			}
@@ -129,9 +118,9 @@ namespace Carbon.AutoUpdate.Common
 		{
 			get
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
-					return base.InnerList[index] as AutoUpdateChangeSummary;
+					return InnerList[index] as AutoUpdateChangeSummary;
 				}
 			}
 		}
@@ -145,9 +134,9 @@ namespace Carbon.AutoUpdate.Common
 		{
 			get
 			{
-				lock (base.SyncRoot)
+				lock (SyncRoot)
 				{
-					foreach (AutoUpdateChangeSummary existingSummary in base.InnerList)
+					foreach (AutoUpdateChangeSummary existingSummary in InnerList)
 						if (string.Compare(existingSummary.Id, id, true) == 0)
 							return existingSummary;
 				}

@@ -52,7 +52,6 @@ namespace Carbon.Common
 		/// Initializes a new instance of the CommandLineParsingEngine class
 		/// </summary>
 		public CommandLineParser()
-			: base()
 		{
 
 		}
@@ -61,15 +60,14 @@ namespace Carbon.Common
 		/// Initializes a new instance of the CommandLineParsingEngine class
 		/// </summary>
 		/// <param name="args">A command line argument set to parse</param>
-		public CommandLineParser(string[] args) 
-			: base()
+		public CommandLineParser(string[] args)
 		{
-			this.Parse(args);
+			Parse(args);
 		}
 
 		#region Implementation of IEnumerable
 
-		public System.Collections.IEnumerator GetEnumerator()
+		public IEnumerator GetEnumerator()
 		{
 			return _arguments.GetEnumerator();
 		}
@@ -84,8 +82,8 @@ namespace Carbon.Common
 		{
 			_arguments = new StringDictionary();
 
-			Regex regexSplitter = new Regex(@"^-{1,2}|^/|=|:", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-			Regex regexRemover = new Regex(@"^['""]?(.*?)['""]?$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+			var regexSplitter = new Regex(@"^-{1,2}|^/|=|:", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+			var regexRemover = new Regex(@"^['""]?(.*?)['""]?$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
 			string param = null;
 			string[] paramElements;
@@ -93,7 +91,7 @@ namespace Carbon.Common
 			// Valid parameters forms:
 			// {-,/,--}param{ ,=,:}((",')value(",'))
 			// Examples: -param1 value1 --param2 /param3:"Test-:-work" /param4=happy -param5 '--=nice=--'
-			foreach (string arg in args)
+			foreach (var arg in args)
 			{
 				// Look for new parameters (-,/ or --) and a possible enclosed value (=,:)
 				paramElements = regexSplitter.Split(arg, 3);
@@ -182,7 +180,7 @@ namespace Carbon.Common
 		/// <returns></returns>
 		public bool ToBoolean(string name)
 		{
-			if (this.Exists(name))
+			if (Exists(name))
 				return Convert.ToBoolean(_arguments[name]);
 			return false;
 		}
@@ -192,9 +190,9 @@ namespace Carbon.Common
 		/// </summary>
 		/// <param name="name">The name of the argument to check for.</param>
 		/// <returns></returns>
-		public Int16 ToInt16(string name)
+		public short ToInt16(string name)
 		{
-			if (this.Exists(name))
+			if (Exists(name))
 				return Convert.ToInt16(_arguments[name]);
 			return 0;
 		}
@@ -204,9 +202,9 @@ namespace Carbon.Common
 		/// </summary>
 		/// <param name="name">The name of the argument to check for.</param>
 		/// <returns></returns>
-		public Int32 ToInt32(string name)
+		public int ToInt32(string name)
 		{
-			if (this.Exists(name))
+			if (Exists(name))
 				return Convert.ToInt32(_arguments[name]);
 			return 0;
 		}
@@ -216,9 +214,9 @@ namespace Carbon.Common
 		/// </summary>
 		/// <param name="name">The name of the argument to check for.</param>
 		/// <returns></returns>
-		public Int64 ToInt64(string name)
+		public long ToInt64(string name)
 		{
-			if (this.Exists(name))
+			if (Exists(name))
 				return Convert.ToInt64(_arguments[name]);
 			return 0;
 		}
@@ -228,9 +226,9 @@ namespace Carbon.Common
 		/// </summary>
 		/// <param name="name">The name of the argument to check for.</param>
 		/// <returns></returns>
-		public Single ToSingle(string name)
+		public float ToSingle(string name)
 		{			
-			if (this.Exists(name))
+			if (Exists(name))
 				return Convert.ToSingle(_arguments[name]);
 			return 0;
 		}	

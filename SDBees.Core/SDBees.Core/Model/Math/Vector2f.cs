@@ -19,7 +19,6 @@
  *
  */
 
-using System;
 using System.Text;
 
 namespace SDBees.Core.Model.Math
@@ -42,7 +41,7 @@ namespace SDBees.Core.Model.Math
         {
             this.x = x.NativeValue;
             this.y = y.GetIn(x.NativeUnit);
-            this.unit = x.NativeUnit;
+            unit = x.NativeUnit;
         }
 
         /// <summary>
@@ -67,7 +66,7 @@ namespace SDBees.Core.Model.Math
         /// <param name="unitY">Unit type for Y</param>
         public Vector2f(float x, float y, Unit unitX, Unit unitY)
         {
-            this.unit = unitX;
+            unit = unitX;
             this.x = x;
             this.y = unitY.Convert(y, unitX);
         }
@@ -83,7 +82,7 @@ namespace SDBees.Core.Model.Math
             }
             set
             {
-                this.x = value.GetIn(unit);
+                x = value.GetIn(unit);
             }
         }
 
@@ -98,7 +97,7 @@ namespace SDBees.Core.Model.Math
             }
             set
             {
-                this.y = value.GetIn(unit);
+                y = value.GetIn(unit);
             }
         }
 
@@ -142,7 +141,7 @@ namespace SDBees.Core.Model.Math
         /// <returns></returns>
         public Vector2f Converted(Unit unit)
         {
-            return new Vector2f(this.unit.Convert(this.x, unit), this.unit.Convert(this.y, unit), unit);
+            return new Vector2f(this.unit.Convert(x, unit), this.unit.Convert(y, unit), unit);
         }
 
         /// <summary>
@@ -197,7 +196,7 @@ namespace SDBees.Core.Model.Math
         /// <returns>New vector</returns>
         public static Vector2f operator /(Vector2f a, double value)
         {
-            return new Vector2f((float)((double)a.NativeX / value), (float)((double)a.NativeY / value), a.NativeUnit);
+            return new Vector2f((float)(a.NativeX / value), (float)(a.NativeY / value), a.NativeUnit);
         }
 
         /// <summary>
@@ -208,7 +207,7 @@ namespace SDBees.Core.Model.Math
         /// <returns>New vector</returns>
         public static Vector2f operator /(Vector2f a, int value)
         {
-            return new Vector2f(a.NativeX / (float)value, a.NativeY / (float)value, a.NativeUnit);
+            return new Vector2f(a.NativeX / value, a.NativeY / value, a.NativeUnit);
         }
 
         /// <summary>
@@ -241,7 +240,7 @@ namespace SDBees.Core.Model.Math
         /// <returns>New vector</returns>
         public static Vector2f operator *(Vector2f a, double value)
         {
-            return new Vector2f((float)((double)a.NativeX * value), (float)((double)a.NativeY * value), a.NativeUnit);
+            return new Vector2f((float)(a.NativeX * value), (float)(a.NativeY * value), a.NativeUnit);
         }
 
         /// <summary>
@@ -274,7 +273,7 @@ namespace SDBees.Core.Model.Math
         /// <returns>New vector</returns>
         public static Vector2f operator *(double value, Vector2f a)
         {
-            return new Vector2f((float)((double)a.NativeX * value), (float)((double)a.NativeY * value), a.NativeUnit);
+            return new Vector2f((float)(a.NativeX * value), (float)(a.NativeY * value), a.NativeUnit);
         }
 
         /// <summary>
@@ -327,7 +326,7 @@ namespace SDBees.Core.Model.Math
         /// <param name="newLength">New vector length</param>
         public void Scale(DistanceF newLength)
         {
-            float scale = newLength.GetIn(unit) / NativeLength;
+            var scale = newLength.GetIn(unit) / NativeLength;
             x *= scale;
             y *= scale;
         }
@@ -339,7 +338,7 @@ namespace SDBees.Core.Model.Math
         /// <returns>New vector of specified length</returns>
         public Vector2f Scaled(DistanceF newLength)
         {
-            float scale = newLength.GetIn(unit) / NativeLength;
+            var scale = newLength.GetIn(unit) / NativeLength;
             return this * scale;
         }
 
@@ -348,7 +347,7 @@ namespace SDBees.Core.Model.Math
         /// </summary>
         public void Normalize()
         {
-            float scale = 1.0f / NativeLength;
+            var scale = 1.0f / NativeLength;
             x *= scale;
             y *= scale;
         }
@@ -360,7 +359,7 @@ namespace SDBees.Core.Model.Math
         {
             get
             {
-                float scale = 1.0f / NativeLength;
+                var scale = 1.0f / NativeLength;
                 return this * scale;
             }
         }
@@ -392,10 +391,10 @@ namespace SDBees.Core.Model.Math
         /// <returns></returns>
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(X.ToString());
+            var sb = new StringBuilder();
+            sb.Append(X);
             sb.Append(' ');
-            sb.Append(Y.ToString());
+            sb.Append(Y);
             return sb.ToString();
         }
 

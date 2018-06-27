@@ -21,27 +21,18 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //
 // #EndHeader# ================================================================
+
 using System;
-using System.Collections.Generic;
-
-using System.Diagnostics;
-using System.Reflection;
-
-using System.Data;
-
-using System.Text;
 using System.Drawing;
-using System.Windows.Forms;
-
-using Carbon;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
-
-using SDBees.Plugs.Attributes;
-using SDBees.Main.Window;
-using SDBees.DB;
-using SDBees.Plugs.TemplateTreeNode;
+using SDBees.Core.Global;
 using SDBees.Core.Model;
+using SDBees.Core.Properties;
+using SDBees.DB;
+using SDBees.Main.Window;
+using SDBees.Plugs.TemplateBase;
+using SDBees.Plugs.TemplateTreeNode;
 
 namespace SDBees.Demoplugins.Dummys
 {
@@ -56,11 +47,11 @@ namespace SDBees.Demoplugins.Dummys
     [PluginId("A25F07FC-4134-41e2-8029-B5AE3675B540")]
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
-    [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
-    [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
-    [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
+    [PluginDependency(typeof(MainWindowApplication))]
+    [PluginDependency(typeof(SDBeesDBConnection))]
+    [PluginDependency(typeof(GlobalManager))]
 
-    public class Dummy1 : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
+    public class Dummy1 : TemplateTreenode
     {
         private static Dummy1 _theInstance;
 
@@ -78,7 +69,7 @@ namespace SDBees.Demoplugins.Dummys
         /// <summary>
         /// Konstruktor des Dummy1
         /// </summary>
-        public Dummy1() : base()
+        public Dummy1()
         {
             _theInstance = this;
             CreateMenuItem = "Create Dummy1";
@@ -97,7 +88,7 @@ namespace SDBees.Demoplugins.Dummys
             {
                 Console.WriteLine("Dummy1 Plugin starts\n");
 
-                this.StartMe(context, e);
+                StartMe(context, e);
 
                 InitDatabase();
             }
@@ -120,7 +111,7 @@ namespace SDBees.Demoplugins.Dummys
         public override Icon GetIcon(Size size)
         {
             Icon result = null;
-            result = SDBees.Core.Properties.Resources.SDBees_Demoplugins_Dummys_Dummy1;
+            result = Resources.SDBees_Demoplugins_Dummys_Dummy1;
             return result;
         }
 
@@ -134,19 +125,19 @@ namespace SDBees.Demoplugins.Dummys
             return Dummy1BaseData.gTable;
         }
 
-        public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
+        public override TemplateDBBaseData CreateDataObject()
         {
             return new Dummy1BaseData();
         }
 
-        public override SDBees.Plugs.TemplateBase.TemplatePlugin GetPlugin()
+        public override TemplatePlugin GetPlugin()
         {
             return _theInstance;
         }
 
         public override SDBeesEntityDefinition GetEntityDefinition()
         {
-            return base.GetEntityDefinition(this.GetType());
+            return base.GetEntityDefinition(GetType());
         }
 
         protected override void OnDatabaseChanged(object sender, EventArgs e)
@@ -160,8 +151,8 @@ namespace SDBees.Demoplugins.Dummys
             if (MyDBManager != null)
             {
                 // Verify that the required Tables are created/updated in the database
-                Database database = MyDBManager.Database;
-                this.CreateDataObject().InitTableSchema(ref Dummy1BaseData.gTable, database);
+                var database = MyDBManager.Database;
+                CreateDataObject().InitTableSchema(ref Dummy1BaseData.gTable, database);
             }
         }
     }
@@ -172,11 +163,11 @@ namespace SDBees.Demoplugins.Dummys
     [PluginId("2661C28A-C810-45e5-B4A7-3514D0372328")]
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
-    [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
-    [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
-    [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
+    [PluginDependency(typeof(MainWindowApplication))]
+    [PluginDependency(typeof(SDBeesDBConnection))]
+    [PluginDependency(typeof(GlobalManager))]
 
-    public class Dummy2 : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
+    public class Dummy2 : TemplateTreenode
     {
         private static Dummy2 _theInstance;
 
@@ -195,7 +186,6 @@ namespace SDBees.Demoplugins.Dummys
         /// Konstruktor des Dummy1
         /// </summary>
         public Dummy2()
-            : base()
         {
             _theInstance = this;
             CreateMenuItem = "Create Dummy2";
@@ -214,7 +204,7 @@ namespace SDBees.Demoplugins.Dummys
             {
                 Console.WriteLine("Dummy2 Plugin starts\n");
 
-                this.StartMe(context, e);
+                StartMe(context, e);
 
                 InitDatabase();
             }
@@ -237,7 +227,7 @@ namespace SDBees.Demoplugins.Dummys
         public override Icon GetIcon(Size size)
         {
             Icon result = null;
-            result = SDBees.Core.Properties.Resources.SDBees_Demoplugins_Dummys_Dummy2;
+            result = Resources.SDBees_Demoplugins_Dummys_Dummy2;
             return result;
         }
 
@@ -251,19 +241,19 @@ namespace SDBees.Demoplugins.Dummys
             return Dummy2BaseData.gTable;
         }
 
-        public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
+        public override TemplateDBBaseData CreateDataObject()
         {
             return new Dummy2BaseData();
         }
 
-        public override Plugs.TemplateBase.TemplatePlugin GetPlugin()
+        public override TemplatePlugin GetPlugin()
         {
             return _theInstance;
         }
 
         public override SDBeesEntityDefinition GetEntityDefinition()
         {
-            return base.GetEntityDefinition(this.GetType());
+            return base.GetEntityDefinition(GetType());
         }
 
         protected override void OnDatabaseChanged(object sender, EventArgs e)
@@ -277,17 +267,17 @@ namespace SDBees.Demoplugins.Dummys
             if (MyDBManager != null)
             {
                 // Verify that the required Tables are created/updated in the database
-                Database database = MyDBManager.Database;
-                this.CreateDataObject().InitTableSchema(ref Dummy2BaseData.gTable, database);
+                var database = MyDBManager.Database;
+                CreateDataObject().InitTableSchema(ref Dummy2BaseData.gTable, database);
             }
         }
     }
 
-    public class Dummy1BaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
+    public class Dummy1BaseData : TemplateDBBaseData
     {
         #region Private Data Members
 
-        internal static Table gTable = null;
+        internal static Table gTable;
 
         #endregion
 
@@ -304,7 +294,7 @@ namespace SDBees.Demoplugins.Dummys
         public Dummy1BaseData() :
             base("Dummy1", "Dummy1 Daten", "General")
         {
-            base.Table = gTable;
+            Table = gTable;
         }
 
         #endregion
@@ -325,11 +315,11 @@ namespace SDBees.Demoplugins.Dummys
         #endregion
     }
 
-    public class Dummy2BaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
+    public class Dummy2BaseData : TemplateDBBaseData
     {
         #region Private Data Members
 
-        internal static Table gTable = null;
+        internal static Table gTable;
 
         #endregion
 
@@ -346,7 +336,7 @@ namespace SDBees.Demoplugins.Dummys
         public Dummy2BaseData() :
             base("Dummy2", "Dummy2 Daten", "General")
         {
-            base.Table = gTable;
+            Table = gTable;
         }
 
         #endregion

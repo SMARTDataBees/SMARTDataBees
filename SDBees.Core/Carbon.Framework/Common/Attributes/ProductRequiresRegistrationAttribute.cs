@@ -39,7 +39,7 @@ namespace Carbon.Common.Attributes
 	/// Defines an assembly level attribute that contains a flag that indicates
 	/// whether the product requires registration or not.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false)]
+	[AttributeUsage(AttributeTargets.Assembly)]
 	public sealed class ProductRequiresRegistrationAttribute : Attribute 
 	{
 		private readonly bool _requiresRegistration;
@@ -49,7 +49,6 @@ namespace Carbon.Common.Attributes
 		/// </summary>
 		/// <param name="requiresRegistration">A flag that indicates whether the product requires activation.</param>
 		public ProductRequiresRegistrationAttribute(bool requiresRegistration)
-			: base()
 		{
 			_requiresRegistration = requiresRegistration;
 		}
@@ -74,7 +73,7 @@ namespace Carbon.Common.Attributes
 		{
 			try
 			{
-				object[] attributes = assembly.GetCustomAttributes(typeof(ProductRequiresRegistrationAttribute), false);
+				var attributes = assembly.GetCustomAttributes(typeof(ProductRequiresRegistrationAttribute), false);
 				if (attributes != null)
 					if (attributes.Length > 0)
 						return attributes[0] as ProductRequiresRegistrationAttribute;

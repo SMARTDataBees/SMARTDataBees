@@ -29,15 +29,16 @@
 //
 //	============================================================================
 
-using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace Carbon.Common
 {
     /// <summary>
     /// Provides methods for working with the keyboard.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
     public static class KeyboardUtilities
     {
         [DllImport("User32.dll")]
@@ -48,7 +49,7 @@ namespace Carbon.Common
         /// </summary>
         /// <param name="key">The key whos state will be determined to be down or not</param>
         /// <returns></returns>
-        public static bool IsKeyDown(System.Windows.Forms.Keys key)
+        public static bool IsKeyDown(Keys key)
         {
             if (GetAsyncKeyState((int)key) < 0)
                 return true;

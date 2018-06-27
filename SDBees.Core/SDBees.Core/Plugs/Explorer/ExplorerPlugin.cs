@@ -20,31 +20,29 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
-using Carbon;
 using Carbon.Plugins;
-using Carbon.Plugins.Attributes;
-
+using SDBees.Core.Connectivity.SDBeesLink.Service;
 using SDBees.Core.Model;
 
 namespace SDBees.Plugs.Explorer
 {
-    public enum ExplorerMode { eQualification, eSelection, eDefinition, eIssues };
+    public enum ExplorerMode { eQualification, eSelection, eDefinition, eIssues }
 
     public interface iExplorer
     {
         PluginContext Context { get; set; }
 
-        SDBees.Core.Connectivity.SDBeesLink.Service.SDBeesExternalPluginService MyPluginService { get; set; }
+        SDBeesExternalPluginService MyPluginService { get; set; }
 
         SDBeesDataSet MyDataSet { get; set; }
 
         Dictionary<string, SDBeesEntityDefinition> EntityDefinitions { get; set; }
 
-        System.Windows.Forms.DialogResult ShowDialog(IWin32Window window, bool blockApplication);
+        DialogResult ShowDialog(IWin32Window window, bool blockApplication);
 
         void CloseDialog();
 
@@ -55,7 +53,7 @@ namespace SDBees.Plugs.Explorer
     {
         public PluginContext Context { get; set; }
 
-        public SDBees.Core.Connectivity.SDBeesLink.Service.SDBeesExternalPluginService MyPluginService { get; set; }
+        public SDBeesExternalPluginService MyPluginService { get; set; }
 
         public abstract ExplorerMode ExplorerMode { get; set; }
 

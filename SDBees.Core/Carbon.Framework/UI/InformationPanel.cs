@@ -29,13 +29,10 @@
 //
 //	============================================================================
 
-using System;
-using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-
-using Carbon.Common;
 
 namespace Carbon.UI
 {
@@ -43,25 +40,25 @@ namespace Carbon.UI
 	/// Provides a UserControl for displaying information using a Title, Description, and Image. Alternatively providing
 	/// access to a scrolling MarqueeControl to provide visual feedback for long running processes.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
-	public sealed class InformationPanel : System.Windows.Forms.UserControl 
+	[DebuggerStepThrough]
+	public sealed class InformationPanel : UserControl 
 	{		
 		private Label _labelTitle;		
 		private Label _labelDescription;
 		private PictureBox _pictureBox;
-		private Carbon.UI.MarqueeControl _marquee;
+		private MarqueeControl _marquee;
 
 		/// <summary> 
 		/// Required designer variable.
 		/// </summary>
-		private System.ComponentModel.Container components = null;
+		private Container components = null;
 
 		/// <summary>
 		/// Initializes a new instance of the InformationPanel class
 		/// </summary>
 		public InformationPanel()
 		{
-			this.InitializeComponent();					
+			InitializeComponent();					
 		}		
 
 		/// <summary> 
@@ -92,7 +89,7 @@ namespace Carbon.UI
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(InformationPanel));
+			var resources = new System.Resources.ResourceManager(typeof(InformationPanel));
 			this._labelTitle = new System.Windows.Forms.Label();
 			this._pictureBox = new System.Windows.Forms.PictureBox();
 			this._labelDescription = new System.Windows.Forms.Label();
@@ -170,7 +167,7 @@ namespace Carbon.UI
 
 			// refresh all of the child controls to prevent flickering
 			// this should really be all GDI+ stuff if we wanted to be pure
-			foreach(Control c in this.Controls)
+			foreach(Control c in Controls)
 				c.Refresh();			
 		}
 
@@ -192,7 +189,7 @@ namespace Carbon.UI
 			set
 			{
 				_labelTitle.Text = value;
-				this.Refresh();
+				Refresh();
 			}
 		}
 
@@ -210,7 +207,7 @@ namespace Carbon.UI
 			set
 			{
 				_labelDescription.Text = value;
-				this.Refresh();
+				Refresh();
 			}
 		}
 
@@ -228,7 +225,7 @@ namespace Carbon.UI
 			set
 			{
 				_pictureBox.Image = value;
-				this.Refresh();
+				Refresh();
 			}
 		}
 

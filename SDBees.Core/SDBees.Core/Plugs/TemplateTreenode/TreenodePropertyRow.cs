@@ -20,28 +20,28 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using SDBees.Plugs.Properties;
 using System.Windows.Forms;
 using SDBees.DB;
-using System.ComponentModel;
+using SDBees.Plugs.Properties;
+using SDBees.Plugs.TemplateBase;
 
 namespace SDBees.Plugs.TemplateTreeNode
 {
     public class TreenodePropertyRow : PropertyRow
     {
         private TemplateTreenode m_Treenode;
-        private Plugs.TemplateBase.TemplateDBBaseData m_baseData;
+        private TemplateDBBaseData m_baseData;
         private TemplateTreenodeTag m_Tag;
-        private SDBees.DB.SDBeesDBConnection m_dbManager;
+        private SDBeesDBConnection m_dbManager;
         private Hashtable m_MapDisplayToDbName;
 
         private List<PropertySpecEventArgs> m_updates = new List<PropertySpecEventArgs>();
 
-        public TreenodePropertyRow(SDBees.DB.SDBeesDBConnection dbManager, TemplateTreenode treenode, TemplateTreenodeTag tag)
+        public TreenodePropertyRow(SDBeesDBConnection dbManager, TemplateTreenode treenode, TemplateTreenodeTag tag)
         {
             m_dbManager = dbManager;
             m_Treenode = treenode;
@@ -50,26 +50,26 @@ namespace SDBees.Plugs.TemplateTreeNode
             UpdateProperties();
         }
 
-        public TreenodePropertyRow(SDBees.DB.SDBeesDBConnection dbManager, string typePlugin, string guidInstance)
+        public TreenodePropertyRow(SDBeesDBConnection dbManager, string typePlugin, string guidInstance)
         {
             m_dbManager = dbManager;
             m_Treenode = TemplateTreenode.GetPluginForType(typePlugin);
-            m_Tag = new TemplateTreenodeTag() { NodeGUID = guidInstance };
+            m_Tag = new TemplateTreenodeTag { NodeGUID = guidInstance };
 
             UpdateProperties();
         }
 
-        public TreenodePropertyRow(SDBees.DB.SDBeesDBConnection dbManager, Plugs.TemplateBase.TemplateDBBaseData baseData, string guidInstance)
+        public TreenodePropertyRow(SDBeesDBConnection dbManager, TemplateDBBaseData baseData, string guidInstance)
         {
             m_dbManager = dbManager;
             m_Treenode = null;
-            m_Tag = new TemplateTreenodeTag() { NodeGUID = guidInstance };
+            m_Tag = new TemplateTreenodeTag { NodeGUID = guidInstance };
             m_baseData = baseData;
 
             UpdateProperties();
         }
 
-        public SDBees.DB.SDBeesDBConnection MyDBManager
+        public SDBeesDBConnection MyDBManager
         {
             get
             {
@@ -79,16 +79,10 @@ namespace SDBees.Plugs.TemplateTreeNode
 
         public string GetType()
         {
-            return (m_baseData != null) ? m_baseData.GetType().ToString() : "";
+            return m_baseData?.GetType().ToString() ?? "";
         }
 
-        public object Id
-        {
-            get
-            {
-                return m_baseData != null ? m_baseData.Id : null;
-            }
-        }
+        public object Id => m_baseData?.Id;
 
         public string GetPropertyString(string displayName)
         {
@@ -97,8 +91,8 @@ namespace SDBees.Plugs.TemplateTreeNode
 
         public void SetPropertyString(string displayName, string value, bool updateProperties)
         {
-            SetPropertyManually(new Plugs.Properties.PropertySpecEventArgs(
-                new Plugs.Properties.PropertySpec(displayName, typeof(string)), value, updateProperties));
+            SetPropertyManually(new PropertySpecEventArgs(
+                new PropertySpec(displayName, typeof(string)), value, updateProperties));
         }
 
         public void UpdateProperties()
@@ -115,26 +109,25 @@ namespace SDBees.Plugs.TemplateTreeNode
 
                 if (m_baseData != null)
                 {
-                    Table table = m_baseData.Table;
+                    var table = m_baseData.Table;
 
-                    this.Properties.Clear();
+                    Properties.Clear();
                     m_MapDisplayToDbName = new Hashtable();
 
                     // Dieses ist nur zum testen und sollte aus dem "DB.Object" gefüllt werden.
-                    foreach (KeyValuePair<string, Column> iterator in table.Columns)
+                    foreach (var column in table.Columns)
                     {
-                        Column column = iterator.Value;
-                        Type columnType = column.GetTypeForColumn();
+                        var columnType = column.GetTypeForColumn();
                         PropertySpec ps = null;
                         if ((column.SelectionList != null) && (columnType == typeof(string)))
                         {
                             ps = new PropertySpecListbox(column.DisplayName, columnType, column.Category, column.Description, null, column.SelectionList);
                         }
-                        else if ((!String.IsNullOrEmpty(column.UITypeConverter)) && (!String.IsNullOrEmpty(column.UITypeEditor)))
+                        else if ((!string.IsNullOrEmpty(column.UITypeConverter)) && (!string.IsNullOrEmpty(column.UITypeEditor)))
                         {
                             ps = new PropertySpec(column.DisplayName, columnType, column.Category, column.Description, null, column.UITypeEditor, column.UITypeConverter);
                         }
-                        else if ((!String.IsNullOrEmpty(column.UITypeConverter)) && (String.IsNullOrEmpty(column.UITypeEditor)))
+                        else if ((!string.IsNullOrEmpty(column.UITypeConverter)) && (string.IsNullOrEmpty(column.UITypeEditor)))
                         {
                             ps = new PropertySpec(column.DisplayName, columnType, column.Category, column.Description, null, column.UITypeConverter);
                         }
@@ -144,8 +137,8 @@ namespace SDBees.Plugs.TemplateTreeNode
                         }
                         if (ps != null)
                         {
-                            ps.ReadOnlyProperty = (column.Editable == true) ? false : true;
-                            ps.BrowsableProperty = (column.Browsable == true) ? true : false;
+                            ps.ReadOnlyProperty = column.IsEditable ? false : true;
+                            ps.BrowsableProperty = column.IsBrowsable ? true : false;
 
                             //ps.Attributes = new List<System.Attribute>();
                             //if (!column.Editable)
@@ -158,7 +151,7 @@ namespace SDBees.Plugs.TemplateTreeNode
 
                             m_baseData.SetReadWriteVisibility(ref ps, ref _error);
 
-                            this.Properties.Add(ps);
+                            Properties.Add(ps);
                             this[column.DisplayName] = m_baseData.GetPropertyByColumn(column.Name);
 
                             m_MapDisplayToDbName.Add(column.DisplayName, column.Name);
@@ -166,11 +159,11 @@ namespace SDBees.Plugs.TemplateTreeNode
                     }
 
                     //Fill the automatic properties
-                    foreach (KeyValuePair<PropertySpec, object> sp in m_baseData.GetAutomaticProperties())
+                    foreach (var sp in m_baseData.GetAutomaticProperties())
                     {
                         try
                         {
-                            this.Properties.Add(sp.Key);
+                            Properties.Add(sp.Key);
                             this[sp.Key.Name] = sp.Value;
                         }
                         catch (Exception ex)
@@ -199,7 +192,7 @@ namespace SDBees.Plugs.TemplateTreeNode
             // TBD: First check if this is allowed...
 
             // Remember the old value...
-            object oldValue = this[e.Property.Name];
+            var oldValue = this[e.Property.Name];
 
             if (CheckIsNotEqualValue(oldValue, e.Value))
             {
@@ -211,12 +204,12 @@ namespace SDBees.Plugs.TemplateTreeNode
 
                 if (m_baseData == null)
                 {
-                    this.m_baseData = m_Treenode.CreateDataObject();
+                    m_baseData = m_Treenode.CreateDataObject();
                     m_baseData.Load(m_dbManager.Database, m_Tag.NodeGUID, ref error);
                 }
                 if ((m_baseData != null) && (error == null))
                 {
-                    bool proceed = false;
+                    var proceed = false;
                     if (m_baseData.CheckForUniqueName())
                     {
                         proceed = m_baseData.IsNameUnique(m_baseData.GetTableName, e.Value.ToString());
@@ -226,7 +219,7 @@ namespace SDBees.Plugs.TemplateTreeNode
 
                     if (proceed)
                     {
-                        string columnName = (string)m_MapDisplayToDbName[e.Property.Name];
+                        var columnName = (string)m_MapDisplayToDbName[e.Property.Name];
                         m_baseData.SetPropertyByColumn(columnName, e.Value);
                         m_baseData.Save(ref error);
                     }
@@ -242,11 +235,11 @@ namespace SDBees.Plugs.TemplateTreeNode
 
                 // Refresh the property grid
                 if (e.UpdateProperties)
-                    this.UpdateProperties();
+                    UpdateProperties();
 
-                if ((error == null) && (m_Treenode != null))
+                if ((error == null))
                 {
-                    m_Treenode.RaiseObjectModified(m_baseData, m_Tag);
+                    m_Treenode?.RaiseObjectModified(m_baseData, m_Tag);
                 }
             }
         }
@@ -256,13 +249,13 @@ namespace SDBees.Plugs.TemplateTreeNode
         /// </summary>
         protected void OnSetValue(List<PropertySpecEventArgs> events)
         {
-            bool updateProperties = false;
+            var updateProperties = false;
 
-            Dictionary<PropertySpecEventArgs, object> oldValues = new Dictionary<PropertySpecEventArgs, object>();
+            var oldValues = new Dictionary<PropertySpecEventArgs, object>();
 
-            foreach (PropertySpecEventArgs e in events)
+            foreach (var e in events)
             {
-                object oldValue = this[e.Property.Name];
+                var oldValue = this[e.Property.Name];
 
                 if (CheckIsNotEqualValue(oldValue, e.Value))
                 {
@@ -278,17 +271,17 @@ namespace SDBees.Plugs.TemplateTreeNode
 
             if (m_baseData == null)
             {
-                this.m_baseData = m_Treenode.CreateDataObject();
+                m_baseData = m_Treenode.CreateDataObject();
                 m_baseData.Load(m_dbManager.Database, m_Tag.NodeGUID, ref error);
             }
 
             if ((m_baseData != null) && (error == null))
             {
-                foreach (KeyValuePair<PropertySpecEventArgs, object> iterator in oldValues)
+                foreach (var iterator in oldValues)
                 {
-                    PropertySpecEventArgs e = iterator.Key;
+                    var e = iterator.Key;
 
-                    string columnName = (string)m_MapDisplayToDbName[e.Property.Name];
+                    var columnName = (string)m_MapDisplayToDbName[e.Property.Name];
 
                     m_baseData.SetPropertyByColumn(columnName, e.Value);
                 }
@@ -299,21 +292,21 @@ namespace SDBees.Plugs.TemplateTreeNode
 
                 if (error != null)
                 {
-                    foreach (KeyValuePair<PropertySpecEventArgs, object> iterator in oldValues)
+                    foreach (var iterator in oldValues)
                     {
-                        PropertySpecEventArgs e = iterator.Key;
+                        var e = iterator.Key;
 
-                        object oldValue = iterator.Value;
+                        var oldValue = iterator.Value;
 
                         this[e.Property.Name] = oldValue;
                     }
                 }
 
-                if (updateProperties) this.UpdateProperties();
+                if (updateProperties) UpdateProperties();
 
-                if ((error == null) && (m_Treenode != null))
+                if ((error == null))
                 {
-                    m_Treenode.RaiseObjectModified(m_baseData, m_Tag);
+                    m_Treenode?.RaiseObjectModified(m_baseData, m_Tag);
                 }
             }
             else
@@ -324,29 +317,15 @@ namespace SDBees.Plugs.TemplateTreeNode
 
         public bool Buffered
         {
-            get
-            {
-                return m_updates != null;
-            }
-            set
-            {
-                if (value)
-                {
-                    m_updates = new List<PropertySpecEventArgs>();
-                }
-                else
-                {
-                    m_updates = null;
-                }
-            }
-
+            get => m_updates != null;
+            set => m_updates = value ? new List<PropertySpecEventArgs>() : null;
         }
 
         public void SetPropertyManually(PropertySpecEventArgs e)
         {
             if (m_updates == null)
             {
-                this.OnSetValue(e);
+                OnSetValue(e);
             }
             else
             {
@@ -358,7 +337,7 @@ namespace SDBees.Plugs.TemplateTreeNode
         {
             if (m_updates != null)
             {
-                this.OnSetValue(m_updates);
+                OnSetValue(m_updates);
 
                 m_updates.Clear();
             }
@@ -370,8 +349,7 @@ namespace SDBees.Plugs.TemplateTreeNode
                 return true;
             if (!oldValue.Equals(p))
                 return true;
-            else
-                return false;
+            return false;
         }
     }
 }

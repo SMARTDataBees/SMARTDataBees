@@ -20,20 +20,17 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 
+using System.Collections;
 using SDBees.DB;
 
 namespace SDBees.EDM
 {
-    class EDMBaseData : SDBees.DB.Object
+    class EDMBaseData : Object
     {
         #region Private Data Members
 
-        private static Table gTable = null;
+        private static Table gTable;
 
         #endregion
 
@@ -103,14 +100,14 @@ namespace SDBees.EDM
 
         public static void InitTableSchema(Database database)
         {
-            EDMBaseData baseData = new EDMBaseData();
+            var baseData = new EDMBaseData();
             baseData.InitTableSchema(ref gTable, database);
 
             // Now add columns always required by this plugIn
-            baseData.AddColumn(new Column("folder", DbType.eString, "Verzeichnis", "Verzeichnis für dieses Plugin", "", 256, "", 0), database);
-            baseData.AddColumn(new Column("plugin", DbType.eString, "Plugin", "Plugin für dieses Verzeichnis", "", 256, "", 0), database);
-            baseData.AddColumn(new Column("object_id", DbType.eGuidString, "Objekt Id", "Objekt für dieses Verzeichnis", "", 256, "", 0), database);
-            baseData.AddColumn(new Column("filespec", DbType.eString, "Dateiinfo", "Dateispezifikation für dieses Verzeichnis", "", 256, "Alle Dateien (*.*)|*.*", 0), database);
+            baseData.AddColumn(new Column("folder", DbType.String, "Verzeichnis", "Verzeichnis für dieses Plugin", "", 256, "", 0), database);
+            baseData.AddColumn(new Column("plugin", DbType.String, "Plugin", "Plugin für dieses Verzeichnis", "", 256, "", 0), database);
+            baseData.AddColumn(new Column("object_id", DbType.GuidString, "Objekt Id", "Objekt für dieses Verzeichnis", "", 256, "", 0), database);
+            baseData.AddColumn(new Column("filespec", DbType.String, "Dateiinfo", "Dateispezifikation für dieses Verzeichnis", "", 256, "Alle Dateien (*.*)|*.*", 0), database);
         }
 
 

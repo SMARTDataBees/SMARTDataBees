@@ -22,25 +22,10 @@
 //
 // #EndHeader# ================================================================
 using System;
-using System.Collections.Generic;
-
-using System.Diagnostics;
-using System.Reflection;
-
-using System.Data;
-
-using System.Text;
 using System.Drawing;
-using System.Windows.Forms;
-
-using Carbon;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
-
-using SDBees.Plugs.Attributes;
-using SDBees.Main.Window;
 using SDBees.DB;
-using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Core.Model;
 
 namespace SDBees.Core.Plugins.MEP.ContractData
@@ -57,10 +42,10 @@ namespace SDBees.Core.Plugins.MEP.ContractData
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
     [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
-    [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
-    [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
+    [PluginDependency(typeof(SDBeesDBConnection))]
+    [PluginDependency(typeof(Global.GlobalManager))]
 
-    public class MEPContractData : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
+    public class MEPContractData : Plugs.TemplateTreeNode.TemplateTreenode
     {
         private static MEPContractData _theInstance;
 
@@ -98,7 +83,7 @@ namespace SDBees.Core.Plugins.MEP.ContractData
             {
                 Console.WriteLine("Contract Data Plugin starts\n");
 
-                this.StartMe(context, e);
+                StartMe(context, e);
 
                 InitDatabase();
             }
@@ -134,7 +119,7 @@ namespace SDBees.Core.Plugins.MEP.ContractData
             return MEPContractDataBaseData.gTable;
         }
 
-        public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
+        public override Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
         {
             return new MEPContractDataBaseData();
         }
@@ -146,7 +131,7 @@ namespace SDBees.Core.Plugins.MEP.ContractData
 
         public override SDBeesEntityDefinition GetEntityDefinition()
         {
-            return base.GetEntityDefinition(this.GetType());
+            return base.GetEntityDefinition(GetType());
         }
         
         protected override void OnDatabaseChanged(object sender, EventArgs e)
@@ -160,13 +145,13 @@ namespace SDBees.Core.Plugins.MEP.ContractData
             if (MyDBManager != null)
             {
                 // Verify that the required Tables are created/updated in the database
-                Database database = MyDBManager.Database;
-                this.CreateDataObject().InitTableSchema(ref MEPContractDataBaseData.gTable, database);
+                var database = MyDBManager.Database;
+                CreateDataObject().InitTableSchema(ref MEPContractDataBaseData.gTable, database);
             }
         }
     }
 
-    public class MEPContractDataBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
+    public class MEPContractDataBaseData : Plugs.TemplateBase.TemplateDBBaseData
     {
         #region Private Data Members
 
@@ -187,7 +172,7 @@ namespace SDBees.Core.Plugins.MEP.ContractData
         public MEPContractDataBaseData() :
             base("Contract data name", "MEP contract data", "General")
         {
-            base.Table = gTable;
+            Table = gTable;
         }
 
         #endregion

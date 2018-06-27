@@ -30,13 +30,14 @@
 //	============================================================================
 
 using System;
+using System.Diagnostics;
 
 namespace Carbon.MultiThreading
 {
 	/// <summary>
 	/// Defines an EventArgs class that defines a BackgroundThread event
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public sealed class BackgroundThreadEventArgs : EventArgs
 	{
 		private readonly BackgroundThread _thread;
@@ -45,7 +46,7 @@ namespace Carbon.MultiThreading
 		/// Initializes a new instance of the BackgroundThreadEventArgs class
 		/// </summary>
 		/// <param name="thread">The background thread about which this event is centered</param>
-		public BackgroundThreadEventArgs(BackgroundThread thread) : base()
+		public BackgroundThreadEventArgs(BackgroundThread thread)
 		{
 			_thread = thread;
 		}

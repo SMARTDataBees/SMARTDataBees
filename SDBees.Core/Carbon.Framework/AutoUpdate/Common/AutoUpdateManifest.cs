@@ -30,7 +30,7 @@
 //	============================================================================
 
 using System;
-
+using System.Text;
 using Carbon.AutoUpdate.Common.Xml;
 
 namespace Carbon.AutoUpdate.Common
@@ -177,7 +177,7 @@ namespace Carbon.AutoUpdate.Common
 		/// <returns></returns>
 		public override string ToString()
 		{
-			return XmlAutoUpdateManifestWriter.ToXml(this, System.Text.Encoding.UTF8);
+			return XmlAutoUpdateManifestWriter.ToXml(this, Encoding.UTF8);
 		}
 	}
 }

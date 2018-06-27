@@ -1,11 +1,14 @@
-﻿namespace SDBees.Core.Connectivity.SDBeesLink.UI
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace SDBees.Core.Connectivity.SDBeesLink.UI
 {
     partial class SDBeesDataSetDLG
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -160,11 +163,11 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView m_dataGridViewSDBeesEntitys;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button m_buttonOK;
-        private System.Windows.Forms.PropertyGrid m_propertyGrid;
-        private System.Windows.Forms.SplitContainer m_splitContainer;
-        private System.Windows.Forms.Label m_labelNumberOfItems;
+        private DataGridView m_dataGridViewSDBeesEntitys;
+        private GroupBox groupBox1;
+        private Button m_buttonOK;
+        private PropertyGrid m_propertyGrid;
+        private SplitContainer m_splitContainer;
+        private Label m_labelNumberOfItems;
     }
 }

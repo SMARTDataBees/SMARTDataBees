@@ -30,6 +30,7 @@
 //	============================================================================
 
 using System;
+using System.Diagnostics;
 
 namespace Carbon.UI
 {
@@ -37,7 +38,7 @@ namespace Carbon.UI
 	/// <summary>
 	/// Summary description for AsyncWindowManagerEventArgs.
 	/// </summary>
-	[System.Diagnostics.DebuggerStepThrough()]
+	[DebuggerStepThrough]
 	public class AsyncWindowManagerEventArgs : EventArgs
 	{
 		private readonly AsyncWindowManager _asyncWindow;

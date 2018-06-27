@@ -32,9 +32,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Security.Cryptography;
-using System.Security.Permissions;
 
 namespace Carbon.Configuration
 {	
@@ -81,8 +79,8 @@ namespace Carbon.Configuration
 //				FileIOPermission p = new FileIOPermission(FileIOPermissionAccess.Write, filename);
 //				p.Assert();
 				
-				FileStream fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
-				CryptoStream cs = new CryptoStream(fs, _encryptor, CryptoStreamMode.Write);
+				var fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
+				var cs = new CryptoStream(fs, _encryptor, CryptoStreamMode.Write);
 				return cs;
 			}
 			catch(Exception ex)
@@ -104,8 +102,8 @@ namespace Carbon.Configuration
 //				FileIOPermission p = new FileIOPermission(FileIOPermissionAccess.Read, filename);
 //				p.Assert();
 
-				FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
-				CryptoStream cs = new CryptoStream(fs, _decryptor, CryptoStreamMode.Read);
+				var fs = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
+				var cs = new CryptoStream(fs, _decryptor, CryptoStreamMode.Read);
 				return cs;
 			}
 			catch(Exception ex)
@@ -125,20 +123,20 @@ namespace Carbon.Configuration
 		{
 			try
 			{
-				FileStream inputStream = new FileStream(inputFile, FileMode.Open, FileAccess.Read);
-				FileStream outputStream = new FileStream(outputFile, FileMode.OpenOrCreate, FileAccess.Write);				
-				CryptoStream cryptoStream = new CryptoStream(outputStream, _encryptor, CryptoStreamMode.Write);
+				var inputStream = new FileStream(inputFile, FileMode.Open, FileAccess.Read);
+				var outputStream = new FileStream(outputFile, FileMode.OpenOrCreate, FileAccess.Write);				
+				var cryptoStream = new CryptoStream(outputStream, _encryptor, CryptoStreamMode.Write);
 			
-				int bufferLength = 4096;
-				byte[] buffer = new byte[bufferLength];
-				int bytesRead = 0;
+				var bufferLength = 4096;
+				var buffer = new byte[bufferLength];
+				var bytesRead = 0;
 
 				do
 				{
-					/// read a chunk from the file 
+					// read a chunk from the file 
 					bytesRead = inputStream.Read(buffer, 0, bufferLength);
 
-					/// and then encrypt in
+					// and then encrypt in
 					cryptoStream.Write(buffer, 0, bytesRead);
 				}
 				while(bytesRead != 0);
@@ -165,20 +163,20 @@ namespace Carbon.Configuration
 		{
 			try
 			{
-				FileStream inputStream = new FileStream(inputFile, FileMode.Open, FileAccess.Read);
-				FileStream outputStream = new FileStream(outputFile, FileMode.OpenOrCreate, FileAccess.Write);
-				CryptoStream cryptoStream = new CryptoStream(outputStream, _decryptor, CryptoStreamMode.Write);
+				var inputStream = new FileStream(inputFile, FileMode.Open, FileAccess.Read);
+				var outputStream = new FileStream(outputFile, FileMode.OpenOrCreate, FileAccess.Write);
+				var cryptoStream = new CryptoStream(outputStream, _decryptor, CryptoStreamMode.Write);
 			
-				int bufferLength = 4096;
-				byte[] buffer = new byte[bufferLength];
-				int bytesRead = 0;
+				var bufferLength = 4096;
+				var buffer = new byte[bufferLength];
+				var bytesRead = 0;
 
 				do
 				{
-					/// read a chunk from the file 
+					// read a chunk from the file 
 					bytesRead = inputStream.Read(buffer, 0, bufferLength);
 
-					/// and then encrypt in
+					// and then encrypt in
 					cryptoStream.Write(buffer, 0, bytesRead);
 				}
 				while(bytesRead != 0);
@@ -214,8 +212,8 @@ namespace Carbon.Configuration
 			_algorithm.Padding = PaddingMode.PKCS7;
 			_algorithm.Mode = CipherMode.CBC;
 		
-			byte[] keyBuf = System.Convert.FromBase64String(_key);
-			byte[] ivBuf  = System.Convert.FromBase64String(_iv);
+			var keyBuf = Convert.FromBase64String(_key);
+			var ivBuf  = Convert.FromBase64String(_iv);
 
 			_algorithm.Key = keyBuf;
 			_algorithm.IV = ivBuf;
@@ -224,22 +222,6 @@ namespace Carbon.Configuration
 			_decryptor = _algorithm.CreateDecryptor();//(_pdb.GetBytes(32), _pdb.GetBytes(16));
 		}		
 	}
-
-	/// <summary>
-	/// Provides an encryption engine using the Triple-DES Symmetric Algorithm
-	/// </summary>
-//	public class TripleDESEncryptionEngine : FileEncryptionEngine
-//	{
-//		public TripleDESEncryptionEngine()
-//		{							
-////			_pdb = new PasswordDeriveBytes(_key, _iv);
-////			_algorithm = TripleDES.Create();
-////			_algorithm.Key = _pdb.GetBytes(8);
-////			_algorithm.IV =  _pdb.GetBytes(8);
-////			_encryptor = _algorithm.CreateEncryptor();//(_pdb.GetBytes(32), _pdb.GetBytes(16));
-////			_decryptor = _algorithm.CreateDecryptor();//(_pdb.GetBytes(32), _pdb.GetBytes(16));
-//		}		
-//	}
 
 	/// <summary>
 	/// Provides an encryption engine using the DES Symmetric Algorithm
@@ -255,8 +237,8 @@ namespace Carbon.Configuration
 			_algorithm.Padding = PaddingMode.PKCS7;
 			_algorithm.Mode = CipherMode.CBC;
 		
-			byte[] keyBuf = System.Convert.FromBase64String(_key);
-			byte[] ivBuf  = System.Convert.FromBase64String(_iv);
+			var keyBuf = Convert.FromBase64String(_key);
+			var ivBuf  = Convert.FromBase64String(_iv);
 
 			_algorithm.Key = keyBuf;
 			_algorithm.IV = ivBuf;
@@ -265,20 +247,4 @@ namespace Carbon.Configuration
 			_decryptor = _algorithm.CreateDecryptor();//(_pdb.GetBytes(32), _pdb.GetBytes(16));
 		}
 	}
-
-	/// <summary>
-	/// Provides an encryption engine using the RC2 Symmetric Algorithm
-	/// </summary>
-//	public class RC2EncryptionEngine : FileEncryptionEngine
-//	{
-//		public RC2EncryptionEngine()
-//		{							
-////			_pdb = new PasswordDeriveBytes(_key, _iv);
-////			_algorithm = RC2.Create();
-////			_algorithm.Key = _pdb.GetBytes(8);
-////			_algorithm.IV =  _pdb.GetBytes(8);
-////			_encryptor = _algorithm.CreateEncryptor();//(_pdb.GetBytes(32), _pdb.GetBytes(16));
-////			_decryptor = _algorithm.CreateDecryptor();//(_pdb.GetBytes(32), _pdb.GetBytes(16));
-//		}		
-//	}
 }

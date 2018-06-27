@@ -20,6 +20,10 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
+using System.ComponentModel;
+using System.Windows.Forms;
+
 namespace SDBees.DB.Forms
 {
     /// <summary>
@@ -30,7 +34,7 @@ namespace SDBees.DB.Forms
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -111,8 +115,8 @@ namespace SDBees.DB.Forms
 
         #endregion
 
-        private System.Windows.Forms.TextBox ebDetails;
-        private System.Windows.Forms.Label lbMessage;
-        private System.Windows.Forms.Button bnOk;
+        private TextBox ebDetails;
+        private Label lbMessage;
+        private Button bnOk;
     }
 }

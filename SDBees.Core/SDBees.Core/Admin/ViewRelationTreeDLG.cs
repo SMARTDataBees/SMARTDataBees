@@ -20,18 +20,16 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
-using System;
-using System.Collections.Generic;
-using System.Collections;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using SDBees.DB;
-using System.Diagnostics;
 
-namespace SDBees.ViewAdmin
+using System;
+using System.Collections;
+using System.Diagnostics;
+using System.Windows.Forms;
+using SDBees.Core.Utils;
+using SDBees.DB;
+using SDBees.Plugs.TemplateTreeNode;
+
+namespace SDBees.Core.Admin
 {
     /// <summary>
     /// Form to display a view in a tree view
@@ -39,7 +37,7 @@ namespace SDBees.ViewAdmin
     public partial class ViewRelationTreeDLG : Form
     {
         private ViewRelationTreeView tvViewRelations;
-        private SDBees.DB.SDBeesDBConnection m_dbManager;
+        private SDBeesDBConnection m_dbManager;
 
         /// <summary>
         /// Gets or sets the view id this window works with
@@ -67,7 +65,7 @@ namespace SDBees.ViewAdmin
         /// <summary>
         /// Standard constructor
         /// </summary>
-        public ViewRelationTreeDLG(SDBees.DB.SDBeesDBConnection dbManager)
+        public ViewRelationTreeDLG(SDBeesDBConnection dbManager)
         {
             m_dbManager = dbManager;
 
@@ -82,7 +80,7 @@ namespace SDBees.ViewAdmin
             tvViewRelations.AllowDrop = false;
             //tvViewRelations.dra
 
-            tvViewRelations.ViewSwitched += new ViewRelationTreeView.NotificationHandler(tvViewRelations_ViewSwitched);
+            tvViewRelations.ViewSwitched += tvViewRelations_ViewSwitched;
             tvViewRelations.AfterSelNodeChanged += tvViewRelations_AfterSelNodeChanged;
         }
 
@@ -103,8 +101,8 @@ namespace SDBees.ViewAdmin
             tvViewRelations.Fill(ref error);
         }
 
-        SDBees.Plugs.TemplateTreeNode.TemplateTreenodeTag m_Tag = null;
-        public SDBees.Plugs.TemplateTreeNode.TemplateTreenodeTag TagSelected
+        TemplateTreenodeTag m_Tag;
+        public TemplateTreenodeTag TagSelected
         {
             get { return m_Tag; }
         }
@@ -112,7 +110,7 @@ namespace SDBees.ViewAdmin
         void tvViewRelations_AfterSelNodeChanged(object sender, EventArgs e)
         {
             if (tvViewRelations.SelectedNode != null)
-                m_Tag = tvViewRelations.SelectedNode.Tag as SDBees.Plugs.TemplateTreeNode.TemplateTreenodeTag;
+                m_Tag = tvViewRelations.SelectedNode.Tag as TemplateTreenodeTag;
         }
 
         private void ViewRelationWindow_Load(object sender, EventArgs e)
@@ -125,18 +123,18 @@ namespace SDBees.ViewAdmin
 
         private void Activate()
         {
-            Process currentProcess = Process.GetCurrentProcess();
-            IntPtr hWnd = currentProcess.MainWindowHandle;
-            if (hWnd != SDBees.Core.Utils.User32.InvalidHandleValue)
+            var currentProcess = Process.GetCurrentProcess();
+            var hWnd = currentProcess.MainWindowHandle;
+            if (hWnd != User32.InvalidHandleValue)
             {
-                SDBees.Core.Utils.User32.SetForegroundWindow(hWnd);
-                SDBees.Core.Utils.User32.ShowWindow(hWnd, SDBees.Core.Utils.User32.SW_MAXIMIZE);
+                User32.SetForegroundWindow(hWnd);
+                User32.ShowWindow(hWnd, User32.SW_MAXIMIZE);
             }
         }
 
         private void setTitle (string viewName)
         {
-            this.Text = "View: " + viewName;
+            Text = "View: " + viewName;
         }
 
         private void tvViewRelations_ViewSwitched(object sender, ViewRelationTreeView.NotificationEventArgs args)
@@ -146,7 +144,7 @@ namespace SDBees.ViewAdmin
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }

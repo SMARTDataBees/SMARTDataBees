@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Text;
+using System.ServiceModel.Channels;
 
 namespace SDBees.Core.Connectivity.SDBeesLink.Service
 {
@@ -13,9 +11,9 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             return new EndpointAddress("net.pipe://localhost/SDBees.Core/SDBeesExternalPluginService");
         }
 
-        public static System.ServiceModel.Channels.Binding getServiceBinding()
+        public static Binding getServiceBinding()
         {
-            NetNamedPipeBinding retval = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
+            var retval = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None);
 
             retval.CloseTimeout = new TimeSpan(5, 55, 0); //TODO : TH Check close timeout
             retval.OpenTimeout = new TimeSpan(5, 55, 0);

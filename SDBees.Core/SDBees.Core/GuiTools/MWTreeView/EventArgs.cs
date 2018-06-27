@@ -20,7 +20,9 @@
 // along with SMARTDataBees.  If not, see <http://www.gnu.org/licenses/>.
 //
 // #EndHeader# ================================================================
+
 using System;
+using System.ComponentModel;
 
 /// <summary>
 ///	Mikael Wiberg 2003
@@ -45,7 +47,7 @@ namespace SDBees.GuiTools
 	/// <summary>
 	/// ShadowDirectionEventArgs class.
 	/// </summary>
-	public class TextDirEventArgs : System.EventArgs
+	public class TextDirEventArgs : EventArgs
 	{
 		private TextDir tdOldTextDir = TextDir.Normal;
 		private TextDir tdNewTextDir = TextDir.Normal;
@@ -100,7 +102,7 @@ namespace SDBees.GuiTools
 	/// <summary>
 	/// ShadowDirectionEventArgs class.
 	/// </summary>
-	public class StringFormatEnumEventArgs : System.EventArgs
+	public class StringFormatEnumEventArgs : EventArgs
 	{
 		private StringFormatEnum sfeOldStringFormatEnum = StringFormatEnum.GenericDefault;
 		private StringFormatEnum sfeNewStringFormatEnum = StringFormatEnum.GenericDefault;
@@ -159,19 +161,19 @@ namespace SDBees.GuiTools
 	///		and proposed values are.
 	///	Note that the MWCancelEventArgs should be used in an OnBeforePROPERTYChanged property - BEFORE the value of the property is changed.
 	/// </summary>
-	public class MWCancelEventArgs : System.ComponentModel.CancelEventArgs
+	public class MWCancelEventArgs : CancelEventArgs
 	{
 		#region Variables
 
 		/// <summary>
 		/// The current object before the property is changed.
 		/// </summary>
-		private object oCurrent = null;
+		private object oCurrent;
 
 		/// <summary>
 		/// The proposed object that will be used if the property is changed.
 		/// </summary>
-		private object oProposed = null;
+		private object oProposed;
 
 		#endregion Variables
 

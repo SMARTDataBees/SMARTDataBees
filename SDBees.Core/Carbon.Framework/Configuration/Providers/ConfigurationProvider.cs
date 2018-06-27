@@ -30,9 +30,7 @@
 //	============================================================================
 
 using System;
-
 using Carbon.Common;
-using Carbon.Configuration;
 using Carbon.UI;
 
 namespace Carbon.Configuration.Providers
@@ -87,8 +85,8 @@ namespace Carbon.Configuration.Providers
         {
             get
             {
-                XmlConfiguration configuration = new XmlConfiguration();
-                configuration.ElementName = this.ConfigurationName;                
+                var configuration = new XmlConfiguration();
+                configuration.ElementName = ConfigurationName;                
                 return configuration;
             }
         }
@@ -100,7 +98,7 @@ namespace Carbon.Configuration.Providers
         /// <param name="e"></param>
         protected virtual void FormatConfiguration(object sender, XmlConfigurationEventArgs e)
         {
-            e.Element = this.DefaultConfiguration;
+            e.Element = DefaultConfiguration;
         }
 
         /// <summary>
@@ -119,22 +117,22 @@ namespace Carbon.Configuration.Providers
         public virtual void Load(IProgressViewer progressViewer)
         {
             // read or create the local user configuration
-            ProgressViewer.SetExtendedDescription(progressViewer, string.Format("Loading '{0}' configuration...", this.ConfigurationName));
+            ProgressViewer.SetExtendedDescription(progressViewer, $"Loading '{ConfigurationName}' configuration...");
             
             ConfigurationProvidersManager.ReadOrCreateConfiguration(
                 CarbonConfig.Verbose, 
-                this.ConfigurationName, 
-                this.FullPath, 
+                ConfigurationName, 
+                FullPath, 
                 out _configuration, 
-                this.GetEncryptionEngine(),
-                this.FormatConfiguration);
+                GetEncryptionEngine(),
+                FormatConfiguration);
 
-            if (this.Configuration != null)
+            if (Configuration != null)
             {
-                this.Configuration.TimeToSave += new EventHandler(OnConfigurationTimeToSave);
+                Configuration.TimeToSave += OnConfigurationTimeToSave;
 
                 // by default we'll add this to the list so that the configuration shows up in the options dialog
-                ConfigurationProvidersManager.EnumeratingConfigurations += new EventHandler<XmlConfigurationManagerEventArgs>(OnConfigurationProvidersManagerEnumeratingConfigurations);
+                ConfigurationProvidersManager.EnumeratingConfigurations += OnConfigurationProvidersManagerEnumeratingConfigurations;
             }
         }
                 
@@ -145,9 +143,9 @@ namespace Carbon.Configuration.Providers
         {
             ConfigurationProvidersManager.WriteConfiguration(
                 CarbonConfig.Verbose, 
-                this.FullPath, 
-                this.Configuration,
-                this.GetEncryptionEngine());
+                FullPath, 
+                Configuration,
+                GetEncryptionEngine());
         }
 
         /// <summary>
@@ -157,7 +155,7 @@ namespace Carbon.Configuration.Providers
         /// <param name="e"></param>
         private void OnConfigurationTimeToSave(object sender, EventArgs e)
         {
-            this.Save();
+            Save();
         }
 
         /// <summary>
@@ -167,7 +165,7 @@ namespace Carbon.Configuration.Providers
         /// <param name="e"></param>
         protected virtual void OnConfigurationProvidersManagerEnumeratingConfigurations(object sender, XmlConfigurationManagerEventArgs e)
         {
-            e.Configurations.Add(this.Configuration);
+            e.Configurations.Add(Configuration);
         }
 	}
 }
