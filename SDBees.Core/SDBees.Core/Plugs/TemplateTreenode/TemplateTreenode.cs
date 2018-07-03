@@ -211,7 +211,7 @@ namespace SDBees.Plugs.TemplateTreeNode
                 {
                     if (selectedTag.NodeTypeOf == GetType().ToString())
                     {
-                        var tabPage = MainWindowApplication.Current.MyMainWindow.TheDialog.TabPagePlugin("");
+                        var tabPage = MainWindowApplication.Current.MainWindow.TheDialog.TabPagePlugin("");
 
                         // Get the standard Properties from Database
                         m_propertyRow = GetTreenodePropertyRowFromTag(selectedTag);
@@ -227,7 +227,7 @@ namespace SDBees.Plugs.TemplateTreeNode
                         MyUserControl.Dock = DockStyle.Fill;
 
                         // Show the Propertypage
-                        MainWindowApplication.Current.MyMainWindow.TheDialog.MyTabControl().SelectedTab = tabPage;
+                        MainWindowApplication.Current.MainWindow.TheDialog.MyTabControl().SelectedTab = tabPage;
                     }
                 }
                 catch (Exception ex)
@@ -236,7 +236,7 @@ namespace SDBees.Plugs.TemplateTreeNode
             }
             else if (selectedTag == null)
             {
-                var tabPage = MainWindowApplication.Current.MyMainWindow.TheDialog.TabPagePlugin("");
+                var tabPage = MainWindowApplication.Current.MainWindow.TheDialog.TabPagePlugin("");
 
                 var _myControl = (IUserControlTempTreenode)MyUserControl;
 
@@ -251,14 +251,14 @@ namespace SDBees.Plugs.TemplateTreeNode
                     MyUserControl.Dock = DockStyle.Fill;
 
                     // Show the Propertypage
-                    MainWindowApplication.Current.MyMainWindow.TheDialog.MyTabControl().SelectedTab = tabPage;
+                    MainWindowApplication.Current.MainWindow.TheDialog.MyTabControl().SelectedTab = tabPage;
                 }
             }
         }
 
         private TreenodePropertyRow GetTreenodePropertyRowFromTag(TemplateTreenodeTag selectedTag)
         {
-            return m_propertyRow = new TreenodePropertyRow(MyDBManager, this, selectedTag);
+            return m_propertyRow = new TreenodePropertyRow(DBManager, this, selectedTag);
             // Get automatic Properties by Plugin.
             // Each plugin should provide it's own implementation
         }
@@ -300,7 +300,7 @@ namespace SDBees.Plugs.TemplateTreeNode
             Error error = null;
             var nodeType = GetPluginForType(pluginType);
             var baseData = nodeType.CreateDataObject();
-            baseData.SetDefaults(nodeType.MyDBManager.Database);
+            baseData.SetDefaults(nodeType.DBManager.Database);
             if (name == "")
             {
                 name = "Unnamed";
@@ -525,14 +525,14 @@ namespace SDBees.Plugs.TemplateTreeNode
 
             var relationParents2Children = new ArrayList();
 
-            if (0 < ViewRelation.FindViewRelationByChildId(MyDBManager.Database, new Guid(item.Id.ToString()), ref relationParents2Children, ref _error))
+            if (0 < ViewRelation.FindViewRelationByChildId(DBManager.Database, new Guid(item.Id.ToString()), ref relationParents2Children, ref _error))
             {
                 relations.AddRange(relationParents2Children);
             }
 
             var relationParent2Children = new ArrayList();
 
-            if (0 < ViewRelation.FindViewRelationByParentId(MyDBManager.Database, new Guid(item.Id.ToString()), ref relationParent2Children, ref _error))
+            if (0 < ViewRelation.FindViewRelationByParentId(DBManager.Database, new Guid(item.Id.ToString()), ref relationParent2Children, ref _error))
             {
                 relations.AddRange(relationParent2Children);
             }
@@ -541,7 +541,7 @@ namespace SDBees.Plugs.TemplateTreeNode
             {
                 var viewRelation = new ViewRelation();
 
-                if (viewRelation.Load(MyDBManager.Database, new Guid(relation.ToString()), ref _error))
+                if (viewRelation.Load(DBManager.Database, new Guid(relation.ToString()), ref _error))
                 {
                     viewRelation.Erase(ref _error);
                 }

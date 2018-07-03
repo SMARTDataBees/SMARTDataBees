@@ -98,13 +98,13 @@ namespace SDBees.UserAdmin
                 InitDatabase();
 
                 //Setting up the menuitem
-                if (MyMainWindow != null)
+                if (MainWindow != null)
                 {
                     var mnuChangePassword = new MenuItem("Change Password ...");
                     mnuChangePassword.Click += mnuChangePassword_Click;
 
-                    MyMainWindow.TheDialog.MenueAdmin().MenuItems.Add(mnuChangePassword);
-                    MyMainWindow.TheDialog.MenueAdmin().MenuItems.Add(_mnuItem);
+                    MainWindow.TheDialog.MenueAdmin().MenuItems.Add(mnuChangePassword);
+                    MainWindow.TheDialog.MenueAdmin().MenuItems.Add(_mnuItem);
                 }
             }
             catch (Exception ex)
@@ -133,10 +133,10 @@ namespace SDBees.UserAdmin
         private void InitDatabase()
         {
             // Das Databaseplugin besorgen
-            if (MyDBManager != null)
+            if (DBManager != null)
             {
                 // Create the required database tables...
-                var database = MyDBManager.Database;
+                var database = DBManager.Database;
                 RoleDefinitions.InitTableSchema(database);
             }
         }
@@ -146,8 +146,8 @@ namespace SDBees.UserAdmin
         {
             // Prüfen, ob der Anwender genügend Rechte hat...
             Error error = null;
-            var loginName = Current.MyDBManager.Database.User;
-            var server = Current.MyDBManager.Database.Server;
+            var loginName = Current.DBManager.Database.User;
+            var server = Current.DBManager.Database.Server;
             var hasGrantPrivilege = server.UserHasGrantPrivileges(loginName, ref error);
 
             if (!hasGrantPrivilege)
@@ -173,7 +173,7 @@ namespace SDBees.UserAdmin
 
                 if (oldPassword != newPassword)
                 {
-                    var database = Current.MyDBManager.Database;
+                    var database = Current.DBManager.Database;
                     var server = database.Server;
 
                     Error error = null;

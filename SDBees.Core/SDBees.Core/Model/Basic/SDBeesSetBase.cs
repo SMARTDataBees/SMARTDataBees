@@ -137,7 +137,7 @@ namespace SDBees.Core.Model.Basic
                 foreach (string id in _existingObjects)
                 {
                     var alienData = new ConnectivityManagerAlienBaseData();
-                    if (alienData.Load(SDBeesDBConnection.Current.MyDBManager.Database, id, ref _error))
+                    if (alienData.Load(SDBeesDBConnection.Current.DBManager.Database, id, ref _error))
                     {
                         try
                         {
@@ -145,7 +145,7 @@ namespace SDBees.Core.Model.Basic
                             var tnEntity = TemplateTreenode.GetPluginForType(alienData.GetPropertyByColumn(ConnectivityManagerAlienBaseData.m_AlienInternalDBElementTypeColumnName).ToString());
                             //Get PluginData
                             var tnEntityBasedata = tnEntity.CreateDataObject();
-                            if (tnEntityBasedata.Load(SDBeesDBConnection.Current.MyDBManager.Database, alienData.GetPropertyByColumn(ConnectivityManagerAlienBaseData.m_AlienInternalDBElementIdColumnName), ref _error))
+                            if (tnEntityBasedata.Load(SDBeesDBConnection.Current.DBManager.Database, alienData.GetPropertyByColumn(ConnectivityManagerAlienBaseData.m_AlienInternalDBElementIdColumnName), ref _error))
                             {
                                 CreateEntity(dset, ref _error, docId, tnEntityBasedata);
                             }
@@ -175,7 +175,7 @@ namespace SDBees.Core.Model.Basic
                 foreach (string idElem in _existingObjectsWithSameRootId)
                 {
                     var rel = new ViewRelation();
-                    if (rel.Load(SDBeesDBConnection.Current.MyDBManager.Database, idElem, ref _error))
+                    if (rel.Load(SDBeesDBConnection.Current.DBManager.Database, idElem, ref _error))
                     {
                         var plgChild = TemplateTreenode.GetPluginForType(rel.GetPropertyByColumn(ViewRelation.m_ChildTypeColumnName).ToString());
                         if (plgChild != null)
@@ -183,7 +183,7 @@ namespace SDBees.Core.Model.Basic
                             var childBaseData = plgChild.CreateDataObject();
                             if (childBaseData != null)
                             {
-                                if (childBaseData.Load(SDBeesDBConnection.Current.MyDBManager.Database, rel.GetPropertyByColumn(ViewRelation.m_ChildIdColumnName).ToString(), ref _error))
+                                if (childBaseData.Load(SDBeesDBConnection.Current.DBManager.Database, rel.GetPropertyByColumn(ViewRelation.m_ChildIdColumnName).ToString(), ref _error))
                                 {
                                     CreateEntity(dset, ref _error, null, childBaseData);
                                 }
@@ -215,13 +215,13 @@ namespace SDBees.Core.Model.Basic
 #endif
             //Relations to childs
             ArrayList _lstchild = null;
-            var countchilds = ViewRelation.FindViewRelationByParentId(SDBeesDBConnection.Current.MyDBManager.Database, new Guid(ent.Id.ToString()), ref _lstchild, ref _error);
+            var countchilds = ViewRelation.FindViewRelationByParentId(SDBeesDBConnection.Current.DBManager.Database, new Guid(ent.Id.ToString()), ref _lstchild, ref _error);
             if (countchilds > 0)
             {
                 foreach (var itemid in _lstchild)
                 {
                     var relSD = new ViewRelation();
-                    if (relSD.Load(SDBeesDBConnection.Current.MyDBManager.Database, itemid, ref _error))
+                    if (relSD.Load(SDBeesDBConnection.Current.DBManager.Database, itemid, ref _error))
                     {
                         var rel = new SDBeesRelation
                         {
@@ -246,13 +246,13 @@ namespace SDBees.Core.Model.Basic
 #endif
             //Relations to parents
             ArrayList _lstparent = null;
-            var countparents = ViewRelation.FindViewRelationByChildId(SDBeesDBConnection.Current.MyDBManager.Database, new Guid(ent.Id.ToString()), ref _lstparent, ref _error);
+            var countparents = ViewRelation.FindViewRelationByChildId(SDBeesDBConnection.Current.DBManager.Database, new Guid(ent.Id.ToString()), ref _lstparent, ref _error);
             if (countparents > 0)
             {
                 foreach (var itemid in _lstparent)
                 {
                     var relSD = new ViewRelation();
-                    if (relSD.Load(SDBeesDBConnection.Current.MyDBManager.Database, itemid, ref _error))
+                    if (relSD.Load(SDBeesDBConnection.Current.DBManager.Database, itemid, ref _error))
                     {
                         var rel = new SDBeesRelation
                         {
@@ -290,7 +290,7 @@ namespace SDBees.Core.Model.Basic
                 {
                     instanceId = Guid.NewGuid().ToString();
                     tnbasedata.SetPropertyByColumn(Object.m_IdSDBeesColumnName, instanceId);
-                    tnbasedata.Save(SDBeesDBConnection.Current.MyDBManager.Database, ref _error);
+                    tnbasedata.Save(SDBeesDBConnection.Current.DBManager.Database, ref _error);
                 }
                 ent.InstanceId.Id = tnbasedata.GetPropertyByColumn(Object.m_IdSDBeesColumnName).ToString();
 #if PROFILER
@@ -345,7 +345,7 @@ namespace SDBees.Core.Model.Basic
                     ConnectivityManagerAlienBaseData.GetAlienIdsByDbId(tnbasedata.GetPropertyByColumn(Object.m_IdColumnName).ToString(), ref _error, ref lst);
                     foreach (var item in lst)
                     {
-                        if (alienData.Load(ConnectivityManager.Current.MyDBManager.Database, item, ref _error))
+                        if (alienData.Load(ConnectivityManager.Current.DBManager.Database, item, ref _error))
                         {
                             var aid = new SDBeesAlienId
                             {

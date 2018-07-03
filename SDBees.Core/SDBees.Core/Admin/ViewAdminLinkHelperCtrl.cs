@@ -70,7 +70,7 @@ namespace SDBees.Core.Admin
         {
             get
             {
-                return mParent.MyDBManager.Database;
+                return mParent.DBManager.Database;
             }
         }
 
@@ -149,7 +149,7 @@ namespace SDBees.Core.Admin
         private void FillListControl()
         {
             Error _error = null;
-            ViewAdmin.Current.MyDBManager.Database.Open(true, ref _error);
+            AdminView.Current.DBManager.Database.Open(true, ref _error);
 
             ListSibling.Enabled = true;
             ListChilds.Enabled = true;
@@ -157,7 +157,7 @@ namespace SDBees.Core.Admin
             FillListControlSibling();
             FillListControlChildren();
 
-            ViewAdmin.Current.MyDBManager.Database.Close(ref _error);
+            AdminView.Current.DBManager.Database.Close(ref _error);
         }
 
         private void FillListControlChildren()

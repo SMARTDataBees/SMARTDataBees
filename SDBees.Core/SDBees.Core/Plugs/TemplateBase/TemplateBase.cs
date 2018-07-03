@@ -31,17 +31,11 @@ namespace SDBees.Plugs.TemplateBase
 {
     public abstract class TemplateBase : Plugin
     {
-        private SDBeesDBConnection _DBManager;
-        private MainWindowApplication _MainWindow;
-        private PluginContext m_context;
+        private SDBeesDBConnection _dbManager;
 
-        public PluginContext MyPluginContext
-        {
-            get { return m_context; }
-            set { m_context = value; }
-        }
+        public PluginContext PluginContext { get; set; }
 
-        public void ReStart(PluginContext context)
+        public void Restart(PluginContext context)
         {
             Start(context, null);
         }
@@ -55,32 +49,32 @@ namespace SDBees.Plugs.TemplateBase
         {
             try
             {
-                m_context = context;
+                PluginContext = context;
 
                 Console.WriteLine("TemplateBase starts\n");
 
                 //Das Databaseplugin besorgen
-                if (m_context.PluginDescriptors.Contains(new PluginDescriptor(typeof(SDBeesDBConnection))))
+                if (PluginContext.PluginDescriptors.Contains(new PluginDescriptor(typeof(SDBeesDBConnection))))
                 {
-                    _DBManager = (SDBeesDBConnection)m_context.PluginDescriptors[typeof(SDBeesDBConnection)].PluginInstance;
-                    _DBManager.AddDatabaseChangedHandler(OnDatabaseChanged);
-                    _DBManager.AddUpdateHandler(OnUpdate);
+                    _dbManager = (SDBeesDBConnection)PluginContext.PluginDescriptors[typeof(SDBeesDBConnection)].PluginInstance;
+                    _dbManager.AddDatabaseChangedHandler(OnDatabaseChanged);
+                    _dbManager.AddUpdateHandler(OnUpdate);
                 }
                 else
                 {
                     MessageBox.Show("Es konnte kein Datenbankmanager gefunden werden!", ToString());
-                    _DBManager = null;
+                    _dbManager = null;
                 }
 
                 //Das MainWindowplugin besorgen
-                if (m_context.PluginDescriptors.Contains(new PluginDescriptor(typeof(MainWindowApplication))))
+                if (PluginContext.PluginDescriptors.Contains(new PluginDescriptor(typeof(MainWindowApplication))))
                 {
-                    _MainWindow = (MainWindowApplication)m_context.PluginDescriptors[typeof(MainWindowApplication)].PluginInstance;
+                    MainWindow = (MainWindowApplication)PluginContext.PluginDescriptors[typeof(MainWindowApplication)].PluginInstance;
                 }
                 else
                 {
                     MessageBox.Show("Es konnte kein Hauptfenster gefunden werden!", ToString());
-                    _MainWindow = null;
+                    MainWindow = null;
                 }
             }
             catch (Exception ex)
@@ -90,15 +84,12 @@ namespace SDBees.Plugs.TemplateBase
             }
         }
 
-        public SDBeesDBConnection MyDBManager
+        public SDBeesDBConnection DBManager
         {
-            get { return _DBManager; }
+            get { return _dbManager; }
         }
 
-        public MainWindowApplication MyMainWindow
-        {
-            get { return _MainWindow; }
-        }
+        public MainWindowApplication MainWindow { get; private set; }
 
         // Must be overridden by derived class!
         protected abstract void OnDatabaseChanged(object sender, EventArgs e);

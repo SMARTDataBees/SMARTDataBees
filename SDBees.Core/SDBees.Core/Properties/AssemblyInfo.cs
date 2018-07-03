@@ -53,7 +53,7 @@ using SDBees.UserAdmin;
 [assembly: PluginDefinition(typeof(ConnectivityManager))]
 [assembly: PluginDefinition(typeof(SDBeesExternalDocumentAdmin))]
 [assembly: PluginDefinition(typeof(ProcessIcon))]
-[assembly: PluginDefinition(typeof(ViewAdmin))]
+[assembly: PluginDefinition(typeof(AdminView))]
 
 [assembly: PluginDefinition(typeof(ViewAdminLinkHelper))]
 

@@ -260,7 +260,7 @@ namespace SDBees.Main.Window
 
         private void InitDatabase()
         {
-            if(MyDBManager != null)
+            if(DBManager != null)
             { }
         }
 

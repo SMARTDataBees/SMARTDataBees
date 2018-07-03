@@ -124,10 +124,9 @@ namespace SDBees.Core.Admin
             // Events...
             KeyDown += ViewRelationTreeView_KeyDown;
 
-            ViewAdmin.Current.ViewRelationCreated += Current_ViewRelationCreated;
-            ViewAdmin.Current.ViewRelationModified += Current_ViewRelationModified;
-            ViewAdmin.Current.ViewRelationRemoved += Current_ViewRelationRemoved;
-            ViewAdmin.Current.OnViewSelectionChanged += Current_ViewSelectionChanged;
+            AdminView.Current.ViewRelationCreated += Current_ViewRelationCreated;
+            AdminView.Current.ViewRelationModified += Current_ViewRelationModified;
+            AdminView.Current.ViewRelationRemoved += Current_ViewRelationRemoved;
 
             //this.MultiSelect = TreeViewMultiSelect.NoMulti;
         }
@@ -968,7 +967,7 @@ namespace SDBees.Core.Admin
             }
         }
 
-        private void Current_ViewRelationCreated(object sender, ViewAdmin.ViewRelationEventArgs args)
+        private void Current_ViewRelationCreated(object sender, AdminView.ViewRelationEventArgs args)
         {
             TreeNode parentTreeNode = null;
             TreeNodeCollection nodes = null;
@@ -1010,7 +1009,7 @@ namespace SDBees.Core.Admin
             }
         }
 
-        private void Current_ViewRelationModified(object sender, ViewAdmin.ViewRelationEventArgs args)
+        private void Current_ViewRelationModified(object sender, AdminView.ViewRelationEventArgs args)
         {
             var key = args.ViewRelation.ChildId.ToString();
 
@@ -1035,7 +1034,7 @@ namespace SDBees.Core.Admin
             }
         }
 
-        private void Current_ViewRelationRemoved(object sender, ViewAdmin.ViewRelationEventArgs args)
+        private void Current_ViewRelationRemoved(object sender, AdminView.ViewRelationEventArgs args)
         {
             var key = args.ViewRelation.ChildId.ToString();
 
@@ -1053,29 +1052,7 @@ namespace SDBees.Core.Admin
             }
         }
 
-        private void Current_ViewSelectionChanged(object myObject, ViewSelectArgs myArgs)
-        {
-            //Guid value = myArgs.ViewGuid;
-
-            //m_ViewId = value;
-
-            //// update the filter...
-            //Table table = this.Table;
-            //Error error = null;
-
-            ////Filter only the current view?
-            //SDBees.DB.Attribute attribute = new SDBees.DB.Attribute(table.Columns["view"], m_ViewId.ToString());
-            //this.Filter = Database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
-
-            //m_ViewProperties = new ViewProperty();
-            //m_ViewProperties.Load(Database, m_ViewId, ref error);
-
-            //Error.Display("Cannot format criteria", error);
-
-            //RefreshView();
-
-            //RaiseViewSwitched(m_ViewProperties.ViewName);
-        }
+      
 
         #endregion
 

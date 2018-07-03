@@ -88,10 +88,10 @@ namespace SDBees.EDM
 
                 StartMe(context, e);
 
-                mRootDirectory = MyDBManager.CurrentServerConfigItem.EDMRootDirectory;
+                mRootDirectory = DBManager.CurrentServerConfigItem.EDMRootDirectory;
 
-                if (MyDBManager != null)
-                    MyDBManager.AddDatabaseChangedHandler(EDMManager_OnDatabaseChangedHandler);
+                if (DBManager != null)
+                    DBManager.AddDatabaseChangedHandler(EDMManager_OnDatabaseChangedHandler);
 
                 if (mRootDirectory != "")
                 {
@@ -117,8 +117,8 @@ namespace SDBees.EDM
 
         void EDMManager_OnDatabaseChangedHandler(object myObject, EventArgs myArgs)
         {
-            if (MyDBManager != null)
-                mRootDirectory = MyDBManager.CurrentServerConfigItem.EDMRootDirectory;
+            if (DBManager != null)
+                mRootDirectory = DBManager.CurrentServerConfigItem.EDMRootDirectory;
         }
 
         /// <summary>
@@ -131,8 +131,8 @@ namespace SDBees.EDM
             //MessageBox.Show("Das Raumplugin stirbt");
             Console.WriteLine("EDM Manager Plugin stops\n");
 
-            if (MyDBManager != null)
-                MyDBManager.RemoveDatabaseChangedHandler(EDMManager_OnDatabaseChangedHandler);
+            if (DBManager != null)
+                DBManager.RemoveDatabaseChangedHandler(EDMManager_OnDatabaseChangedHandler);
         }
 
         /// <summary>
@@ -239,10 +239,10 @@ namespace SDBees.EDM
         private void InitDatabase()
         {
             // Das Databaseplugin besorgen
-            if (MyDBManager != null)
+            if (DBManager != null)
             {
                 // Verify that the required Tables are created/updated in the database
-                var database = MyDBManager.Database;
+                var database = DBManager.Database;
                 EDMBaseData.InitTableSchema(database);
             }
         }

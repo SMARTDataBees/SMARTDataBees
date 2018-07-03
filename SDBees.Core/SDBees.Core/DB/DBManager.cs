@@ -371,7 +371,7 @@ namespace SDBees.DB
                 var dlgLogin = new frmLogin();
                 dlgLogin.Serverconfig = _serverConfiguration;
 
-                var dlgRes = dlgLogin.ShowDialog(MyMainWindow.TheDialog);
+                var dlgRes = dlgLogin.ShowDialog(MainWindow.TheDialog);
 
                 if (dlgRes == DialogResult.OK)
                 {
@@ -429,7 +429,7 @@ namespace SDBees.DB
 
         protected iProgress GetProgressForm()
         {
-            var myMainWindowHandle = MyMainWindow.TheDialog.Handle;
+            var myMainWindowHandle = MainWindow.TheDialog.Handle;
 
             var result = Progress.GetProgress(myMainWindowHandle);
 

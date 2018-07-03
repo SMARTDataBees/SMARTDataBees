@@ -51,7 +51,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink
             var dialogResult = dlg.ShowDialog();
             if (dialogResult == DialogResult.OK)
             {
-                MyDBManager.OnUpdate(null);
+                DBManager.OnUpdate(null);
             }
         }
 
@@ -65,9 +65,9 @@ namespace SDBees.Core.Connectivity.SDBeesLink
 
                 StartMe(context, e);
                 //Setting up the menuitem
-                if (MyMainWindow != null)
+                if (MainWindow != null)
                 {
-                    MyMainWindow.TheDialog.MenueTools().MenuItems.Add(_mnuItem);
+                    MainWindow.TheDialog.MenueTools().MenuItems.Add(_mnuItem);
                 }
             }
             catch (Exception ex)

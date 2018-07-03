@@ -143,10 +143,10 @@ namespace SDBees.Core.Plugins.AEC.Door
         private void InitDatabase()
         {
             // Das Databaseplugin besorgen
-            if (MyDBManager != null)
+            if (DBManager != null)
             {
                 // Verify that the required Tables are created/updated in the database
-                var database = MyDBManager.Database;
+                var database = DBManager.Database;
                 CreateDataObject().InitTableSchema(ref AECDoorBaseData.gTable, database);
             }
         }

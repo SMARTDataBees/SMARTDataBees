@@ -41,7 +41,7 @@ namespace SDBees.Core.Model.Instances
             var dset = new SDBeesTransferSet();
             Error _error = null;
 
-            ConnectivityManager.Current.MyDBManager.Database.Open(false, ref _error);
+            ConnectivityManager.Current.DBManager.Database.Open(false, ref _error);
             try
             {
                 var docIds = new List<SDBeesDocumentId>();
@@ -61,7 +61,7 @@ namespace SDBees.Core.Model.Instances
             {
             }
 
-            ConnectivityManager.Current.MyDBManager.Database.Close(ref _error);
+            ConnectivityManager.Current.DBManager.Database.Close(ref _error);
 
             return dset;
         }
@@ -73,7 +73,7 @@ namespace SDBees.Core.Model.Instances
             if (dset != null)
             {
                 Error _error = null;
-                ConnectivityManager.Current.MyDBManager.Database.Open(false, ref _error);
+                ConnectivityManager.Current.DBManager.Database.Open(false, ref _error);
 
                 var docHashOldIdToSDBeesId = new Hashtable();
                 var docHashSDBeesIdToNewId = new Hashtable();
@@ -88,7 +88,7 @@ namespace SDBees.Core.Model.Instances
                     var dataDoc = SDBeesDBDocument.CreateFromSDBeesDocument(doc);
                     if (!TemplateDBBaseData.ObjectExistsInDbWithSDBeesId(dataDoc.Table, doc.InstanceId, ref _error, ref _lstTemp))
                     {
-                        if (dataDoc.Save(ConnectivityManager.Current.MyDBManager.Database, ref _error))
+                        if (dataDoc.Save(ConnectivityManager.Current.DBManager.Database, ref _error))
                         {
                             docHashOldIdToSDBeesId.Add(doc.Id, dataDoc.GetPropertyByColumn(Object.m_IdSDBeesColumnName).ToString());
                             docHashSDBeesIdToNewId.Add(dataDoc.GetPropertyByColumn(Object.m_IdSDBeesColumnName).ToString(), dataDoc.GetPropertyByColumn(Object.m_IdColumnName).ToString());
@@ -109,7 +109,7 @@ namespace SDBees.Core.Model.Instances
                         var _lstIds = new ArrayList();
                         if (TemplateDBBaseData.ObjectExistsInDbWithSDBeesId(dbEntityObject.Table, ent.InstanceId.Id, ref _error, ref _lstIds))
                         {
-                            if (dbEntityObject.Load(ConnectivityManager.Current.MyDBManager.Database, _lstIds[0], ref _error))
+                            if (dbEntityObject.Load(ConnectivityManager.Current.DBManager.Database, _lstIds[0], ref _error))
                             {
                                 //Existing object
                                 ConnectivityManager.SetObjectData(ref _error, ent, dbEntityObject);
@@ -123,7 +123,7 @@ namespace SDBees.Core.Model.Instances
                             {
                                 // New object, never synced before
                                 _newobjects = true;
-                                dbEntityObject.SetDefaults(ConnectivityManager.Current.MyDBManager.Database);
+                                dbEntityObject.SetDefaults(ConnectivityManager.Current.DBManager.Database);
                                 ConnectivityManager.SetObjectData(ref _error, ent, dbEntityObject);
 
                                 // Set the hashes
@@ -155,7 +155,7 @@ namespace SDBees.Core.Model.Instances
                                 foreach (var aId in ent.AlienIds)
                                 {
                                     var aIdData = new ConnectivityManagerAlienBaseData();
-                                    aIdData.SetDefaults(ConnectivityManager.Current.MyDBManager.Database);
+                                    aIdData.SetDefaults(ConnectivityManager.Current.DBManager.Database);
 
                                     //Alien Id / Handle in BIM software
                                     aIdData.SetPropertyByColumn(ConnectivityManagerAlienBaseData.m_AlienIdColumnName, aId.AlienInstanceId.Id);
@@ -179,7 +179,7 @@ namespace SDBees.Core.Model.Instances
                                     aIdData.SetPropertyByColumn(ConnectivityManagerAlienBaseData.m_AlienDocumentIdColumnName, docSDBeesId);
 
                                     //aIdData.SetPropertyByColumn(ConnectivityManagerAlienBaseData.m_AlienIdColumnName, aId.AlienInstanceId.Id);
-                                    aIdData.Save(ConnectivityManager.Current.MyDBManager.Database, ref _error);
+                                    aIdData.Save(ConnectivityManager.Current.DBManager.Database, ref _error);
                                 }
                             }
                             catch (Exception ex)
@@ -197,14 +197,14 @@ namespace SDBees.Core.Model.Instances
                     {
                         var dataDoc = SDBeesDBDocument.CreateFromSDBeesDocument(doc);
                         var docsdbeesid = ConnectivityManagerDocumentBaseData.GetDocumentDbIdBySDBeesId(doc.InstanceId.ToString(), ref _error);
-                        if (dataDoc.Load(ConnectivityManager.Current.MyDBManager.Database, docsdbeesid, ref _error))
+                        if (dataDoc.Load(ConnectivityManager.Current.DBManager.Database, docsdbeesid, ref _error))
                         {
                             if (entHashOldIdToSDBeesId.ContainsKey(dataDoc.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_DocumentRootColumnName)))
                             {
                                 var sdbeesid = entHashOldIdToSDBeesId[dataDoc.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_DocumentRootColumnName)];
                                 var newid = entHashSDBeesIdToNewId[sdbeesid];
                                 dataDoc.SetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_DocumentRootColumnName, newid);
-                                dataDoc.Save(ConnectivityManager.Current.MyDBManager.Database, ref _error);
+                                dataDoc.Save(ConnectivityManager.Current.DBManager.Database, ref _error);
                             }
                         }
                     }
@@ -213,7 +213,7 @@ namespace SDBees.Core.Model.Instances
                     foreach (var rel in dset.Relations)
                     {
                         var viewrel = new ViewRelation();
-                        viewrel.SetDefaults(ConnectivityManager.Current.MyDBManager.Database);
+                        viewrel.SetDefaults(ConnectivityManager.Current.DBManager.Database);
 
                         if (entHashOldIdToSDBeesId.ContainsKey(rel.SourceId.Id))
                         {
@@ -243,11 +243,11 @@ namespace SDBees.Core.Model.Instances
                                 viewrel.SetPropertyByColumn(ViewRelation.m_ChildNameColumnName, dset.GetEntityBySDBeesId(sdbeesIdSource).GetProperty(TemplateDBBaseData.m_NameColumnName).InstanceValue.ObjectValue.ToString());
                             }
                         }
-                        viewrel.Save(ConnectivityManager.Current.MyDBManager.Database, ref _error);
+                        viewrel.Save(ConnectivityManager.Current.DBManager.Database, ref _error);
                     }
                 }
 
-                ConnectivityManager.Current.MyDBManager.Database.Close(ref _error);
+                ConnectivityManager.Current.DBManager.Database.Close(ref _error);
             }
         }
 
@@ -259,7 +259,7 @@ namespace SDBees.Core.Model.Instances
             foreach (var item in _objDocIds)
             {
                 var docdata = new ConnectivityManagerDocumentBaseData();
-                if (docdata.Load(ConnectivityManager.Current.MyDBManager.Database, item.ToString(), ref _error))
+                if (docdata.Load(ConnectivityManager.Current.DBManager.Database, item.ToString(), ref _error))
                 {
                     var docid = new SDBeesDocumentId
                     {
@@ -297,7 +297,7 @@ namespace SDBees.Core.Model.Instances
             var tn = TemplateTreenode.GetPluginForType(doc.Document_root_type);
             //Get PluginData
             var tnbasedata = tn.CreateDataObject();
-            if (tnbasedata.Load(SDBeesDBConnection.Current.MyDBManager.Database, doc.Document_root, ref _error))
+            if (tnbasedata.Load(SDBeesDBConnection.Current.DBManager.Database, doc.Document_root, ref _error))
             {
                 CreateEntity(dset, ref _error, doc.Id.ToString(), tnbasedata);
 

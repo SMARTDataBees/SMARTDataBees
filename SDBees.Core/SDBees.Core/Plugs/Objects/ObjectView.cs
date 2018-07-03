@@ -23,35 +23,10 @@
 
 namespace SDBees.Plugs.Objects
 {
-  public class ObjectView
-  {
-    private string _sViewName;
-    private string _sViewDescription;
-    private string _sViewGUID;
-    
-    public string ViewName
+    public class View
     {
-      get { return _sViewName; }
-      set { _sViewName = value; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Identification { get; set; }
     }
-
-    public string ViewDescription
-    {
-      get { return _sViewDescription; }
-      set { _sViewDescription = value; }
-    }
-
-    public string ViewGUID
-    {
-      get { return _sViewGUID; }
-      set { _sViewGUID = value; }
-    }
-
-    public ObjectView()
-    {
-      _sViewName = "";
-      _sViewDescription = "";
-      _sViewGUID = "";
-    }
-  }
 }
