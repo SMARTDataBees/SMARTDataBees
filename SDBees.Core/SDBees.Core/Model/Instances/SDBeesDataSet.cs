@@ -192,7 +192,7 @@ namespace SDBees.Core.Model
             dset.DocumentId = doc.DocumentId;
             Error _error = null;
 
-            ConnectivityManager.Current.MyDBManager.Database.Open(false, ref _error);
+            ConnectivityManager.Current.DBManager.Database.Open(false, ref _error);
 
             try
             {
@@ -203,7 +203,7 @@ namespace SDBees.Core.Model
                 var _objLst = new ArrayList();
                 if (TemplateDBBaseData.ObjectExistsInDbWithSDBeesId(docdata.Table, doc.DocumentId.Id, ref _error, ref _objLst))
                 {
-                    if (docdata.Load(ConnectivityManager.Current.MyDBManager.Database, _objLst[0], ref _error))
+                    if (docdata.Load(ConnectivityManager.Current.DBManager.Database, _objLst[0], ref _error))
                     {
                         var docid = new SDBeesDocumentId
                         {
@@ -233,7 +233,7 @@ namespace SDBees.Core.Model
             {
                 ViewCache.Disable();
 
-                ConnectivityManager.Current.MyDBManager.Database.Close(ref _error);
+                ConnectivityManager.Current.DBManager.Database.Close(ref _error);
 
 #if PROFILER
                 SDBees.Profiler.Stop();

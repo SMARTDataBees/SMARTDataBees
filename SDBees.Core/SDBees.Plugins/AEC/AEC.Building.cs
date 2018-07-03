@@ -91,7 +91,7 @@ namespace SDBees.Core.Plugins.AEC.Building
 				InitDatabase();
 
 				//setup event listener
-			    MyDBManager?.AddDatabaseChangedHandler(AECBuilding_OnDatabaseChangedHandler);
+			    DBManager?.AddDatabaseChangedHandler(AECBuilding_OnDatabaseChangedHandler);
 			}
 			catch (Exception ex)
 			{
@@ -121,7 +121,7 @@ namespace SDBees.Core.Plugins.AEC.Building
 			Console.WriteLine("BuildingPlugin stops\n");
 
 			//remove event listener
-		    MyDBManager?.RemoveDatabaseChangedHandler(AECBuilding_OnDatabaseChangedHandler);
+		    DBManager?.RemoveDatabaseChangedHandler(AECBuilding_OnDatabaseChangedHandler);
 		}
 
 		public override Icon GetIcon(Size size)
@@ -139,24 +139,24 @@ namespace SDBees.Core.Plugins.AEC.Building
 			if (m_DefaultBuilding == null)
 			{
 				m_DefaultBuilding = CreateDataObject() as AECBuildingBaseData;
-				m_DefaultBuilding.SetDefaults(MyDBManager.Database);
+				m_DefaultBuilding.SetDefaults(DBManager.Database);
 
 				if (m_DefaultBuilding != null)
 				{
 					m_DefaultBuilding.SetPropertyByColumn(Plugs.TemplateBase.TemplateDBBaseData.m_NameColumnName, "Building");
 
-					if (m_DefaultBuilding.Save(MyDBManager.Database, ref _error))
+					if (m_DefaultBuilding.Save(DBManager.Database, ref _error))
 					{
 						//create relation for view
 						var rel = new Admin.ViewRelation();
-						rel.SetDefaults(MyDBManager.Database);
+						rel.SetDefaults(DBManager.Database);
 						rel.ParentId = Guid.Empty;
 						rel.ParentType =Admin.ViewRelation.m_StartNodeValue;
 						rel.ChildId = Guid.Parse(m_DefaultBuilding.GetPropertyByColumn(SDBees.DB.Object.m_IdColumnName).ToString());
 						rel.ChildName = m_DefaultBuilding.GetPropertyByColumn(Plugs.TemplateBase.TemplateDBBaseData.m_NameColumnName).ToString();
 						rel.ChildType = typeof(AECBuilding).ToString();
 
-						rel.Save(MyDBManager.Database, ref _error);
+						rel.Save(DBManager.Database, ref _error);
 
 						return m_DefaultBuilding;
 					}
@@ -198,10 +198,10 @@ namespace SDBees.Core.Plugins.AEC.Building
 		private void InitDatabase()
 		{
 			// Das Databaseplugin besorgen
-			if (MyDBManager != null)
+			if (DBManager != null)
 			{
 				// Verify that the required Tables are created/updated in the database
-				var database = MyDBManager.Database;
+				var database = DBManager.Database;
 				CreateDataObject().InitTableSchema(ref AECBuildingBaseData.gTable, database);
 			}
 		}

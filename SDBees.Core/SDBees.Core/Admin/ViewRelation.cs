@@ -160,7 +160,7 @@ namespace SDBees.Core.Admin
 
                 // select all viewrels with parentid == rootid
                 var firstDocid = docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_DocumentRootColumnName).ToString();
-                var _countWithoutAlienId = FindViewRelationByParentId(ViewAdmin.Current.MyDBManager.Database, new Guid(firstDocid), ref _existingObjectsWithoutAlienId, ref _error);
+                var _countWithoutAlienId = FindViewRelationByParentId(AdminView.Current.DBManager.Database, new Guid(firstDocid), ref _existingObjectsWithoutAlienId, ref _error);
                 if (_countWithoutAlienId > 0)
                     result = true;
             }
@@ -417,7 +417,7 @@ namespace SDBees.Core.Admin
                             viewRel.Save(ref error);
 
                             // raise an event...
-                            ViewAdmin.Current.RaiseViewRelationModified(viewRel, true);
+                            AdminView.Current.RaiseViewRelationModified(viewRel, true);
                         }
                     }
                 }
@@ -450,7 +450,7 @@ namespace SDBees.Core.Admin
                 }
 
                 // raise an event...
-                ViewAdmin.Current.RaiseViewRelationRemoved(this);
+                AdminView.Current.RaiseViewRelationRemoved(this);
             }
 
         }
@@ -469,7 +469,7 @@ namespace SDBees.Core.Admin
             if (WasNewObject && success)
             {
                 // raise an event...
-                ViewAdmin.Current.RaiseViewRelationCreated(this);
+                AdminView.Current.RaiseViewRelationCreated(this);
             }
 
             return success;

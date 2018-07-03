@@ -1,5 +1,4 @@
 ﻿using System;
-using Carbon.Plugins;
 using SDBees.Core.Connectivity.SDBeesLink.UI;
 using SDBees.Core.Model;
 using SDBees.Plugs.Properties;

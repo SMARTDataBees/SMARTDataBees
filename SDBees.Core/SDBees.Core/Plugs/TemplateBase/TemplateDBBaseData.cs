@@ -118,21 +118,21 @@ namespace SDBees.Plugs.TemplateBase
             var m_dataList = new BindingList<TreenodePropertyRow>();
             Error error = null;
 
-            SDBeesDBConnection.Current.MyDBManager.Database.Open(false, ref error);
+            SDBeesDBConnection.Current.DBManager.Database.Open(false, ref error);
 
             var objectIds = new ArrayList();
-            var count = SDBeesDBConnection.Current.MyDBManager.Database.Select(tbl, tbl.PrimaryKey, ref objectIds, ref error);
+            var count = SDBeesDBConnection.Current.DBManager.Database.Select(tbl, tbl.PrimaryKey, ref objectIds, ref error);
             foreach (string item in objectIds)
             {
                 var baseData = basePlugin.CreateDataObject();
-                if (baseData.Load(SDBeesDBConnection.Current.MyDBManager.Database, item, ref error))
+                if (baseData.Load(SDBeesDBConnection.Current.DBManager.Database, item, ref error))
                 {
-                    var propTableRow = new TreenodePropertyRow(SDBeesDBConnection.Current.MyDBManager, baseData, item);
+                    var propTableRow = new TreenodePropertyRow(SDBeesDBConnection.Current.DBManager, baseData, item);
                     m_dataList.Add(propTableRow);
                     //baseData
                 }
             }
-            SDBeesDBConnection.Current.MyDBManager.Database.Close(ref error);
+            SDBeesDBConnection.Current.DBManager.Database.Close(ref error);
 
             return m_dataList;
         }
@@ -150,9 +150,9 @@ namespace SDBees.Plugs.TemplateBase
             var exists = false;
             var column = tbl.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_IdSDBeesColumnName));
             var attParent = new Attribute(column, sdbeesid);
-            var criteria = SDBeesDBConnection.Current.MyDBManager.Database.FormatCriteria(attParent, DbBinaryOperator.eIsEqual, ref _error);
+            var criteria = SDBeesDBConnection.Current.DBManager.Database.FormatCriteria(attParent, DbBinaryOperator.eIsEqual, ref _error);
 
-            var count = SDBeesDBConnection.Current.MyDBManager.Database.Select(tbl, tbl.PrimaryKey, criteria, ref _lstDbIds, ref _error);
+            var count = SDBeesDBConnection.Current.DBManager.Database.Select(tbl, tbl.PrimaryKey, criteria, ref _lstDbIds, ref _error);
             if (count > 0)
                 exists = true;
 
@@ -195,7 +195,7 @@ namespace SDBees.Plugs.TemplateBase
         {
             TemplateTreenode result = null;
 
-            foreach (PluginDescriptor desc in SDBeesDBConnection.Current.MyPluginContext.PluginDescriptors)
+            foreach (PluginDescriptor desc in SDBeesDBConnection.Current.PluginContext.PluginDescriptors)
             {
                 var temp = desc.PluginInstance as TemplateTreenode;
                 if (temp != null)

@@ -21,7 +21,6 @@
 //
 // #EndHeader# ================================================================
 
-using System;
 using System.Runtime.Serialization;
 
 namespace SDBees.Core.Model

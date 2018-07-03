@@ -88,6 +88,7 @@
   <ItemGroup>
     <Compile Include="Admin\ViewCacheImplementation.cs" />
     <Compile Include="Admin\ViewCacheImplementationOne.cs" />
+    <Compile Include="Admin\ViewSelectionArgs.cs" />
     <Compile Include="Connectivity\ConnectivityHost.cs" />
     <Compile Include="Connectivity\ConnectivityManager.cs" />
     <Compile Include="Connectivity\SDBeesLink\Client\SDBeesCallbackCommand.cs" />
@@ -369,12 +370,12 @@
     <Compile Include="Admin\CheckDatabaseDLG.Designer.cs">
       <DependentUpon>CheckDatabaseDLG.cs</DependentUpon>
     </Compile>
-    <Compile Include="Admin\ViewAdmin.cs" />
-    <Compile Include="Admin\ViewAdminAddNew.cs">
+    <Compile Include="Admin\AdminView.cs" />
+    <Compile Include="Admin\AddPluginConfigurationForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Admin\ViewAdminAddNew.Designer.cs">
-      <DependentUpon>ViewAdminAddNew.cs</DependentUpon>
+    <Compile Include="Admin\AddPluginConfigurationForm.Designer.cs">
+      <DependentUpon>AddPluginConfigurationForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Admin\ViewAdminDelegator.cs" />
     <Compile Include="Admin\AdminDialog.cs">
@@ -488,8 +489,8 @@
       <DependentUpon>CheckDatabaseDLG.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Admin\ViewAdminAddNew.resx">
-      <DependentUpon>ViewAdminAddNew.cs</DependentUpon>
+    <EmbeddedResource Include="Admin\AddPluginConfigurationForm.resx">
+      <DependentUpon>AddPluginConfigurationForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Admin\AdminDialog.resx">

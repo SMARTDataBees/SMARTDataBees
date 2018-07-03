@@ -43,7 +43,7 @@ namespace SDBees.Plugs.TemplateBase
         /// <returns>The datatable</returns>
         public DataTable MyDataTable()
         {
-            return MyDBManager.GetDataTableForPlugin(MyTable().Name);
+            return DBManager.GetDataTableForPlugin(MyTable().Name);
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace SDBees.Plugs.TemplateBase
         {
             if (m_editSchemaAllowed)
             {
-                var tableEditor = new frmEditTable(MyDBManager)
+                var tableEditor = new frmEditTable(DBManager)
                 {
                     Text = GetType().ToString(),
                     Table = MyTable()
@@ -151,7 +151,7 @@ namespace SDBees.Plugs.TemplateBase
                 if (tableEditor.ShowDialog() == DialogResult.OK)
                 {
                     Object dataObject = CreateDataObject();
-                    dataObject.ModifyTable(tableEditor.Table, MyDBManager.Database);
+                    dataObject.ModifyTable(tableEditor.Table, DBManager.Database);
                 }                
             }
             else

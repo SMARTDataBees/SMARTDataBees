@@ -23,43 +23,43 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using Carbon.Plugins;
 using SDBees.DB;
 using SDBees.Plugs.Objects;
 using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Plugs.TreenodeHelper;
+using View = SDBees.Plugs.Objects.View;
 
 namespace SDBees.Core.Admin
 {
     public partial class AdminDialog : Form
     {
-        private readonly ViewAdmin _refViewAdmin;
-        private readonly Hashtable _hashPlugins;
+        private readonly AdminView _adminView;
+        private readonly Hashtable _plugins;
         private readonly Hashtable _hashHelper;
 
-        private Hashtable _hashViews;
-        private string _currentViewId;
+        private IList<View> _views;
+        public string CurrentViewIdentification { get; private set; }
 
-        public ToolStripComboBox _cmbViewSelector;
+        private readonly ToolStripComboBox _viewSelector;
 
-        private bool _isConfigNodeSelected;
-
-        public AdminDialog(ViewAdmin baseRef)
+        public AdminDialog(AdminView adminView)
         {
             try
             {
-                _refViewAdmin = baseRef;
                 InitializeComponent();
 
-                _hashPlugins = new Hashtable();
+                _adminView = adminView;
+                _plugins = new Hashtable();
+                _views = new List<View>();
                 _hashHelper = new Hashtable();
-                _hashViews = new Hashtable();
+                CurrentViewIdentification = null;
 
-                _currentViewId = null;
-
-                _cmbViewSelector = new ToolStripComboBox
+                _viewSelector = new ToolStripComboBox
                 {
                     Alignment = ToolStripItemAlignment.Right,
                     Sorted = true,
@@ -68,11 +68,12 @@ namespace SDBees.Core.Admin
 
                 var pluginListContextMenu = new ContextMenu();
                 pluginListContextMenu.Popup += pluginListContextMenu_Popup;
-                m_listViewPlugins.ContextMenu = pluginListContextMenu;
+                AvailablePluginsListView.ContextMenu = pluginListContextMenu;
 
-                _cmbViewSelector.SelectedIndexChanged += _cmbViewSelector_SelectedIndexChanged;
-                if (_cmbViewSelector.Items.Count > 0)
-                    _cmbViewSelector.SelectedIndex = 0;
+                _viewSelector.SelectedIndexChanged += OnViewSelectionChanged;
+               
+                if (_viewSelector.Items.Count > 0)
+                    _viewSelector.SelectedIndex = 0;
 
             }
             catch (Exception ex)
@@ -93,15 +94,15 @@ namespace SDBees.Core.Admin
 
         void pluginListContextMenu_Popup(object sender, EventArgs e)
         {
-            m_listViewPlugins.ContextMenu.MenuItems.Clear();
+            AvailablePluginsListView.ContextMenu.MenuItems.Clear();
 
-            if (m_listViewPlugins.SelectedItems.Count == 1)
+            if (AvailablePluginsListView.SelectedItems.Count == 1)
             {
-                var lvi = m_listViewPlugins.SelectedItems[0];
+                var lvi = AvailablePluginsListView.SelectedItems[0];
 
-                var menuEditSchema = new MenuItem("Edit schema of " + lvi.Text) {Tag = lvi.Tag};
+                var menuEditSchema = new MenuItem("Edit schema of " + lvi.Text) { Tag = lvi.Tag };
                 menuEditSchema.Click += OnEditSchema;
-                m_listViewPlugins.ContextMenu.MenuItems.Add(menuEditSchema);
+                AvailablePluginsListView.ContextMenu.MenuItems.Add(menuEditSchema);
             }
         }
 
@@ -118,7 +119,7 @@ namespace SDBees.Core.Admin
         {
             try
             {
-                toolStrip1.Items.Add(_cmbViewSelector);
+                toolStrip1.Items.Add(_viewSelector);
             }
             catch (Exception ex)
             {
@@ -126,37 +127,30 @@ namespace SDBees.Core.Admin
             }
         }
 
-        void _cmbViewSelector_SelectedIndexChanged(object sender, EventArgs e)
+        private void OnViewSelectionChanged(object sender, EventArgs e)
         {
-            //Einlesen der Viewdaten
-            var objView = (ObjectView)_hashViews[_cmbViewSelector.SelectedItem.ToString()];
+            var selectedViewNam = _viewSelector.SelectedItem.ToString();
+            var view = _views.FirstOrDefault(vw => vw.Name.Equals(selectedViewNam));
 
-            _currentViewId = objView.ViewGUID;
-            if (_currentViewId != null)
-                _refViewAdmin.CurrentViewId = new Guid(_currentViewId);
-            else
-                _refViewAdmin.CurrentViewId = Guid.Empty;
-
-            LoadView(objView);
-
-            //Füllen der Pluginliste
-
-            //Löschen der Plugins aus der liste, die bereits in der view verwendet werden
+            CurrentViewIdentification = view?.Identification;
+            _adminView.CurrentViewId = CurrentViewIdentification != null ? new Guid(CurrentViewIdentification) : Guid.Empty;
+          
+            LoadView(view);
         }
 
         private void FillPluginList()
         {
-            m_listViewPlugins.SmallImageList = new ImageList();
-            m_listViewPlugins.Items.Clear();
+            AvailablePluginsListView.SmallImageList = new ImageList();
+            AvailablePluginsListView.Items.Clear();
 
-            foreach (ObjectPlugin obj in _hashPlugins.Values)
+            foreach (ObjectPlugin obj in _plugins.Values)
             {
-                var imageKey = TemplateTreenode.getImageForPluginType(obj.PluginType, m_listViewPlugins.SmallImageList);
+                var imageKey = TemplateTreenode.getImageForPluginType(obj.PluginType, AvailablePluginsListView.SmallImageList);
 
                 var item = new ListViewItem(obj.PluginName);
                 item.ImageKey = imageKey;
                 item.Tag = obj;
-                m_listViewPlugins.Items.Add(item);
+                AvailablePluginsListView.Items.Add(item);
             }
         }
 
@@ -171,46 +165,56 @@ namespace SDBees.Core.Admin
 
         private void FillViewComboBox()
         {
-            FillHashViews();
+            _viewSelector.Items.Clear();
+            _views = GetViews(_adminView.DBManager.Database);
 
-            _cmbViewSelector.Items.Clear(); //Die Liste der vorhandenen Views löschen?
+            if (_views != null)
+                foreach (var view in _views)
+                    _viewSelector.Items.Add(view.Name);
 
-            foreach (string var in _hashViews.Keys)
+            if (_views != null)
             {
-                var iSelectedItem = _cmbViewSelector.Items.Add(var);
+                var viewForSelection = _views.FirstOrDefault(vw => vw.Identification.Equals(_adminView.CurrentViewId + ""));
+                var index = _views.IndexOf(viewForSelection);
+                if (index >= 0)
+                    _viewSelector.SelectedIndex = index;
             }
-            var propView = new ViewProperty();
-            Error error = null;
-            propView.Load(_refViewAdmin.MyDBManager.Database, _refViewAdmin.CurrentViewId, ref error);
-            var index = _cmbViewSelector.FindStringExact(propView.ViewName);
-            if (index >= 0)
-            {
-                _cmbViewSelector.SelectedIndex = index;
-            }
+
+
+            //var propView = new ViewProperty();
+            //Error error = null;
+            //propView.Load(_adminView.MyDBManager.Database, _adminView.CurrentViewId, ref error);
+            //var index = _viewSelector.FindStringExact(propView.ViewName);
+            //if (index >= 0)
+            //{
+            //    _viewSelector.SelectedIndex = index;
+            //}
         }
 
-        private void FillHashViews()
-        {
-            _hashViews.Clear();
 
+        private IList<View> GetViews(Database database)
+        {
+            var views = new List<View>();
             try
             {
                 var ids = new ArrayList();
                 Error error = null;
-                ViewProperty.FindAllViewProperties(_refViewAdmin.MyDBManager.Database, ref ids, ref error);
+                ViewProperty.FindAllViewProperties(database, ref ids, ref error);
 
                 foreach (var id in ids)
                 {
-                    var propView = new ViewProperty();
-                    propView.Load(_refViewAdmin.MyDBManager.Database, id, ref error);
-                    var opbView = new ObjectView
+                    var viewProperty = new ViewProperty();
+                    viewProperty.Load(_adminView.DBManager.Database, id, ref error);
+                    var opbView = new View
                     {
-                        ViewDescription = propView.ViewDescription,
-                        ViewName = propView.ViewName,
-                        ViewGUID = propView.Id.ToString()
+                        Description = viewProperty.ViewDescription,
+                        Name = viewProperty.ViewName,
+                        Identification = viewProperty.Id.ToString()
                     };
-                    if (_hashViews.ContainsKey(propView.ViewName) == false)
-                        _hashViews.Add(propView.ViewName, opbView);
+
+
+                    if (views.FirstOrDefault(vw => vw.Name.Equals(opbView.Name)) == null)
+                        views.Add(opbView);
                 }
             }
             catch (Exception ex)
@@ -218,11 +222,16 @@ namespace SDBees.Core.Admin
                 MessageBox.Show(ex.ToString());
                 //throw;
             }
+
+            return views;
         }
+
+
+
 
         private void InitHelperHash()
         {
-            foreach (PluginDescriptor plgDesc in _refViewAdmin.MyContext.PluginDescriptors)
+            foreach (PluginDescriptor plgDesc in _adminView.MyContext.PluginDescriptors)
             {
                 try
                 {
@@ -249,7 +258,7 @@ namespace SDBees.Core.Admin
 
         private void InitPluginHash()
         {
-            foreach (PluginDescriptor plgDesc in _refViewAdmin.MyContext.PluginDescriptors)
+            foreach (PluginDescriptor plgDesc in _adminView.MyContext.PluginDescriptors)
             {
                 try
                 {
@@ -261,8 +270,8 @@ namespace SDBees.Core.Admin
                         objPLG.PluginType = plgDesc.PluginType.ToString();
                         objPLG.PluginName = plgDesc.PluginName;
                         objPLG.Plugin = plgDesc.PluginInstance;
-                        if (!_hashPlugins.ContainsKey(objPLG.PluginName))
-                            _hashPlugins.Add(objPLG.PluginName, objPLG);
+                        if (!_plugins.ContainsKey(objPLG.PluginName))
+                            _plugins.Add(objPLG.PluginName, objPLG);
                     }
                 }
                 catch (Exception ex)
@@ -272,42 +281,50 @@ namespace SDBees.Core.Admin
             }
         }
 
-        private void buttonNew_Click(object sender, EventArgs e)
+        private void OnNewConfiguration(object sender, EventArgs eventArgs)
         {
             //Die alte View sichern?
-            if (_cmbViewSelector.Items.Count > 0)
+            if (_viewSelector.Items.Count > 0)
             {
-                var result = MessageBox.Show(@"Should the current data be stored ? ", @"Save data ? ", MessageBoxButtons.YesNo);
-                if (result == DialogResult.OK)
-                    SaveView();
-            }
-           
-            var dlgNewView = new ViewAdminAddNew(ref _hashViews);
-            dlgNewView.ShowDialog();
+                var result = MessageBox.Show(@"Should the current data be stored? ", @"Save data ? ", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    var selectedViewName = _viewSelector.SelectedItem.ToString();
+                    var view = _views.FirstOrDefault(vw => vw.Name.Equals(selectedViewName));
+                    Save(view, PluginConfigurationTreeView.Nodes);
 
+                    CurrentViewIdentification = view.Identification;
+                    _adminView.CurrentViewId = new Guid(CurrentViewIdentification);
+                }
+            }
+
+
+            var dlgNewView = new AddPluginConfigurationForm();
             try
             {
-                if (dlgNewView.DialogResult == DialogResult.OK)
+                if (dlgNewView.ShowDialog() == DialogResult.OK)
                 {
+                    var view = new View
+                    {
+                        Description = dlgNewView.View.Description,
+                        Name = dlgNewView.View.Name,
+                        Identification = dlgNewView.View.Identification
+                    };
 
-                    //if(this._hashViews.ContainsKey(_dlgNewView.ViewName))
-                    var opbView = new ObjectView();
-                    opbView.ViewDescription = dlgNewView.ViewDescription;
-                    opbView.ViewName = dlgNewView.ViewName;
-                    opbView.ViewGUID = dlgNewView.ViewGuid;
-                    _hashViews.Add(dlgNewView.ViewName, opbView);
+
+                    Save(view, PluginConfigurationTreeView.Nodes);
+
+                    _views.Add(view);
+                    CurrentViewIdentification = view.Identification;
+                    _adminView.CurrentViewId = new Guid(CurrentViewIdentification);
 
 
-                    SaveViewProperty((ObjectView)_hashViews[dlgNewView.ViewName]);
-
-                    m_listViewPlugins.Items.Clear(); //Die Liste der verfügbaren Plugins löschen
+                    AvailablePluginsListView.Items.Clear();
                     FillViewComboBox();
-                    m_treeViewSystemConfig.Nodes.Clear(); //Die alte Treeview löschen
-                    _cmbViewSelector.SelectedItem = dlgNewView.ViewName;
-                    // die ID setzen
-                    var objView = (ObjectView)_hashViews[dlgNewView.ViewName];
-                    _currentViewId = objView.ViewGUID;
-                   
+                    PluginConfigurationTreeView.Nodes.Clear(); //Die alte Treeview löschen
+                    _viewSelector.SelectedItem = dlgNewView.View.Name;
+
+
                     FillPluginList();
                     FillHelperList();
                 }
@@ -319,14 +336,19 @@ namespace SDBees.Core.Admin
             }
         }
 
-        private void buttonClose_Click(object sender, EventArgs e)
+        private void OnClose(object sender, EventArgs e)
         {
             try
             {
                 var dlgRes = MessageBox.Show(@"Should the data be stored?", @"Save data?", MessageBoxButtons.YesNo);
 
                 if (dlgRes == DialogResult.Yes)
-                    SaveView();
+                {
+                    var selectedViewName = _viewSelector.SelectedItem.ToString();
+                    var view = _views.FirstOrDefault(vw => vw.Name.Equals(selectedViewName));
+                    Save(view, PluginConfigurationTreeView.Nodes);
+                }
+
                 Close();
             }
             catch (Exception ex)
@@ -342,32 +364,33 @@ namespace SDBees.Core.Admin
         }
 
         #region SaveView
-        private void SaveView()
+        private void Save(View view, IEnumerable nodes)
         {
+            if (view == null)
+                return;
+
             //Was passiert mit vorhandenen Einträgen? ViewProperty wird aktualisiert
             // ViewRelations werden gelöscht
             DeleteViewRelations();
 
-            if (m_treeViewSystemConfig.TopNode != null)
-            {
-                if (_cmbViewSelector.SelectedItem != null)
-                    SaveViewProperty((ObjectView)_hashViews[_cmbViewSelector.SelectedItem.ToString()]);
+            //if (PluginConfigurationTreeView.TopNode != null)
+            //{
 
-                foreach (TreeNode trn in m_treeViewSystemConfig.Nodes)
-                {
-                    SaveViewDefinition(trn, ViewRelation.m_StartNodeValue);
-                }
-            }
-            else //Es ist eine leere View, der Treeview sollte leer sein. Sollen wir das zulassen? Nein
-            {
-                //this.SaveViewProperty((ObjectView)this._hashViews[this._cmbViewSelector.SelectedItem.ToString()]);
-                MessageBox.Show("Die Viewdefiniton ist leer! Sie kann nicht gespeichert werden!");
-            }
+            SaveViewProperty(view);
+
+            foreach (TreeNode node in nodes)
+                SaveViewDefinition(node, ViewRelation.m_StartNodeValue);
+            //}
+            //else //Es ist eine leere View, der Treeview sollte leer sein. Sollen wir das zulassen? Nein
+            //{
+            //    //this.SaveViewProperty((ObjectView)this._hashViews[this._cmbViewSelector.SelectedItem.ToString()]);
+            //    MessageBox.Show("Die Viewdefiniton ist leer! Sie kann nicht gespeichert werden!");
+            //}
         }
 
         private void DeleteViewRelations()
         {
-            if (_currentViewId == null)
+            if (CurrentViewIdentification == null)
                 return;
 
             Error error = null;
@@ -376,11 +399,11 @@ namespace SDBees.Core.Admin
 
             try
             {
-                ViewDefinition.FindViewDefinitions(_refViewAdmin.MyDBManager.Database, ref lstEraseIds,
-                    new Guid(_currentViewId), ref error);
+                ViewDefinition.FindViewDefinitions(_adminView.DBManager.Database, ref lstEraseIds,
+                    new Guid(CurrentViewIdentification), ref error);
                 foreach (var var in lstEraseIds)
                 {
-                    viewDef.Load(_refViewAdmin.MyDBManager.Database, var, ref error);
+                    viewDef.Load(_adminView.DBManager.Database, var, ref error);
                     viewDef.Erase(ref error);
                 }
             }
@@ -390,38 +413,26 @@ namespace SDBees.Core.Admin
             }
         }
 
-        private void SaveViewProperty(ObjectView objView)
+        private void SaveViewProperty(View objView)
         {
             try
             {
                 Error error = null;
-                var lstViewProps = new ArrayList();
+
                 var viewProp = new ViewProperty();
-                //if (_currentViewId != null)
-                //{
-                //    // Falls die view bereits existiert, laden...
-                //    viewProp.Load(_refViewAdmin.MyDBManager.Database, _currentViewId, ref error);
+                if (objView.Identification.Equals(CurrentViewIdentification))
+                    viewProp.Load(_adminView.DBManager.Database, objView.Identification, ref error);
+                else
+                    viewProp.SetDefaults(_adminView.DBManager.Database);
 
-                //    Error.Display("View konnte nicht geladen werden", error);
-                //}
-                //else
-                {
-                    viewProp.SetDefaults(_refViewAdmin.MyDBManager.Database);
-                }
 
-                viewProp.ViewName = objView.ViewName;
-                viewProp.ViewDescription = objView.ViewDescription;
+                viewProp.ViewName = objView.Name;
+                viewProp.ViewDescription = objView.Description;
                 viewProp.Save(ref error);
 
-                if (_currentViewId == null)
-                {
-                    _currentViewId = viewProp.Id.ToString();
-                    objView.ViewGUID = _currentViewId;
-                    _refViewAdmin.CurrentViewId = new Guid(_currentViewId);
-                }
 
                 if (error != null)
-                    Error.Display("View Properties Erzeugung", error);
+                    Error.Display("View properties save error", error);
 
             }
             catch (Exception ex)
@@ -445,12 +456,12 @@ namespace SDBees.Core.Admin
                 }
 
                 Error error = null;
-                var viewDef = new ViewDefinition {Database = _refViewAdmin.MyDBManager.Database};
+                var viewDef = new ViewDefinition { Database = _adminView.DBManager.Database };
                 var objTag = (ObjectPlugin)trn.Tag;
                 viewDef.ParentType = tParentType;
                 viewDef.ChildType = objTag.PluginType;
                 viewDef.ChildName = objTag.PluginName;
-                viewDef.ViewId = _currentViewId;
+                viewDef.ViewId = CurrentViewIdentification;
                 viewDef.Save(ref error);
 
                 if (error != null)
@@ -463,8 +474,6 @@ namespace SDBees.Core.Admin
                 //throw;
             }
         }
-
-
         #endregion
 
 
@@ -472,46 +481,46 @@ namespace SDBees.Core.Admin
         /// <summary>
         /// Loads the Views defined in the database
         /// </summary>
-        private void LoadView(ObjectView objView)
+        private void LoadView(View objView)
         {
-            var database = _refViewAdmin.MyDBManager.Database;
+            var database = _adminView.DBManager.Database;
             Error error = null;
             database.Open(false, ref error);
 
-            m_treeViewSystemConfig.Nodes.Clear();
-            m_treeViewSystemConfig.ImageList = new ImageList();
+            PluginConfigurationTreeView.Nodes.Clear();
+            PluginConfigurationTreeView.ImageList = new ImageList();
             LoadViewStartDefinition(objView);
 
             database.Close(ref error);
         }
 
-        private void LoadViewStartDefinition(ObjectView objView)
+        private void LoadViewStartDefinition(View objView)
         {
             try
             {
-                if (objView.ViewGUID == null)
+                if (objView.Identification == null)
                     return;
 
                 var lstObjViewDefs = new ArrayList();
                 Error error = null;
 
-                ViewDefinition.FindViewDefinitionsByParentType(_refViewAdmin.MyDBManager.Database,
-                  ref lstObjViewDefs, new Guid(objView.ViewGUID), ViewRelation.m_StartNodeValue, ref error);
+                ViewDefinition.FindViewDefinitionsByParentType(_adminView.DBManager.Database,
+                  ref lstObjViewDefs, new Guid(objView.Identification), ViewRelation.m_StartNodeValue, ref error);
 
                 if (lstObjViewDefs.Count == 1)
                 {
-                    _currentViewId = objView.ViewGUID;
-                    _refViewAdmin.CurrentViewId = new Guid(_currentViewId);
+                    CurrentViewIdentification = objView.Identification;
+                    _adminView.CurrentViewId = new Guid(CurrentViewIdentification);
                 }
 
                 var viewDef = new ViewDefinition();
                 foreach (var var in lstObjViewDefs)
                 {
                     //Das Startteil herausfinden. Kann ja auch unsortiert sein ...
-                    viewDef.Load(_refViewAdmin.MyDBManager.Database, var, ref error);
+                    viewDef.Load(_adminView.DBManager.Database, var, ref error);
                     if (viewDef.ParentType == ViewRelation.m_StartNodeValue)
                     {
-                        var imageKey = TemplateTreenode.getImageForPluginType(viewDef.ChildType, m_treeViewSystemConfig.ImageList);
+                        var imageKey = TemplateTreenode.getImageForPluginType(viewDef.ChildType, PluginConfigurationTreeView.ImageList);
 
                         var trnPLG = new TreeNode(viewDef.ChildName);
                         trnPLG.ImageKey = imageKey;
@@ -524,7 +533,7 @@ namespace SDBees.Core.Admin
                             ID = viewDef.Id.ToString()
                         };
                         trnPLG.Tag = objPLG;
-                        m_treeViewSystemConfig.Nodes.Add(trnPLG);
+                        PluginConfigurationTreeView.Nodes.Add(trnPLG);
 
 
                         error = LoadViewSubDefinitions(objView, error, viewDef.ChildType, trnPLG);
@@ -538,18 +547,18 @@ namespace SDBees.Core.Admin
             }
         }
 
-        private Error LoadViewSubDefinitions(ObjectView objView, Error error, string sParentType, TreeNode trnPLGParent)
+        private Error LoadViewSubDefinitions(View objView, Error error, string sParentType, TreeNode trnPLGParent)
         {
             var lstChilds = new ArrayList();
-            var iDefs = ViewDefinition.FindViewDefinitionsByParentType(_refViewAdmin.MyDBManager.Database, ref lstChilds,
-              new Guid(objView.ViewGUID), sParentType, ref error);
+            var iDefs = ViewDefinition.FindViewDefinitionsByParentType(_adminView.DBManager.Database, ref lstChilds,
+              new Guid(objView.Identification), sParentType, ref error);
 
             var viewDefSub = new ViewDefinition();
             foreach (var obj in lstChilds)
             {
-                viewDefSub.Load(_refViewAdmin.MyDBManager.Database, obj, ref error);
+                viewDefSub.Load(_adminView.DBManager.Database, obj, ref error);
 
-                var imageKey = TemplateTreenode.getImageForPluginType(viewDefSub.ChildType, m_treeViewSystemConfig.ImageList);
+                var imageKey = TemplateTreenode.getImageForPluginType(viewDefSub.ChildType, PluginConfigurationTreeView.ImageList);
 
                 var trnPLG_SUB = new TreeNode(viewDefSub.ChildName);
                 trnPLG_SUB.ImageKey = imageKey;
@@ -712,11 +721,11 @@ namespace SDBees.Core.Admin
         #region LabelEdit + Löschen
         private void treeViewConfig_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
-            if (e.Node.Tag.GetType() == typeof(ObjectView))
+            if (e.Node.Tag.GetType() == typeof(View))
             {
-                var objView = (ObjectView)e.Node.Tag;
-                _cmbViewSelector.Items.Remove(objView.ViewName);
-                objView.ViewName = e.Label;
+                var objView = (View)e.Node.Tag;
+                _viewSelector.Items.Remove(objView.Name);
+                objView.Name = e.Label;
                 e.Node.Tag = objView;
             }
             else if (e.Node.Tag.GetType() == typeof(ObjectPlugin))
@@ -736,12 +745,12 @@ namespace SDBees.Core.Admin
                 var dlgRes = MessageBox.Show("Do you really want to delete the selected node and the subnodes?", "Attention", MessageBoxButtons.YesNo);
                 if (dlgRes == DialogResult.Yes)
                 {
-                    RemoveNodeAndAddBackToList(m_treeViewSystemConfig.SelectedNode);
+                    RemoveNodeAndAddBackToList(PluginConfigurationTreeView.SelectedNode);
                 }
             }
             else if (e.KeyCode == Keys.F2)
             {
-                m_treeViewSystemConfig.SelectedNode.BeginEdit();
+                PluginConfigurationTreeView.SelectedNode.BeginEdit();
             }
         }
 
@@ -753,26 +762,34 @@ namespace SDBees.Core.Admin
             }
 
             var obj = (ObjectPlugin)trNode.Tag;
-            var imageKey = TemplateTreenode.getImageForPluginType(obj.PluginType, m_listViewPlugins.SmallImageList);
+            var imageKey = TemplateTreenode.getImageForPluginType(obj.PluginType, AvailablePluginsListView.SmallImageList);
 
             var lstItem = new ListViewItem(trNode.Text);
             lstItem.ImageKey = imageKey;
             lstItem.Tag = trNode.Tag;
-            m_listViewPlugins.Items.Add(lstItem);
+            AvailablePluginsListView.Items.Add(lstItem);
             trNode.Remove();
         }
         #endregion
 
 
-        private void buttonSave_Click(object sender, EventArgs e)
+        private void OnSave(object sender, EventArgs e)
         {
-            SaveView();
+            var view = GetSelectedView();
+            if (view != null)
+                Save(view, PluginConfigurationTreeView.Nodes);
         }
 
         private void ViewAdminDLG_Shown(object sender, EventArgs e)
         {
             RefreshView();
 
+        }
+
+        private View GetSelectedView()
+        {
+            var selectedViewName = _viewSelector.SelectedItem.ToString();
+            return _views.FirstOrDefault(vw => vw.Name.Equals(selectedViewName));
         }
 
     }

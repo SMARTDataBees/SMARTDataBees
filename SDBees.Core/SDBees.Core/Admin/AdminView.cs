@@ -23,8 +23,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Specialized;
-using System.Linq;
 using System.Windows.Forms;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
@@ -34,8 +32,6 @@ using SDBees.Main.Window;
 using SDBees.Plugs.TemplateMenue;
 using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Plugs.TreenodeHelper;
-using Attribute = SDBees.DB.Attribute;
-using Object = SDBees.DB.Object;
 
 namespace SDBees.Core.Admin
 {
@@ -54,12 +50,10 @@ namespace SDBees.Core.Admin
     [PluginDependency(typeof(MainWindowApplication))]
     [PluginDependency(typeof(GlobalManager))]
 
-    public class ViewAdmin : TemplateMenue
+    public class AdminView : TemplateMenue
     {
-        private static ViewAdmin _theInstance;
         private readonly MenuItem _mnuItemViewAdmin;
         private readonly ToolStripComboBox _puViewSelector;
-        private AdminDialog _dlgViewAdmin;
         private Guid _curViewId;
         private ViewRelationTreeView _treeView;
         private ViewRelationTreeDLG _viewRelDLG;
@@ -71,58 +65,43 @@ namespace SDBees.Core.Admin
             set => _curViewId = value;
         }
 
-        public ViewAdmin()
+        public AdminView()
         {
-            _theInstance = this;
+            Current = this;
             _mnuItemViewAdmin = new MenuItem("View Admin ...");
             _mnuItemViewAdmin.Click += _mnuItemViewManager_Click;
-            //_mnuItem.
+            _puViewSelector = new ToolStripComboBox("View")
+            {
+                Alignment = ToolStripItemAlignment.Left,
+                Sorted = true,
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                FlatStyle = FlatStyle.Flat,
+                Width = MainWindowApplicationDLG.m_Splitterdistance,
+                DropDownWidth = MainWindowApplicationDLG.m_Splitterdistance
+            };
 
-            _puViewSelector = new ToolStripComboBox("View");
-            _puViewSelector.Alignment = ToolStripItemAlignment.Left;
-            _puViewSelector.Sorted = true;
-            _puViewSelector.DropDownStyle = ComboBoxStyle.DropDownList;
-            _puViewSelector.FlatStyle = FlatStyle.Flat;
-            _puViewSelector.Width = MainWindowApplicationDLG.m_Splitterdistance;
-            _puViewSelector.DropDownWidth = MainWindowApplicationDLG.m_Splitterdistance;
-
-            _puViewSelector.SelectedIndexChanged += _puViewSelector_SelectedIndexChanged;
+            _puViewSelector.SelectedIndexChanged += OnSelectedIndexChanged;
         }
 
-        public ViewRelationTreeDLG MyViewRelationWindow()
-        {
-            try
-            {
-                return _viewRelDLG;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
+        public ViewRelationTreeDLG ViewRelationWindow() => _viewRelDLG;
 
-        void _puViewSelector_SelectedIndexChanged(object sender, EventArgs e)
+        private void OnSelectedIndexChanged(object sender, EventArgs eventArgs)
         {
-            if ((_treeView != null) && (MyDBManager != null))
+            if ((_treeView != null) && (DBManager != null))
             {
                 Error error = null;
-                var viewId = ViewProperty.GetViewIdFromName(MyDBManager.Database, _puViewSelector.Text, ref error);
+                var viewId = ViewProperty.GetViewIdFromName(DBManager.Database, _puViewSelector.Text, ref error);
                 if (viewId != Guid.Empty)
                 {
                     _treeView.ViewId = viewId;
                     _curViewId = viewId;
+                    OnViewSelectionChanged?.Invoke(_puViewSelector, new ViewSelectionArgs(_puViewSelector.Text, viewId));
                 }
-
-                Error.Display("View " + _puViewSelector.Text + " not found in database!", error);
-
-                //fire the event for view selection changed!
-                if(OnViewSelectionChanged != null)
-                    OnViewSelectionChanged(_puViewSelector, new ViewSelectArgs(_puViewSelector.Text, viewId));
             }
         }
 
         // The delegate procedure we are assigning to our object
-        public delegate void ViewSelectedChangedHandler(object myObject, ViewSelectArgs myArgs);
+        public delegate void ViewSelectedChangedHandler(object myObject, ViewSelectionArgs myArgs);
 
         public event ViewSelectedChangedHandler OnViewSelectionChanged;
 
@@ -135,75 +114,28 @@ namespace SDBees.Core.Admin
         {
             try
             {
-                Console.WriteLine("Viewadmin starts\n");
-
+                Console.WriteLine(@"Viewadmin starts");
                 _context = context;
-
                 StartMe(context, e);
-
                 InitDatabase();
 
-                if (MyDBManager != null)
+                AdminDialog = new AdminDialog(this);
+                if (MainWindow != null)
                 {
-                    // creating an inspector is enough, it will register itself...
-                    var inspector = new ViewRelationsInspector(MyDBManager);
-
-                    // creating the view admin delegator is enough, it will register itself...
-                    var delegator = new ViewAdminDelegator(MyDBManager);
-                }
-
-                _dlgViewAdmin = new AdminDialog(this);
-
-                //Setting up the menuitem
-                if (MyMainWindow != null)
-                {
-                    //Adding the ViewAdmin window
-                    MyMainWindow.TheDialog.MenueAdmin().MenuItems.Add(_mnuItemViewAdmin);
-
-                    _mnuItemViewAdmin.Visible = SDBeesGlobalVars.GetViewAdminDisplayment() ? true : false;
-
-                    //MenuItem mnuNewWindow = new MenuItem("New View Window...");
-                    //mnuNewWindow.Click += new EventHandler(mnuNewWindow_Click);
-                    //MyMainWindow.TheDialog.MenueAdmin().MenuItems.Add(mnuNewWindow);
-
-                    //MenuItem mnuCheckDatabase = new MenuItem("Check database...");
-                    //mnuCheckDatabase.Click += new EventHandler(mnuCheckDatabase_Click);
-                    //MyMainWindow.TheDialog.MenueAdmin().MenuItems.Add(mnuCheckDatabase);
-
+                    MainWindow.TheDialog.MenueAdmin().MenuItems.Add(_mnuItemViewAdmin);
+                    _mnuItemViewAdmin.Visible = SDBeesGlobalVars.GetViewAdminDisplayment();
                     CreateTreeView();
                 }
 
-                if (MyDBManager != null)
-                {
-                    //create a new viewrelationwindow
-                    _viewRelDLG = new ViewRelationTreeDLG(MyDBManager);
-                    MyDBManager.AddUpdateHandler(ViewAdmin_OnUpdateHandler);
-                    try
-                    {
-                        //this.MyContext.ApplicationContext.AddTopLevelWindow(_viewRelDLG);
-                    }
-                    catch (Exception ex)
-                    {
-                    }
-                }
+                if (DBManager != null)
+                    _viewRelDLG = new ViewRelationTreeDLG(DBManager);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-                //throw;
             }
         }
 
-        void ViewAdmin_OnUpdateHandler(object myObject, EventArgs myArgs)
-        {
-            //_treeView.RefreshView();
-
-            //SelectFirstTreeNode();
-
-            //_treeView.RefreshView();
-
-            //_viewRelDLG.RefreshView();
-        }
 
         private void SelectFirstTreeNode()
         {
@@ -212,7 +144,6 @@ namespace SDBees.Core.Admin
                 if (0 < _treeView.Nodes.Count)
                 {
                     var firstTreeNode = _treeView.Nodes[0];
-
                     _treeView.SelectNode(firstTreeNode, true);
                 }
             }
@@ -220,7 +151,7 @@ namespace SDBees.Core.Admin
 
         public void UpdatePropertyPages(TreeNode selectedNode)
         {
-            var database = MyDBManager.Database;
+            var database = DBManager.Database;
             Error error = null;
             database.Open(false, ref error);
 
@@ -232,19 +163,13 @@ namespace SDBees.Core.Admin
                 selectedTag = (TemplateTreenodeTag)selectedNode.Tag;
 
                 if (selectedNode.Parent != null)
-                {
-                    parentTag = (TemplateTreenodeTag)selectedNode.Parent.Tag;
-                }
-
+                    parentTag = (TemplateTreenodeTag) selectedNode.Parent.Tag;
             }
 
             var allTreenodePlugins = TemplateTreenode.GetAllTreenodePlugins();
             foreach (var treenodePlugin in allTreenodePlugins)
             {
-                if (treenodePlugin != null)
-                {
-                    treenodePlugin.UpdatePropertyPage(selectedTag, parentTag);
-                }
+                treenodePlugin?.UpdatePropertyPage(selectedTag, parentTag);
             }
 
             // Jetzt die TemplateTreenodeHelper benachrichtigen...
@@ -253,7 +178,7 @@ namespace SDBees.Core.Admin
             {
                 if (helperPlugin != null)
                 {
-                    var tabPage = MyMainWindow.TheDialog.TabPagePlugin(helperPlugin.GetType().ToString());
+                    var tabPage = MainWindow.TheDialog.TabPagePlugin(helperPlugin.GetType().ToString());
                     if (tabPage != null)
                     {
                         helperPlugin.UpdatePropertyPage(tabPage, _treeView.ViewId, selectedTag, parentTag);
@@ -266,24 +191,24 @@ namespace SDBees.Core.Admin
 
         private void CreateTreeView()
         {
-            if (MyDBManager != null)
+            if (DBManager != null)
             {
                 // Create the required database tables...
-                var database = MyDBManager.Database;
+                var database = DBManager.Database;
 
                 Error error = null;
                 database.Open(false, ref error);
 
                 FillViewSelector();
-                MyMainWindow.TheDialog.ToolStripMainWindow().Items.Add(_puViewSelector);
+                MainWindow.TheDialog.ToolStripMainWindow().Items.Add(_puViewSelector);
                 _puViewSelector.Width = MainWindowApplicationDLG.m_Splitterdistance;
 
-                _treeView = new ViewRelationTreeView(MyDBManager);
+                _treeView = new ViewRelationTreeView(DBManager);
                 _treeView.AfterSelect += _treeView_AfterSelect;
                 _treeView.ViewSwitched += _treeView_ViewSwitched;
 
-                MyMainWindow.TheDialog.SystemView().Controls.Clear();
-                MyMainWindow.TheDialog.SystemView().Controls.Add(_treeView);
+                MainWindow.TheDialog.SystemView().Controls.Clear();
+                MainWindow.TheDialog.SystemView().Controls.Add(_treeView);
                 _treeView.Dock = DockStyle.Fill;
 
                 CreateTabPropertyPages();
@@ -331,7 +256,7 @@ namespace SDBees.Core.Admin
         {
             var newTag = args.Tag;
 
-            var database = MyDBManager.Database;
+            var database = DBManager.Database;
             Error error = null;
             if (ViewRelation.ChildReferencedByView(database, _curViewId, new Guid(newTag.NodeGUID), ref error))
             {
@@ -341,7 +266,7 @@ namespace SDBees.Core.Admin
 
             if (!ViewDefinition.ViewDefinitionExists(database, _curViewId, args.ParentType, newTag.NodeTypeOf, ref error))
             {
-                MessageBox.Show("relation not guilty (" + args.ParentType + " / " + newTag.NodeTypeOf + ")");
+                MessageBox.Show($@"Relation not guilty ({args.ParentType} / {newTag.NodeTypeOf})");
                 return;
             }
 
@@ -357,19 +282,22 @@ namespace SDBees.Core.Admin
 
             viewrel.Save(ref error);
 
-            Error.Display("can't create relation", error);
+            Error.Display($"Can't create relation", error);
         }
 
         private void CreateTabPropertyPages()
         {
             // Jetzt das TabControl für Eigenschaften bzw. EDM, ... einrichten
-            MyMainWindow.TheDialog.MyTabControl().TabPages.Clear();
+            MainWindow.TheDialog.MyTabControl().TabPages.Clear();
 
             // Eine TabPage für die Grunddaten ist immer da...
-            var tabPageProperties = new TabPage();
-            tabPageProperties.Name = ""; // Grunddaten muss diesen Namen haben!!!
-            tabPageProperties.Text = "Properties";
-            MyMainWindow.TheDialog.MyTabControl().TabPages.Add(tabPageProperties);
+            var tabPageProperties = new TabPage
+            {
+                Name = "",
+                Text = @"Properties"
+            };
+            // Grunddaten muss diesen Namen haben!!!
+            MainWindow.TheDialog.MyTabControl().TabPages.Add(tabPageProperties);
 
             // Für jeden Helper eine TabPage hinzufügen...
             var allHelperPlugins = TemplateTreenodeHelper.GetAllHelperPlugins();
@@ -379,10 +307,13 @@ namespace SDBees.Core.Admin
                 // Wenn der Helper kein Label hat, dann möchte dieser nicht dargestellt werden.
                 if (pluginHelper.TabPageName() != "")
                 {
-                    var tabPageHelper = new TabPage();
-                    tabPageHelper.Name = pluginHelper.GetType().ToString(); // Grunddaten muss einen leeren namen haben!!!
-                    tabPageHelper.Text = pluginHelper.TabPageName();
-                    MyMainWindow.TheDialog.MyTabControl().TabPages.Add(tabPageHelper);
+                    var tabPageHelper = new TabPage
+                    {
+                        Name = pluginHelper.GetType().ToString(),
+                        Text = pluginHelper.TabPageName()
+                    };
+                    // Grunddaten muss einen leeren namen haben!!!
+                    MainWindow.TheDialog.MyTabControl().TabPages.Add(tabPageHelper);
                 }
             }
         }
@@ -408,17 +339,13 @@ namespace SDBees.Core.Admin
         /// <param name="e"></param>
         protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
         {
-            //context.SplashWindow.ShowDialog();
-            //this.CloseHiddenWindow();
+           
         }
 
         /// <summary>
         /// Returns the one and only ViewAdminManager Plugin instance.
         /// </summary>
-        public static ViewAdmin Current
-        {
-            get { return _theInstance; }
-        }
+        public static AdminView Current { get; private set; }
 
         /// <summary>
         /// The Context for the loaded Plugin
@@ -428,10 +355,7 @@ namespace SDBees.Core.Admin
             get { return _context; }
         }
 
-        public AdminDialog MyDialog
-        {
-            get { return _dlgViewAdmin; }
-        }
+        public AdminDialog AdminDialog { get; private set; }
 
         private void FillViewSelector()
         {
@@ -439,7 +363,7 @@ namespace SDBees.Core.Admin
 
             _puViewSelector.Items.Clear();
 
-            var database = MyDBManager.Database;
+            var database = DBManager.Database;
             if (database != null)
             {
                 ArrayList viewNames = null;
@@ -477,17 +401,17 @@ namespace SDBees.Core.Admin
         {
             FillViewSelector();
 
-            _dlgViewAdmin.RefreshView();
+            AdminDialog.RefreshView();
             SelectFirstTreeNode();
         }
 
         private void InitDatabase()
         {
             // Das Databaseplugin besorgen
-            if (MyDBManager != null)
+            if (DBManager != null)
             {
                 // Create the required database tables...
-                var database = MyDBManager.Database;
+                var database = DBManager.Database;
 
                 Error error = null;
                 database.Open(false, ref error);
@@ -580,106 +504,18 @@ namespace SDBees.Core.Admin
         #region MyEvents
         void _mnuItemViewManager_Click(object sender, EventArgs e)
         {
-            _dlgViewAdmin.ShowDialog();
+            AdminDialog.ShowDialog();
 
             // Refill the view list, but get the last setting first...
             var lastViewName = _puViewSelector.Text;
 
             FillViewSelector();
 
-            var lastViewInDialog = _dlgViewAdmin._cmbViewSelector.Text;
-            if (lastViewInDialog != "")
-            {
-                lastViewName = lastViewInDialog;
-            }
-            SelectViewByName(lastViewName);
+            if (string.IsNullOrEmpty(AdminDialog.CurrentViewIdentification) == false)
+                SelectViewByName(lastViewName);
         }
-
-        void mnuNewWindow_Click(object sender, EventArgs e)
-        {
-            var newWindow = new ViewRelationTreeDLG(MyDBManager);
-            //newWindow.ViewId = _curViewId;
-
-            newWindow.Show();
-        }
-
-        void mnuCheckDatabase_Click(object sender, EventArgs e)
-        {
-            var dialog = new CheckDatabaseDLG();
-
-            dialog.ShowDialog();
-        }
-
 
         #endregion
 
-        public void SetUpPredefinedViewForPlugin(string typeOfPlugin, StringCollection viewStructure, string nameOfViewProperty)
-        {
-            //check, if View already exists
-            Error error = null;
-
-            var viewprop = new ViewProperty();
-            var column = viewprop.Table.Columns.FirstOrDefault(clmn => clmn.Name.Equals("viewname"));
-            var attViewProp = new Attribute(column, nameOfViewProperty);
-            var criteria = MyDBManager.Database.FormatCriteria(attViewProp, DbBinaryOperator.eIsEqual, ref error);
-
-            ArrayList objectIds = null;
-            var count = MyDBManager.Database.Select(viewprop.Table, viewprop.Table.PrimaryKey, criteria, ref objectIds, ref error);
-
-            if (count > 0)
-                return;
-
-            // create a new viewprop
-            viewprop.SetDefaults(MyDBManager.Database);
-            viewprop.SetPropertyByColumn("viewname", nameOfViewProperty);
-            viewprop.SetPropertyByColumn("viewdescription", string.Format("view automatically created by plugin {0}", typeOfPlugin));
-            viewprop.Save(ref error);
-
-            // define the viewrelations from structure
-            foreach (var item in viewStructure)
-            {
-                var viewdef = new ViewDefinition();
-                viewdef.SetDefaults(MyDBManager.Database);
-                viewdef.SetPropertyByColumn("view", viewprop.GetPropertyByColumn(Object.m_IdColumnName));
-                viewdef.SetPropertyByColumn("parent_type", item.Split(',')[0]);
-                viewdef.SetPropertyByColumn("child_type", item.Split(',')[1]);
-
-                foreach(PluginDescriptor desc in MyContext.PluginDescriptors)
-                {
-                    if (desc.PluginType.ToString() == item.Split(',')[1])
-                    {
-                        viewdef.SetPropertyByColumn("child_name", desc.PluginName);
-                        break;
-                    }
-                }
-                viewdef.Save(ref error);
-            }
-            //FillViewSelector();
-        }
-    }
-
-    public class ViewSelectArgs : EventArgs
-    {
-        private string m_viewname;
-        private Guid m_viewguid;
-
-        public ViewSelectArgs(string viewname, Guid viewguid)
-        {
-            m_viewname = viewname;
-            m_viewguid = viewguid;
-        }
-
-        public string ViewName
-        {
-            get
-            {
-                return m_viewname;
-            }
-        }
-
-        public Guid ViewGuid
-        {
-            get { return m_viewguid; }
-        }
     }
 }

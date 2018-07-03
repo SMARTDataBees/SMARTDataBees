@@ -25,7 +25,7 @@ namespace SDBees.Plugins.TreeviewHelper
 
         public TemplateTreenodeTag ParentTemplateTreenodeTag { get; set; }
 
-        public Database Database => _parent.MyDBManager.Database;
+        public Database Database => _parent.DBManager.Database;
 
         public Guid ViewId { get; set; }
 
@@ -91,7 +91,7 @@ namespace SDBees.Plugins.TreeviewHelper
                         var viewRelIds = new ArrayList();
                         if (ViewRelation.FindViewRelationForView(Database, ViewId, guidParent, guidChild, ref viewRelIds, ref error) > 0)
                         {
-                            var propTable = new TreenodePropertyRow(_parent.MyDBManager, viewDef.ChildType, item);
+                            var propTable = new TreenodePropertyRow(_parent.DBManager, viewDef.ChildType, item);
                             dataList.Add(propTable);
                         }
                     }

@@ -48,7 +48,7 @@ namespace SDBees.UserAdmin
         {
             get
             {
-                return mParent.MyDBManager.Database.Server;
+                return mParent.DBManager.Database.Server;
             }
         }
 

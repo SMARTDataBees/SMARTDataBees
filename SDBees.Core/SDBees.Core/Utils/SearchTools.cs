@@ -1,5 +1,4 @@
-﻿using System;
-using SDBees.Core.Model;
+﻿using SDBees.Core.Model;
 
 namespace SDBees.Core.Utils
 {
