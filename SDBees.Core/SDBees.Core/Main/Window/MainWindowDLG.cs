@@ -278,9 +278,10 @@ namespace SDBees.Main.Window
             this.m_statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.m_toolStripStatusLabel,
             this.m_toolStripProgressBar});
-            this.m_statusBar.Location = new System.Drawing.Point(0, 486);
+            this.m_statusBar.Location = new System.Drawing.Point(0, 781);
             this.m_statusBar.Name = "m_statusBar";
-            this.m_statusBar.Size = new System.Drawing.Size(735, 36);
+            this.m_statusBar.Padding = new System.Windows.Forms.Padding(2, 0, 22, 0);
+            this.m_statusBar.Size = new System.Drawing.Size(1176, 54);
             this.m_statusBar.TabIndex = 0;
             this.m_statusBar.Resize += new System.EventHandler(this._statusBar_Resize);
             // 
@@ -288,7 +289,7 @@ namespace SDBees.Main.Window
             // 
             this.m_toolStripStatusLabel.AutoSize = false;
             this.m_toolStripStatusLabel.Name = "m_toolStripStatusLabel";
-            this.m_toolStripStatusLabel.Size = new System.Drawing.Size(720, 31);
+            this.m_toolStripStatusLabel.Size = new System.Drawing.Size(1152, 49);
             this.m_toolStripStatusLabel.Spring = true;
             this.m_toolStripStatusLabel.Text = "Ready...";
             this.m_toolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -297,7 +298,7 @@ namespace SDBees.Main.Window
             // 
             this.m_toolStripProgressBar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.m_toolStripProgressBar.Name = "m_toolStripProgressBar";
-            this.m_toolStripProgressBar.Size = new System.Drawing.Size(144, 30);
+            this.m_toolStripProgressBar.Size = new System.Drawing.Size(230, 48);
             this.m_toolStripProgressBar.Visible = false;
             // 
             // m_groupBoxSystemView
@@ -307,10 +308,8 @@ namespace SDBees.Main.Window
             this.m_groupBoxSystemView.Controls.Add(this.m_label);
             this.m_groupBoxSystemView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_groupBoxSystemView.Location = new System.Drawing.Point(0, 0);
-            this.m_groupBoxSystemView.Margin = new System.Windows.Forms.Padding(2);
             this.m_groupBoxSystemView.Name = "m_groupBoxSystemView";
-            this.m_groupBoxSystemView.Padding = new System.Windows.Forms.Padding(2);
-            this.m_groupBoxSystemView.Size = new System.Drawing.Size(122, 459);
+            this.m_groupBoxSystemView.Size = new System.Drawing.Size(202, 750);
             this.m_groupBoxSystemView.TabIndex = 1;
             this.m_groupBoxSystemView.TabStop = false;
             this.m_groupBoxSystemView.Text = "Hierarchy";
@@ -322,10 +321,9 @@ namespace SDBees.Main.Window
             | System.Windows.Forms.AnchorStyles.Right)));
             this.m_label.AutoSize = true;
             this.m_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.m_label.Location = new System.Drawing.Point(12, 185);
-            this.m_label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.m_label.Location = new System.Drawing.Point(19, 296);
             this.m_label.Name = "m_label";
-            this.m_label.Size = new System.Drawing.Size(182, 25);
+            this.m_label.Size = new System.Drawing.Size(282, 37);
             this.m_label.TabIndex = 0;
             this.m_label.Text = "No view selected!";
             this.m_label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -337,22 +335,19 @@ namespace SDBees.Main.Window
             this.m_groupBox.Controls.Add(this.m_tabControlMain);
             this.m_groupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.m_groupBox.Location = new System.Drawing.Point(0, 0);
-            this.m_groupBox.Margin = new System.Windows.Forms.Padding(2);
             this.m_groupBox.Name = "m_groupBox";
-            this.m_groupBox.Padding = new System.Windows.Forms.Padding(2);
-            this.m_groupBox.Size = new System.Drawing.Size(582, 459);
+            this.m_groupBox.Size = new System.Drawing.Size(968, 750);
             this.m_groupBox.TabIndex = 2;
             this.m_groupBox.TabStop = false;
             this.m_groupBox.Text = "Details";
             // 
             // m_tabControlMain
             // 
-            this.m_tabControlMain.Location = new System.Drawing.Point(104, 76);
-            this.m_tabControlMain.Margin = new System.Windows.Forms.Padding(2);
+            this.m_tabControlMain.Location = new System.Drawing.Point(166, 122);
             this.m_tabControlMain.Name = "m_tabControlMain";
             this.m_tabControlMain.SelectedIndex = 0;
             this.m_tabControlMain.ShowToolTips = true;
-            this.m_tabControlMain.Size = new System.Drawing.Size(342, 240);
+            this.m_tabControlMain.Size = new System.Drawing.Size(547, 384);
             this.m_tabControlMain.TabIndex = 1;
             // 
             // m_splitContainer
@@ -360,8 +355,7 @@ namespace SDBees.Main.Window
             this.m_splitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.m_splitContainer.Location = new System.Drawing.Point(14, 32);
-            this.m_splitContainer.Margin = new System.Windows.Forms.Padding(2);
+            this.m_splitContainer.Location = new System.Drawing.Point(0, 28);
             this.m_splitContainer.Name = "m_splitContainer";
             // 
             // m_splitContainer.Panel1
@@ -371,8 +365,9 @@ namespace SDBees.Main.Window
             // m_splitContainer.Panel2
             // 
             this.m_splitContainer.Panel2.Controls.Add(this.m_groupBox);
-            this.m_splitContainer.Size = new System.Drawing.Size(708, 459);
-            this.m_splitContainer.SplitterDistance = 122;
+            this.m_splitContainer.Size = new System.Drawing.Size(1176, 750);
+            this.m_splitContainer.SplitterDistance = 202;
+            this.m_splitContainer.SplitterWidth = 6;
             this.m_splitContainer.TabIndex = 3;
             // 
             // m_toolStrip
@@ -380,22 +375,21 @@ namespace SDBees.Main.Window
             this.m_toolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.m_toolStrip.Location = new System.Drawing.Point(0, 0);
             this.m_toolStrip.Name = "m_toolStrip";
-            this.m_toolStrip.Size = new System.Drawing.Size(735, 25);
+            this.m_toolStrip.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+            this.m_toolStrip.Size = new System.Drawing.Size(1176, 25);
             this.m_toolStrip.TabIndex = 4;
             this.m_toolStrip.Text = "toolStrip1";
             this.m_toolStrip.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.m_toolStrip_ItemClicked);
             // 
             // MainWindowApplicationDLG
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(735, 522);
+            this.ClientSize = new System.Drawing.Size(1176, 835);
             this.Controls.Add(this.m_toolStrip);
             this.Controls.Add(this.m_splitContainer);
             this.Controls.Add(this.m_statusBar);
             this.HelpButton = true;
-            this.Margin = new System.Windows.Forms.Padding(2);
             this.Menu = this.m_mainMenu;
             this.Name = "MainWindowApplicationDLG";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

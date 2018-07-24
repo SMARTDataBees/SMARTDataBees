@@ -63,19 +63,19 @@ namespace SDBees.Core.Admin
             this.panelView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panelView.Location = new System.Drawing.Point(16, 15);
-            this.panelView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelView.Location = new System.Drawing.Point(24, 23);
+            this.panelView.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.panelView.Name = "panelView";
-            this.panelView.Size = new System.Drawing.Size(452, 529);
+            this.panelView.Size = new System.Drawing.Size(678, 827);
             this.panelView.TabIndex = 0;
             // 
             // button1
             // 
             this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button1.Location = new System.Drawing.Point(368, 551);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button1.Location = new System.Drawing.Point(552, 861);
+            this.button1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(100, 28);
+            this.button1.Size = new System.Drawing.Size(150, 44);
             this.button1.TabIndex = 1;
             this.button1.Text = "OK";
             this.button1.UseVisualStyleBackColor = true;
@@ -83,14 +83,13 @@ namespace SDBees.Core.Admin
             // 
             // ViewRelationTreeDLG
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(484, 594);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.ClientSize = new System.Drawing.Size(726, 928);
             this.ControlBox = false;
             this.Controls.Add(this.button1);
             this.Controls.Add(this.panelView);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "ViewRelationTreeDLG";
             this.Text = "Relations";
             this.TopMost = true;

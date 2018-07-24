@@ -76,9 +76,11 @@ namespace SDBees.DB
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.lbColumns);
             this.groupBox1.Controls.Add(this.pgProperties);
-            this.groupBox1.Location = new System.Drawing.Point(13, 12);
+            this.groupBox1.Location = new System.Drawing.Point(26, 23);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(488, 392);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox1.Size = new System.Drawing.Size(976, 754);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Eigenschaften:";
@@ -88,9 +90,11 @@ namespace SDBees.DB
             this.lbColumns.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.lbColumns.FormattingEnabled = true;
-            this.lbColumns.Location = new System.Drawing.Point(6, 19);
+            this.lbColumns.ItemHeight = 25;
+            this.lbColumns.Location = new System.Drawing.Point(12, 37);
+            this.lbColumns.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.lbColumns.Name = "lbColumns";
-            this.lbColumns.Size = new System.Drawing.Size(189, 355);
+            this.lbColumns.Size = new System.Drawing.Size(374, 679);
             this.lbColumns.TabIndex = 0;
             this.lbColumns.SelectedIndexChanged += new System.EventHandler(this.lbColumns_SelectedIndexChanged);
             // 
@@ -99,17 +103,19 @@ namespace SDBees.DB
             this.pgProperties.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pgProperties.Location = new System.Drawing.Point(201, 19);
+            this.pgProperties.Location = new System.Drawing.Point(402, 37);
+            this.pgProperties.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.pgProperties.Name = "pgProperties";
-            this.pgProperties.Size = new System.Drawing.Size(281, 355);
+            this.pgProperties.Size = new System.Drawing.Size(562, 683);
             this.pgProperties.TabIndex = 1;
             // 
             // bnDeleteColumn
             // 
             this.bnDeleteColumn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.bnDeleteColumn.Location = new System.Drawing.Point(507, 60);
+            this.bnDeleteColumn.Location = new System.Drawing.Point(1014, 115);
+            this.bnDeleteColumn.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.bnDeleteColumn.Name = "bnDeleteColumn";
-            this.bnDeleteColumn.Size = new System.Drawing.Size(126, 23);
+            this.bnDeleteColumn.Size = new System.Drawing.Size(252, 44);
             this.bnDeleteColumn.TabIndex = 3;
             this.bnDeleteColumn.Text = "&Delete property";
             this.bnDeleteColumn.UseVisualStyleBackColor = true;
@@ -118,9 +124,10 @@ namespace SDBees.DB
             // bnAddColumn
             // 
             this.bnAddColumn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.bnAddColumn.Location = new System.Drawing.Point(507, 31);
+            this.bnAddColumn.Location = new System.Drawing.Point(1014, 60);
+            this.bnAddColumn.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.bnAddColumn.Name = "bnAddColumn";
-            this.bnAddColumn.Size = new System.Drawing.Size(126, 23);
+            this.bnAddColumn.Size = new System.Drawing.Size(252, 44);
             this.bnAddColumn.TabIndex = 1;
             this.bnAddColumn.Text = "&New property";
             this.bnAddColumn.UseVisualStyleBackColor = true;
@@ -130,9 +137,10 @@ namespace SDBees.DB
             // 
             this.bnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.bnCancel.Location = new System.Drawing.Point(507, 381);
+            this.bnCancel.Location = new System.Drawing.Point(1014, 733);
+            this.bnCancel.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.bnCancel.Name = "bnCancel";
-            this.bnCancel.Size = new System.Drawing.Size(126, 23);
+            this.bnCancel.Size = new System.Drawing.Size(252, 44);
             this.bnCancel.TabIndex = 4;
             this.bnCancel.Text = "Cancel";
             this.bnCancel.UseVisualStyleBackColor = true;
@@ -140,9 +148,10 @@ namespace SDBees.DB
             // bnOk
             // 
             this.bnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.bnOk.Location = new System.Drawing.Point(507, 352);
+            this.bnOk.Location = new System.Drawing.Point(1014, 677);
+            this.bnOk.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.bnOk.Name = "bnOk";
-            this.bnOk.Size = new System.Drawing.Size(126, 23);
+            this.bnOk.Size = new System.Drawing.Size(252, 44);
             this.bnOk.TabIndex = 5;
             this.bnOk.Text = "OK";
             this.bnOk.UseVisualStyleBackColor = true;
@@ -151,9 +160,10 @@ namespace SDBees.DB
             // bnExport
             // 
             this.bnExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.bnExport.Location = new System.Drawing.Point(507, 118);
+            this.bnExport.Location = new System.Drawing.Point(1014, 227);
+            this.bnExport.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.bnExport.Name = "bnExport";
-            this.bnExport.Size = new System.Drawing.Size(126, 23);
+            this.bnExport.Size = new System.Drawing.Size(252, 44);
             this.bnExport.TabIndex = 6;
             this.bnExport.Text = "&Export";
             this.bnExport.UseVisualStyleBackColor = true;
@@ -162,9 +172,10 @@ namespace SDBees.DB
             // bnImport
             // 
             this.bnImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.bnImport.Location = new System.Drawing.Point(507, 147);
+            this.bnImport.Location = new System.Drawing.Point(1014, 283);
+            this.bnImport.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.bnImport.Name = "bnImport";
-            this.bnImport.Size = new System.Drawing.Size(126, 23);
+            this.bnImport.Size = new System.Drawing.Size(252, 44);
             this.bnImport.TabIndex = 7;
             this.bnImport.Text = "&Import";
             this.bnImport.UseVisualStyleBackColor = true;
@@ -173,10 +184,9 @@ namespace SDBees.DB
             // frmEditTable
             // 
             this.AcceptButton = this.bnOk;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.CancelButton = this.bnCancel;
-            this.ClientSize = new System.Drawing.Size(645, 416);
+            this.ClientSize = new System.Drawing.Size(1290, 800);
             this.Controls.Add(this.bnImport);
             this.Controls.Add(this.bnExport);
             this.Controls.Add(this.bnOk);
@@ -185,6 +195,7 @@ namespace SDBees.DB
             this.Controls.Add(this.bnAddColumn);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "frmEditTable";
             this.ShowIcon = false;
             this.Text = "Property editor";
