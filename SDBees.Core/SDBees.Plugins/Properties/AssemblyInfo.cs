@@ -54,7 +54,7 @@ using System.Runtime.InteropServices;
 [assembly: PluginDefinition(typeof(SDBees.Core.Plugins.MEP.System.MEPSystem))]
 [assembly: PluginDefinition(typeof(SDBees.Core.Plugins.MEP.CutOut.MEPCutOut))]
 
-[assembly: PluginDefinition(typeof(SDBees.Plugins.TreeviewHelper.ListViewHelper))]
+//[assembly: PluginDefinition(typeof(SDBees.Plugins.TreeviewHelper.ListViewHelper))]
 
 
 
