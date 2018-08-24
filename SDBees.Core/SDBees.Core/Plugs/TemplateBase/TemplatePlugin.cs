@@ -124,14 +124,14 @@ namespace SDBees.Plugs.TemplateBase
             return (database.Select(table, table.PrimaryKey, criteria, ref objectIds, ref error) == 1);
         }
 
-        bool m_editSchemaAllowed = true;
+        bool editSchemaAllowed = true;
         /// <summary>
         /// Is it allowed for the addin to edit the schema?
         /// </summary>
         public bool EditSchemaAllowed
         {
-            get { return m_editSchemaAllowed; }
-            set { m_editSchemaAllowed = value; }
+            get { return editSchemaAllowed; }
+            set { editSchemaAllowed = value; }
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace SDBees.Plugs.TemplateBase
         /// </summary>
         public void EditSchema()
         {
-            if (m_editSchemaAllowed)
+            if (editSchemaAllowed)
             {
                 var tableEditor = new frmEditTable(MyDBManager)
                 {

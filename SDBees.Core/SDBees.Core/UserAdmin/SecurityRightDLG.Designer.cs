@@ -72,9 +72,10 @@ namespace SDBees.UserAdmin
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(24, 17);
+            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(28, 13);
+            this.label1.Size = new System.Drawing.Size(54, 25);
             this.label1.TabIndex = 0;
             this.label1.Text = "&Typ:";
             // 
@@ -84,18 +85,20 @@ namespace SDBees.UserAdmin
             | System.Windows.Forms.AnchorStyles.Right)));
             this.puSecurityType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.puSecurityType.FormattingEnabled = true;
-            this.puSecurityType.Location = new System.Drawing.Point(84, 6);
+            this.puSecurityType.Location = new System.Drawing.Point(168, 12);
+            this.puSecurityType.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.puSecurityType.Name = "puSecurityType";
-            this.puSecurityType.Size = new System.Drawing.Size(208, 21);
+            this.puSecurityType.Size = new System.Drawing.Size(412, 33);
             this.puSecurityType.TabIndex = 1;
             this.puSecurityType.SelectedIndexChanged += new System.EventHandler(this.puSecurityType_SelectedIndexChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 40);
+            this.label2.Location = new System.Drawing.Point(24, 77);
+            this.label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(56, 13);
+            this.label2.Size = new System.Drawing.Size(110, 25);
             this.label2.TabIndex = 2;
             this.label2.Text = "Database:";
             // 
@@ -105,9 +108,10 @@ namespace SDBees.UserAdmin
             | System.Windows.Forms.AnchorStyles.Right)));
             this.puDatabase.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.puDatabase.FormattingEnabled = true;
-            this.puDatabase.Location = new System.Drawing.Point(84, 33);
+            this.puDatabase.Location = new System.Drawing.Point(168, 63);
+            this.puDatabase.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.puDatabase.Name = "puDatabase";
-            this.puDatabase.Size = new System.Drawing.Size(208, 21);
+            this.puDatabase.Size = new System.Drawing.Size(412, 33);
             this.puDatabase.TabIndex = 3;
             this.puDatabase.SelectedIndexChanged += new System.EventHandler(this.puDatabase_SelectedIndexChanged);
             // 
@@ -115,9 +119,10 @@ namespace SDBees.UserAdmin
             // 
             this.cbSystemAdministrator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cbSystemAdministrator.AutoSize = true;
-            this.cbSystemAdministrator.Location = new System.Drawing.Point(299, 9);
+            this.cbSystemAdministrator.Location = new System.Drawing.Point(599, 17);
+            this.cbSystemAdministrator.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.cbSystemAdministrator.Name = "cbSystemAdministrator";
-            this.cbSystemAdministrator.Size = new System.Drawing.Size(120, 17);
+            this.cbSystemAdministrator.Size = new System.Drawing.Size(239, 29);
             this.cbSystemAdministrator.TabIndex = 4;
             this.cbSystemAdministrator.Text = "&Server Administrator";
             this.cbSystemAdministrator.UseVisualStyleBackColor = true;
@@ -126,9 +131,10 @@ namespace SDBees.UserAdmin
             // 
             this.cbDatabaseAdministrator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cbDatabaseAdministrator.AutoSize = true;
-            this.cbDatabaseAdministrator.Location = new System.Drawing.Point(298, 35);
+            this.cbDatabaseAdministrator.Location = new System.Drawing.Point(598, 67);
+            this.cbDatabaseAdministrator.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.cbDatabaseAdministrator.Name = "cbDatabaseAdministrator";
-            this.cbDatabaseAdministrator.Size = new System.Drawing.Size(135, 17);
+            this.cbDatabaseAdministrator.Size = new System.Drawing.Size(268, 29);
             this.cbDatabaseAdministrator.TabIndex = 5;
             this.cbDatabaseAdministrator.Text = "&Database Administrator";
             this.cbDatabaseAdministrator.UseVisualStyleBackColor = true;
@@ -137,9 +143,10 @@ namespace SDBees.UserAdmin
             // 
             this.bnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.bnCancel.Location = new System.Drawing.Point(380, 212);
+            this.bnCancel.Location = new System.Drawing.Point(760, 408);
+            this.bnCancel.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.bnCancel.Name = "bnCancel";
-            this.bnCancel.Size = new System.Drawing.Size(75, 23);
+            this.bnCancel.Size = new System.Drawing.Size(150, 44);
             this.bnCancel.TabIndex = 6;
             this.bnCancel.Text = "&Abbruch";
             this.bnCancel.UseVisualStyleBackColor = true;
@@ -147,9 +154,10 @@ namespace SDBees.UserAdmin
             // bnOk
             // 
             this.bnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.bnOk.Location = new System.Drawing.Point(298, 212);
+            this.bnOk.Location = new System.Drawing.Point(596, 408);
+            this.bnOk.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.bnOk.Name = "bnOk";
-            this.bnOk.Size = new System.Drawing.Size(75, 23);
+            this.bnOk.Size = new System.Drawing.Size(150, 44);
             this.bnOk.TabIndex = 7;
             this.bnOk.Text = "&OK";
             this.bnOk.UseVisualStyleBackColor = true;
@@ -159,9 +167,10 @@ namespace SDBees.UserAdmin
             // 
             this.cbTableAdministrator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cbTableAdministrator.AutoSize = true;
-            this.cbTableAdministrator.Location = new System.Drawing.Point(298, 62);
+            this.cbTableAdministrator.Location = new System.Drawing.Point(598, 119);
+            this.cbTableAdministrator.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.cbTableAdministrator.Name = "cbTableAdministrator";
-            this.cbTableAdministrator.Size = new System.Drawing.Size(116, 17);
+            this.cbTableAdministrator.Size = new System.Drawing.Size(230, 29);
             this.cbTableAdministrator.TabIndex = 10;
             this.cbTableAdministrator.Text = "&Table Administrator";
             this.cbTableAdministrator.UseVisualStyleBackColor = true;
@@ -172,18 +181,20 @@ namespace SDBees.UserAdmin
             | System.Windows.Forms.AnchorStyles.Right)));
             this.puTable.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.puTable.FormattingEnabled = true;
-            this.puTable.Location = new System.Drawing.Point(84, 60);
+            this.puTable.Location = new System.Drawing.Point(168, 115);
+            this.puTable.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.puTable.Name = "puTable";
-            this.puTable.Size = new System.Drawing.Size(208, 21);
+            this.puTable.Size = new System.Drawing.Size(412, 33);
             this.puTable.TabIndex = 9;
             this.puTable.SelectedIndexChanged += new System.EventHandler(this.puTable_SelectedIndexChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 67);
+            this.label3.Location = new System.Drawing.Point(24, 129);
+            this.label3.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(37, 13);
+            this.label3.Size = new System.Drawing.Size(72, 25);
             this.label3.TabIndex = 8;
             this.label3.Text = "Table:";
             // 
@@ -193,27 +204,28 @@ namespace SDBees.UserAdmin
             | System.Windows.Forms.AnchorStyles.Right)));
             this.puColumn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.puColumn.FormattingEnabled = true;
-            this.puColumn.Location = new System.Drawing.Point(84, 87);
+            this.puColumn.Location = new System.Drawing.Point(168, 167);
+            this.puColumn.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.puColumn.Name = "puColumn";
-            this.puColumn.Size = new System.Drawing.Size(208, 21);
+            this.puColumn.Size = new System.Drawing.Size(412, 33);
             this.puColumn.TabIndex = 12;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 94);
+            this.label4.Location = new System.Drawing.Point(24, 181);
+            this.label4.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(45, 13);
+            this.label4.Size = new System.Drawing.Size(91, 25);
             this.label4.TabIndex = 11;
             this.label4.Text = "Column:";
             // 
             // SecurityRightDLG
             // 
             this.AcceptButton = this.bnOk;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.CancelButton = this.bnCancel;
-            this.ClientSize = new System.Drawing.Size(467, 247);
+            this.ClientSize = new System.Drawing.Size(934, 475);
             this.Controls.Add(this.puColumn);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.cbTableAdministrator);
@@ -227,7 +239,8 @@ namespace SDBees.UserAdmin
             this.Controls.Add(this.label2);
             this.Controls.Add(this.puSecurityType);
             this.Controls.Add(this.label1);
-            this.MinimumSize = new System.Drawing.Size(475, 280);
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.MinimumSize = new System.Drawing.Size(924, 473);
             this.Name = "SecurityRightDLG";
             this.Text = "Change &User rights";
             this.Load += new System.EventHandler(this.SecurityRightDLG_Load);

@@ -65,27 +65,27 @@ namespace SDBees.Core.Admin
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 11);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(24, 17);
+            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(170, 17);
+            this.label1.Size = new System.Drawing.Size(259, 25);
             this.label1.TabIndex = 0;
             this.label1.Text = "Plugin combination name:";
             // 
             // textBoxViewName
             // 
-            this.textBoxViewName.Location = new System.Drawing.Point(16, 31);
-            this.textBoxViewName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBoxViewName.Location = new System.Drawing.Point(24, 48);
+            this.textBoxViewName.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.textBoxViewName.Name = "textBoxViewName";
-            this.textBoxViewName.Size = new System.Drawing.Size(404, 22);
+            this.textBoxViewName.Size = new System.Drawing.Size(604, 31);
             this.textBoxViewName.TabIndex = 1;
             // 
             // buttonOK
             // 
-            this.buttonOK.Location = new System.Drawing.Point(212, 162);
-            this.buttonOK.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonOK.Location = new System.Drawing.Point(318, 253);
+            this.buttonOK.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(100, 28);
+            this.buttonOK.Size = new System.Drawing.Size(150, 44);
             this.buttonOK.TabIndex = 2;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
@@ -94,10 +94,10 @@ namespace SDBees.Core.Admin
             // buttonChancel
             // 
             this.buttonChancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonChancel.Location = new System.Drawing.Point(320, 162);
-            this.buttonChancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonChancel.Location = new System.Drawing.Point(480, 253);
+            this.buttonChancel.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.buttonChancel.Name = "buttonChancel";
-            this.buttonChancel.Size = new System.Drawing.Size(100, 28);
+            this.buttonChancel.Size = new System.Drawing.Size(150, 44);
             this.buttonChancel.TabIndex = 3;
             this.buttonChancel.Text = "Cancel";
             this.buttonChancel.UseVisualStyleBackColor = true;
@@ -105,28 +105,27 @@ namespace SDBees.Core.Admin
             // 
             // richTextBoxDescription
             // 
-            this.richTextBoxDescription.Location = new System.Drawing.Point(16, 81);
-            this.richTextBoxDescription.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.richTextBoxDescription.Location = new System.Drawing.Point(24, 127);
+            this.richTextBoxDescription.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.richTextBoxDescription.Name = "richTextBoxDescription";
-            this.richTextBoxDescription.Size = new System.Drawing.Size(404, 73);
+            this.richTextBoxDescription.Size = new System.Drawing.Size(604, 112);
             this.richTextBoxDescription.TabIndex = 4;
             this.richTextBoxDescription.Text = "";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(16, 60);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(24, 94);
+            this.label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(83, 17);
+            this.label2.Size = new System.Drawing.Size(126, 25);
             this.label2.TabIndex = 5;
             this.label2.Text = "Description:";
             // 
             // ViewAdminAddNew
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(437, 203);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.ClientSize = new System.Drawing.Size(656, 317);
             this.ControlBox = false;
             this.Controls.Add(this.label2);
             this.Controls.Add(this.richTextBoxDescription);
@@ -135,7 +134,7 @@ namespace SDBees.Core.Admin
             this.Controls.Add(this.textBoxViewName);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ViewAdminAddNew";

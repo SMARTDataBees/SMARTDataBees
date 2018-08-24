@@ -66,10 +66,10 @@ namespace SDBees.Core.Admin
             // cbAutomaticFix
             // 
             this.cbAutomaticFix.AutoSize = true;
-            this.cbAutomaticFix.Location = new System.Drawing.Point(16, 15);
-            this.cbAutomaticFix.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbAutomaticFix.Location = new System.Drawing.Point(24, 23);
+            this.cbAutomaticFix.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.cbAutomaticFix.Name = "cbAutomaticFix";
-            this.cbAutomaticFix.Size = new System.Drawing.Size(114, 21);
+            this.cbAutomaticFix.Size = new System.Drawing.Size(169, 29);
             this.cbAutomaticFix.TabIndex = 0;
             this.cbAutomaticFix.Text = "Repair &errors";
             this.cbAutomaticFix.UseVisualStyleBackColor = true;
@@ -77,10 +77,10 @@ namespace SDBees.Core.Admin
             // cbAutomaticDelete
             // 
             this.cbAutomaticDelete.AutoSize = true;
-            this.cbAutomaticDelete.Location = new System.Drawing.Point(16, 43);
-            this.cbAutomaticDelete.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbAutomaticDelete.Location = new System.Drawing.Point(24, 67);
+            this.cbAutomaticDelete.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.cbAutomaticDelete.Name = "cbAutomaticDelete";
-            this.cbAutomaticDelete.Size = new System.Drawing.Size(221, 21);
+            this.cbAutomaticDelete.Size = new System.Drawing.Size(332, 29);
             this.cbAutomaticDelete.TabIndex = 1;
             this.cbAutomaticDelete.Text = "&Delete unreferenced elements";
             this.cbAutomaticDelete.UseVisualStyleBackColor = true;
@@ -88,10 +88,10 @@ namespace SDBees.Core.Admin
             // bnStart
             // 
             this.bnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.bnStart.Location = new System.Drawing.Point(573, 10);
-            this.bnStart.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.bnStart.Location = new System.Drawing.Point(860, 16);
+            this.bnStart.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.bnStart.Name = "bnStart";
-            this.bnStart.Size = new System.Drawing.Size(71, 28);
+            this.bnStart.Size = new System.Drawing.Size(106, 44);
             this.bnStart.TabIndex = 3;
             this.bnStart.Text = "&Check";
             this.bnStart.UseVisualStyleBackColor = true;
@@ -102,17 +102,17 @@ namespace SDBees.Core.Admin
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.progressBar});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 323);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 517);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(660, 22);
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(2, 0, 28, 0);
+            this.statusStrip1.Size = new System.Drawing.Size(990, 22);
             this.statusStrip1.TabIndex = 4;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // progressBar
             // 
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(267, 20);
+            this.progressBar.Size = new System.Drawing.Size(400, 25);
             this.progressBar.Visible = false;
             // 
             // ebOutput
@@ -120,27 +120,26 @@ namespace SDBees.Core.Admin
             this.ebOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ebOutput.Location = new System.Drawing.Point(16, 82);
-            this.ebOutput.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ebOutput.Location = new System.Drawing.Point(24, 128);
+            this.ebOutput.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.ebOutput.Multiline = true;
             this.ebOutput.Name = "ebOutput";
             this.ebOutput.ReadOnly = true;
             this.ebOutput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.ebOutput.Size = new System.Drawing.Size(627, 230);
+            this.ebOutput.Size = new System.Drawing.Size(938, 357);
             this.ebOutput.TabIndex = 5;
             // 
             // CheckDatabaseDLG
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(660, 345);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.ClientSize = new System.Drawing.Size(990, 539);
             this.Controls.Add(this.ebOutput);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.bnStart);
             this.Controls.Add(this.cbAutomaticDelete);
             this.Controls.Add(this.cbAutomaticFix);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.MinimumSize = new System.Drawing.Size(567, 334);
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.MinimumSize = new System.Drawing.Size(838, 482);
             this.Name = "CheckDatabaseDLG";
             this.Text = "Check database";
             this.statusStrip1.ResumeLayout(false);

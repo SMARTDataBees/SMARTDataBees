@@ -21,7 +21,7 @@ using SDBees.UserAdmin;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SMARTDataBees")]
 [assembly: AssemblyProduct("SDBees.Core")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
