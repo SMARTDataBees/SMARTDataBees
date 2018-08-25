@@ -178,7 +178,7 @@ namespace SDBees.DB.SQLite
             {
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 // Add this error to the list...
                 var myError = new Error(ex.Message, 9999, GetType(), error);
@@ -297,7 +297,7 @@ namespace SDBees.DB.SQLite
             Error _error = null;
             //this.Open(this,true, ref _error);
             var _lstTblNames = new ArrayList();
-            Database.TableNames(ref _lstTblNames, ref  _error);
+            Database.TableNames(ref _lstTblNames, ref _error);
 
             //this.DbConnection.
             foreach (string sTblName in _lstTblNames)
@@ -369,12 +369,13 @@ namespace SDBees.DB.SQLite
 
             if (mDbConnection != null)
             {
-                var specifications = "";
+                var addColumnQuery = "";
+                var dropColumnQuery = "";
 
                 // First check for new and modified columns...
                 foreach (var column in table.Columns)
                 {
-                  
+
                     var columnDefinition = GetColumnDefinition(column);
 
 
@@ -382,9 +383,9 @@ namespace SDBees.DB.SQLite
                     if (clm == null)
                     {
                         // This is a new column...
-                        if (specifications != "")
+                        if (addColumnQuery != "")
                         {
-                            specifications += ", ";
+                            addColumnQuery += ", ";
                         }
 
                         if (table.PrimaryKey == column.Name)
@@ -392,7 +393,7 @@ namespace SDBees.DB.SQLite
                             columnDefinition += " PRIMARY KEY";
                         }
 
-                        specifications += " ADD " + columnDefinition;
+                        addColumnQuery += " ADD " + columnDefinition;
                     }
                 }
 
@@ -403,19 +404,21 @@ namespace SDBees.DB.SQLite
                     var clm = table.Columns.FirstOrDefault(clmn => clmn.Name.Equals(column.Name));
                     if (clm == null)
                     {
-                        if (specifications != "")
+                        if (dropColumnQuery != "")
                         {
-                            specifications += ", ";
+                            dropColumnQuery += ", ";
                         }
 
-                        specifications += " DROP " + column.Name;
+                        dropColumnQuery += " DROP " + column.Name;
                     }
                 }
 
-                if (!string.IsNullOrEmpty(specifications))
+                if (!string.IsNullOrEmpty(addColumnQuery))
                 {
-                    var cmdString = "ALTER TABLE " + table.Name + specifications;
-
+                    var cmdString = "ALTER TABLE " 
+                                    + table.Name + ""
+                                    + (string.IsNullOrEmpty(addColumnQuery) == false ? addColumnQuery : "")
+                                    + (string.IsNullOrEmpty(dropColumnQuery) == false ? " " + dropColumnQuery : "");
                     success = ExecuteCommand(cmdString, ref error);
                 }
                 else
