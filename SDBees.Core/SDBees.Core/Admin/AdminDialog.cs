@@ -397,14 +397,14 @@ namespace SDBees.Core.Admin
                 Error error = null;
                 var lstViewProps = new ArrayList();
                 var viewProp = new ViewProperty();
-                //if (_currentViewId != null)
-                //{
-                //    // Falls die view bereits existiert, laden...
-                //    viewProp.Load(_refViewAdmin.MyDBManager.Database, _currentViewId, ref error);
+                if (_currentViewId != null)
+                {
+                    // Falls die view bereits existiert, laden...
+                    viewProp.Load(_refViewAdmin.MyDBManager.Database, _currentViewId, ref error);
 
-                //    Error.Display("View konnte nicht geladen werden", error);
-                //}
-                //else
+                   // Error.Display("View konnte nicht geladen werden", error);
+                }
+                else
                 {
                     viewProp.SetDefaults(_refViewAdmin.MyDBManager.Database);
                 }
