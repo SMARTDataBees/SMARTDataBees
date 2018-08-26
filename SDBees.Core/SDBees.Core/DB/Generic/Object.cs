@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SDBees.Core.Utils;
+using SDBees.Demoplugins.Dummys;
 using SDBees.Plugs.Properties;
 
 namespace SDBees.DB
@@ -647,6 +648,9 @@ namespace SDBees.DB
             if (error == null)
             {
                 schema.Save(ref error);
+               
+                //Dummy1BaseData.gTable = table;        
+                //TableSchema.InitTableSchema(database);
             }
             else if (oldTable != null)
             {

@@ -370,8 +370,7 @@ namespace SDBees.DB.SQLite
             if (mDbConnection != null)
             {
                 var addColumnQuery = "";
-                var dropColumnQuery = "";
-
+           
                 // First check for new and modified columns...
                 foreach (var column in table.Columns)
                 {
@@ -382,21 +381,20 @@ namespace SDBees.DB.SQLite
                     var clm = oldTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(column.Name));
                     if (clm == null)
                     {
-                        // This is a new column...
-                        if (addColumnQuery != "")
-                        {
-                            addColumnQuery += ", ";
-                        }
-
                         if (table.PrimaryKey == column.Name)
                         {
                             columnDefinition += " PRIMARY KEY";
                         }
 
-                        addColumnQuery += " ADD " + columnDefinition;
+                        addColumnQuery = " ALTER TABLE "
+                                  + table.Name 
+                                  + " ADD " + columnDefinition + ";";
+                        success |= ExecuteCommand(addColumnQuery, ref error);
                     }
                 }
 
+
+                var dropColumnQuery = "";
                 // second step columns to drop
                 foreach (var column in oldTable.Columns)
                 {
@@ -404,26 +402,12 @@ namespace SDBees.DB.SQLite
                     var clm = table.Columns.FirstOrDefault(clmn => clmn.Name.Equals(column.Name));
                     if (clm == null)
                     {
-                        if (dropColumnQuery != "")
-                        {
-                            dropColumnQuery += ", ";
-                        }
 
-                        dropColumnQuery += " DROP " + column.Name;
+                        dropColumnQuery = " ALTER TABLE "
+                                + table.Name
+                                + " DROP " + column.Name + ";";
+                        success |= ExecuteCommand(dropColumnQuery, ref error);
                     }
-                }
-
-                if (!string.IsNullOrEmpty(addColumnQuery))
-                {
-                    var cmdString = "ALTER TABLE " 
-                                    + table.Name + ""
-                                    + (string.IsNullOrEmpty(addColumnQuery) == false ? addColumnQuery : "")
-                                    + (string.IsNullOrEmpty(dropColumnQuery) == false ? " " + dropColumnQuery : "");
-                    success = ExecuteCommand(cmdString, ref error);
-                }
-                else
-                {
-                    success = true;
                 }
             }
 

@@ -200,7 +200,7 @@ namespace SDBees.Core.Admin
 
             if (numLastReferences > 0)
             {
-                var answerDelete = MessageBox.Show(numLastReferences + @"Objects no longer referenced, would you like to delete them??", @"Remove objects", MessageBoxButtons.YesNo);
+                var answerDelete = MessageBox.Show(numLastReferences + @" objects no longer referenced, would you like to delete them??", @"Remove objects", MessageBoxButtons.YesNo);
 
                 deleteUnreferenced = (answerDelete == DialogResult.Yes);
             }
