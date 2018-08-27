@@ -153,8 +153,11 @@ namespace Carbon.Configuration
 		[Category("Configuration Properties")]
 		public string Path
 		{
-			get => _path;
-		    set
+			get
+			{
+				return _path;
+			}
+			set
 			{
 				try
 				{
@@ -206,7 +209,25 @@ namespace Carbon.Configuration
 			}
 		}
 
-
+//		public bool Load()
+//		{
+//			return true;
+//		}
+//
+//		public bool Load(string path)
+//		{
+//			return true;
+//		}
+//
+//		public bool Save()
+//		{
+//			return true;
+//		}
+//
+//		public bool Save(string path)
+//		{
+//			return true;
+//		}
 
 		public void TraceCategories()
 		{

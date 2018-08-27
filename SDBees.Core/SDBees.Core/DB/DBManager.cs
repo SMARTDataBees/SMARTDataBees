@@ -29,7 +29,6 @@ using System.Threading;
 using System.Windows.Forms;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
-using SDBees.Core.Admin;
 using SDBees.Core.Global;
 using SDBees.Core.Model;
 using SDBees.DB.Forms;
@@ -40,6 +39,7 @@ using SDBees.GuiTools;
 using SDBees.Main.Window;
 using SDBees.Plugs.TemplateBase;
 using SDBees.Utils;
+using SDBees.ViewAdmin;
 
 namespace SDBees.DB
 {
@@ -53,28 +53,36 @@ namespace SDBees.DB
 
     public sealed class SDBeesDBConnection : TemplatePlugin
     {
-        private PluginContext _context;
-        private ServerConfig _serverConfiguration;
-        private Database _database;
+        private static SDBeesDBConnection m_theInstance;
+        private PluginContext m_context;
+        private ServerConfig m_ServerConfig;
+        private Database m_database; // RALF : This database is absolutely needed here!
         private LogfileWriter mLogfileWriter;
         private TableInspector mInspector;
 
         /// <summary>
         /// Returns the one and only DataBaseManagerPlugin instance.
         /// </summary>
-        public static SDBeesDBConnection Current { get; private set; }
+        public static SDBeesDBConnection Current
+        {
+            get
+            {
+                return m_theInstance;
+            }
+        }
 
         /// <summary>
         /// Standard constructor
         /// </summary>
         public SDBeesDBConnection()
         {
-            Current = this;
-            _context = null;
-            _serverConfiguration = null;
-            _database = null;
+            m_theInstance = this;
+            m_context = null;
+            m_ServerConfig = null;
+            m_database = null;
 
             SetupLogWriter();
+
             SDBeesGlobalVars.SetupInternalConfigurations(); //Configure SDBees internal configurations
         }
 
@@ -86,14 +94,11 @@ namespace SDBees.DB
                 fileInfo.Delete();
             }
             mLogfileWriter = new LogfileWriter(fileInfo.FullName);
-            var dbCategory = new LogfileCategory("DB.Details")
-            {
-                Flags = LogfileWriter.Flags.eShowDateTime | LogfileWriter.Flags.eTitleBold |
-                        LogfileWriter.Flags.eMessageItalic,
-                Red = 0,
-                Green = 192,
-                Blue = 0
-            };
+            var dbCategory = new LogfileCategory("DB.Details");
+            dbCategory.Flags = LogfileWriter.Flags.eShowDateTime | LogfileWriter.Flags.eTitleBold | LogfileWriter.Flags.eMessageItalic;
+            dbCategory.Red = 0;
+            dbCategory.Green = 192;
+            dbCategory.Blue = 0;
             mLogfileWriter.AddCategory(dbCategory);
         }
 
@@ -129,7 +134,7 @@ namespace SDBees.DB
         /// </summary>
         public Database Database
         {
-            get { return _database; }
+            get { return m_database; }
         }
 
         /// <summary>
@@ -142,7 +147,7 @@ namespace SDBees.DB
 
         public ServerConfigItem CurrentServerConfigItem
         {
-            get { return _serverConfiguration.GetSelectedItem(); }
+            get { return m_ServerConfig.GetSelectedItem(); }
         }
 
         /// <summary>
@@ -154,15 +159,26 @@ namespace SDBees.DB
         {
             try
             {
-                _context = context;
+                m_context = context;
 
                 StartMe(context, e);
 
                 Console.WriteLine("DB Plugin starts\n");
 
+                //CopyDemoDataset(); //Now handled by SDBees.Main
+
+                /*
+                bool doLogin = true; // TBD: Ralf - Set this to false!
+
+                if (doLogin)
+                {
+                    SetDatabase();
+                }
+                */
+
                 mInspector = new TableInspector(this);
 
-                _context.AfterPluginsStarted += OnAllPluginsStarted;
+                m_context.AfterPluginsStarted += OnAllPluginsStarted;
 
                 var filenameDatabaseFolder = new DirectoryInfo(Path.Combine(ServerConfigHandler.GetConfigStorageFolder(), "Content\\"));
 
@@ -184,10 +200,17 @@ namespace SDBees.DB
 
         private void OnAllPluginsStarted(object sender, EventArgs e)
         {
-         
+           //OnUpdate();
         }
 
-      
+        //public void OpenProjectOLD(SDBeesProjectId _inputId)
+        //{
+        //    SDBeesProjectId _id = new SDBeesProjectId();
+
+        //    MyDBManager.SetDatabase();
+        //    MyDBManager.ReloadPlugins();
+        //   _id = MyDBManager.CurrentProjectId().ToString();
+        //}
 
         string m_CurrentDbName = "";
 
@@ -223,30 +246,50 @@ namespace SDBees.DB
         public bool OpenProject(string filenameDatabase, bool createIfNotFound, bool force)
         {
             var result = false;
-            var configuration = GetConfiguration();
 
-            if (configuration != null)
+            // NOT NEEDED - Create database if it doesn't exist.
+
+            /*
+            if (!File.Exists(filenameDatabase))
             {
-                var item = configuration.FindServerConfigItemByServerDatabasePath(filenameDatabase);
+                string path = Path.Combine(Path.GetDirectoryName(this.GetType().Assembly.Location), "Content\\Start.s3db");
 
-                if (item == null && createIfNotFound)
+                FileInfo fileInfo = new FileInfo(path);
+
+                fileInfo.CopyTo(filenameDatabase);
+            }
+            */
+
+            // Find or create configuration.
+
+            var conf = GetConfiguration();
+
+            if (conf != null)
+            {
+                var item = conf.FindServerConfigItemByServerDatabasePath(filenameDatabase);
+
+                if ((item == null) && createIfNotFound)
                 {
-                    item = new ServerConfigItem
-                    {
-                        ProjectName = Path.GetFileName(filenameDatabase),
-                        ProjectDescription = "",
-                        ServerDatabasePath = filenameDatabase,
-                        ServerTableCaching = false,
-                        ServerType = Servers.SQLite,
-                        ConfigItemName = Path.GetFileName(filenameDatabase)
-                    };
-                 configuration.ConfigItems.Add(item);
-                    ServerConfigHandler.SaveConfig(configuration);
+                    item = new ServerConfigItem();
+
+                    item.ProjectName = Path.GetFileName(filenameDatabase);
+                    item.ProjectDescription = "";
+                    item.ServerDatabasePath = filenameDatabase;
+                    item.ServerTableCaching = false;
+                    item.ServerType = Servers.SQLite;
+                    item.ConfigItemName = Path.GetFileName(filenameDatabase);
+
+                    conf.ConfigItems.Add(item);
+
+                    ServerConfigHandler.SaveConfig(conf);
+
+                    //m_CurrentDbName = item.ConfigItemName;
                 }
 
                 if (item != null)
                 {
                     Error error = null;
+
                     result = SetDatabase(item, "", force, ref error);
                 }
             }
@@ -258,49 +301,57 @@ namespace SDBees.DB
         {
             var result = false;
 
-            if (force || !string.Equals(CurrentProjectId().ToString(), item.ProjectGuid))
+            if (force || !String.Equals(CurrentProjectId().ToString(), item.ProjectGuid))
             {
                 if (item != null)
                 {
                     if (item.ServerType == Servers.MySQL)
                     {
-                        _database = new MySqlDatabase();
-                        _database.Server = new MySqlServer(item, "pwd");
+                        m_database = new MySqlDatabase();
+                        m_database.Server = new MySqlServer(item, "pwd");
                     }
+                    //else if (item.ServerType == Generic.Servers.MicrosoftSQL)
+                    //{
+                    //    m_database = new MsSqlDatabase();
+                    //    m_database.Server = new MsSqlServer(item, "pwd");
+                    //}
+                    //else if (item.ServerType == Generic.Servers.MicrosoftSQLServerExpress)
+                    //{
+                    //    m_database = new DB.MicrosoftLocalDB.MsLocalDbDatabase();
+                    //    m_database.Server = new DB.MicrosoftLocalDB.MsLocalDbServer(item, "pwd");
+                    //}
                     else if (item.ServerType == Servers.SQLite)
                     {
-                        _database = new SQLiteDatabase
-                        {
-                            UseGlobalCaching = false,
-                            Server = new SQLiteServer(item, "pwd")
-                        };
+                        m_database = new SQLiteDatabase();
+                        m_database.UseGlobalCaching = false; // Use global caching!
+                        m_database.Server = new SQLiteServer(item, "pwd");
                     }
 
-                    _database.Name = item.ServerDatabase;
-                    _database.Server.Name = item.ServerIpAdress;
-                    _database.User = item.UserName;
-                    _database.Port = item.ServerPort;
-                    _database.UseTableNameCaching = item.ServerTableCaching;
-                    _database.Password = password;
-                    _database.Server.SuperUser = item.UserName;
-                    _database.Server.Password = password;
+                    m_database.Name = item.ServerDatabase;
+                    m_database.Server.Name = item.ServerIpAdress;
+                    m_database.User = item.UserName;
+                    m_database.Port = item.ServerPort;
+                    m_database.UseTableNameCaching = item.ServerTableCaching;
+                    m_database.Password = password;
+                    m_database.Server.SuperUser = item.UserName;
+                    m_database.Server.Password = password;
 
                     // Create the required Tables...
-                    TableSchema.InitTableSchema(_database);
+                    TableSchema.InitTableSchema(m_database);
 
                     //m_database.Server.Init();
 
                     error = null;
-                    var conn = _database.Open(true, ref error);
+                    var conn = m_database.Open(true, ref error);
                     if (conn == null)
                     {
-                        _database.Password = "";
+                        m_database.Password = "";
                     }
                     else
                     {
-                        _database.Close(ref error);
+                        m_database.Close(ref error);
 
-                        _serverConfiguration.SelectedItemGuid = item.ConfigItemGuid;
+                        m_ServerConfig.SelectedItemGuid = item.ConfigItemGuid;
 
                         InitTableSchema(ref SDBeesDBConnectionData.gTable, Database);
 
@@ -344,13 +395,13 @@ namespace SDBees.DB
 
                 if (dataObject.Load(Database, _dbObjects[0], ref error))
                 {
-                    if(!string.Equals(CurrentServerConfigItem.ProjectGuid, dataObject.GetPropertyByColumn(Object.m_IdColumnName).ToString()))
+                    if(!String.Equals(CurrentServerConfigItem.ProjectGuid, dataObject.GetPropertyByColumn(Object.m_IdColumnName).ToString()))
                         CurrentServerConfigItem.ProjectGuid = dataObject.GetPropertyByColumn(Object.m_IdColumnName).ToString();
 
-                    if (!string.Equals(CurrentServerConfigItem.ProjectName, dataObject.ProjectName))
+                    if (!String.Equals(CurrentServerConfigItem.ProjectName, dataObject.ProjectName))
                         dataObject.ProjectName = CurrentServerConfigItem.ProjectName;
 
-                    if (!string.Equals(CurrentServerConfigItem.ProjectDescription, dataObject.ProjectDescription))
+                    if (!String.Equals(CurrentServerConfigItem.ProjectDescription, dataObject.ProjectDescription))
                         dataObject.ProjectDescription = CurrentServerConfigItem.ProjectDescription;
 
                     dataObject.Save(ref error);
@@ -366,10 +417,10 @@ namespace SDBees.DB
         {
             LoadConfiguration();
 
-            if (_serverConfiguration != null)
+            if (m_ServerConfig != null)
             {
                 var dlgLogin = new frmLogin();
-                dlgLogin.Serverconfig = _serverConfiguration;
+                dlgLogin.Serverconfig = m_ServerConfig;
 
                 var dlgRes = dlgLogin.ShowDialog(MyMainWindow.TheDialog);
 
@@ -382,17 +433,18 @@ namespace SDBees.DB
                     dbCategory.Enabled = false;
 
 #if DEBUG
-                    if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out var m_logValue) && m_logValue)
+                    var m_logValue = false;
+                    if (Boolean.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
                         mLogfileWriter.Writeline("Info", "Database Plugin started", "DB.Details");
 #endif
 
-                    if (_serverConfiguration.GetSelectedItem() != null)
+                    if (m_ServerConfig.GetSelectedItem() != null)
                     {
                         Error error = null;
 
-                        if (!SetDatabase(_serverConfiguration.GetSelectedItem(), dlgLogin.Password, true, ref error))
+                        if (!SetDatabase(m_ServerConfig.GetSelectedItem(), dlgLogin.Password, true, ref error))
                         {
-                            _database.Password = "";
+                            m_database.Password = "";
 
                             // login failed... display error message...
                             var dlgError = new frmError("Can't open database!", "Login failed", error);
@@ -645,21 +697,21 @@ namespace SDBees.DB
 
         private ServerConfig GetConfiguration()
         {
-            if (_serverConfiguration == null) LoadConfiguration(false);
+            if (m_ServerConfig == null) LoadConfiguration(false);
 
-            return _serverConfiguration;
+            return m_ServerConfig;
         }
 
         private void SaveConfiguration()
         {
             //Write the server configuration back to disk
-            if (_serverConfiguration != null) ServerConfigHandler.SaveConfig(_serverConfiguration);
+            if (m_ServerConfig != null) ServerConfigHandler.SaveConfig(m_ServerConfig);
         }
 
         private void LoadConfiguration(bool createDefaults = true)
         {
             //Load server mandator config from user appdata
-            _serverConfiguration = ServerConfigHandler.LoadConfig(createDefaults);
+            m_ServerConfig = ServerConfigHandler.LoadConfig(createDefaults);
         }
 
         /*
@@ -688,7 +740,7 @@ namespace SDBees.DB
         {
             Console.WriteLine("DB Plugins stops\n");
 
-            if (_serverConfiguration != null)
+            if (m_ServerConfig != null)
             {
                 SaveConfiguration();
             }
@@ -706,7 +758,7 @@ namespace SDBees.DB
 
         public override TemplatePlugin GetPlugin()
         {
-            return Current;
+            return m_theInstance;
         }
 
         protected override void OnDatabaseChanged(object myObject, EventArgs myArgs)
@@ -745,24 +797,24 @@ namespace SDBees.DB
 
         public DataSet GetDataSetForAllTables()
         {
-            DataSet set;
+            DataSet _set = null;
 
-            Error error = null;
+            Error _error = null;
 
             try
             {
-                Database.Open(true, ref error);
+                Database.Open(true, ref _error);
 
-                set = Database.Connection.GetReadOnlyDataSet();
+                _set = Database.Connection.GetReadOnlyDataSet();
             }
             finally
             {
-                Database.Close(ref error);
+                Database.Close(ref _error);
             }
 
-            Error.Display("Error while receiving Dataset", error);
+            Error.Display("Error while receiving Dataset", _error);
 
-            return set;
+            return _set;
         }
         #endregion
     }

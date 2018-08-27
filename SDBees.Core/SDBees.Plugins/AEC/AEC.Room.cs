@@ -22,10 +22,25 @@
 //
 // #EndHeader# ================================================================
 using System;
+using System.Collections.Generic;
+
+using System.Diagnostics;
+using System.Reflection;
+
+using System.Data;
+
+using System.Text;
 using System.Drawing;
+using System.Windows.Forms;
+
+using Carbon;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
+
+using SDBees.Plugs.Attributes;
+using SDBees.Main.Window;
 using SDBees.DB;
+using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Core.Model;
 
 namespace SDBees.Core.Plugins.AEC.Room
@@ -42,10 +57,10 @@ namespace SDBees.Core.Plugins.AEC.Room
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
     [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
-    [PluginDependency(typeof(SDBeesDBConnection))]
-    [PluginDependency(typeof(Global.GlobalManager))]
+    [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
+    [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
 
-    public class AECRoom : Plugs.TemplateTreeNode.TemplateTreenode
+    public class AECRoom : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
     {
         private static AECRoom _theInstance;
 
@@ -83,7 +98,7 @@ namespace SDBees.Core.Plugins.AEC.Room
             {
                 Console.WriteLine("RoomPlugin starts\n");
 
-                StartMe(context, e);
+                this.StartMe(context, e);
 
                 InitDatabase();
             }
@@ -119,7 +134,7 @@ namespace SDBees.Core.Plugins.AEC.Room
             return AECRoomBaseData.gTable;
         }
 
-        public override Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
+        public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
         {
             return new AECRoomBaseData();
         }
@@ -131,7 +146,7 @@ namespace SDBees.Core.Plugins.AEC.Room
 
         public override SDBeesEntityDefinition GetEntityDefinition()
         {
-            return base.GetEntityDefinition(GetType());
+            return base.GetEntityDefinition(this.GetType());
         }
 
         protected override void OnDatabaseChanged(object sender, EventArgs e)
@@ -146,12 +161,12 @@ namespace SDBees.Core.Plugins.AEC.Room
             {
                 // Verify that the required Tables are created/updated in the database
                 var database = MyDBManager.Database;
-                CreateDataObject().InitTableSchema(ref AECRoomBaseData.gTable, database);
+                this.CreateDataObject().InitTableSchema(ref AECRoomBaseData.gTable, database);
             }
         }
     }
 
-    public class AECRoomBaseData : Plugs.TemplateBase.TemplateDBBaseData
+    public class AECRoomBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
     {
         #region Private Data Members
 
@@ -172,7 +187,7 @@ namespace SDBees.Core.Plugins.AEC.Room
         public AECRoomBaseData() :
             base("Roomname", "Room", "General")
         {
-            Table = gTable;
+            base.Table = gTable;
         }
 
         #endregion

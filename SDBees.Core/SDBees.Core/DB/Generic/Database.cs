@@ -49,6 +49,7 @@ namespace SDBees.DB
         // Optional caching of table names for improved performance
         private Hashtable mTableNameCache;
         private bool mUseTableNameCaching;
+        private bool mUseGlobalCaching;
 
         #endregion
 
@@ -211,7 +212,17 @@ namespace SDBees.DB
         /// <summary>
         /// Get or Set the database to use global caching
         /// </summary>
-        public bool UseGlobalCaching { get; set; }
+        public bool UseGlobalCaching
+        {
+            get { return mUseGlobalCaching; }
+            set
+            {
+                if (mUseGlobalCaching != value)
+                {
+                    mUseGlobalCaching = value;
+                }
+            }
+        }
 
         #endregion
 
@@ -244,7 +255,7 @@ namespace SDBees.DB
 
             mTableNameCache = null;
             mUseTableNameCaching = true;
-            UseGlobalCaching = false;
+            mUseGlobalCaching = false;
         }
 
         #endregion
@@ -584,7 +595,7 @@ namespace SDBees.DB
         /// <param name="attributes">Attributes of this row</param>
         /// <param name="error">Contains error information if this fails</param>
         /// <returns></returns>
-        public object CreateRow(Table table, Column idColumn, List<Column> uniqueColumns, Attributes attributes, ref Error error)
+        public object CreateRow(Table table, Column idColumn, Columns uniqueColumns, Attributes attributes, ref Error error)
         {
             object id = null;
 

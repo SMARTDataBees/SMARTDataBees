@@ -31,26 +31,41 @@ namespace SDBees.Core.Model
 	[DataContract]
 	public class SDBeesProjectDefinitions
 	{
-	    /// <summary>
+		private HashSet<SDBeesExternalMappings> m_pluginMappings;
+        /// <summary>
         /// Mapping definitionen für alle Plugins
         /// </summary>
         [DataMember]
-		public HashSet<SDBeesExternalMappings> PluginMappings { get; set; }
+		public HashSet<SDBeesExternalMappings> PluginMappings
+		{
+            get { return m_pluginMappings; }
+            set { m_pluginMappings = value; }
+		}
 
-	    /// <summary>
+		private HashSet<SDBeesEntityDefinition> m_entityDefinitions;
+        /// <summary>
         /// Definitionen aller Entities mit Eigenschaften
         /// </summary>
         [DataMember]
-		public HashSet<SDBeesEntityDefinition> EntityDefinitions { get; set; }
+		public HashSet<SDBeesEntityDefinition> EntityDefinitions
+		{
+            get { return m_entityDefinitions; }
+            set { m_entityDefinitions = value; }
+		}
 
-	    /// <summary>
+		private HashSet<SDBeesRelationshipDefinition> m_relationshipDefinitions;
+        /// <summary>
         /// Definitionen aller Entity Beziehungen
         /// </summary>
         [DataMember]
-		public HashSet<SDBeesRelationshipDefinition> RelationshipDefinitions { get; set; }
+		public HashSet<SDBeesRelationshipDefinition> RelationshipDefinitions
+		{
+            get { return m_relationshipDefinitions; }
+            set { m_relationshipDefinitions = value; }
+		}
 
 
-	    public SDBeesExternalMappings getPluginMappings(SDBeesPluginId pluginId)
+		public SDBeesExternalMappings getPluginMappings(SDBeesPluginId pluginId)
 		{
 			throw new NotImplementedException();
 		}

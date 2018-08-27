@@ -22,8 +22,6 @@
 // #EndHeader# ================================================================
 
 using System.Collections;
-using System.Collections.Generic;
-using SDBees.Core.DB.Tools;
 using SDBees.DB.Generic;
 
 namespace SDBees.DB.MySQL
@@ -71,13 +69,15 @@ namespace SDBees.DB.MySQL
             if (accessMask == 0)
                 return true;
 
+            var success = false;
+
             var options = "";
             var privileges = FormatServerPrivileges(accessMask, true, ref options);
 
             var commandString = "GRANT " + privileges + " ON *.* TO '" + loginName + "' " + options;
 
             var mysqlDb = GetDatabase("mysql");
-            var success = mysqlDb.ExecuteCommand(commandString, ref error);
+            success = mysqlDb.ExecuteCommand(commandString, ref error);
 
             return success;
         }
@@ -95,13 +95,15 @@ namespace SDBees.DB.MySQL
             if (accessMask == 0)
                 return true;
 
+            var success = false;
+
             var options = "";
             var privileges = FormatServerPrivileges(accessMask, false, ref options);
 
             var commandString = "REVOKE " + privileges + " FROM '" + loginName + "' " + options;
 
             var mysqlDb = GetDatabase("mysql");
-            var success = mysqlDb.ExecuteCommand(commandString, ref error);
+            success = mysqlDb.ExecuteCommand(commandString, ref error);
 
             return success;
         }
@@ -120,13 +122,15 @@ namespace SDBees.DB.MySQL
             if (accessMask == 0)
                 return true;
 
+            var success = false;
+
             var options = "";
             var privileges = FormatDatabasePrivileges(accessMask, true, ref options);
 
             var commandString = "GRANT " + privileges + " ON " + databaseName + ".* TO '" + loginName + "' " + options;
 
             var mysqlDb = GetDatabase("mysql");
-            var success = mysqlDb.ExecuteCommand(commandString, ref error);
+            success = mysqlDb.ExecuteCommand(commandString, ref error);
 
             return success;
         }
@@ -157,13 +161,15 @@ namespace SDBees.DB.MySQL
             if (accessMask == 0)
                 return true;
 
+            var success = false;
+
             var options = "";
             var privileges = FormatDatabasePrivileges(accessMask, false, ref options);
 
             var commandString = "REVOKE " + privileges + " ON " + databaseName + ".* FROM '" + loginName + "' " + options;
 
             var mysqlDb = GetDatabase("mysql");
-            var success = mysqlDb.ExecuteCommand(commandString, ref error);
+            success = mysqlDb.ExecuteCommand(commandString, ref error);
 
             return success;
         }
@@ -217,10 +223,12 @@ namespace SDBees.DB.MySQL
         /// <returns></returns>
         public override bool CreateUser(User user, ref Error error)
         {
+            var success = false;
+
             var mysqlDb = GetDatabase("mysql");
 
             var sqlCommand = "CREATE USER '" + user.LoginName + "' IDENTIFIED BY 'password'";
-            var success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
+            success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
 
             return success;
         }
@@ -233,10 +241,12 @@ namespace SDBees.DB.MySQL
         /// <returns></returns>
         public override bool RemoveUser(string loginName, ref Error error)
         {
+            var success = false;
+
             var mysqlDb = GetDatabase("mysql");
 
             var sqlCommand = "DROP USER '" + loginName + "'";
-            var success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
+            success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
 
             return success;
         }
@@ -250,10 +260,12 @@ namespace SDBees.DB.MySQL
         /// <returns></returns>
         public override bool SetPassword(string loginName, string password, ref Error error)
         {
+            var success = false;
+
             var mysqlDb = GetDatabase("mysql");
 
             var sqlCommand = "SET PASSWORD FOR '" + loginName + "' = PASSWORD('" + password + "')";
-            var success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
+            success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
 
             return success;
         }
@@ -268,12 +280,14 @@ namespace SDBees.DB.MySQL
         /// <returns></returns>
         public override bool ChangePassword(string loginName, string oldPassword, string newPassword, ref Error error)
         {
+            var success = false;
+
             var mysqlDb = GetDatabase("mysql");
             // Use the old password to verify that it's correct
             mysqlDb.Password = oldPassword;
 
             var sqlCommand = "SET PASSWORD FOR '" + loginName + "' = PASSWORD('" + newPassword + "')";
-            var success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
+            success = mysqlDb.ExecuteCommand(sqlCommand, ref error);
 
             return success;
         }
@@ -304,38 +318,53 @@ namespace SDBees.DB.MySQL
         /// <returns></returns>
         protected string FormatServerPrivileges(int flags, bool useGrantSyntax, ref string options)
         {
-            const string separator = ",";
             var result = "";
             options = "";
 
             if (flags == AccessFlags.All)
+            {
                 result += "ALL";
+            }
             else
             {
                 // Tabellen Rechte
                 if ((flags & AccessFlags.CreateDatabase) != 0)
-                    result = Formater.Concat(separator, new List<string> {result, "CREATE"});
+                {
+                    result = AddCommaSeparated(result, "CREATE");
+                }
                 if ((flags & AccessFlags.EditDatabase) != 0)
-                    result = Formater.Concat(separator, new List<string> {result, "ALTER"});
+                {
+                    result = AddCommaSeparated(result, "ALTER");
+                }
                 if ((flags & AccessFlags.DeleteDatabase) != 0)
-                    result = Formater.Concat(separator, new List<string> {result, "DROP"});
+                {
+                    result = AddCommaSeparated(result, "DROP");
+                }
 
                 // Benutzer Rechte
                 if ((flags & (AccessFlags.CreateUser | AccessFlags.EditUser | AccessFlags.DeleteUser)) != 0)
-                    result = Formater.Concat(separator, new List<string> {result, "CREATE USER"});
+                {
+                    result = AddCommaSeparated(result, "CREATE USER");
+                }
             }
 
             if ((flags & (AccessFlags.EditUser | AccessFlags.EditGroup)) != 0)
             {
                 // TBD: Check this users rights????
                 if (useGrantSyntax)
-                    options = Formater.Concat(separator, new List<string> {options, "GRANT OPTION"});
+                {
+                    options = AddCommaSeparated(options, "GRANT OPTION");
+                }
                 else
-                    result = Formater.Concat(separator, new List<string> {result, "GRANT OPTION"});
+                {
+                    result = AddCommaSeparated(result, "GRANT OPTION");
+                }
             }
 
             if (options != "")
+            {
                 options = "WITH " + options;
+            }
 
             return result;
         }
@@ -349,51 +378,92 @@ namespace SDBees.DB.MySQL
         /// <returns></returns>
         protected string FormatDatabasePrivileges(int flags, bool useGrantSyntax, ref string options)
         {
-            const string separator = ",";
             var result = "";
             options = "";
 
             if (flags == AccessFlags.All)
+            {
                 result += "ALL";
+            }
             else
             {
                 // Tabellen Rechte
                 if ((flags & AccessFlags.CreateTable) != 0)
-                    result = Formater.Concat(separator, new List<string> {result, "CREATE"});
+                {
+                    result = AddCommaSeparated(result, "CREATE");
+                }
                 if ((flags & AccessFlags.EditTable) != 0)
-                    result = Formater.Concat(separator, new List<string> {result, "ALTER"});
+                {
+                    result = AddCommaSeparated(result, "ALTER");
+                }
                 if ((flags & AccessFlags.DeleteTable) != 0)
-                    result = Formater.Concat(separator, new List<string> {result, "DROP"});
+                {
+                    result = AddCommaSeparated(result, "DROP");
+                }
 
+                // Benutzer Rechte
                 if ((flags & (AccessFlags.CreateDbUser | AccessFlags.EditDbUser | AccessFlags.DeleteDbUser)) != 0)
-                    result = Formater.Concat(separator, new List<string> {result, "CREATE USER"});
+                {
+                    result = AddCommaSeparated(result, "CREATE USER");
+                }
 
                 // Zeilen Rechte
                 if ((flags & AccessFlags.SelectRows) != 0)
-                    result = Formater.Concat(separator, new List<string> {result, "SELECT"});
+                {
+                    result = AddCommaSeparated(result, "SELECT");
+                }
                 if ((flags & AccessFlags.CreateRows) != 0)
-                    result = Formater.Concat(separator, new List<string> {result, "INSERT"});
+                {
+                    result = AddCommaSeparated(result, "INSERT");
+                }
                 if ((flags & AccessFlags.EditRows) != 0)
-                    result = Formater.Concat(separator, new List<string> {result, "UPDATE"});
+                {
+                    result = AddCommaSeparated(result, "UPDATE");
+                }
                 if ((flags & AccessFlags.DeleteRows) != 0)
-                    result = Formater.Concat(separator, new List<string> {result, "DELETE"});
+                {
+                    result = AddCommaSeparated(result, "DELETE");
+                }
             }
 
             if ((flags & (AccessFlags.EditDbUser | AccessFlags.EditDbGroup)) != 0)
             {
                 // TBD: Check this users rights????
                 if (useGrantSyntax)
-                    options = Formater.Concat(separator, new List<string> {options, "GRANT OPTION"});
+                {
+                    options = AddCommaSeparated(options, "GRANT OPTION");
+                }
                 else
-                    result = Formater.Concat(separator, new List<string> {result, "GRANT OPTION"});
+                {
+                    result = AddCommaSeparated(result, "GRANT OPTION");
+                }
             }
 
             if (options != "")
+            {
                 options = "WITH " + options;
+            }
 
             return result;
         }
 
+        /// <summary>
+        /// Adds a string to a complete string and separates with commas if required
+        /// </summary>
+        /// <param name="string1"></param>
+        /// <param name="string2"></param>
+        /// <returns></returns>
+        protected string AddCommaSeparated(string string1, string string2)
+        {
+            var result = string1;
+            if (result != "")
+            {
+                result += ", ";
+            }
+            result += string2;
+
+            return result;
+        }
 
         #endregion
     }

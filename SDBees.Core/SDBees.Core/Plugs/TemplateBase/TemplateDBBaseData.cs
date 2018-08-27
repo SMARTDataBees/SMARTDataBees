@@ -25,7 +25,6 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Data;
-using System.Linq;
 using System.Windows.Forms;
 using Carbon.Plugins;
 using SDBees.Core.Connectivity;
@@ -148,8 +147,7 @@ namespace SDBees.Plugs.TemplateBase
         public static bool ObjectExistsInDbWithSDBeesId(Table tbl, object sdbeesid, ref Error _error, ref ArrayList _lstDbIds)
         {
             var exists = false;
-            var column = tbl.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_IdSDBeesColumnName));
-            var attParent = new Attribute(column, sdbeesid);
+            var attParent = new Attribute(tbl.Columns[m_IdSDBeesColumnName], sdbeesid);
             var criteria = SDBeesDBConnection.Current.MyDBManager.Database.FormatCriteria(attParent, DbBinaryOperator.eIsEqual, ref _error);
 
             var count = SDBeesDBConnection.Current.MyDBManager.Database.Select(tbl, tbl.PrimaryKey, criteria, ref _lstDbIds, ref _error);

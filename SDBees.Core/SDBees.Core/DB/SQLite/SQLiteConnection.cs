@@ -23,9 +23,9 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
-using System.Linq;
 using Carbon.Configuration;
 using SDBees.Core.Global;
 using SDBees.DB.Forms;
@@ -164,7 +164,8 @@ namespace SDBees.DB.SQLite
             var connectionString = ConnectionString(database, bReadOnly);
 
 #if DEBUG
-            if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out var logValue) && logValue)
+            var m_logValue = false;
+            if (Boolean.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
                 SDBeesDBConnection.Current.LogfileWriter.Writeline("Open", connectionString, "DB.Details");
 #endif
 
@@ -178,7 +179,7 @@ namespace SDBees.DB.SQLite
             {
 
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 // Add this error to the list...
                 var myError = new Error(ex.Message, 9999, GetType(), error);
@@ -192,7 +193,7 @@ namespace SDBees.DB.SQLite
             {
                 msg = "Failed";
             }
-            if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out logValue) && logValue)
+            if (Boolean.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
                 SDBeesDBConnection.Current.LogfileWriter.Writeline("Open", msg, "DB.Details");
 #endif
 
@@ -210,7 +211,8 @@ namespace SDBees.DB.SQLite
             {
 
 #if DEBUG
-                if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out var logValue) && logValue)
+                var m_logValue = false;
+                if (Boolean.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
                     SDBeesDBConnection.Current.LogfileWriter.Writeline("Close", "Closing SQLight connection", "DB.Details");
 #endif
                 try
@@ -258,7 +260,8 @@ namespace SDBees.DB.SQLite
             {
 
 #if DEBUG
-                if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out var logValue) && logValue)
+                var m_logValue = false;
+                if (Boolean.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
                     SDBeesDBConnection.Current.LogfileWriter.Writeline("ExecuteCommand", cmdString, "DB.Details");
 #endif
 
@@ -272,7 +275,7 @@ namespace SDBees.DB.SQLite
                     var rowsAffected = sqlCmd.ExecuteNonQuery();
 
 #if DEBUG
-                    if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out logValue) && logValue)
+                    if (Boolean.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
                         SDBeesDBConnection.Current.LogfileWriter.Writeline("ExecuteCommand", "Success " + rowsAffected + " rows were affected.", "DB.Details");
 #endif
                     success = true;
@@ -297,7 +300,7 @@ namespace SDBees.DB.SQLite
             Error _error = null;
             //this.Open(this,true, ref _error);
             var _lstTblNames = new ArrayList();
-            Database.TableNames(ref _lstTblNames, ref _error);
+            Database.TableNames(ref _lstTblNames, ref  _error);
 
             //this.DbConnection.
             foreach (string sTblName in _lstTblNames)
@@ -344,6 +347,8 @@ namespace SDBees.DB.SQLite
         /// <returns>true if it exists</returns>
         public override bool TableExists(string tableName, ref Error error)
         {
+            var success = false;
+
             if (mDbConnection != null)
             {
                 var criteria = "(type = '" + "table" + "') AND (name = '" + tableName + "')";
@@ -353,7 +358,7 @@ namespace SDBees.DB.SQLite
                 return numTables > 0;
             }
 
-            return false;
+            return success;
         }
 
         /// <summary>
@@ -369,45 +374,57 @@ namespace SDBees.DB.SQLite
 
             if (mDbConnection != null)
             {
-                var addColumnQuery = "";
-           
+                var specifications = "";
+
                 // First check for new and modified columns...
-                foreach (var column in table.Columns)
+                foreach (var iterator in table.Columns)
                 {
+                    var column = iterator.Value;
 
                     var columnDefinition = GetColumnDefinition(column);
 
-
-                    var clm = oldTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(column.Name));
-                    if (clm == null)
+                    if (!oldTable.Columns.ContainsKey(column.Name))
                     {
+                        // This is a new column...
+                        if (specifications != "")
+                        {
+                            specifications += ", ";
+                        }
+
                         if (table.PrimaryKey == column.Name)
                         {
                             columnDefinition += " PRIMARY KEY";
                         }
 
-                        addColumnQuery = " ALTER TABLE "
-                                  + table.Name 
-                                  + " ADD " + columnDefinition + ";";
-                        success |= ExecuteCommand(addColumnQuery, ref error);
+                        specifications += " ADD " + columnDefinition;
                     }
                 }
 
-
-                var dropColumnQuery = "";
                 // second step columns to drop
-                foreach (var column in oldTable.Columns)
+                foreach (var iterator in oldTable.Columns)
                 {
+                    var column = iterator.Value;
 
-                    var clm = table.Columns.FirstOrDefault(clmn => clmn.Name.Equals(column.Name));
-                    if (clm == null)
+                    if (!table.Columns.ContainsKey(column.Name))
                     {
+                        if (specifications != "")
+                        {
+                            specifications += ", ";
+                        }
 
-                        dropColumnQuery = " ALTER TABLE "
-                                + table.Name
-                                + " DROP " + column.Name + ";";
-                        success |= ExecuteCommand(dropColumnQuery, ref error);
+                        specifications += " DROP " + column.Name;
                     }
+                }
+
+                if (!String.IsNullOrEmpty(specifications))
+                {
+                    var cmdString = "ALTER TABLE " + table.Name + specifications;
+
+                    success = ExecuteCommand(cmdString, ref error);
+                }
+                else
+                {
+                    success = true;
                 }
             }
 
@@ -473,11 +490,12 @@ namespace SDBees.DB.SQLite
         protected virtual string ConnectionString(Database database, bool bReadOnly)
         {
             //string connectionString = "Server=" + database.Server.Name + ";Port=" + mPort + ";Database=" + database.Name + ";Uid=" + database.User + ";Pwd=" + database.Password + ";";
-            string connectionString;
+            var connectionString = "";
 
-            if (!string.IsNullOrEmpty(database.Server.GetServerConfigItem().ServerDatabasePath))
+            if (!String.IsNullOrEmpty(database.Server.GetServerConfigItem().ServerDatabasePath))
             {
-                if (bool.TryParse(SDBeesSQLiteLocalConfiguration().Options[m_SQLiteWAL, true].Value.ToString(), out var logValue) && logValue)
+                var m_logValue = false;
+                if (Boolean.TryParse(SDBeesSQLiteLocalConfiguration().Options[m_SQLiteWAL, true].Value.ToString(), out m_logValue) && m_logValue)
                     connectionString = "Data Source=" + database.Server.GetServerConfigItem().ServerDatabasePath + ";Uid=" + database.User + ";Pwd=" + database.Password + ";" + "PRAGMA journal_mode=WAL;";
                 else
                     connectionString = "Data Source=" + database.Server.GetServerConfigItem().ServerDatabasePath + ";Uid=" + database.User + ";Pwd=" + database.Password + ";";
@@ -499,7 +517,7 @@ namespace SDBees.DB.SQLite
 
 #if DEBUG
                     var m_logValue = false;
-                    if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
+                    if (Boolean.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
                         SDBeesDBConnection.Current.LogfileWriter.Writeline("FillDataSet", "Query: '" + query + "'", "DB.Details");
 #endif
 
@@ -514,7 +532,7 @@ namespace SDBees.DB.SQLite
                     da.Fill(ds, sTablename);
 
 #if DEBUG
-                    if (bool.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
+                    if (Boolean.TryParse(LogfileWriter.SDBeesLogLocalConfiguration().Options[LogfileWriter.m_LogSuccess, true].Value.ToString(), out m_logValue) && m_logValue)
                         SDBeesDBConnection.Current.LogfileWriter.Writeline("FillDataSet", "Successful.", "DB.Details");
 #endif
 
@@ -635,8 +653,10 @@ namespace SDBees.DB.SQLite
 
         protected override string GetColumnDefinition(Column column)
         {
+            var definition = "";
+
             Error error = null;
-            var definition = column.Name + " " + SQL_Label(column.Type, ref error);
+            definition = column.Name + " " + SQL_Label(column.Type, ref error);
 
             if (error != null)
             {

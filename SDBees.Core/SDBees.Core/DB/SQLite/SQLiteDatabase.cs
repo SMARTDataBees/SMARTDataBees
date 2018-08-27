@@ -65,6 +65,7 @@ namespace SDBees.DB.SQLite
         #region Overrides
         public override int TableNames(ref ArrayList names, ref Error error)
         {
+            var num = 0;
             Error _error = null;
 
             var select = "SELECT * FROM sqlite_master;";
@@ -73,7 +74,7 @@ namespace SDBees.DB.SQLite
 
             Error.Display("Error while fetching table names", _error);
 
-            return names.Count;
+            return num = names.Count;
         }
 
         #endregion
@@ -110,9 +111,10 @@ namespace SDBees.DB.SQLite
 
         private DataTable GetDataTable(string sql, ref Error _error)
         {
+            DataTable dt = null;
             try
             {
-                var dt = new DataTable();
+                dt = new DataTable();
                 SDBeesDBConnection.Current.Database.Open(true, ref _error);
 
                 using (var cmd = new SQLiteCommand(sql, SDBeesDBConnection.Current.Database.Connection.GetNativeConnection() as System.Data.SQLite.SQLiteConnection))

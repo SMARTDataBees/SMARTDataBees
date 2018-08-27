@@ -304,7 +304,7 @@ namespace SDBees.DB
         protected override string MakeSelectQuery(string tableName, string columnName, string criteria, int topCount)
         {
             // build the query...
-            string query;
+            var query = "";
             if (topCount <= 0)
             {
                 query = "SELECT " + columnName + " FROM " + tableName;
@@ -323,8 +323,10 @@ namespace SDBees.DB
         }
         protected override string GetColumnDefinition(Column column)
         {
+            var definition = "";
+
             Error error = null;
-            var definition = "[" + column.Name + "] " + SQL_Label(column.Type, ref error);
+            definition = "[" + column.Name + "] " + SQL_Label(column.Type, ref error);
 
             if (error != null)
             {

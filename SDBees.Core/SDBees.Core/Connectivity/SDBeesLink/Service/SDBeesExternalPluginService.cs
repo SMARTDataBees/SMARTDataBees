@@ -5,10 +5,10 @@ using System.ServiceModel;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Threading;
+using Carbon.Plugins;
 using SDBees.Core.Connectivity.SDBeesLink.UI;
 using SDBees.Core.Main.Systemtray;
 using SDBees.Core.Model;
-using SDBees.Core.Model.Basic;
 using SDBees.Plugs.Explorer;
 using Timer = System.Threading.Timer;
 
@@ -669,7 +669,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
                 {
                     dataSet = explorer.MyDataSet;
 
-                    SDBeesSetBase.DebugDataSetWrite("EditDataSetFeedbackFromDB.xml", dataSet);
+                    SDBeesDataSet.DebugDataSetWrite("EditDataSetFeedbackFromDB.xml", dataSet);
                 }
             }
             catch (Exception ex)
@@ -850,7 +850,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             {
                 m_dSet = ConnectivityManager.Current.SynchronizeClient(doc);
 
-                SDBeesSetBase.DebugDataSetWrite("SyncClient.xml", m_dSet);
+                SDBeesDataSet.DebugDataSetWrite("SyncClient.xml", m_dSet);
             }
             catch (Exception ex)
             {
@@ -1020,7 +1020,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.Service
             }
         }
 
-        private void TimerTick(object stateInfo)
+        private void TimerTick(Object stateInfo)
         {
             if (m_mode == Mode.OnRequest)
             {

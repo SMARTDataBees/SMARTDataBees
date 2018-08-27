@@ -269,7 +269,7 @@ namespace SDBees.Main.Window
             Icon ic = null;
 
             var _iconPath = GetApplicationIconPath();
-            if (!string.IsNullOrEmpty(_iconPath))
+            if (!String.IsNullOrEmpty(_iconPath))
             {
                 var path = Path.GetDirectoryName(GetType().Assembly.Location);
                 var full = path + _iconPath;
@@ -303,7 +303,7 @@ namespace SDBees.Main.Window
         {
             //Load expected window title
             var _webpage = ConfigurationManager.AppSettings["Webpage"];
-            if (!string.IsNullOrEmpty(_webpage))
+            if (!String.IsNullOrEmpty(_webpage))
             {
                 Process.Start(_webpage);
             }

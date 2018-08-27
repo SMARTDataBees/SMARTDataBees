@@ -36,18 +36,26 @@ namespace SDBees.Plugs.Attributes
   [AttributeUsage(AttributeTargets.Class)]
   public sealed class PluginTypeDefAttribute : Attribute
   {
-      /// <summary>
+    private readonly string _type;
+
+    /// <summary>
     /// Initializes a new instance of the PluginTypeAttribute class.
     /// </summary>
     /// <param name="type">An string for the plugintype</param>
     public PluginTypeDefAttribute(string type)
     {
-      Types = type;
+      _type = type;
     }
 
     /// <summary>
     /// Returns an array of strings the specify the names of the plugin's type.
     /// </summary>
-    public string Types { get; }
+    public string Types
+    {
+      get
+      {
+        return _type;
+      }
+    }
   }
 }

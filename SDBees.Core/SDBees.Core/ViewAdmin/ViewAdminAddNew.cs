@@ -26,7 +26,7 @@ using System.Collections;
 using System.Windows.Forms;
 using SDBees.Plugs.Objects;
 
-namespace SDBees.Core.Admin
+namespace SDBees.ViewAdmin
 {
     public partial class ViewAdminAddNew : Form
     {
@@ -51,6 +51,8 @@ namespace SDBees.Core.Admin
 
         public string ViewGuid { get; private set; }
 
+        public string IdSdBees  { get; private set; }
+
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
@@ -65,7 +67,9 @@ namespace SDBees.Core.Admin
                     var _plgObjViews = new ObjectView();
                     _plgObjViews.ViewName = ViewName;
                     _plgObjViews.ViewGUID = Guid.NewGuid() + "";
+                    _plgObjViews.IdSdBees = Guid.NewGuid() + "";
                     ViewGuid = _plgObjViews.ViewGUID;
+                    IdSdBees = _plgObjViews.IdSdBees;
                     _plgObjViews.ViewDescription = ViewDescription;
                     _hashViewDefs.Add(ViewName, _plgObjViews);
                     DialogResult = DialogResult.OK;

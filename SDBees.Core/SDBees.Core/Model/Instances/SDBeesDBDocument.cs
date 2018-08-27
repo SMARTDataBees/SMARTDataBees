@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using SDBees.Core.Connectivity;
-using SDBees.Plugs.TemplateBase;
-using Object = SDBees.DB.Object;
 
 namespace SDBees.Core.Model.Instances
 {
@@ -96,15 +94,15 @@ namespace SDBees.Core.Model.Instances
             var doc = new SDBeesDBDocument();
             try
             {
-                doc.m_id= new Guid(docdata.GetPropertyByColumn(Object.m_IdColumnName).ToString());
+                doc.m_id= new Guid(docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_IdColumnName).ToString());
 
-                var gSDBees = new Guid(docdata.GetPropertyByColumn(Object.m_IdSDBeesColumnName).ToString());
+                var gSDBees = new Guid(docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_IdSDBeesColumnName).ToString());
                 if (gSDBees == Guid.Empty)
                     gSDBees = Guid.NewGuid();
 
                 doc.m_instanceId = gSDBees;
 
-                doc.m_name = docdata.GetPropertyByColumn(TemplateDBBaseData.m_NameColumnName).ToString();
+                doc.m_name = docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_NameColumnName).ToString();
                 doc.m_roleid = docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_RoleIdColumnName).ToString();
                 doc.m_application = docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_ApplicationColumnName).ToString();
                 doc.m_docfilename = docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_DocumentFileColumnName).ToString();
@@ -125,8 +123,8 @@ namespace SDBees.Core.Model.Instances
         public static ConnectivityManagerDocumentBaseData CreateFromSDBeesDocument(SDBeesDBDocument doc)
         {
             var docData = new ConnectivityManagerDocumentBaseData();
-            docData.SetPropertyByColumn(Object.m_IdSDBeesColumnName, doc.InstanceId);
-            docData.SetPropertyByColumn(TemplateDBBaseData.m_NameColumnName, doc.Name);
+            docData.SetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_IdSDBeesColumnName, doc.InstanceId);
+            docData.SetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_NameColumnName, doc.Name);
             docData.SetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_RoleIdColumnName, doc.Roleid);
             docData.SetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_ApplicationColumnName, doc.Application);
             docData.SetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_DocumentFileColumnName, doc.Docfilename);

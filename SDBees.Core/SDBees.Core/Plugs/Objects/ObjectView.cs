@@ -28,8 +28,9 @@ namespace SDBees.Plugs.Objects
     private string _sViewName;
     private string _sViewDescription;
     private string _sViewGUID;
-    
-    public string ViewName
+        private string _idSdBees;
+
+        public string ViewName
     {
       get { return _sViewName; }
       set { _sViewName = value; }
@@ -47,7 +48,14 @@ namespace SDBees.Plugs.Objects
       set { _sViewGUID = value; }
     }
 
-    public ObjectView()
+        public string IdSdBees
+        {
+            get { return _idSdBees; }
+            set { _idSdBees = value; }
+        }
+
+
+        public ObjectView()
     {
       _sViewName = "";
       _sViewDescription = "";

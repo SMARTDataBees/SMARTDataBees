@@ -39,9 +39,12 @@ namespace SDBees.Core.GuiTools.TypeConverters
 
             try
             {
-                if (value != null && double.TryParse(value.ToString(), NumberStyles.Any, culture.NumberFormat, out var doubleValue))
+                double doubleValue;
+                if (Double.TryParse(value.ToString(), NumberStyles.Any, culture.NumberFormat, out doubleValue))
+                //if (Double.TryParse(value.ToString(), out doubleValue))
+                {
                     result = ConvertUILengthUnitToDBLengthUnit(doubleValue);
-
+                }
                 result = result ?? base.ConvertFrom(context, culture, value);
             }
             catch (Exception ex)
@@ -93,7 +96,7 @@ namespace SDBees.Core.GuiTools.TypeConverters
             double length;
             object result = null;
 
-            if (double.TryParse(value.ToString(), out length))
+            if (Double.TryParse(value.ToString(), out length))
             {
                 var decimalplaces = SDBeesGlobalVars.GetDecimalPlaces();
 

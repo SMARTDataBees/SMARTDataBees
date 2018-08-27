@@ -25,11 +25,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
-using SDBees.Core.Admin;
 using SDBees.Core.Utils;
 using SDBees.GuiTools;
+using SDBees.ViewAdmin;
 
 namespace SDBees.DB
 {
@@ -493,10 +492,10 @@ namespace SDBees.DB
             {
                 var criteriaLstViewDefs = new ArrayList();
 
-                if (string.IsNullOrEmpty(parentType))
+                if (String.IsNullOrEmpty(parentType))
                 {
-                    criteriaLstViewDefs.Add(string.Format("parent_type='{0}'", ViewRelation.m_StartNodeValue));
-                    if (string.IsNullOrEmpty(mFilter))
+                    criteriaLstViewDefs.Add(String.Format("parent_type='{0}'", ViewRelation.m_StartNodeValue));
+                    if (String.IsNullOrEmpty(mFilter))
                     {
                         criteriaViewDef = criteriaLstViewDefs[0].ToString();
                     }
@@ -508,8 +507,8 @@ namespace SDBees.DB
                 }
                 else
                 {
-                    criteriaLstViewDefs.Add(string.Format("parent_type='{0}'", parentType));
-                    if (string.IsNullOrEmpty(mFilter))
+                    criteriaLstViewDefs.Add(String.Format("parent_type='{0}'", parentType));
+                    if (String.IsNullOrEmpty(mFilter))
                     {
                         criteriaViewDef = criteriaLstViewDefs[0].ToString();
                     }
@@ -529,8 +528,7 @@ namespace SDBees.DB
                     ViewDefinition db = null;
                     if (mViewCache.ViewDefinition(lstViewDefs[i], out db, ref error))
                     {
-                        var column = mTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(mTable));
-                        var attParent = new Attribute(column, parentId.ToString());
+                        var attParent = new Attribute(mTable.Columns[mParentNodeColumnName], parentId.ToString());
                         var criteria = Database.FormatCriteria(attParent, DbBinaryOperator.eIsEqual, ref error);
                         if (Database.UseGlobalCaching == false)
                         {
@@ -560,8 +558,7 @@ namespace SDBees.DB
                                         var nextParentId = objectIds[index];
                                         if (mNodeColumnName != mTable.PrimaryKey)
                                         {
-                                            var primaryKeyColumn = mTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(mTable.PrimaryKey));
-                                            var attribute = new Attribute(primaryKeyColumn, nextParentId.ToString());
+                                            var attribute = new Attribute(mTable.Columns[mTable.PrimaryKey], nextParentId.ToString());
                                             var idCriteria = Database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
                                             nextParentId = mViewCache.Parent(mTable, mNodeColumnName, idCriteria, ref error);
                                         }
@@ -678,8 +675,8 @@ namespace SDBees.DB
         protected virtual TreeNode CreateNode (object nodeId, ref Error error)
         {
             TreeNode treeNode = null;
-            var column = mTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(mTable.PrimaryKey));
-            var attribute = new Attribute(column, nodeId.ToString());
+
+            var attribute = new Attribute(mTable.Columns[mTable.PrimaryKey], nodeId.ToString());
             var idCriteria = Database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
             var nodeLabel = Database.SelectSingle(mTable.Name, mDisplayColumnName, idCriteria, ref error);
 

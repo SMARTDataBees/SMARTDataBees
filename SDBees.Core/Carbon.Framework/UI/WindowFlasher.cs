@@ -57,22 +57,22 @@ namespace Carbon.UI
 
 		private struct FLASHINFO
 		{			
-			public uint  cbSize;
+			public UINT  cbSize;
 			public HWND  hwnd;
-			public int dwFlags;
-			public uint  uCount;
-			public int dwTimeout;
+			public DWORD dwFlags;
+			public UINT  uCount;
+			public DWORD dwTimeout;
 		}
 
 		[DllImport("User32")]
 		private static extern BOOL FlashWindowEx(ref FLASHINFO pfwi);
 
-		private const int FLASHW_STOP			= 0;
-		private const int FLASHW_CAPTION		= 0x00000001;
-		private const int FLASHW_TRAY			= 0x00000002;
-		private const int FLASHW_ALL			= (FLASHW_CAPTION | FLASHW_TRAY);
-		private const int FLASHW_TIMER		= 0x00000004;
-		private const int FLASHW_TIMERNOFG	= 0x0000000C;
+		private const DWORD FLASHW_STOP			= 0;
+		private const DWORD FLASHW_CAPTION		= 0x00000001;
+		private const DWORD FLASHW_TRAY			= 0x00000002;
+		private const DWORD FLASHW_ALL			= (FLASHW_CAPTION | FLASHW_TRAY);
+		private const DWORD FLASHW_TIMER		= 0x00000004;
+		private const DWORD FLASHW_TIMERNOFG	= 0x0000000C;
 				
 		/// <summary>
 		/// Flashes the window specified the number of times specified.
@@ -83,10 +83,10 @@ namespace Carbon.UI
 		public static bool FlashWindow(HWND hWnd, int flashCount)
 		{
 			FLASHINFO fwi;
-			fwi.cbSize		= (uint)Marshal.SizeOf(typeof(FLASHINFO));	// size
+			fwi.cbSize		= (UINT)Marshal.SizeOf(typeof(FLASHINFO));	// size
 			fwi.hwnd		= hWnd;									// the window to flash
 			fwi.dwFlags		= FLASHW_ALL;							// flash the caption and tray
-			fwi.uCount		= (uint)flashCount;							// how many times to flash it
+			fwi.uCount		= (UINT)flashCount;							// how many times to flash it
 			fwi.dwTimeout	= 0;									// use the default cursor blink rate
 
 			return (FlashWindowEx(ref fwi) == BOOL.TRUE);
@@ -101,7 +101,7 @@ namespace Carbon.UI
 		public static bool FlashWindow(HWND hWnd, bool flashUntilForeground)
 		{
 			FLASHINFO fwi;
-			fwi.cbSize		= (uint)Marshal.SizeOf(typeof(FLASHINFO));	// size
+			fwi.cbSize		= (UINT)Marshal.SizeOf(typeof(FLASHINFO));	// size
 			fwi.hwnd		= hWnd;									// the window to flash
 			fwi.dwFlags		= (flashUntilForeground ? FLASHW_ALL | FLASHW_TIMERNOFG : FLASHW_ALL);							// flash the caption and tray
 			fwi.uCount		= 5;									// how many times to flash it

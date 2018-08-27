@@ -69,7 +69,7 @@ namespace SDBees.Core.GuiTools.TypeConverters
 
                     var doubleValue0 = 0.0;
 
-                    if (double.TryParse(dimensions[0], out doubleValue0))
+                    if (Double.TryParse(dimensions[0], out doubleValue0))
                     {
                         if (destinationType == null)
                         {
@@ -94,7 +94,7 @@ namespace SDBees.Core.GuiTools.TypeConverters
 
                     var doubleValue1 = 0.0;
 
-                    if (double.TryParse(dimensions[0], out doubleValue0) && double.TryParse(dimensions[1], out doubleValue1))
+                    if (Double.TryParse(dimensions[0], out doubleValue0) && Double.TryParse(dimensions[1], out doubleValue1))
                     {
                         if (destinationType == null)
                         {

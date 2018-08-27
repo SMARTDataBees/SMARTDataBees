@@ -55,7 +55,7 @@ namespace SDBees.UserAdmin
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserAdminDLG));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(UserAdminDLG));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabUsersAndGroups = new System.Windows.Forms.TabControl();
             this.tabPageUsers = new System.Windows.Forms.TabPage();
@@ -87,7 +87,6 @@ namespace SDBees.UserAdmin
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -97,9 +96,8 @@ namespace SDBees.UserAdmin
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(1406, 902);
-            this.splitContainer1.SplitterDistance = 524;
-            this.splitContainer1.SplitterWidth = 8;
+            this.splitContainer1.Size = new System.Drawing.Size(703, 469);
+            this.splitContainer1.SplitterDistance = 262;
             this.splitContainer1.TabIndex = 0;
             // 
             // tabUsersAndGroups
@@ -108,31 +106,28 @@ namespace SDBees.UserAdmin
             this.tabUsersAndGroups.Controls.Add(this.tabPageGroups);
             this.tabUsersAndGroups.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabUsersAndGroups.Location = new System.Drawing.Point(0, 0);
-            this.tabUsersAndGroups.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tabUsersAndGroups.Name = "tabUsersAndGroups";
             this.tabUsersAndGroups.SelectedIndex = 0;
-            this.tabUsersAndGroups.Size = new System.Drawing.Size(524, 902);
+            this.tabUsersAndGroups.Size = new System.Drawing.Size(262, 469);
             this.tabUsersAndGroups.TabIndex = 0;
             this.tabUsersAndGroups.SelectedIndexChanged += new System.EventHandler(this.tabUsersAndGroups_SelectedIndexChanged);
             // 
             // tabPageUsers
             // 
-            this.tabPageUsers.Location = new System.Drawing.Point(8, 39);
-            this.tabPageUsers.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tabPageUsers.Location = new System.Drawing.Point(4, 22);
             this.tabPageUsers.Name = "tabPageUsers";
-            this.tabPageUsers.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.tabPageUsers.Size = new System.Drawing.Size(508, 855);
+            this.tabPageUsers.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageUsers.Size = new System.Drawing.Size(254, 443);
             this.tabPageUsers.TabIndex = 0;
             this.tabPageUsers.Text = "Users";
             this.tabPageUsers.UseVisualStyleBackColor = true;
             // 
             // tabPageGroups
             // 
-            this.tabPageGroups.Location = new System.Drawing.Point(8, 39);
-            this.tabPageGroups.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tabPageGroups.Location = new System.Drawing.Point(4, 22);
             this.tabPageGroups.Name = "tabPageGroups";
-            this.tabPageGroups.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.tabPageGroups.Size = new System.Drawing.Size(508, 855);
+            this.tabPageGroups.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageGroups.Size = new System.Drawing.Size(254, 443);
             this.tabPageGroups.TabIndex = 1;
             this.tabPageGroups.Text = "Groups";
             this.tabPageGroups.UseVisualStyleBackColor = true;
@@ -141,7 +136,6 @@ namespace SDBees.UserAdmin
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.splitContainer2.Name = "splitContainer2";
             this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -152,18 +146,16 @@ namespace SDBees.UserAdmin
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.lvSecurityRights);
-            this.splitContainer2.Size = new System.Drawing.Size(874, 902);
-            this.splitContainer2.SplitterDistance = 673;
-            this.splitContainer2.SplitterWidth = 8;
+            this.splitContainer2.Size = new System.Drawing.Size(437, 469);
+            this.splitContainer2.SplitterDistance = 350;
             this.splitContainer2.TabIndex = 0;
             // 
             // pgProperties
             // 
             this.pgProperties.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pgProperties.Location = new System.Drawing.Point(0, 0);
-            this.pgProperties.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.pgProperties.Name = "pgProperties";
-            this.pgProperties.Size = new System.Drawing.Size(874, 673);
+            this.pgProperties.Size = new System.Drawing.Size(437, 350);
             this.pgProperties.TabIndex = 0;
             // 
             // lvSecurityRights
@@ -171,74 +163,71 @@ namespace SDBees.UserAdmin
             this.lvSecurityRights.ContextMenuStrip = this.contextMenuStripSecurityRights;
             this.lvSecurityRights.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvSecurityRights.Location = new System.Drawing.Point(0, 0);
-            this.lvSecurityRights.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.lvSecurityRights.Name = "lvSecurityRights";
-            this.lvSecurityRights.Size = new System.Drawing.Size(874, 221);
+            this.lvSecurityRights.Size = new System.Drawing.Size(437, 115);
             this.lvSecurityRights.TabIndex = 0;
             this.lvSecurityRights.UseCompatibleStateImageBehavior = false;
             this.lvSecurityRights.SelectedIndexChanged += new System.EventHandler(this.lvSecurityRights_SelectedIndexChanged);
             // 
             // contextMenuStripSecurityRights
             // 
-            this.contextMenuStripSecurityRights.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.contextMenuStripSecurityRights.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuAddSecurityRight,
             this.mnuRemoveSecurityRight});
             this.contextMenuStripSecurityRights.Name = "contextMenuStripSecurityRights";
-            this.contextMenuStripSecurityRights.Size = new System.Drawing.Size(366, 76);
+            this.contextMenuStripSecurityRights.Size = new System.Drawing.Size(211, 48);
             // 
             // mnuAddSecurityRight
             // 
             this.mnuAddSecurityRight.Name = "mnuAddSecurityRight";
-            this.mnuAddSecurityRight.Size = new System.Drawing.Size(365, 36);
+            this.mnuAddSecurityRight.Size = new System.Drawing.Size(210, 22);
             this.mnuAddSecurityRight.Text = "Berechtigung &Hinzufügen";
             this.mnuAddSecurityRight.Click += new System.EventHandler(this.mnuAddSecurityRight_Click);
             // 
             // mnuRemoveSecurityRight
             // 
             this.mnuRemoveSecurityRight.Name = "mnuRemoveSecurityRight";
-            this.mnuRemoveSecurityRight.Size = new System.Drawing.Size(365, 36);
+            this.mnuRemoveSecurityRight.Size = new System.Drawing.Size(210, 22);
             this.mnuRemoveSecurityRight.Text = "Berechtigung &Entfernen";
             this.mnuRemoveSecurityRight.Click += new System.EventHandler(this.mnuRemoveSecurityRight_Click);
             // 
             // contextMenuStripUser
             // 
-            this.contextMenuStripUser.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.contextMenuStripUser.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuCreateUser,
             this.mnuDeleteUser,
             this.mnuSetPassword});
             this.contextMenuStripUser.Name = "contextMenuStripUser";
-            this.contextMenuStripUser.Size = new System.Drawing.Size(294, 112);
+            this.contextMenuStripUser.Size = new System.Drawing.Size(176, 70);
             // 
             // mnuCreateUser
             // 
             this.mnuCreateUser.Name = "mnuCreateUser";
-            this.mnuCreateUser.Size = new System.Drawing.Size(293, 36);
+            this.mnuCreateUser.Size = new System.Drawing.Size(175, 22);
             this.mnuCreateUser.Text = "Benutzer &Erzeugen";
             this.mnuCreateUser.Click += new System.EventHandler(this.mnuCreateUser_Click);
             // 
             // mnuDeleteUser
             // 
             this.mnuDeleteUser.Name = "mnuDeleteUser";
-            this.mnuDeleteUser.Size = new System.Drawing.Size(293, 36);
+            this.mnuDeleteUser.Size = new System.Drawing.Size(175, 22);
             this.mnuDeleteUser.Text = "Benutzer &Löschen";
             this.mnuDeleteUser.Click += new System.EventHandler(this.mnuDeleteUser_Click);
             // 
             // mnuSetPassword
             // 
             this.mnuSetPassword.Name = "mnuSetPassword";
-            this.mnuSetPassword.Size = new System.Drawing.Size(293, 36);
+            this.mnuSetPassword.Size = new System.Drawing.Size(175, 22);
             this.mnuSetPassword.Text = "&Password festlegen";
             this.mnuSetPassword.Click += new System.EventHandler(this.mnuSetPassword_Click);
             // 
             // UserAdminDLG
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.ClientSize = new System.Drawing.Size(1406, 902);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(703, 469);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "UserAdminDLG";
             this.Text = "SMARTDataBees user handling";
             this.Load += new System.EventHandler(this.UserAdminDLG_Load);

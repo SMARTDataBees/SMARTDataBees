@@ -82,34 +82,34 @@ namespace SDBees.DB
             // btnOK
             // 
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(576, 15);
+            this.btnOK.Location = new System.Drawing.Point(288, 8);
             this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(128, 44);
+            this.btnOK.Size = new System.Drawing.Size(64, 24);
             this.btnOK.TabIndex = 1;
             this.btnOK.Text = "OK";
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // txtResult
             // 
-            this.txtResult.Location = new System.Drawing.Point(16, 148);
+            this.txtResult.Location = new System.Drawing.Point(8, 80);
             this.txtResult.Name = "txtResult";
-            this.txtResult.Size = new System.Drawing.Size(688, 31);
+            this.txtResult.Size = new System.Drawing.Size(344, 20);
             this.txtResult.TabIndex = 0;
             // 
             // lblText
             // 
-            this.lblText.Location = new System.Drawing.Point(32, 15);
+            this.lblText.Location = new System.Drawing.Point(16, 8);
             this.lblText.Name = "lblText";
-            this.lblText.Size = new System.Drawing.Size(528, 118);
+            this.lblText.Size = new System.Drawing.Size(264, 64);
             this.lblText.TabIndex = 0;
             this.lblText.Text = "InputBox";
             // 
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(576, 74);
+            this.btnCancel.Location = new System.Drawing.Point(288, 40);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(128, 44);
+            this.btnCancel.Size = new System.Drawing.Size(64, 24);
             this.btnCancel.TabIndex = 2;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -117,10 +117,10 @@ namespace SDBees.DB
             // frmInputBox
             // 
             this.AcceptButton = this.btnOK;
-            this.AutoScaleBaseSize = new System.Drawing.Size(10, 24);
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(726, 229);
+            this.ClientSize = new System.Drawing.Size(362, 111);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.lblText);
             this.Controls.Add(this.txtResult);

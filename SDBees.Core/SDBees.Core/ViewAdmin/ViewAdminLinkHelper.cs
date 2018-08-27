@@ -31,7 +31,7 @@ using SDBees.Main.Window;
 using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Plugs.TreenodeHelper;
 
-namespace SDBees.Core.Admin
+namespace SDBees.ViewAdmin
 {
 	[PluginName("View Admin LinkHelper Plugin")]
 	[PluginAuthors("Tim Hoffeller")]

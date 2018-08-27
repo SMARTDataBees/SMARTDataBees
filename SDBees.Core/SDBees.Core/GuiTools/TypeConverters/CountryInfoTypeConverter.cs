@@ -34,7 +34,7 @@ namespace SDBees.Core.GuiTools.TypeConverters
 
             foreach (var ci in GetCultures())
             {
-                if (!string.IsNullOrEmpty(ci.DisplayName))
+                if (!String.IsNullOrEmpty(ci.DisplayName))
                     items.Add(ci.DisplayName);
                 /*
                 Console.Write("{0,-7}", ci.Name);

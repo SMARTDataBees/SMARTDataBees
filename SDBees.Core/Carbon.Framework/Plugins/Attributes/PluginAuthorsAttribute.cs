@@ -39,13 +39,15 @@ namespace Carbon.Plugins.Attributes
 	[AttributeUsage(AttributeTargets.Class)]
 	public sealed class PluginAuthorsAttribute : Attribute
 	{
-	    /// <summary>
+		private readonly string[] _authors;
+
+		/// <summary>
 		/// Initializes a new instance of the PluginAuthorsAttribute class.
 		/// </summary>
 		/// <param name="authors">An array of strings that specify the names of the plugin's authors.</param>
 		public PluginAuthorsAttribute(params string[] authors)
 		{
-			Authors = authors;
+			_authors = authors;
 		}
 
 		/// <summary>
@@ -54,12 +56,18 @@ namespace Carbon.Plugins.Attributes
 		/// <param name="author">The name of the plugin's author</param>
 		public PluginAuthorsAttribute(string author)
 		{
-			Authors = new[] {author};
+			_authors = new[] {author};
 		}
 
 		/// <summary>
 		/// Returns an array of strings the specify the names of the plugin's authors.
 		/// </summary>
-		public string[] Authors { get; }
+		public string[] Authors
+		{
+			get
+			{
+				return _authors;
+			}
+		}		
 	}
 }

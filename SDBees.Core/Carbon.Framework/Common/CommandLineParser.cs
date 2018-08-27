@@ -190,7 +190,7 @@ namespace Carbon.Common
 		/// </summary>
 		/// <param name="name">The name of the argument to check for.</param>
 		/// <returns></returns>
-		public short ToInt16(string name)
+		public Int16 ToInt16(string name)
 		{
 			if (Exists(name))
 				return Convert.ToInt16(_arguments[name]);
@@ -202,7 +202,7 @@ namespace Carbon.Common
 		/// </summary>
 		/// <param name="name">The name of the argument to check for.</param>
 		/// <returns></returns>
-		public int ToInt32(string name)
+		public Int32 ToInt32(string name)
 		{
 			if (Exists(name))
 				return Convert.ToInt32(_arguments[name]);
@@ -214,7 +214,7 @@ namespace Carbon.Common
 		/// </summary>
 		/// <param name="name">The name of the argument to check for.</param>
 		/// <returns></returns>
-		public long ToInt64(string name)
+		public Int64 ToInt64(string name)
 		{
 			if (Exists(name))
 				return Convert.ToInt64(_arguments[name]);
@@ -226,7 +226,7 @@ namespace Carbon.Common
 		/// </summary>
 		/// <param name="name">The name of the argument to check for.</param>
 		/// <returns></returns>
-		public float ToSingle(string name)
+		public Single ToSingle(string name)
 		{			
 			if (Exists(name))
 				return Convert.ToSingle(_arguments[name]);

@@ -40,7 +40,9 @@ namespace Carbon.Plugins.Attributes
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple=true)]
 	public sealed class PluginDependencyAttribute : Attribute
 	{
-	    /// <summary>
+		private readonly Type _type;
+
+        /// <summary>
         /// Initializes a new instance of the PluginDependencyAttribute class.
         /// </summary>
         /// <param name="type">The Plugin Type that the class depends upon.</param>
@@ -48,12 +50,18 @@ namespace Carbon.Plugins.Attributes
 		{
 			if (type == null)
 				throw new ArgumentNullException("type");
-			Type = type;
+			_type = type;
 		}
 
         /// <summary>
         /// Returns the Type of the other Plugin that the class depends upon.
         /// </summary>
-		public Type Type { get; }
+		public Type Type
+		{
+			get
+			{
+				return _type;
+			}
+		}
 	}
 }

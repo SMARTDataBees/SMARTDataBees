@@ -67,30 +67,27 @@ namespace SDBees.DB.Forms
             this.ebDetails.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ebDetails.Location = new System.Drawing.Point(24, 146);
-            this.ebDetails.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.ebDetails.Location = new System.Drawing.Point(12, 76);
             this.ebDetails.Multiline = true;
             this.ebDetails.Name = "ebDetails";
             this.ebDetails.ReadOnly = true;
             this.ebDetails.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.ebDetails.Size = new System.Drawing.Size(1160, 289);
+            this.ebDetails.Size = new System.Drawing.Size(582, 152);
             this.ebDetails.TabIndex = 2;
             // 
             // lbMessage
             // 
-            this.lbMessage.Location = new System.Drawing.Point(24, 17);
-            this.lbMessage.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.lbMessage.Location = new System.Drawing.Point(12, 9);
             this.lbMessage.Name = "lbMessage";
-            this.lbMessage.Size = new System.Drawing.Size(1164, 123);
+            this.lbMessage.Size = new System.Drawing.Size(582, 64);
             this.lbMessage.TabIndex = 1;
             // 
             // bnOk
             // 
             this.bnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.bnOk.Location = new System.Drawing.Point(1038, 450);
-            this.bnOk.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.bnOk.Location = new System.Drawing.Point(519, 234);
             this.bnOk.Name = "bnOk";
-            this.bnOk.Size = new System.Drawing.Size(150, 44);
+            this.bnOk.Size = new System.Drawing.Size(75, 23);
             this.bnOk.TabIndex = 0;
             this.bnOk.Text = "OK";
             this.bnOk.UseVisualStyleBackColor = true;
@@ -99,13 +96,13 @@ namespace SDBees.DB.Forms
             // frmError
             // 
             this.AcceptButton = this.bnOk;
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.ClientSize = new System.Drawing.Size(1212, 517);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(606, 269);
             this.Controls.Add(this.bnOk);
             this.Controls.Add(this.lbMessage);
             this.Controls.Add(this.ebDetails);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "frmError";
             this.ShowIcon = false;
             this.Text = "Error";

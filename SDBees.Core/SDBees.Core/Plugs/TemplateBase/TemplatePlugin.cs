@@ -23,7 +23,6 @@
 
 using System.Collections;
 using System.Data;
-using System.Linq;
 using System.Windows.Forms;
 using SDBees.DB;
 
@@ -117,21 +116,19 @@ namespace SDBees.Plugs.TemplateBase
         {
             var table = MyTable();
             ArrayList objectIds = null;
-
-            var column = table.Columns.FirstOrDefault(clmn => clmn.Name.Equals(table.PrimaryKey));
-            var attribute = new Attribute(column, objectId.ToString());
+            var attribute = new Attribute(table.Columns[table.PrimaryKey], objectId.ToString());
             var criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
             return (database.Select(table, table.PrimaryKey, criteria, ref objectIds, ref error) == 1);
         }
 
-        bool editSchemaAllowed = true;
+        bool m_editSchemaAllowed = true;
         /// <summary>
         /// Is it allowed for the addin to edit the schema?
         /// </summary>
         public bool EditSchemaAllowed
         {
-            get { return editSchemaAllowed; }
-            set { editSchemaAllowed = value; }
+            get { return m_editSchemaAllowed; }
+            set { m_editSchemaAllowed = value; }
         }
 
         /// <summary>
@@ -139,14 +136,12 @@ namespace SDBees.Plugs.TemplateBase
         /// </summary>
         public void EditSchema()
         {
-            if (editSchemaAllowed)
+            if (m_editSchemaAllowed)
             {
-                var tableEditor = new frmEditTable(MyDBManager)
-                {
-                    Text = GetType().ToString(),
-                    Table = MyTable()
-                };
+                var tableEditor = new frmEditTable(MyDBManager);
                 // TBD: besser wäre eine "lesbarer" Name...
+                tableEditor.Text = GetType().ToString();
+                tableEditor.Table = MyTable();
 
                 if (tableEditor.ShowDialog() == DialogResult.OK)
                 {

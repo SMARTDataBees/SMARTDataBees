@@ -25,9 +25,10 @@ using System;
 using System.Collections;
 using System.Windows.Forms;
 using SDBees.DB;
+using SDBees.Plugs.TemplateBase;
 using SDBees.Plugs.TemplateTreeNode;
 
-namespace SDBees.Core.Admin
+namespace SDBees.ViewAdmin
 {
 	public partial class ViewAdminLinkHelperCtrl : UserControl
 	{

@@ -40,47 +40,65 @@ namespace SDBees.Core.Global
 
     public class GlobalManager : TemplatePlugin
     {
-        private static GlobalManager _instance;
-        private Configuration _configuration;
+        private static GlobalManager m_theInstance;
+        private Configuration m_config;
 
         public GlobalManager()
         {
-            _instance = this;
+            m_theInstance = this;
         }
 
         /// <summary>
         /// Returns the one and only DataBaseManagerPlugin instance.
         /// </summary>
-        public static GlobalManager Current => _instance;
-
-        public Configuration Configuration
+        public static GlobalManager Current
         {
-            get => _configuration;
-            set => _configuration = value;
+            get
+            {
+                return m_theInstance;
+            }
         }
 
-        /// <inheritdoc />
-        public override TemplateDBBaseData CreateDataObject() => null;
+        public Configuration Config
+        {
+            get
+            {
+                return m_config;
+            }
 
-        /// <inheritdoc />
-        public override TemplatePlugin GetPlugin() => _instance;
-
-        /// <inheritdoc />
-        public override Table MyTable() => null;
-
-        /// <inheritdoc />
-        protected override void OnDatabaseChanged(object sender, EventArgs eventArgs)
-        {           
+            set
+            {
+                m_config = value;
+            }
         }
 
-        /// <inheritdoc />
-        protected override void Start(PluginContext context, PluginDescriptorEventArgs eventArgs)
+        public override TemplateDBBaseData CreateDataObject()
+        {
+            return null;
+        }
+
+        public override TemplatePlugin GetPlugin()
+        {
+            return m_theInstance;
+        }
+
+        public override Table MyTable()
+        {
+            return null;
+        }
+
+        protected override void OnDatabaseChanged(object sender, EventArgs e)
+        {
+            //
+        }
+
+        protected override void Start(PluginContext context, PluginDescriptorEventArgs e)
         {
             //
             try
             {
                 var assem = Assembly.GetEntryAssembly();
-                Configuration = ConfigurationManager.OpenExeConfiguration(assem.Location);
+                Config = ConfigurationManager.OpenExeConfiguration(assem.Location);
             }
             catch (Exception ex)
             {
@@ -88,9 +106,9 @@ namespace SDBees.Core.Global
             }
         }
 
-        /// <inheritdoc />
-        protected override void Stop(PluginContext context, PluginDescriptorEventArgs eventArgs)
+        protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
         {
+            //
         }
     }
 }

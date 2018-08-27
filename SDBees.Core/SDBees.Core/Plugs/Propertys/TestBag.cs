@@ -65,8 +65,10 @@ namespace SDBees.Plugs.Properties
     }
     sealed class BagDefinition<T> : IBagDefinition
     {
-        public PropertyDescriptor Property { get; }
-        public T DefaultValue { get; }
+        private readonly PropertyDescriptor property;
+        public PropertyDescriptor Property { get { return property; } }
+        private readonly T defaultValue;
+        public T DefaultValue { get { return defaultValue; } }
         public string Name { get { return Property.Name; } }
         IBagValue IBagDefinition.Create(IBag bag)
         {
@@ -74,7 +76,7 @@ namespace SDBees.Plugs.Properties
         }
         public BagDefinition(string propertyName, Attribute[] attributes)
         {
-            DefaultValue = default(T);
+            defaultValue = default(T);
             if (attributes != null)
             { // check for A default value
                 foreach (var attrib in attributes)
@@ -83,12 +85,12 @@ namespace SDBees.Plugs.Properties
     DefaultValueAttribute;
                     if (defAttrib != null)
                     {
-                        DefaultValue = (T)defAttrib.Value;
+                        defaultValue = (T)defAttrib.Value;
                         break;
                     }
                 }
             }
-            Property = new BagPropertyDescriptor(propertyName, attributes);
+            property = new BagPropertyDescriptor(propertyName, attributes);
         }
         
         internal class BagPropertyDescriptor : PropertyDescriptor
@@ -111,10 +113,14 @@ namespace SDBees.Plugs.Properties
             {
                 get { return typeof(Bag); }
             }
-            public override Type PropertyType { get; } = typeof(T);
-
-            public override bool IsReadOnly { get; } = false;
-
+            public override Type PropertyType
+            {
+                get { return typeof(T); }
+            }
+            public override bool IsReadOnly
+            {
+                get { return false; }
+            }
             public override bool CanResetValue(object component)
             {
                 return true;
@@ -127,8 +133,10 @@ namespace SDBees.Plugs.Properties
             {
                 return !GetBagValue(component).IsDefaultValue;
             }
-            public override bool SupportsChangeEvents { get; } = true;
-
+            public override bool SupportsChangeEvents
+            {
+                get { return true; }
+            }
             public override void AddValueChanged(object component,
     EventHandler handler)
             {
@@ -145,7 +153,7 @@ namespace SDBees.Plugs.Properties
     sealed class BagValue<T> : IBagValue, ITypeDescriptorContext
     {
         private T value;
-
+        private readonly IBag bag;
         void IBagValue.ResetValue()
         {
             Value = Definition.DefaultValue;
@@ -158,21 +166,21 @@ namespace SDBees.Plugs.Properties
                     Definition.DefaultValue);
             }
         }
-
-        public IBag Bag { get; }
-        public BagDefinition<T> Definition { get; }
-
+        private readonly BagDefinition<T> definition;
+        public IBag Bag { get { return bag; } }
+        public BagDefinition<T> Definition { get { return definition; } }
         public BagValue(IBag bag, BagDefinition<T> definition)
         {
+            if (bag == null) throw new ArgumentNullException("bag");
             if (definition == null) throw new
-    ArgumentNullException(nameof(definition));
-            Bag = bag ?? throw new ArgumentNullException(nameof(bag));
-            Definition = definition;
+    ArgumentNullException("definition");
+            this.bag = bag;
+            this.definition = definition;
             Value = Definition.DefaultValue;
         }
         public T Value
         {
-            get => value;
+            get { return value; }
             set
             {
                 if (EqualityComparer<T>.Default.Equals(Value, value))
@@ -189,8 +197,8 @@ namespace SDBees.Plugs.Properties
         }
         object IBagValue.Value
         {
-            get => Value;
-            set => Value = (T)value;
+            get { return Value; }
+            set { Value = (T)value; }
         }
 
         IContainer ITypeDescriptorContext.Container

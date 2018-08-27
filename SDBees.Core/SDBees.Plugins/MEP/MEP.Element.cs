@@ -22,10 +22,25 @@
 //
 // #EndHeader# ================================================================
 using System;
+using System.Collections.Generic;
+
+using System.Diagnostics;
+using System.Reflection;
+
+using System.Data;
+
+using System.Text;
 using System.Drawing;
+using System.Windows.Forms;
+
+using Carbon;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
+
+using SDBees.Plugs.Attributes;
+using SDBees.Main.Window;
 using SDBees.DB;
+using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Core.Model;
 
 namespace SDBees.Core.Plugins.MEP.Element
@@ -42,10 +57,10 @@ namespace SDBees.Core.Plugins.MEP.Element
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
     [PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
-    [PluginDependency(typeof(SDBeesDBConnection))]
-    [PluginDependency(typeof(Global.GlobalManager))]
+    [PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
+    [PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
 
-    public class MEPElement : Plugs.TemplateTreeNode.TemplateTreenode
+    public class MEPElement : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
     {
         private static MEPElement _theInstance;
 
@@ -83,7 +98,7 @@ namespace SDBees.Core.Plugins.MEP.Element
             {
                 Console.WriteLine("HVAC Element Plugin starts\n");
 
-                StartMe(context, e);
+                this.StartMe(context, e);
 
                 InitDatabase();
             }
@@ -119,7 +134,7 @@ namespace SDBees.Core.Plugins.MEP.Element
             return MEPElementBaseData.gTable;
         }
 
-        public override Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
+        public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
         {
             return new MEPElementBaseData();
         }
@@ -131,7 +146,7 @@ namespace SDBees.Core.Plugins.MEP.Element
 
         public override SDBeesEntityDefinition GetEntityDefinition()
         {
-            return base.GetEntityDefinition(GetType());
+            return base.GetEntityDefinition(this.GetType());
         }
 
         protected override void OnDatabaseChanged(object sender, EventArgs e)
@@ -146,12 +161,12 @@ namespace SDBees.Core.Plugins.MEP.Element
             {
                 // Verify that the required Tables are created/updated in the database
                 var database = MyDBManager.Database;
-                CreateDataObject().InitTableSchema(ref MEPElementBaseData.gTable, database);
+                this.CreateDataObject().InitTableSchema(ref MEPElementBaseData.gTable, database);
             }
         }
     }
 
-    public class MEPElementBaseData : Plugs.TemplateBase.TemplateDBBaseData
+    public class MEPElementBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
     {
         #region Private Data Members
 
@@ -171,7 +186,7 @@ namespace SDBees.Core.Plugins.MEP.Element
         public MEPElementBaseData() :
             base("Elementname", "MEP element", "General")
         {
-            Table = gTable;
+            base.Table = gTable;
         }
 
         #endregion

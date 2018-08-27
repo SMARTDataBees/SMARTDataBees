@@ -58,7 +58,7 @@ namespace SDBees.DB.Generic
         {
             ServerConfigItem res = null;
 
-            if (!string.IsNullOrEmpty(SelectedItemGuid))
+            if (!String.IsNullOrEmpty(SelectedItemGuid))
             {
                 foreach (var item in mConfigItems)
                 {
@@ -126,7 +126,7 @@ namespace SDBees.DB.Generic
         {
             ServerConfigItem res = null;
 
-            if (!string.IsNullOrEmpty(SelectedItemGuid))
+            if (!String.IsNullOrEmpty(SelectedItemGuid))
             {
                 foreach (var item in mConfigItems)
                 {
@@ -225,12 +225,16 @@ namespace SDBees.DB.Generic
             var replace = false;
 
             var _title = ConfigurationManager.AppSettings["MainWindowTitle"];
-            if (!string.IsNullOrEmpty(_title))
+            if (!String.IsNullOrEmpty(_title))
             {
                 replace = true;
             }
 
-            var inf = replace ? new FileInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), _title + "\\DemoData\\DemoDb.s3db")) : new FileInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SMARTDataBees\\DemoData\\DemoDb.s3db"));
+            FileInfo inf = null;
+            if(replace)
+                inf = new FileInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), _title + "\\DemoData\\DemoDb.s3db"));
+            else
+                inf = new FileInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SMARTDataBees\\DemoData\\DemoDb.s3db"));
 
             return inf.FullName;
         }
@@ -320,7 +324,7 @@ namespace SDBees.DB.Generic
         {
             //Load expected window title
             var _title = ConfigurationManager.AppSettings["MainWindowTitle"];
-            if (!string.IsNullOrEmpty(_title))
+            if (!String.IsNullOrEmpty(_title))
             {
                 return _title;
             }
@@ -371,12 +375,14 @@ namespace SDBees.DB.Generic
 
         private static void CreateMandatorConfig(bool createDefaults = true)
         {
-            var configuration = new ServerConfig {ConfigSaveDate = DateTime.Now};
+            var cfg = new ServerConfig();
+            cfg.ConfigSaveDate = DateTime.Now;
 
             if(createDefaults)
-                configuration.AddDefaultItem();
+                cfg.AddDefaultItem();
 
-            ObjectXMLSerializer<ServerConfig>.Save(configuration, GetMandatorConfigFile(), Encoding.UTF8);
+
+            ObjectXMLSerializer<ServerConfig>.Save(cfg, GetMandatorConfigFile(), Encoding.UTF8);
         }
     }
 }

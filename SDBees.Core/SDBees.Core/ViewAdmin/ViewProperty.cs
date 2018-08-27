@@ -23,12 +23,11 @@
 
 using System;
 using System.Collections;
-using System.Linq;
 using SDBees.DB;
 using SDBees.Plugs.TemplateBase;
 using Attribute = SDBees.DB.Attribute;
 
-namespace SDBees.Core.Admin
+namespace SDBees.ViewAdmin
 {
     /// <summary>
     /// Database resident object representing the view properties. For each view there is
@@ -50,13 +49,13 @@ namespace SDBees.Core.Admin
         public string ViewName
         {
             get { return (string)GetPropertyByColumn("viewname"); }
-            set => SetPropertyByColumn("viewname", value);
+            set { SetPropertyByColumn("viewname", value); }
         }
 
         public Guid ViewId
         {
-            get => new Guid(Id.ToString());
-            set => Id = value.ToString();
+            get { return new Guid(Id.ToString()); }
+            set { Id = value.ToString(); }
         }
 
         /// <summary>
@@ -64,11 +63,23 @@ namespace SDBees.Core.Admin
         /// </summary>
         public string ViewDescription
         {
-            get => (string)GetPropertyByColumn("viewdescription");
-            set => SetPropertyByColumn("viewdescription", value);
+            get { return (string)GetPropertyByColumn("viewdescription"); }
+            set { SetPropertyByColumn("viewdescription", value); }
         }
 
-        public override string GetTableName => "usrViewProperties";
+
+        public string idSdBees
+        {
+            get { return (string)GetPropertyByColumn("id_sdbees"); }
+            set { SetPropertyByColumn("id_sdbees", value); }
+        }
+
+
+        public override string GetTableName
+        {
+            get { return "usrViewProperties"; }
+        }
+
 
         #endregion
 
@@ -146,8 +157,7 @@ namespace SDBees.Core.Admin
         {
             var result = Guid.Empty;
 
-            var column = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals("viewname"));
-            var attribute = new Attribute(column, name);
+            var attribute = new Attribute(gTable.Columns["viewname"], name);
             var criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
             ArrayList objectIds = null;
             if (database.Select(gTable, gTable.PrimaryKey, criteria, ref objectIds, ref error) > 0)
@@ -165,7 +175,7 @@ namespace SDBees.Core.Admin
         /// <param name="viewDefinitions">Returned array of view definitions</param>
         /// <param name="error">Contains error information if this fails</param>
         /// <returns>Number of found entries</returns>
-        public int GetChildren (string parentType, ref ArrayList viewDefinitions, ref Error error)
+        public int GetChildren(string parentType, ref ArrayList viewDefinitions, ref Error error)
         {
             viewDefinitions = new ArrayList();
 
