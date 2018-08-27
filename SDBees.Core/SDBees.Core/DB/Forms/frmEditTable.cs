@@ -160,10 +160,10 @@ namespace SDBees.DB
             string columnName;
             var displayName = "";
             bool nameInUse;
-            var index = 1;
+            var index = 0;
             do
             {
-                columnName = "Eigenschaft" + index;
+                columnName = "Eigenschaft" + ++index;
                 var column = mTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(columnName));
                 nameInUse = column != null;    
             } while (nameInUse);

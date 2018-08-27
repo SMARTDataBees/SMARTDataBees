@@ -178,7 +178,7 @@ namespace SDBees.DB.SQLite
             {
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 // Add this error to the list...
                 var myError = new Error(ex.Message, 9999, GetType(), error);
@@ -297,7 +297,7 @@ namespace SDBees.DB.SQLite
             Error _error = null;
             //this.Open(this,true, ref _error);
             var _lstTblNames = new ArrayList();
-            Database.TableNames(ref _lstTblNames, ref  _error);
+            Database.TableNames(ref _lstTblNames, ref _error);
 
             //this.DbConnection.
             foreach (string sTblName in _lstTblNames)
@@ -369,33 +369,32 @@ namespace SDBees.DB.SQLite
 
             if (mDbConnection != null)
             {
-                var specifications = "";
-
+                var addColumnQuery = "";
+           
                 // First check for new and modified columns...
                 foreach (var column in table.Columns)
                 {
-                  
+
                     var columnDefinition = GetColumnDefinition(column);
 
 
                     var clm = oldTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(column.Name));
                     if (clm == null)
                     {
-                        // This is a new column...
-                        if (specifications != "")
-                        {
-                            specifications += ", ";
-                        }
-
                         if (table.PrimaryKey == column.Name)
                         {
                             columnDefinition += " PRIMARY KEY";
                         }
 
-                        specifications += " ADD " + columnDefinition;
+                        addColumnQuery = " ALTER TABLE "
+                                  + table.Name 
+                                  + " ADD " + columnDefinition + ";";
+                        success |= ExecuteCommand(addColumnQuery, ref error);
                     }
                 }
 
+
+                var dropColumnQuery = "";
                 // second step columns to drop
                 foreach (var column in oldTable.Columns)
                 {
@@ -403,24 +402,12 @@ namespace SDBees.DB.SQLite
                     var clm = table.Columns.FirstOrDefault(clmn => clmn.Name.Equals(column.Name));
                     if (clm == null)
                     {
-                        if (specifications != "")
-                        {
-                            specifications += ", ";
-                        }
 
-                        specifications += " DROP " + column.Name;
+                        dropColumnQuery = " ALTER TABLE "
+                                + table.Name
+                                + " DROP " + column.Name + ";";
+                        success |= ExecuteCommand(dropColumnQuery, ref error);
                     }
-                }
-
-                if (!string.IsNullOrEmpty(specifications))
-                {
-                    var cmdString = "ALTER TABLE " + table.Name + specifications;
-
-                    success = ExecuteCommand(cmdString, ref error);
-                }
-                else
-                {
-                    success = true;
                 }
             }
 
