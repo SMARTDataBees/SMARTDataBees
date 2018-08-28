@@ -158,7 +158,7 @@ namespace SDBees
 
                 m_children = new List<Node>();
 
-                m_level = m_parent?.Level + 1 ?? 0;
+                m_level = (m_parent == null) ? 0 : m_parent.Level + 1;
             }
 
             public Node Parent
@@ -339,7 +339,9 @@ namespace SDBees
 
             public void AddFunction(string name, long count, long time)
             {
-                m_functions.TryGetValue(name, out var function);
+                Function function = null;
+
+                m_functions.TryGetValue(name, out function);
 
                 if (function == null)
                 {
@@ -513,7 +515,10 @@ namespace SDBees
             {
                 var node = s_nodeStack.Peek();
 
-                node?.Log(message);
+                if (node != null)
+                {
+                    node.Log(message);
+                }
             }
         }
 

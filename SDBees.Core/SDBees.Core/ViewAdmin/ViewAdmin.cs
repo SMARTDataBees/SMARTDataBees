@@ -23,8 +23,8 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Windows.Forms;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
@@ -37,7 +37,7 @@ using SDBees.Plugs.TreenodeHelper;
 using Attribute = SDBees.DB.Attribute;
 using Object = SDBees.DB.Object;
 
-namespace SDBees.Core.Admin
+namespace SDBees.ViewAdmin
 {
     /// <summary>
     /// ViewAdmin
@@ -59,7 +59,7 @@ namespace SDBees.Core.Admin
         private static ViewAdmin _theInstance;
         private readonly MenuItem _mnuItemViewAdmin;
         private readonly ToolStripComboBox _puViewSelector;
-        private AdminDialog _dlgViewAdmin;
+        private ViewAdminDLG _dlgViewAdmin;
         private Guid _curViewId;
         private ViewRelationTreeView _treeView;
         private ViewRelationTreeDLG _viewRelDLG;
@@ -152,7 +152,7 @@ namespace SDBees.Core.Admin
                     var delegator = new ViewAdminDelegator(MyDBManager);
                 }
 
-                _dlgViewAdmin = new AdminDialog(this);
+                _dlgViewAdmin = new ViewAdminDLG(this);
 
                 //Setting up the menuitem
                 if (MyMainWindow != null)
@@ -428,7 +428,7 @@ namespace SDBees.Core.Admin
             get { return _context; }
         }
 
-        public AdminDialog MyDialog
+        public ViewAdminDLG MyDialog
         {
             get { return _dlgViewAdmin; }
         }
@@ -619,8 +619,7 @@ namespace SDBees.Core.Admin
             Error error = null;
 
             var viewprop = new ViewProperty();
-            var column = viewprop.Table.Columns.FirstOrDefault(clmn => clmn.Name.Equals("viewname"));
-            var attViewProp = new Attribute(column, nameOfViewProperty);
+            var attViewProp = new Attribute(viewprop.Table.Columns["viewname"], nameOfViewProperty);
             var criteria = MyDBManager.Database.FormatCriteria(attViewProp, DbBinaryOperator.eIsEqual, ref error);
 
             ArrayList objectIds = null;
@@ -632,7 +631,7 @@ namespace SDBees.Core.Admin
             // create a new viewprop
             viewprop.SetDefaults(MyDBManager.Database);
             viewprop.SetPropertyByColumn("viewname", nameOfViewProperty);
-            viewprop.SetPropertyByColumn("viewdescription", string.Format("view automatically created by plugin {0}", typeOfPlugin));
+            viewprop.SetPropertyByColumn("viewdescription", String.Format("view automatically created by plugin {0}", typeOfPlugin));
             viewprop.Save(ref error);
 
             // define the viewrelations from structure

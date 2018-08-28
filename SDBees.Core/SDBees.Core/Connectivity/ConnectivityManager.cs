@@ -25,11 +25,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Windows.Forms;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
-using SDBees.Core.Admin;
 using SDBees.Core.Connectivity.SDBeesLink;
 using SDBees.Core.Connectivity.SDBeesLink.Service;
 using SDBees.Core.Global;
@@ -39,6 +37,7 @@ using SDBees.DB;
 using SDBees.Main.Window;
 using SDBees.Plugs.TemplateBase;
 using SDBees.Plugs.TemplateTreeNode;
+using SDBees.ViewAdmin;
 using Attribute = SDBees.DB.Attribute;
 using DbType = SDBees.DB.DbType;
 using Object = SDBees.DB.Object;
@@ -59,7 +58,7 @@ namespace SDBees.Core.Connectivity
     {
         private static ConnectivityManager _theInstance;
         private PluginContext m_context;
-        private ViewAdmin m_viewAdmin;
+        private ViewAdmin.ViewAdmin m_viewAdmin;
         private ProcessIcon _processIcon;
         private bool m_ready;
 
@@ -107,8 +106,7 @@ namespace SDBees.Core.Connectivity
         {
             try
             {
-                Console.WriteLine(@"ConnectivityManager starts
-");
+                Console.WriteLine("ConnectivityManager starts\n");
                 m_context = context;
 
                 //m_context.BeforePluginsStopped += _context_BeforePluginsStopped;
@@ -117,9 +115,9 @@ namespace SDBees.Core.Connectivity
                 InitDatabase();
 
                 //Das Viewadmin Plugin besorgen
-                if (context.PluginDescriptors.Contains(new PluginDescriptor(typeof(ViewAdmin))))
+                if (context.PluginDescriptors.Contains(new PluginDescriptor(typeof(ViewAdmin.ViewAdmin))))
                 {
-                    m_viewAdmin = (ViewAdmin)context.PluginDescriptors[typeof(ViewAdmin)].PluginInstance;
+                    m_viewAdmin = (ViewAdmin.ViewAdmin)context.PluginDescriptors[typeof(ViewAdmin.ViewAdmin)].PluginInstance;
                 }
 
                 //Das Viewadmin Plugin besorgen
@@ -152,7 +150,7 @@ namespace SDBees.Core.Connectivity
         /// <param name="e"></param>
         protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
         {
-            Console.WriteLine(@"ConnectivityManager stops ...");
+            Console.WriteLine("ConnectivityManager stops ...");
         }
 
         public override Table MyTable()
@@ -175,7 +173,10 @@ namespace SDBees.Core.Connectivity
             return new ConnectivityManagerAlienBaseData();
         }
 
-        public override TemplatePlugin GetPlugin() => _theInstance;
+        public override TemplatePlugin GetPlugin()
+        {
+            return _theInstance;
+        }
 
         static Hashtable m_connectedClients = new Hashtable();
         public Hashtable ConnectedClients
@@ -237,13 +238,15 @@ namespace SDBees.Core.Connectivity
             }
         }
 
-        internal SDBeesExternalDocument DocumentGet(SDBeesExternalDocument document)
+        internal SDBeesExternalDocument DocumentGet(SDBeesExternalDocument doc)
         {
-            Error error = null;
+            Error _error = null;
 
-            var doc = ConnectivityManagerDocumentBaseData.DocumentGet(document, ref error);
-            Error.Display("Document get errors", error);
-            return doc;
+            var _doc = ConnectivityManagerDocumentBaseData.DocumentGet(doc, ref _error);
+
+            Error.Display("Document get errors", _error);
+
+            return _doc;
         }
 
         internal SDBeesExternalDocument DocumentRegister(SDBeesExternalDocument doc, string pluginId, string roleId)
@@ -478,7 +481,7 @@ namespace SDBees.Core.Connectivity
                             var plug = TemplateTreenode.GetPluginForType(elem.DefinitionId.Id);
                             if (plug != null)
                             {
-                                if (!string.IsNullOrEmpty(elem.Id.ToString()))
+                                if (!String.IsNullOrEmpty(elem.Id.ToString()))
                                 {
                                     //TBD : Object exists in db, we have to add a new alien id
                                     var dataObj = plug.CreateDataObject();
@@ -713,12 +716,12 @@ namespace SDBees.Core.Connectivity
 
         public static void SetObjectData(ref Error _error, SDBeesEntity elem, TemplateDBBaseData dataObj)
         {
-            if (!string.IsNullOrEmpty(elem.InstanceId.Id))
+            if (!String.IsNullOrEmpty(elem.InstanceId.Id))
                 dataObj.SetPropertyByColumn(Object.m_IdSDBeesColumnName, elem.InstanceId.Id);
 
             foreach (var prp in elem.Properties)
             {
-                foreach (var col in dataObj.Table.Columns)
+                foreach (var col in dataObj.Table.Columns.Values)
                 {
                     if (col.Name == prp.DefinitionId)
                     {
@@ -754,7 +757,7 @@ namespace SDBees.Core.Connectivity
                 SDBees.Profiler.Start("ConnectivityManager.RelationsAddChild.1");
 #endif
 
-                if ((relation.AlienSourceId != null) && !string.IsNullOrEmpty(relation.AlienSourceId.AlienInstanceId.ToString()))
+                if ((relation.AlienSourceId != null) && !String.IsNullOrEmpty(relation.AlienSourceId.AlienInstanceId.ToString()))
                 {
                     if (_newObjects.ContainsKey(relation.AlienSourceId.AlienInstanceId.ToString()))
                     {
@@ -1024,10 +1027,10 @@ namespace SDBees.Core.Connectivity
 
         private static bool GetDocumentRootAndTypeInteractive(ref TemplateDBBaseData rootDocData)
         {
-            if (ViewAdmin.Current.MyViewRelationWindow().ShowDialog() == DialogResult.OK)
+            if (ViewAdmin.ViewAdmin.Current.MyViewRelationWindow().ShowDialog() == DialogResult.OK)
             {
-                rootDocData.SetPropertyByColumn(m_DocumentRootColumnName, ViewAdmin.Current.MyViewRelationWindow().TagSelected.NodeGUID);
-                rootDocData.SetPropertyByColumn(m_DocumentRootTypeColumnName, ViewAdmin.Current.MyViewRelationWindow().TagSelected.NodeTypeOf);
+                rootDocData.SetPropertyByColumn(m_DocumentRootColumnName, ViewAdmin.ViewAdmin.Current.MyViewRelationWindow().TagSelected.NodeGUID);
+                rootDocData.SetPropertyByColumn(m_DocumentRootTypeColumnName, ViewAdmin.ViewAdmin.Current.MyViewRelationWindow().TagSelected.NodeTypeOf);
                 return true;
             }
             return false;
@@ -1035,8 +1038,7 @@ namespace SDBees.Core.Connectivity
 
         internal static TemplateDBBaseData GetDocumentData(string docid, ref Error _error)
         {
-            var column = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_IdSDBeesColumnName));
-            var attDocRoot = new Attribute(column, docid);
+            var attDocRoot = new Attribute(gTable.Columns[m_IdSDBeesColumnName], docid);
             var criteria = ConnectivityManager.Current.MyDBManager.Database.FormatCriteria(attDocRoot, DbBinaryOperator.eIsEqual, ref _error);
 
             ArrayList objectIds = null;
@@ -1060,8 +1062,7 @@ namespace SDBees.Core.Connectivity
         /// <returns></returns>
         internal static bool DocumentFound(SDBeesExternalDocument doc, ref Error error, ref int count, ref ArrayList objectIds)
         {
-            var column = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_DocumentAssignmentColumnName));
-            var attParent = new Attribute(column, doc.DocOriginalName);
+            var attParent = new Attribute(gTable.Columns[m_DocumentFileColumnName], doc.DocOriginalName);
             var criteria = ConnectivityManager.Current.MyDBManager.Database.FormatCriteria(attParent, DbBinaryOperator.eIsEqual, ref error);
 
             count = ConnectivityManager.Current.MyDBManager.Database.Select(gTable, gTable.PrimaryKey, criteria, ref objectIds, ref error);
@@ -1072,8 +1073,7 @@ namespace SDBees.Core.Connectivity
 
         public static bool DocumentFound(string sdbeesid, ref Error error, ref int count, ref ArrayList objectIds)
         {
-            var column = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_DocumentAssignmentColumnName));
-            var attParent = new Attribute(column, sdbeesid);
+            var attParent = new Attribute(gTable.Columns[m_IdSDBeesColumnName], sdbeesid);
             var criteria = ConnectivityManager.Current.MyDBManager.Database.FormatCriteria(attParent, DbBinaryOperator.eIsEqual, ref error);
 
             count = ConnectivityManager.Current.MyDBManager.Database.Select(gTable, gTable.PrimaryKey, criteria, ref objectIds, ref error);
@@ -1183,24 +1183,23 @@ namespace SDBees.Core.Connectivity
         {
             base.InitTableSchema(ref table, database);
             //required columns
-            AddColumn(new Column(m_DocumentFileColumnName, DbType.String, m_DocumentFileDisplayName, "The filename of the external document", "ProjectInfo", 250, "", 0) { IsEditable = false }, database);
+            AddColumn(new Column(m_DocumentFileColumnName, DbType.String, m_DocumentFileDisplayName, "The filename of the external document", "ProjectInfo", 250, "", 0) { Editable = false }, database);
 
             var appCol = new Column(m_DocumentAssignmentColumnName, DbType.String, m_DocumentAssignmentDisplayName, "The assignment for this document", "ProjectInfo", 250, "", 0);
             appCol.Flags |= (int)DbFlags.eAllowNull;
             AddColumn(appCol, database);
 
-            AddColumn(new Column(m_ApplicationColumnName, DbType.String, m_ApplicationDisplayName, "The application that created the external document", "ProjectInfo", 250, "", 0) { IsEditable = false, IsBrowsable = false }, database);
-            AddColumn(new Column(m_RoleIdColumnName, DbType.String, m_RoleIdDisplayName, "The role id for the external document", "ProjectInfo", 250, "", 0) { IsBrowsable = false, IsEditable = false }, database);
-            AddColumn(new Column(m_DocumentRootColumnName, DbType.String, m_DocumentRootDisplayName, "The root id for the external document", "ProjectInfo", 250, "", 0) { IsEditable = false, IsBrowsable = false }, database);
-            AddColumn(new Column(m_DocumentRootTypeColumnName, DbType.String, m_DocumentRootTypeDisplayName, "The root type for the external document", "ProjectInfo", 250, "", 0) { IsEditable = false, IsBrowsable = false }, database);
-            AddColumn(new Column(m_DocumentCADInfoColumnName, DbType.String, m_DocumentCADInfoDisplayName, "The units and coordinates used in the bim software", "ProjectInfo", 2000, "", 0) { Flags = (int)DbFlags.eAllowNull, IsEditable = false, IsBrowsable = false }, database);
+            AddColumn(new Column(m_ApplicationColumnName, DbType.String, m_ApplicationDisplayName, "The application that created the external document", "ProjectInfo", 250, "", 0) { Editable = false, Browsable = false }, database);
+            AddColumn(new Column(m_RoleIdColumnName, DbType.String, m_RoleIdDisplayName, "The role id for the external document", "ProjectInfo", 250, "", 0) { Browsable = false, Editable = false }, database);
+            AddColumn(new Column(m_DocumentRootColumnName, DbType.String, m_DocumentRootDisplayName, "The root id for the external document", "ProjectInfo", 250, "", 0) { Editable = false, Browsable = false }, database);
+            AddColumn(new Column(m_DocumentRootTypeColumnName, DbType.String, m_DocumentRootTypeDisplayName, "The root type for the external document", "ProjectInfo", 250, "", 0) { Editable = false, Browsable = false }, database);
+            AddColumn(new Column(m_DocumentCADInfoColumnName, DbType.String, m_DocumentCADInfoDisplayName, "The units and coordinates used in the bim software", "ProjectInfo", 2000, "", 0) { Flags = (int)DbFlags.eAllowNull, Editable = false, Browsable = false }, database);
         }
         #endregion
 
         internal static bool GetDocumentsByAssignedSubContractor(string p, ref Error _error, ref ArrayList _objDocIds)
         {
-            var column = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_DocumentAssignmentColumnName));
-            var attParent = new Attribute(column, p);
+            var attParent = new Attribute(gTable.Columns[m_DocumentAssignmentColumnName], p);
             var criteria = ConnectivityManager.Current.MyDBManager.Database.FormatCriteria(attParent, DbBinaryOperator.eIsEqual, ref _error);
             var count = 0;
 
@@ -1265,8 +1264,7 @@ namespace SDBees.Core.Connectivity
         public static bool GetAlienIdsByDocumentSDBeesId(string idSDBeesDoc, ref Error _error, ref ArrayList objectIds)
         {
             var count = 0;
-            var column = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_AlienDocumentIdColumnName));
-            var attParent = new Attribute(column, idSDBeesDoc);
+            var attParent = new Attribute(gTable.Columns[m_AlienDocumentIdColumnName], idSDBeesDoc);
             var criteria = ConnectivityManager.Current.MyDBManager.Database.FormatCriteria(attParent, DbBinaryOperator.eIsEqual, ref _error);
 
             count = ConnectivityManager.Current.MyDBManager.Database.Select(gTable, gTable.PrimaryKey, criteria, ref objectIds, ref _error);
@@ -1277,8 +1275,7 @@ namespace SDBees.Core.Connectivity
 
         public static bool GetAlienIdsByDbId(string idDb, ref Error _error, ref ArrayList objectIds)
         {
-            var column = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_AlienInternalDBElementIdColumnName));
-            var attParent = new Attribute(column, idDb);
+            var attParent = new Attribute(gTable.Columns[m_AlienInternalDBElementIdColumnName], idDb);
             var criteria = ConnectivityManager.Current.MyDBManager.Database.FormatCriteria(attParent, DbBinaryOperator.eIsEqual, ref _error);
             var count = 0;
 

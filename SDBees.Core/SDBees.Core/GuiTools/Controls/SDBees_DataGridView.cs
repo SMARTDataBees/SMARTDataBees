@@ -257,7 +257,7 @@ namespace SDBees.GuiTools.Controls
 
         private void LoadSortInformations()
         {
-            if (gfDataGridViewSetting.Default.ActiveSortColumn != null && !string.IsNullOrEmpty(gfDataGridViewSetting.Default.ActiveSortColumn))
+            if (gfDataGridViewSetting.Default.ActiveSortColumn != null && !String.IsNullOrEmpty(gfDataGridViewSetting.Default.ActiveSortColumn))
             {
                 if (Columns.Contains(gfDataGridViewSetting.Default.ActiveSortColumn))
                 {

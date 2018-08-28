@@ -22,7 +22,6 @@
 // #EndHeader# ================================================================
 
 using System.Collections;
-using System.Linq;
 
 namespace SDBees.DB
 {
@@ -144,9 +143,7 @@ namespace SDBees.DB
             var database = server.SecurityDatabase;
 
             var baseData = new UserBaseData();
-
-            var column = baseData.Table.Columns.FirstOrDefault(clmn => clmn.Name.Equals("loginname"));
-            var attribute = new Attribute(column, loginName);
+            var attribute = new Attribute(baseData.Table.Columns["loginname"], loginName);
             var criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
 
             var values = new ArrayList();
@@ -171,10 +168,12 @@ namespace SDBees.DB
         /// <returns></returns>
         public static int GetAllLogins(Server server, ref ArrayList loginNames)
         {
+            var loginCount = 0;
+
             Error error = null;
             var baseData = new UserBaseData();
 
-            var loginCount = server.SecurityDatabase.Select(baseData.Table, "loginname", ref loginNames, ref error);
+            loginCount = server.SecurityDatabase.Select(baseData.Table, "loginname", ref loginNames, ref error);
 
             Error.Display("GetAllLogins failed!", error);
 
@@ -190,8 +189,13 @@ namespace SDBees.DB
         /// <returns></returns>
         public static int GetAllLogins(Server server, ref ArrayList loginNames, ref Error error)
         {
+            var loginCount = 0;
+
             var baseData = new UserBaseData();
-            return server.SecurityDatabase.Select(baseData.Table, "loginname", ref loginNames, ref error);
+
+            loginCount = server.SecurityDatabase.Select(baseData.Table, "loginname", ref loginNames, ref error);
+
+            return loginCount;
         }
 
         /// <summary>
@@ -201,6 +205,8 @@ namespace SDBees.DB
         /// <returns>true if successful</returns>
         public bool UpdateAccessRightsOnServer(ref Error error)
         {
+            var success = false;
+
             var server = mBaseData.Database.Server;
 
             if (!server.RemoveAllPrivileges(LoginName, ref error))
@@ -218,7 +224,8 @@ namespace SDBees.DB
                 return true;
             }
 
-            var success = true;
+            success = true;
+
             foreach (var objectId in objectIds)
             {
                 var accessRight = new AccessRights(server, objectId);

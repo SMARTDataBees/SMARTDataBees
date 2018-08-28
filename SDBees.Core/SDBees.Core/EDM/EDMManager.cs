@@ -24,7 +24,6 @@
 using System;
 using System.Collections;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
@@ -166,11 +165,8 @@ namespace SDBees.EDM
         public int FindEDMDatasForObject(Database database, string pluginName, string objectId, ref ArrayList objectIds, ref Error error)
         {
             var table = EDMBaseData.Table;
-              var pluginColumn = table.Columns.FirstOrDefault(clmn => clmn.Name.Equals("plugin"));
-            var attributePlugin = new Attribute(pluginColumn, pluginName);
-
-            var objectIdColumn = table.Columns.FirstOrDefault(clmn => clmn.Name.Equals("object_id"));
-            var attributeObject = new Attribute(objectIdColumn, objectId);
+            var attributePlugin = new Attribute(table.Columns["plugin"], pluginName);
+            var attributeObject = new Attribute(table.Columns["object_id"], objectId);
             var criteria1 = database.FormatCriteria(attributePlugin, DbBinaryOperator.eIsEqual, ref error);
             var criteria2 = database.FormatCriteria(attributeObject, DbBinaryOperator.eIsEqual, ref error);
             var criteria = "(" + criteria1 + ") AND (" + criteria2 + ")";

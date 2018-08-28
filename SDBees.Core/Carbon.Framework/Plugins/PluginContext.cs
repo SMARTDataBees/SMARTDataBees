@@ -564,7 +564,7 @@ namespace Carbon.Plugins
 		{			
 			// ignore the setting if the splash _splashWindow provider's name is empty or equals "none"
 			if (CarbonConfig.SplashWindowProviderName.Length == 0 ||
-				string.Compare(CarbonConfig.SplashWindowProviderName, "None", StringComparison.OrdinalIgnoreCase) == 0)
+				String.Compare(CarbonConfig.SplashWindowProviderName, "None", StringComparison.OrdinalIgnoreCase) == 0)
 				return null;
 
 			// otherwise lookup the _splashWindow provider

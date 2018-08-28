@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections;
-using System.Linq;
 
 namespace SDBees.DB
 {
@@ -163,18 +162,18 @@ namespace SDBees.DB
         /// <summary>
         /// Flags representing the rights explicitly granted
         /// </summary>
-        public int AllowedFlags
+        public Int32 AllowedFlags
         {
-            get { return (int)mBaseData.GetPropertyByColumn("allowflags"); }
+            get { return (Int32)mBaseData.GetPropertyByColumn("allowflags"); }
             set { mBaseData.SetPropertyByColumn("allowflags", value); }
         }
 
         /// <summary>
         /// Flags representing the rights explicitly denied
         /// </summary>
-        public int DeniedFlags
+        public Int32 DeniedFlags
         {
-            get { return (int)mBaseData.GetPropertyByColumn("denyflags"); }
+            get { return (Int32)mBaseData.GetPropertyByColumn("denyflags"); }
             set { mBaseData.SetPropertyByColumn("denyflags", value); }
         }
 
@@ -327,16 +326,17 @@ namespace SDBees.DB
         /// <returns>number of defined access rights</returns>
         public static int GetAccessRightsForUserId(Server server, string userId, ref ArrayList objectIds)
         {
+            var numFound = 0;
+
             Error error = null;
 
             var database = server.SecurityDatabase;
 
             var baseData = new RightsBaseData();
-            var column = baseData.Table.Columns.FirstOrDefault(clmn => clmn.Name.Equals("userid"));
-            var attribute = new Attribute(column, userId);
+            var attribute = new Attribute(baseData.Table.Columns["userid"], userId);
             var criteria = database.FormatCriteria(attribute, DbBinaryOperator.eIsEqual, ref error);
 
-            var numFound = database.Select(baseData.Table, baseData.Table.PrimaryKey, criteria, ref objectIds, ref error);
+            numFound = database.Select(baseData.Table, baseData.Table.PrimaryKey, criteria, ref objectIds, ref error);
 
             Error.Display("GetAccessRightsForUserId failed!", error);
 

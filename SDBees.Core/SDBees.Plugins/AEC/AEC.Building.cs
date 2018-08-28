@@ -22,10 +22,26 @@
 //
 // #EndHeader# ================================================================
 using System;
+using System.Collections;
+using System.Collections.Generic;
+
+using System.Diagnostics;
+using System.Reflection;
+
+using System.Data;
+
+using System.Text;
 using System.Drawing;
+using System.Windows.Forms;
+
+using Carbon;
 using Carbon.Plugins;
 using Carbon.Plugins.Attributes;
+
+using SDBees.Plugs.Attributes;
+using SDBees.Main.Window;
 using SDBees.DB;
+using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Core.Model;
 
 namespace SDBees.Core.Plugins.AEC.Building
@@ -42,13 +58,13 @@ namespace SDBees.Core.Plugins.AEC.Building
 	[PluginManufacturer("CAD-Development")]
 	[PluginVersion("1.0.0")]
 	[PluginDependency(typeof(SDBees.Main.Window.MainWindowApplication))]
-	[PluginDependency(typeof(SDBeesDBConnection))]
-	[PluginDependency(typeof(Global.GlobalManager))]
+	[PluginDependency(typeof(SDBees.DB.SDBeesDBConnection))]
+	[PluginDependency(typeof(SDBees.Core.Global.GlobalManager))]
 
 	//[PluginTypeDef("Treenode")] //The SDBees PluginType
 
 
-	public class AECBuilding : Plugs.TemplateTreeNode.TemplateTreenode
+	public class AECBuilding : SDBees.Plugs.TemplateTreeNode.TemplateTreenode
 	{
 		private static AECBuilding _theInstance;
 
@@ -86,12 +102,15 @@ namespace SDBees.Core.Plugins.AEC.Building
 			{
 				Console.WriteLine("BuildingPlugin starts\n");
 
-				StartMe(context, e);
+				this.StartMe(context, e);
 
 				InitDatabase();
 
 				//setup event listener
-			    MyDBManager?.AddDatabaseChangedHandler(AECBuilding_OnDatabaseChangedHandler);
+				if(this.MyDBManager != null)
+				{
+					this.MyDBManager.AddDatabaseChangedHandler(AECBuilding_OnDatabaseChangedHandler);
+				}
 			}
 			catch (Exception ex)
 			{
@@ -121,7 +140,8 @@ namespace SDBees.Core.Plugins.AEC.Building
 			Console.WriteLine("BuildingPlugin stops\n");
 
 			//remove event listener
-		    MyDBManager?.RemoveDatabaseChangedHandler(AECBuilding_OnDatabaseChangedHandler);
+			if (this.MyDBManager != null)
+				this.MyDBManager.RemoveDatabaseChangedHandler(AECBuilding_OnDatabaseChangedHandler);
 		}
 
 		public override Icon GetIcon(Size size)
@@ -139,24 +159,24 @@ namespace SDBees.Core.Plugins.AEC.Building
 			if (m_DefaultBuilding == null)
 			{
 				m_DefaultBuilding = CreateDataObject() as AECBuildingBaseData;
-				m_DefaultBuilding.SetDefaults(MyDBManager.Database);
+				m_DefaultBuilding.SetDefaults(this.MyDBManager.Database);
 
 				if (m_DefaultBuilding != null)
 				{
-					m_DefaultBuilding.SetPropertyByColumn(Plugs.TemplateBase.TemplateDBBaseData.m_NameColumnName, "Building");
+					m_DefaultBuilding.SetPropertyByColumn(SDBees.Plugs.TemplateBase.TemplateDBBaseData.m_NameColumnName, "Building");
 
-					if (m_DefaultBuilding.Save(MyDBManager.Database, ref _error))
+					if (m_DefaultBuilding.Save(this.MyDBManager.Database, ref _error))
 					{
 						//create relation for view
-						var rel = new Admin.ViewRelation();
-						rel.SetDefaults(MyDBManager.Database);
+						var rel = new ViewAdmin.ViewRelation();
+						rel.SetDefaults(this.MyDBManager.Database);
 						rel.ParentId = Guid.Empty;
-						rel.ParentType =Admin.ViewRelation.m_StartNodeValue;
+						rel.ParentType = ViewAdmin.ViewRelation.m_StartNodeValue;
 						rel.ChildId = Guid.Parse(m_DefaultBuilding.GetPropertyByColumn(SDBees.DB.Object.m_IdColumnName).ToString());
-						rel.ChildName = m_DefaultBuilding.GetPropertyByColumn(Plugs.TemplateBase.TemplateDBBaseData.m_NameColumnName).ToString();
-						rel.ChildType = typeof(AECBuilding).ToString();
+						rel.ChildName = m_DefaultBuilding.GetPropertyByColumn(SDBees.Plugs.TemplateBase.TemplateDBBaseData.m_NameColumnName).ToString();
+						rel.ChildType = typeof(SDBees.Core.Plugins.AEC.Building.AECBuilding).ToString();
 
-						rel.Save(MyDBManager.Database, ref _error);
+						rel.Save(this.MyDBManager.Database, ref _error);
 
 						return m_DefaultBuilding;
 					}
@@ -175,7 +195,7 @@ namespace SDBees.Core.Plugins.AEC.Building
 			return AECBuildingBaseData.gTable;
 		}
 
-		public override Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
+		public override SDBees.Plugs.TemplateBase.TemplateDBBaseData CreateDataObject()
 		{
 			return new AECBuildingBaseData();
 		}
@@ -187,7 +207,7 @@ namespace SDBees.Core.Plugins.AEC.Building
 
 		public override SDBeesEntityDefinition GetEntityDefinition()
 		{
-			return base.GetEntityDefinition(GetType());
+			return base.GetEntityDefinition(this.GetType());
 		}
 
 		protected override void OnDatabaseChanged(object sender, EventArgs e)
@@ -202,7 +222,7 @@ namespace SDBees.Core.Plugins.AEC.Building
 			{
 				// Verify that the required Tables are created/updated in the database
 				var database = MyDBManager.Database;
-				CreateDataObject().InitTableSchema(ref AECBuildingBaseData.gTable, database);
+				this.CreateDataObject().InitTableSchema(ref AECBuildingBaseData.gTable, database);
 			}
 		}
 
@@ -223,7 +243,7 @@ namespace SDBees.Core.Plugins.AEC.Building
 		}
 	}
 
-	public class AECBuildingBaseData : Plugs.TemplateBase.TemplateDBBaseData
+	public class AECBuildingBaseData : SDBees.Plugs.TemplateBase.TemplateDBBaseData
 	{
 		#region Private Data Members
 
@@ -244,7 +264,7 @@ namespace SDBees.Core.Plugins.AEC.Building
 		public AECBuildingBaseData() :
 			base("Buildingname", "Building", "General")
 		{
-			Table = gTable;
+			base.Table = gTable;
 		}
 
 		#endregion

@@ -57,7 +57,14 @@ namespace SDBees.Utils
 
             string path = null;
 
-            path = Path.IsPathRooted(fileName) ? Path.GetDirectoryName(fileName) : Path.Combine(GetTempDir(), Path.GetDirectoryName(fileName));
+            if (Path.IsPathRooted(fileName))
+            {
+                path = Path.GetDirectoryName(fileName);
+            }
+            else
+            {
+                path = Path.Combine(GetTempDir(), Path.GetDirectoryName(fileName));
+            }
 
             if (!Directory.Exists(path))
             {

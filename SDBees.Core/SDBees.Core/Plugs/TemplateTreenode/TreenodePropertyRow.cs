@@ -79,10 +79,16 @@ namespace SDBees.Plugs.TemplateTreeNode
 
         public string GetType()
         {
-            return m_baseData?.GetType().ToString() ?? "";
+            return (m_baseData != null) ? m_baseData.GetType().ToString() : "";
         }
 
-        public object Id => m_baseData?.Id;
+        public object Id
+        {
+            get
+            {
+                return m_baseData != null ? m_baseData.Id : null;
+            }
+        }
 
         public string GetPropertyString(string displayName)
         {
@@ -115,19 +121,20 @@ namespace SDBees.Plugs.TemplateTreeNode
                     m_MapDisplayToDbName = new Hashtable();
 
                     // Dieses ist nur zum testen und sollte aus dem "DB.Object" gefüllt werden.
-                    foreach (var column in table.Columns)
+                    foreach (var iterator in table.Columns)
                     {
+                        var column = iterator.Value;
                         var columnType = column.GetTypeForColumn();
                         PropertySpec ps = null;
                         if ((column.SelectionList != null) && (columnType == typeof(string)))
                         {
                             ps = new PropertySpecListbox(column.DisplayName, columnType, column.Category, column.Description, null, column.SelectionList);
                         }
-                        else if ((!string.IsNullOrEmpty(column.UITypeConverter)) && (!string.IsNullOrEmpty(column.UITypeEditor)))
+                        else if ((!String.IsNullOrEmpty(column.UITypeConverter)) && (!String.IsNullOrEmpty(column.UITypeEditor)))
                         {
                             ps = new PropertySpec(column.DisplayName, columnType, column.Category, column.Description, null, column.UITypeEditor, column.UITypeConverter);
                         }
-                        else if ((!string.IsNullOrEmpty(column.UITypeConverter)) && (string.IsNullOrEmpty(column.UITypeEditor)))
+                        else if ((!String.IsNullOrEmpty(column.UITypeConverter)) && (String.IsNullOrEmpty(column.UITypeEditor)))
                         {
                             ps = new PropertySpec(column.DisplayName, columnType, column.Category, column.Description, null, column.UITypeConverter);
                         }
@@ -137,8 +144,8 @@ namespace SDBees.Plugs.TemplateTreeNode
                         }
                         if (ps != null)
                         {
-                            ps.ReadOnlyProperty = column.IsEditable ? false : true;
-                            ps.BrowsableProperty = column.IsBrowsable ? true : false;
+                            ps.ReadOnlyProperty = column.Editable ? false : true;
+                            ps.BrowsableProperty = column.Browsable ? true : false;
 
                             //ps.Attributes = new List<System.Attribute>();
                             //if (!column.Editable)
@@ -237,9 +244,9 @@ namespace SDBees.Plugs.TemplateTreeNode
                 if (e.UpdateProperties)
                     UpdateProperties();
 
-                if ((error == null))
+                if ((error == null) && (m_Treenode != null))
                 {
-                    m_Treenode?.RaiseObjectModified(m_baseData, m_Tag);
+                    m_Treenode.RaiseObjectModified(m_baseData, m_Tag);
                 }
             }
         }
@@ -304,9 +311,9 @@ namespace SDBees.Plugs.TemplateTreeNode
 
                 if (updateProperties) UpdateProperties();
 
-                if ((error == null))
+                if ((error == null) && (m_Treenode != null))
                 {
-                    m_Treenode?.RaiseObjectModified(m_baseData, m_Tag);
+                    m_Treenode.RaiseObjectModified(m_baseData, m_Tag);
                 }
             }
             else
@@ -317,8 +324,22 @@ namespace SDBees.Plugs.TemplateTreeNode
 
         public bool Buffered
         {
-            get => m_updates != null;
-            set => m_updates = value ? new List<PropertySpecEventArgs>() : null;
+            get
+            {
+                return m_updates != null;
+            }
+            set
+            {
+                if (value)
+                {
+                    m_updates = new List<PropertySpecEventArgs>();
+                }
+                else
+                {
+                    m_updates = null;
+                }
+            }
+
         }
 
         public void SetPropertyManually(PropertySpecEventArgs e)

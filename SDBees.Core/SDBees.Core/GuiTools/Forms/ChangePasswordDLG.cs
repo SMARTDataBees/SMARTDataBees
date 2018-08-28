@@ -26,26 +26,34 @@ using System.Windows.Forms;
 
 namespace SDBees.GuiTools
 {
-    /// <inheritdoc />
-    public partial class ChangePasswordDialog : Form
+    /// <summary>
+    /// 
+    /// </summary>
+    public partial class ChangePasswordDLG : Form
     {
-        private string _currentPassword;
-        private string _newPassword;
+        private string mOldPassword;
+        private string mNewPassword;
 
         /// <summary>
-        /// Returns the current password
+        /// Returns the old password that the user typed in
         /// </summary>
-        public string CurrentPassword => _currentPassword;
+        public string OldPassword
+        {
+            get { return mOldPassword; }
+        }
 
         /// <summary>
-        /// Returns the new password
+        /// Returns the new password the user typed in and confirmed
         /// </summary>
-        public string NewPassword => _newPassword;
+        public string NewPassword
+        {
+            get { return mNewPassword; }
+        }
 
         /// <summary>
         /// Standard constructor
         /// </summary>
-        public ChangePasswordDialog()
+        public ChangePasswordDLG()
         {
             InitializeComponent();
         }
@@ -53,21 +61,22 @@ namespace SDBees.GuiTools
         /// <summary>
         /// Triggered when OK is clicked
         /// </summary>
-        /// <param name="sender">Dialog</param>
-        /// <param name="eventArgs">Standard event arguments</param>
-        private void OnOkay(object sender, EventArgs eventArgs)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void bnOk_Click(object sender, EventArgs e)
         {
-            if (NewPasswordBox.Text == ConfirmationPasswordBox.Text)
+            if (ebNewPassword.Text == ebConfirmPassword.Text)
             {
-                _currentPassword = CurrentPasswordBox.Text;
-                _newPassword = NewPasswordBox.Text;
+                mOldPassword = ebOldPassword.Text;
+                mNewPassword = ebNewPassword.Text;
+
                 DialogResult = DialogResult.OK;
 
                 Close();
             }
             else
             {
-                MessageBox.Show(@"The password confirmation does not match.");
+                MessageBox.Show("Das neue Passwort stimmt nicht mit der Bestätigung überein!");
             }
         }
     }

@@ -34,52 +34,77 @@ namespace SDBees.Core.Model
 	{
         public SDBeesRelationshipDefinition()
         {
-            Id = new SDBeesRelationshipDefinitionId();
-            Name = new SDBeesLabel();
-            RelationshipType = new SDBeesRelationshipType();
-            SourceEntityDefId = new SDBeesEntityDefinitionId();
-            TargetEntityDefId = new SDBeesEntityDefinitionId();
+            m_Id = new SDBeesRelationshipDefinitionId();
+            m_name = new SDBeesLabel();
+            m_relationshipType = new SDBeesRelationshipType();
+            m_sourceId = new SDBeesEntityDefinitionId();
+            m_targetId = new SDBeesEntityDefinitionId();
         }
 
         public SDBeesRelationshipDefinition(SDBeesRelationshipDefinitionId id, SDBeesLabel name, SDBeesRelationshipType relType, SDBeesEntityDefinitionId sourceEntityDefId, SDBeesEntityDefinitionId targetEntityDefId)
         {
-            Id = id;
-            Name = name;
-            RelationshipType = relType;
-            SourceEntityDefId = sourceEntityDefId;
-            TargetEntityDefId = targetEntityDefId;
+            m_Id = id;
+            m_name = name;
+            m_relationshipType = relType;
+            m_sourceId = sourceEntityDefId;
+            m_targetId = targetEntityDefId;
         }
 
 
-	    /// <summary>
+		private SDBeesRelationshipDefinitionId m_Id;
+        /// <summary>
         /// Id der Beziehungdefinition
         /// </summary>
         [DataMember]
-		public SDBeesRelationshipDefinitionId Id { get; set; }
+		public SDBeesRelationshipDefinitionId Id
+		{
+			get { return m_Id; }
+			set { m_Id = value; }
+		}
 
-	    /// <summary>
+        private SDBeesLabel m_name;
+        /// <summary>
         /// Name der Beziehungdefinition
         /// </summary>
         [DataMember]
-        public SDBeesLabel Name { get; set; }
+        public SDBeesLabel Name
+        {
+            get { return m_name; }
+            set { m_name = value; }
+        }
 
-	    /// <summary>
+        public SDBeesRelationshipType m_relationshipType;
+        /// <summary>
         /// Typ der Beziehung
         /// </summary>
         [DataMember]
-		public SDBeesRelationshipType RelationshipType { get; set; }
+		public SDBeesRelationshipType RelationshipType
+		{
+            get { return m_relationshipType; }
+            set { m_relationshipType = value; }
+		}
 
-	    /// <summary>
+		private SDBeesEntityDefinitionId m_sourceId;
+        /// <summary>
         /// Ursprungs Entity Typ der Beziehung
         /// </summary>
         [DataMember]
-		public SDBeesEntityDefinitionId SourceEntityDefId { get; set; }
+		public SDBeesEntityDefinitionId SourceEntityDefId
+		{
+            get { return m_sourceId; }
+            set { m_sourceId = value; }
+		}
 
-	    /// <summary>
+		private SDBeesEntityDefinitionId m_targetId;
+        /// <summary>
         /// Ziel Entity Typ der Beziehung
         /// </summary>
         [DataMember]
-		public SDBeesEntityDefinitionId TargetEntityDefId { get; set; }
+		public SDBeesEntityDefinitionId TargetEntityDefId
+		{
+            get { return m_targetId; }
+            set { m_targetId = value; }
+		}
 	}
 }
 

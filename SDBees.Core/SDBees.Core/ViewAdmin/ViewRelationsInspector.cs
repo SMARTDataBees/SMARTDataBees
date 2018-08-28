@@ -28,27 +28,40 @@ using SDBees.DB;
 using SDBees.Plugs.TemplateBase;
 using SDBees.Plugs.TemplateTreeNode;
 
-namespace SDBees.Core.Admin
+namespace SDBees.ViewAdmin
 {
     internal class ViewRelationsInspector : Inspector
     {
+        #region Private Data Members
+
+        #endregion
+
+        #region Public Properties
+
+        #endregion
+
+        #region Constructor/Destructor
 
         /// <summary>
         /// Standard constructor
         /// </summary>
-        public ViewRelationsInspector(SDBeesDBConnection connection)
-            : base(connection)
+        public ViewRelationsInspector(SDBeesDBConnection dbManager)
+            : base(dbManager)
         {
         }
 
+        #endregion
 
+        #region Public Methods
 
         public override void InspectDatabase()
         {
+            string message;
             var invalidObjects = new List<object>();
             var unreferencedObjects = new List<object>();
 
             var plugins = TemplateTreenode.GetAllTreenodePlugins();
+
             var count = plugins.Count;
             var totalObjectCount = 0;
 
@@ -72,43 +85,42 @@ namespace SDBees.Core.Admin
 
                     if (objectCount > 0)
                     {
-                        WriteMessage($"Checking {objectCount} {plugin.GetType()}\r\n");
+                        WriteMessage("Prüfung " + objectCount + " " + plugin.GetType() + "\r\n");
                     }
 
-                    if (objectIds != null)
-                        foreach (var objectId in objectIds)
+                    foreach (var objectId in objectIds)
+                    {
+                        if (!DbObjectValid(plugin, Database, objectId, AutomaticFix, ref error))
                         {
-                            if (objectId != null && !DbObjectValid(plugin, Database, objectId, AutomaticFix, ref error))
-                            {
-                                invalidObjects.Add(objectId);
-                                invalidCount++;
-                            }
-                            if (objectId != null && !DbObjectReferenced(plugin, Database, objectId, DeleteUnreferenced, ref error))
-                            {
-                                unreferencedObjects.Add(objectId);
-                                unreferencedCount++;
-                            }
+                            invalidObjects.Add(objectId);
+                            invalidCount++;
                         }
+                        if (!DbObjectReferenced(plugin, Database, objectId, DeleteUnreferenced, ref error))
+                        {
+                            unreferencedObjects.Add(objectId);
+                            unreferencedCount++;
+                        }
+                    }
 
                     if (invalidCount > 0)
                     {
-                        WriteMessage("\t" + invalidCount + " faulty elements found\r\n");
+                        WriteMessage("\t" + invalidCount + " fehlerhafte Elemente gefunden\r\n");
                     }
 
                     if (unreferencedCount > 0)
                     {
-                        WriteMessage("\t" + unreferencedCount + " not referenced elements found\r\n");
+                        WriteMessage("\t" + unreferencedCount + " nicht referenzierte Elemente gefunden\r\n");
                     }
 
                     myProgressBar.Value = index;
                 }
             }
 
-            var message = "Number of elements in the database: " + totalObjectCount + "\r\n";
+            message = "Es sind insgesamt " + totalObjectCount + " Elemente in der Datenbank.\r\n";
             if ((invalidObjects.Count > 0) || (unreferencedObjects.Count > 0))
             {
-                message += "Faulty elements: " + invalidObjects.Count + "\r\n";
-                message += "Not referenced elements: " + unreferencedObjects.Count + "\r\n";
+                message += "Fehlerhafte Elemente: " + invalidObjects.Count + "\r\n";
+                message += "Nicht referenzierte Elemente: " + unreferencedObjects.Count + "\r\n";
             }
             else
             {
@@ -118,8 +130,11 @@ namespace SDBees.Core.Admin
             WriteMessage(message);
         }
 
+        #endregion
 
-        private bool DbObjectValid(TemplatePlugin plugin, Database database, object objectId, bool fix, ref Error error)
+        #region Protected Methods
+
+        private bool DbObjectValid(TemplateTreenode plugin, Database database, object objectId, bool fix, ref Error error)
         {
             var isValid = true;
 
@@ -162,10 +177,12 @@ namespace SDBees.Core.Admin
 
         private bool DbObjectReferenced(TemplateTreenode plugin, Database database, object objectId, bool delete, ref Error error)
         {
+            var isReferenced = true;
+
             ArrayList viewRelIds = null;
             var viewRelCount = ViewRelation.FindViewRelationByChildId(database, new Guid(objectId.ToString()), ref viewRelIds, ref error);
 
-            var isReferenced = (viewRelCount > 0);
+            isReferenced = (viewRelCount > 0);
 
             if (!isReferenced && delete && (error == null))
             {
@@ -186,11 +203,14 @@ namespace SDBees.Core.Admin
             {
                 var baseData = plugin.CreateDataObject();
                 if (baseData.Load(database, objectId, ref error))
+                {
                     success = baseData.Erase(ref error);
+                }
             }
 
             return success;
         }
 
+        #endregion
     }
 }

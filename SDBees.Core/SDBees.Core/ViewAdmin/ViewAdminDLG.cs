@@ -31,9 +31,9 @@ using SDBees.Plugs.Objects;
 using SDBees.Plugs.TemplateTreeNode;
 using SDBees.Plugs.TreenodeHelper;
 
-namespace SDBees.Core.Admin
+namespace SDBees.ViewAdmin
 {
-    public partial class AdminDialog : Form
+    public partial class ViewAdminDLG : Form
     {
         private readonly ViewAdmin _refViewAdmin;
         private readonly Hashtable _hashPlugins;
@@ -41,12 +41,13 @@ namespace SDBees.Core.Admin
 
         private Hashtable _hashViews;
         private string _currentViewId;
+      private string   _currentIdSdBees;
 
         public ToolStripComboBox _cmbViewSelector;
 
         private bool _isConfigNodeSelected;
 
-        public AdminDialog(ViewAdmin baseRef)
+        public ViewAdminDLG(ViewAdmin baseRef)
         {
             try
             {
@@ -58,6 +59,7 @@ namespace SDBees.Core.Admin
                 _hashViews = new Hashtable();
 
                 _currentViewId = null;
+                _currentIdSdBees = null;
 
                 _cmbViewSelector = new ToolStripComboBox
                 {
@@ -99,16 +101,18 @@ namespace SDBees.Core.Admin
             {
                 var lvi = m_listViewPlugins.SelectedItems[0];
 
-                var menuEditSchema = new MenuItem("Edit schema of " + lvi.Text) {Tag = lvi.Tag};
-                menuEditSchema.Click += OnEditSchema;
+                var menuEditSchema = new MenuItem("Edit Schema of " + lvi.Text);
+                menuEditSchema.Tag = lvi.Tag;
+                menuEditSchema.Click += menuEditSchema_Click;
                 m_listViewPlugins.ContextMenu.MenuItems.Add(menuEditSchema);
             }
         }
 
-        void OnEditSchema(object sender, EventArgs e)
+        void menuEditSchema_Click(object sender, EventArgs e)
         {
             var menuItem = (MenuItem)sender;
             var objPlug = (ObjectPlugin)menuItem.Tag;
+
             var plugin = TemplateTreenode.GetPluginForType(objPlug.PluginType);
             plugin.EditSchema();
         }
@@ -131,6 +135,7 @@ namespace SDBees.Core.Admin
             //Einlesen der Viewdaten
             var objView = (ObjectView)_hashViews[_cmbViewSelector.SelectedItem.ToString()];
 
+            _currentIdSdBees = objView.IdSdBees;
             _currentViewId = objView.ViewGUID;
             if (_currentViewId != null)
                 _refViewAdmin.CurrentViewId = new Guid(_currentViewId);
@@ -206,6 +211,7 @@ namespace SDBees.Core.Admin
                     var opbView = new ObjectView
                     {
                         ViewDescription = propView.ViewDescription,
+                        IdSdBees = propView.idSdBees,
                         ViewName = propView.ViewName,
                         ViewGUID = propView.Id.ToString()
                     };
@@ -242,7 +248,7 @@ namespace SDBees.Core.Admin
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex + Environment.NewLine + plgDesc);
+                    MessageBox.Show(ex + "\n" + plgDesc);
                 }
             }
         }
@@ -275,39 +281,44 @@ namespace SDBees.Core.Admin
         private void buttonNew_Click(object sender, EventArgs e)
         {
             //Die alte View sichern?
+            var dlgRes = DialogResult.None;
             if (_cmbViewSelector.Items.Count > 0)
             {
-                var result = MessageBox.Show(@"Should the current data be stored ? ", @"Save data ? ", MessageBoxButtons.YesNo);
-                if (result == DialogResult.OK)
-                    SaveView();
+                dlgRes = MessageBox.Show("Soll die aktuelle View gespeichert werden?", "View Sichern?", MessageBoxButtons.OKCancel);
             }
-           
-            var dlgNewView = new ViewAdminAddNew(ref _hashViews);
-            dlgNewView.ShowDialog();
+            if (dlgRes == DialogResult.OK)
+            {
+                SaveView();
+            }
+            var _dlgNewView = new ViewAdminAddNew(ref _hashViews);
+            _dlgNewView.ShowDialog();
 
             try
             {
-                if (dlgNewView.DialogResult == DialogResult.OK)
+                if (_dlgNewView.DialogResult == DialogResult.OK)
                 {
 
                     //if(this._hashViews.ContainsKey(_dlgNewView.ViewName))
                     var opbView = new ObjectView();
-                    opbView.ViewDescription = dlgNewView.ViewDescription;
-                    opbView.ViewName = dlgNewView.ViewName;
-                    opbView.ViewGUID = dlgNewView.ViewGuid;
-                    _hashViews.Add(dlgNewView.ViewName, opbView);
+                    opbView.ViewDescription = _dlgNewView.ViewDescription;
+                    opbView.ViewName = _dlgNewView.ViewName;
+                    opbView.ViewGUID = _dlgNewView.ViewGuid;
+                    opbView.IdSdBees = _dlgNewView.IdSdBees;
+                    _currentViewId = opbView.ViewGUID;
+                    _hashViews.Add(_dlgNewView.ViewName, opbView);
 
 
-                    SaveViewProperty((ObjectView)_hashViews[dlgNewView.ViewName]);
+                    SaveViewProperty((ObjectView)_hashViews[_dlgNewView.ViewName]);
 
                     m_listViewPlugins.Items.Clear(); //Die Liste der verfügbaren Plugins löschen
                     FillViewComboBox();
                     m_treeViewSystemConfig.Nodes.Clear(); //Die alte Treeview löschen
-                    _cmbViewSelector.SelectedItem = dlgNewView.ViewName;
+                    _cmbViewSelector.SelectedItem = _dlgNewView.ViewName;
                     // die ID setzen
-                    var objView = (ObjectView)_hashViews[dlgNewView.ViewName];
+                    var objView = (ObjectView)_hashViews[_dlgNewView.ViewName];
                     _currentViewId = objView.ViewGUID;
-                   
+                    _currentIdSdBees = objView.IdSdBees;
+
                     FillPluginList();
                     FillHelperList();
                 }
@@ -323,10 +334,12 @@ namespace SDBees.Core.Admin
         {
             try
             {
-                var dlgRes = MessageBox.Show(@"Should the data be stored?", @"Save data?", MessageBoxButtons.YesNo);
+                var dlgRes = MessageBox.Show("Soll die aktuelle View gesichert werden?", "View Sichern", MessageBoxButtons.YesNo);
 
                 if (dlgRes == DialogResult.Yes)
+                {
                     SaveView();
+                }
                 Close();
             }
             catch (Exception ex)
@@ -402,7 +415,7 @@ namespace SDBees.Core.Admin
                     // Falls die view bereits existiert, laden...
                     viewProp.Load(_refViewAdmin.MyDBManager.Database, _currentViewId, ref error);
 
-                   // Error.Display("View konnte nicht geladen werden", error);
+                  //  Error.Display("View konnte nicht geladen werden", error);
                 }
                 else
                 {
@@ -411,6 +424,9 @@ namespace SDBees.Core.Admin
 
                 viewProp.ViewName = objView.ViewName;
                 viewProp.ViewDescription = objView.ViewDescription;
+                viewProp.idSdBees = objView.IdSdBees;
+                _currentIdSdBees = objView.IdSdBees;
+
                 viewProp.Save(ref error);
 
                 if (_currentViewId == null)
@@ -418,6 +434,7 @@ namespace SDBees.Core.Admin
                     _currentViewId = viewProp.Id.ToString();
                     objView.ViewGUID = _currentViewId;
                     _refViewAdmin.CurrentViewId = new Guid(_currentViewId);
+                   
                 }
 
                 if (error != null)
@@ -445,12 +462,15 @@ namespace SDBees.Core.Admin
                 }
 
                 Error error = null;
-                var viewDef = new ViewDefinition {Database = _refViewAdmin.MyDBManager.Database};
+                var viewDef = new ViewDefinition();
+                viewDef.Database = _refViewAdmin.MyDBManager.Database;
                 var objTag = (ObjectPlugin)trn.Tag;
+                //viewDef.Id = new Guid(this._sCurrentViewID);
                 viewDef.ParentType = tParentType;
                 viewDef.ChildType = objTag.PluginType;
                 viewDef.ChildName = objTag.PluginName;
                 viewDef.ViewId = _currentViewId;
+                viewDef.IdSdBees = _currentIdSdBees;
                 viewDef.Save(ref error);
 
                 if (error != null)
@@ -501,6 +521,7 @@ namespace SDBees.Core.Admin
                 if (lstObjViewDefs.Count == 1)
                 {
                     _currentViewId = objView.ViewGUID;
+                    _currentIdSdBees = objView.IdSdBees;
                     _refViewAdmin.CurrentViewId = new Guid(_currentViewId);
                 }
 
@@ -775,5 +796,9 @@ namespace SDBees.Core.Admin
 
         }
 
+        private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
     }
 }

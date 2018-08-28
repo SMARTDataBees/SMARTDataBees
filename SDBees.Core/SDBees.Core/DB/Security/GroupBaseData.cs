@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections;
-using System.Linq;
 
 namespace SDBees.DB
 {
@@ -88,9 +87,7 @@ namespace SDBees.DB
             baseData.AddColumn(new Column("name", DbType.String, "Name", "Name of the group", "General", 50, "Unknown Group", 0), database);
             baseData.AddColumn(new Column("description", DbType.String, "Description", "Description of the group", "General", 255, "", 0), database);
             baseData.AddColumn(new Column("parentid", DbType.GuidString, "Parent Id", "Id of the parent of the group", "General", 0, "", 0), database);
-
-            var column = baseData.Table.Columns.FirstOrDefault(clmn => clmn.Name.Equals("parentid"));
-            column.IsEditable = false;
+            baseData.Table.Columns["parentid"].Editable = false;
 
             CreateDefaultGroups(database);
         }

@@ -65,13 +65,13 @@ namespace SDBees.Core.Utils
 
             if (start < value.Length)
             {
-                isNumber = char.IsDigit(value[start]);
+                isNumber = Char.IsDigit(value[start]);
 
                 for (/* empty */; start < value.Length; start++)
                 {
                     var c = value[start];
 
-                    if (char.IsDigit(c))
+                    if (Char.IsDigit(c))
                     {
                         if (isNumber)
                         {

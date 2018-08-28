@@ -39,18 +39,26 @@ namespace Carbon.Plugins.Attributes
 	[AttributeUsage(AttributeTargets.Class)]
 	public sealed class PluginDescriptionAttribute : Attribute
 	{
-	    /// <summary>
+		private readonly string _description;
+
+        /// <summary>
         /// Initializes a new instance of the PluginDescriptionAttribute class.
         /// </summary>
         /// <param name="description">A description of the plugin.</param>
 		public PluginDescriptionAttribute(string description)
 		{
-			Description = description;
+			_description = description;
 		}
 
         /// <summary>
         /// Returns a description of the plugin.
         /// </summary>
-		public string Description { get; }
+		public string Description
+		{
+			get
+			{
+				return _description;
+			}
+		}
 	}
 }

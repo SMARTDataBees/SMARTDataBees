@@ -47,7 +47,7 @@ namespace SDBees.Core.Model
             m_Id = id;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
@@ -103,7 +103,7 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
@@ -172,7 +172,7 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
@@ -231,7 +231,7 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
@@ -289,7 +289,7 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
@@ -348,7 +348,7 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
@@ -407,7 +407,7 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
@@ -464,7 +464,7 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
@@ -522,7 +522,7 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
@@ -580,7 +580,7 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
@@ -638,7 +638,7 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
@@ -697,7 +697,7 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {
@@ -888,7 +888,7 @@ namespace SDBees.Core.Model
             return !(id1 == id2);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(Object obj)
         {
             if (obj == null)
             {

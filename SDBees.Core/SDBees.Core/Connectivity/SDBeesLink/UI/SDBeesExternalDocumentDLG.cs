@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Configuration;
 using System.Windows.Forms;
 using SDBees.DB;
-using SDBees.Plugs.TemplateBase;
 using SDBees.Plugs.TemplateTreeNode;
 using Object = SDBees.DB.Object;
 
@@ -21,7 +20,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
 
             try
             {
-                Text = ConfigurationManager.AppSettings["MainWindowTitle"] + @" - External document manager";
+                Text = ConfigurationManager.AppSettings["MainWindowTitle"] + " - External file manager";
             }
             catch (Exception ex)
             {
@@ -31,19 +30,19 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
         internal void UpdateView()
         {
             SetupControls();
-            _dataGridView.DataSource = null;
+            m_dataGridViewExternalDocuments.DataSource = null;
 
-            m_List = TemplateDBBaseData.GetTreeNodePropertyRowBindingList(ConnectivityManagerDocumentBaseData.gTable, ConnectivityManager.Current);
+            m_List = ConnectivityManagerDocumentBaseData.GetTreeNodePropertyRowBindingList(ConnectivityManagerDocumentBaseData.gTable, ConnectivityManager.Current);
             m_Source = new BindingSource(m_List, null);
-            _dataGridView.DataSource = m_Source;
+            m_dataGridViewExternalDocuments.DataSource = m_Source;
 
         }
 
         private void SetupControls()
         {
-            _dataGridView.AutoGenerateColumns = true;
-            _dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
-            _dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
+            m_dataGridViewExternalDocuments.AutoGenerateColumns = true;
+            m_dataGridViewExternalDocuments.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            m_dataGridViewExternalDocuments.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
         }
 
         private void SDBeesExternalDocumentDLG_Load(object sender, EventArgs e)
@@ -63,7 +62,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
 
         private void m_dataGridViewExternalDocuments_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (_dataGridView.SelectedRows != null)
+            if (m_dataGridViewExternalDocuments.SelectedRows != null)
             {
                 var row = m_List[e.RowIndex];
                 object val = null;
@@ -74,7 +73,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
 
                     if (ConnectivityManagerAlienBaseData.GetAlienIdsByDocumentSDBeesId(val.ToString(), ref _error, ref _ids))
                     {
-                        m_textBox.Text = string.Format("{0} alienids found for this docid {1}", _ids.Count, val);
+                        m_textBox.Text = String.Format("{0} alienids found for this docid {1}", _ids.Count, val);
                     }
                 }
             }

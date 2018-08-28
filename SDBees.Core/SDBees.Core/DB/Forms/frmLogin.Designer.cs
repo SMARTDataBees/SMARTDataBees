@@ -81,12 +81,11 @@ namespace SDBees.DB.Forms
             // 
             this.m_Password.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.m_Password.Location = new System.Drawing.Point(276, 725);
-            this.m_Password.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.m_Password.Location = new System.Drawing.Point(138, 377);
             this.m_Password.Name = "m_Password";
             this.m_Password.PasswordChar = '*';
             this.m_Password.ReadOnly = true;
-            this.m_Password.Size = new System.Drawing.Size(840, 31);
+            this.m_Password.Size = new System.Drawing.Size(422, 20);
             this.m_Password.TabIndex = 1;
             this.m_Password.Visible = false;
             // 
@@ -94,10 +93,9 @@ namespace SDBees.DB.Forms
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(158, 725);
-            this.label4.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label4.Location = new System.Drawing.Point(79, 377);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(106, 25);
+            this.label4.Size = new System.Drawing.Size(53, 13);
             this.label4.TabIndex = 0;
             this.label4.Text = "Passwort:";
             this.label4.Visible = false;
@@ -106,10 +104,9 @@ namespace SDBees.DB.Forms
             // 
             this.m_buttonLogin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.m_buttonLogin.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.m_buttonLogin.Location = new System.Drawing.Point(970, 777);
-            this.m_buttonLogin.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.m_buttonLogin.Location = new System.Drawing.Point(485, 404);
             this.m_buttonLogin.Name = "m_buttonLogin";
-            this.m_buttonLogin.Size = new System.Drawing.Size(150, 44);
+            this.m_buttonLogin.Size = new System.Drawing.Size(75, 23);
             this.m_buttonLogin.TabIndex = 0;
             this.m_buttonLogin.Text = "Open";
             this.toolTip1.SetToolTip(this.m_buttonLogin, "Login with selected data");
@@ -120,10 +117,9 @@ namespace SDBees.DB.Forms
             // 
             this.m_pictureBoxLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.m_pictureBoxLogo.Image = global::SDBees.Core.Properties.Resources.SDBees;
-            this.m_pictureBoxLogo.Location = new System.Drawing.Point(42, 725);
-            this.m_pictureBoxLogo.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.m_pictureBoxLogo.Location = new System.Drawing.Point(21, 377);
             this.m_pictureBoxLogo.Name = "m_pictureBoxLogo";
-            this.m_pictureBoxLogo.Size = new System.Drawing.Size(104, 96);
+            this.m_pictureBoxLogo.Size = new System.Drawing.Size(52, 50);
             this.m_pictureBoxLogo.TabIndex = 8;
             this.m_pictureBoxLogo.TabStop = false;
             // 
@@ -132,19 +128,17 @@ namespace SDBees.DB.Forms
             this.m_propertyGridSelectedConfigItem.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.m_propertyGridSelectedConfigItem.Location = new System.Drawing.Point(48, 94);
-            this.m_propertyGridSelectedConfigItem.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.m_propertyGridSelectedConfigItem.Location = new System.Drawing.Point(24, 49);
             this.m_propertyGridSelectedConfigItem.Name = "m_propertyGridSelectedConfigItem";
-            this.m_propertyGridSelectedConfigItem.Size = new System.Drawing.Size(170, 481);
+            this.m_propertyGridSelectedConfigItem.Size = new System.Drawing.Size(85, 250);
             this.m_propertyGridSelectedConfigItem.TabIndex = 0;
             this.m_propertyGridSelectedConfigItem.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.m_propertyGridSelectedConfigItem_PropertyValueChanged);
             // 
             // m_buttonAddConfigItem
             // 
-            this.m_buttonAddConfigItem.Location = new System.Drawing.Point(18, 6);
-            this.m_buttonAddConfigItem.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.m_buttonAddConfigItem.Location = new System.Drawing.Point(9, 3);
             this.m_buttonAddConfigItem.Name = "m_buttonAddConfigItem";
-            this.m_buttonAddConfigItem.Size = new System.Drawing.Size(66, 44);
+            this.m_buttonAddConfigItem.Size = new System.Drawing.Size(33, 23);
             this.m_buttonAddConfigItem.TabIndex = 9;
             this.m_buttonAddConfigItem.Text = "+";
             this.toolTip1.SetToolTip(this.m_buttonAddConfigItem, "Create new configuration");
@@ -153,10 +147,9 @@ namespace SDBees.DB.Forms
             // 
             // m_buttonDelete
             // 
-            this.m_buttonDelete.Location = new System.Drawing.Point(96, 6);
-            this.m_buttonDelete.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.m_buttonDelete.Location = new System.Drawing.Point(48, 3);
             this.m_buttonDelete.Name = "m_buttonDelete";
-            this.m_buttonDelete.Size = new System.Drawing.Size(66, 44);
+            this.m_buttonDelete.Size = new System.Drawing.Size(33, 23);
             this.m_buttonDelete.TabIndex = 12;
             this.m_buttonDelete.Text = "-";
             this.toolTip1.SetToolTip(this.m_buttonDelete, "Delete the current configuration");
@@ -168,8 +161,7 @@ namespace SDBees.DB.Forms
             this.m_splitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.m_splitContainer.Location = new System.Drawing.Point(24, 23);
-            this.m_splitContainer.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.m_splitContainer.Location = new System.Drawing.Point(12, 12);
             this.m_splitContainer.Name = "m_splitContainer";
             // 
             // m_splitContainer.Panel1
@@ -181,9 +173,8 @@ namespace SDBees.DB.Forms
             // m_splitContainer.Panel2
             // 
             this.m_splitContainer.Panel2.Controls.Add(this.m_propertyGridSelectedConfigItem);
-            this.m_splitContainer.Size = new System.Drawing.Size(1096, 690);
-            this.m_splitContainer.SplitterDistance = 792;
-            this.m_splitContainer.SplitterWidth = 8;
+            this.m_splitContainer.Size = new System.Drawing.Size(548, 359);
+            this.m_splitContainer.SplitterDistance = 396;
             this.m_splitContainer.TabIndex = 10;
             // 
             // m_groupBoxProjects
@@ -192,11 +183,9 @@ namespace SDBees.DB.Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.m_groupBoxProjects.Controls.Add(this.m_listViewItems);
-            this.m_groupBoxProjects.Location = new System.Drawing.Point(6, 62);
-            this.m_groupBoxProjects.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.m_groupBoxProjects.Location = new System.Drawing.Point(3, 32);
             this.m_groupBoxProjects.Name = "m_groupBoxProjects";
-            this.m_groupBoxProjects.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.m_groupBoxProjects.Size = new System.Drawing.Size(780, 623);
+            this.m_groupBoxProjects.Size = new System.Drawing.Size(390, 324);
             this.m_groupBoxProjects.TabIndex = 11;
             this.m_groupBoxProjects.TabStop = false;
             this.m_groupBoxProjects.Text = "Projects";
@@ -212,12 +201,11 @@ namespace SDBees.DB.Forms
             this.columnHeader2});
             this.m_listViewItems.FullRowSelect = true;
             this.m_listViewItems.LargeImageList = this.m_imageListItems;
-            this.m_listViewItems.Location = new System.Drawing.Point(12, 37);
-            this.m_listViewItems.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.m_listViewItems.Location = new System.Drawing.Point(6, 19);
             this.m_listViewItems.MultiSelect = false;
             this.m_listViewItems.Name = "m_listViewItems";
             this.m_listViewItems.ShowItemToolTips = true;
-            this.m_listViewItems.Size = new System.Drawing.Size(752, 571);
+            this.m_listViewItems.Size = new System.Drawing.Size(378, 299);
             this.m_listViewItems.SmallImageList = this.m_imageListItems;
             this.m_listViewItems.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.m_listViewItems.StateImageList = this.m_imageListItems;
@@ -247,15 +235,15 @@ namespace SDBees.DB.Forms
             // frmLogin
             // 
             this.AcceptButton = this.m_buttonLogin;
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.ClientSize = new System.Drawing.Size(1144, 844);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(572, 439);
             this.Controls.Add(this.m_splitContainer);
             this.Controls.Add(this.m_Password);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.m_pictureBoxLogo);
             this.Controls.Add(this.m_buttonLogin);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "frmLogin";
             this.ShowIcon = false;
             this.Text = "SMARTDataBees Login";

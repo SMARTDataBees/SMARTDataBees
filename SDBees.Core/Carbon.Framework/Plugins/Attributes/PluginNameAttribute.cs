@@ -39,18 +39,26 @@ namespace Carbon.Plugins.Attributes
 	[AttributeUsage(AttributeTargets.Class)]
 	public sealed class PluginNameAttribute : Attribute
 	{
-	    /// <summary>
+		private readonly string _name;
+
+		/// <summary>
 		/// Initializes a new instance of the PluginNameAttribute class
 		/// </summary>
 		/// <param name="name">The name of the plugin.</param>
 		public PluginNameAttribute(string name)
 		{
-			Name = name;
+			_name = name;
 		}
 
 		/// <summary>
 		/// Returns the name of the plugin.
 		/// </summary>
-		public string Name { get; }
+		public string Name
+		{
+			get
+			{
+				return _name;
+			}
+		}
 	}
 }

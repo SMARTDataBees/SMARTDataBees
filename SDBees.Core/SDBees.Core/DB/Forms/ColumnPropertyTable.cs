@@ -43,11 +43,9 @@ namespace SDBees.DB
 
         protected void UpdateProperties()
         {
-            var ps = new PropertySpec("Name", typeof(string), "General",
-                "Name der Eigenschaft in der Datenbank (sprachunabhängug)", null)
-            {
-                Attributes = new System.Attribute[] {ReadOnlyAttribute.Yes}
-            };
+            PropertySpec ps = null;
+            ps = new PropertySpec("Name", typeof(string), "General", "Name der Eigenschaft in der Datenbank (sprachunabhängug)", null);
+            ps.Attributes = new System.Attribute[] { ReadOnlyAttribute.Yes };
             if (mColumn.IsSelectionListPossible())
             {
                 Properties.Add(new PropertySpec("Liste", typeof(string), 
@@ -71,7 +69,7 @@ namespace SDBees.DB
             this["Typ"] = mColumn.Type;
             if (mColumn.HasCustomSize())
             {
-                Properties.Add(new PropertySpec("Größe", typeof(int), "Typ", "Größe des Datensatzes der Eigenschaft", null));
+                Properties.Add(new PropertySpec("Größe", typeof(Int32), "Typ", "Größe des Datensatzes der Eigenschaft", null));
                 this["Größe"] = mColumn.Size;
             }
             Properties.Add(new PropertySpec("NULL Zulassen", typeof(bool), "Flags", "Eigenschaft lässt den Wert NULL zu", null));
@@ -84,9 +82,9 @@ namespace SDBees.DB
             this["Auto Increment"] = ((mColumn.Flags & (int)DbFlags.eAutoIncrement) != 0);
 
             Properties.Add(new PropertySpec("Editierbar", typeof(bool), "UserInterface", "Schreibschutz für Eigenschaft", null));
-            this["Editierbar"] = mColumn.IsEditable;
+            this["Editierbar"] = mColumn.Editable;
             Properties.Add(new PropertySpec("Sichtbar", typeof(bool), "UserInterface", "Sichtbare Eigenschaft?", null));
-            this["Sichtbar"] = mColumn.IsBrowsable;
+            this["Sichtbar"] = mColumn.Browsable;
             Properties.Add(new PropertySpec("UITypeEditor", typeof(string), "UserInterface", "Der Editor für das Userinterface", null));
             this["UITypeEditor"] = mColumn.UITypeEditor;
 
@@ -168,11 +166,11 @@ namespace SDBees.DB
                     break;
 
                 case "Editierbar":
-                    mColumn.IsEditable = (bool)this[e.Property.Name];
+                    mColumn.Editable = (bool)this[e.Property.Name];
                     break;
 
                 case "Sichtbar":
-                    mColumn.IsBrowsable = (bool)this[e.Property.Name];
+                    mColumn.Browsable = (bool)this[e.Property.Name];
                     break;
 
                 case "Typ":
@@ -191,7 +189,7 @@ namespace SDBees.DB
                     break;
 
                 case "Größe":
-                    mColumn.Size = (int)this[e.Property.Name];
+                    mColumn.Size = (Int32)this[e.Property.Name];
                     break;
 
                 case "Liste":
@@ -262,16 +260,19 @@ namespace SDBees.DB
             mDialog.updateProperties();
         }
         
-        private void SetStandardValue(DbType dbTyp, ref Column myColumn)
+        private void SetStandardValue(DbType dbTyp, ref Column MyColumn)
         {
-        	if(myColumn.Default == "")
+        	if(MyColumn.Default == "")
         	{
         		switch(dbTyp.ToString())
 	        	{
 	        		case "eDate":
-	        			myColumn.Default = DateTime.Now.ToShortDateString();
+	        			MyColumn.Default = DateTime.Now.ToShortDateString();
 	        			break;
-		        }
+	        			
+	        		default:
+	        			break;
+	        	}
         	}
         }
 

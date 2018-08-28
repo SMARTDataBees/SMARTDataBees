@@ -39,18 +39,26 @@ namespace Carbon.Plugins.Attributes
 	[AttributeUsage(AttributeTargets.Class)]
 	public sealed class PluginManufacturerAttribute : Attribute
 	{
-	    /// <summary>
+		private readonly string _manufacturer;
+
+        /// <summary>
         /// Initializes a new instance of the PluginManufacturerAttribute class.
         /// </summary>
         /// <param name="manufacturer">The name of the plugin's manufacturer.</param>
 		public PluginManufacturerAttribute(string manufacturer)
 		{
-			Manufacturer = manufacturer;
+			_manufacturer = manufacturer;
 		}
 
         /// <summary>
         /// Returns the name of the plugin's manufacturer.
         /// </summary>
-		public string Manufacturer { get; }
+		public string Manufacturer
+		{
+			get
+			{
+				return _manufacturer;
+			}
+		}
 	}
 }

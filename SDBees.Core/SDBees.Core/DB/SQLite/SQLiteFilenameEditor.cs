@@ -7,22 +7,21 @@ namespace SDBees.Core.DB.SQLite
     {
         protected override void InitializeDialog(OpenFileDialog openFileDialog)
         {
-            openFileDialog = new OpenFileDialog
-            {
-                Title = @"Select database file",
-                AddExtension = true,
-                AutoUpgradeEnabled = true,
-                Filter = @"Database files (*.s3db)|*.s3db|All files (*.*)|*.* ",
-                DefaultExt = "s3db",
-                CheckPathExists = false,
-                CheckFileExists = false,
-                FileName = "*.s3db",
-                Multiselect = false
-            };
+            openFileDialog = new OpenFileDialog();
 
+            openFileDialog.Title = "Select Databasefile";
+            openFileDialog.AddExtension = true;
+            openFileDialog.AutoUpgradeEnabled = true;
+            openFileDialog.Filter = "Database files (*.s3db)|*.s3db|All files (*.*)|*.* ";
+            openFileDialog.DefaultExt = "s3db";
+            openFileDialog.CheckPathExists = false;
+            openFileDialog.CheckFileExists = false;
+            openFileDialog.FileName = "*.s3db";
+            openFileDialog.Multiselect = false;
 
             base.InitializeDialog(openFileDialog);
         }
 
+        // public override 
     }
 }

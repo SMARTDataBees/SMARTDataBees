@@ -177,7 +177,7 @@ namespace SDBees.GuiTools
 
                 if (category != null)
                 {
-                    var rgb = string.Format("{0,2:X2}{1,2:X2}{2,2:X2}", category.Red, category.Green, category.Blue);
+                    var rgb = String.Format("{0,2:X2}{1,2:X2}{2,2:X2}", category.Red, category.Green, category.Blue);
                     preGeneralSettings += "<font color = \"#" + rgb + "\">";
                     postGeneralSettings += "</font>";
 

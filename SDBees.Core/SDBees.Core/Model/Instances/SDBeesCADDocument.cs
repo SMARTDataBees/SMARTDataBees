@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using SDBees.Core.Connectivity;
-using Object = SDBees.DB.Object;
 
 namespace SDBees.Core.Model
 {
@@ -32,7 +31,7 @@ namespace SDBees.Core.Model
             var doc = new SDBeesCADDocument();
             try
             {
-                doc.m_id = new Guid(docdata.GetPropertyByColumn(Object.m_IdSDBeesColumnName).ToString());
+                doc.m_id = new Guid(docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_IdSDBeesColumnName).ToString());
                 doc.m_CADInfo = SDBeesDocumentCADInfo.Create(docdata.GetPropertyByColumn(ConnectivityManagerDocumentBaseData.m_DocumentCADInfoColumnName).ToString());
             }
             catch (Exception ex)

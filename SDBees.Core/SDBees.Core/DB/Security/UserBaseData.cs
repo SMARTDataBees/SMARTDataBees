@@ -21,8 +21,6 @@
 //
 // #EndHeader# ================================================================
 
-using System.Linq;
-
 namespace SDBees.DB
 {
     internal class UserBaseData : Object
@@ -99,9 +97,7 @@ namespace SDBees.DB
             baseData.AddColumn(new Column("name", DbType.String, "Name", "Full name of the user", "General", 100, "", 0), database);
             baseData.AddColumn(new Column("description", DbType.String, "Description", "Description of the user", "General", 255, "", 0), database);
             baseData.AddColumn(new Column("email", DbType.String, "Email Address", "Email Address for communication", "General", 255, "", 0), database);
-
-            var column = baseData.Table.Columns.FirstOrDefault(clmn => clmn.Name.Equals("loginname"));
-            column.IsEditable = false;
+            baseData.Table.Columns["loginname"].Editable = false;
         }
 
         /// <summary>

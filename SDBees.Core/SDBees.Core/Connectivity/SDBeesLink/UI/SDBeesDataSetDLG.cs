@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
+using System.Drawing;
 using System.Windows.Forms;
 using Carbon.Plugins;
 using SDBees.Core.Connectivity.SDBeesLink.Instances;
@@ -105,7 +106,7 @@ namespace SDBees.Core.Connectivity.SDBeesLink.UI
 
                     m_SDBeesDataSetEntControllers.Add(entControl);
                 }
-                m_labelNumberOfItems.Text = string.Format("Number of items : {0}", m_dataSet.Entities.Count);
+                m_labelNumberOfItems.Text = String.Format("Number of items : {0}", m_dataSet.Entities.Count);
             }
         }
 

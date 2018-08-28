@@ -34,11 +34,11 @@ namespace SDBees.Core.GuiTools.TypeConverters
 		/// <returns>An <see cref="T:System.Object" /> that represents the converted value.</returns>
 		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
 		{
-			short places = 2;
+			Int16 places = 2;
 
 			if (value != null)
 			{
-				if (short.TryParse(value.ToString(), out places))
+				if (Int16.TryParse(value.ToString(), out places))
 				{
 					if (!inConversionMode)
 					{
@@ -58,7 +58,7 @@ namespace SDBees.Core.GuiTools.TypeConverters
 
 		public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
 		{
-			if(destinationType == typeof(short))
+			if(destinationType == typeof(Int16))
 			{ }
 			return true;
 		}
@@ -79,7 +79,7 @@ namespace SDBees.Core.GuiTools.TypeConverters
 
 			if (value != null)
 			{
-				if (!short.TryParse(value.ToString(), out places))
+				if (!Int16.TryParse(value.ToString(), out places))
 					places = 2;
 			}
 

@@ -25,7 +25,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using SDBees.Core.Connectivity;
 using SDBees.Core.Model;
 using SDBees.DB;
@@ -34,7 +33,7 @@ using SDBees.Plugs.TemplateTreeNode;
 using Attribute = SDBees.DB.Attribute;
 using DbType = SDBees.DB.DbType;
 
-namespace SDBees.Core.Admin
+namespace SDBees.ViewAdmin
 {
     /// <summary>
     /// Class representing relations between objects within a specific view
@@ -179,7 +178,7 @@ namespace SDBees.Core.Admin
         /// <returns></returns>
         public static int FindViewRelationForParentIdChildType(Database database,  Guid parentId, string childType, ref ArrayList objectIds, ref Error error)
         {
-            int result; 
+            var result = 0; 
 
 #if PROFILER
             SDBees.Profiler.Start("FindViewRelationForParentIdChildType");
@@ -203,7 +202,7 @@ namespace SDBees.Core.Admin
                     if (vObject != DBNull.Value)
                     {
                         var strValue = vObject.ToString();
-                        if ((!objectIds.Contains(strValue)))
+                        if (allowMultiple || (!objectIds.Contains(strValue)))
                         {
                             objectIds.Add(strValue);
                         }
@@ -214,12 +213,9 @@ namespace SDBees.Core.Admin
             }
             else
             {
-                var childColumn = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_ChildTypeColumnName));
-                var attView = new Attribute(childColumn, childType);
+                var attView = new Attribute(gTable.Columns[m_ChildTypeColumnName], childType);
                 var criteria1 = database.FormatCriteria(attView, DbBinaryOperator.eIsEqual, ref error);
-
-                var parentColumn = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_ParentIdColumnName));
-                var attParent = new Attribute(parentColumn, parentId.ToString());
+                var attParent = new Attribute(gTable.Columns[m_ParentIdColumnName], parentId.ToString());
                 var criteria2 = database.FormatCriteria(attParent, DbBinaryOperator.eIsEqual, ref error);
 
                 var criteria = database.FormatCriteria(criteria1, criteria2, DbBooleanOperator.eAnd, ref error);
@@ -249,16 +245,11 @@ namespace SDBees.Core.Admin
         public static int FindViewRelationForView(Database database, Guid viewId, Guid parentId, Guid childId, ref ArrayList objectIds, ref Error error)
         {
             var criterias = new ArrayList();
-            var viewColumn = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals("view"));
-            var attView = new Attribute(viewColumn, viewId.ToString());
+            var attView = new Attribute(gTable.Columns["view"], viewId.ToString());
             criterias.Add(database.FormatCriteria(attView, DbBinaryOperator.eIsEqual, ref error));
-
-            var parentColumn = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_ParentIdColumnName));
-            var attParent = new Attribute(parentColumn, parentId.ToString());
+            var attParent = new Attribute(gTable.Columns[m_ParentIdColumnName], parentId.ToString());
             criterias.Add(database.FormatCriteria(attParent, DbBinaryOperator.eIsEqual, ref error));
-
-            var childColumn = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_ChildIdColumnName));
-            var attChild = new Attribute(childColumn, childId.ToString());
+            var attChild = new Attribute(gTable.Columns[m_ChildIdColumnName], childId.ToString());
             criterias.Add(database.FormatCriteria(attChild, DbBinaryOperator.eIsEqual, ref error));
 
             var criteria = database.FormatCriteria(criterias, DbBooleanOperator.eAnd, ref error);
@@ -276,8 +267,7 @@ namespace SDBees.Core.Admin
         /// <returns></returns>
         public static int FindViewRelationByChildId(Database database, Guid childId, ref ArrayList objectIds, ref Error error)
         {
-            var childColumn = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_ChildIdColumnName));
-            var attChild = new Attribute(childColumn, childId.ToString());
+            var attChild = new Attribute(gTable.Columns[m_ChildIdColumnName], childId.ToString());
             var criteria = database.FormatCriteria(attChild, DbBinaryOperator.eIsEqual, ref error);
 
             return Select(database, gTable, gTable.PrimaryKey, criteria, ref objectIds, ref error);
@@ -287,12 +277,9 @@ namespace SDBees.Core.Admin
         {
             var criterias = new ArrayList();
 
-            var parentColumn = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_ParentIdColumnName));
-            var attParent = new Attribute(parentColumn, guid1);
+            var attParent = new Attribute(gTable.Columns[m_ParentIdColumnName], guid1);
             criterias.Add(database.FormatCriteria(attParent, DbBinaryOperator.eIsEqual, ref _error));
-
-            var childColumn = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_ChildIdColumnName));
-            var attChild = new Attribute(childColumn, guid2);
+            var attChild = new Attribute(gTable.Columns[m_ChildIdColumnName], guid2);
             criterias.Add(database.FormatCriteria(attChild, DbBinaryOperator.eIsEqual, ref _error));
 
             var criteria = database.FormatCriteria(criterias, DbBooleanOperator.eAnd, ref _error);
@@ -306,12 +293,9 @@ namespace SDBees.Core.Admin
         {
             var criterias = new ArrayList();
 
-            var parentColumn = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_ParentTypeColumnName));
-            var attParent = new Attribute(parentColumn, parentType);
+            var attParent = new Attribute(gTable.Columns[m_ParentTypeColumnName], parentType);
             criterias.Add(database.FormatCriteria(attParent, DbBinaryOperator.eIsEqual, ref _error));
-
-            var childColumn = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_ChildIdColumnName));
-            var attChild = new Attribute(childColumn, childId.ToString());
+            var attChild = new Attribute(gTable.Columns[m_ChildIdColumnName], childId.ToString());
             criterias.Add(database.FormatCriteria(attChild, DbBinaryOperator.eIsEqual, ref _error));
 
             var criteria = database.FormatCriteria(criterias, DbBooleanOperator.eAnd, ref _error);
@@ -323,12 +307,9 @@ namespace SDBees.Core.Admin
         {
             var criterias = new ArrayList();
 
-            var parentColumn = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_ParentTypeColumnName));
-            var attParent = new Attribute(parentColumn, parentType);
+            var attParent = new Attribute(gTable.Columns[m_ParentTypeColumnName], parentType);
             criterias.Add(database.FormatCriteria(attParent, DbBinaryOperator.eIsEqual, ref _error));
-
-            var childColumn = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_ChildTypeColumnName));
-            var attChild = new Attribute(childColumn, childType);
+            var attChild = new Attribute(gTable.Columns[m_ChildTypeColumnName], childType);
             criterias.Add(database.FormatCriteria(attChild, DbBinaryOperator.eIsEqual, ref _error));
 
             var criteria = database.FormatCriteria(criterias, DbBooleanOperator.eAnd, ref _error);
@@ -347,8 +328,7 @@ namespace SDBees.Core.Admin
         /// <returns></returns>
         public static int FindViewRelationByParentId(Database database, Guid parentId, ref ArrayList objectIds, ref Error error)
         {
-            var parentColumn = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_ParentIdColumnName));
-            var attParent = new Attribute(parentColumn, parentId.ToString());
+            var attParent = new Attribute(gTable.Columns[m_ParentIdColumnName], parentId.ToString());
             var criteria = database.FormatCriteria(attParent, DbBinaryOperator.eIsEqual, ref error);
 
             return Select(database, gTable, gTable.PrimaryKey, criteria, ref objectIds, ref error);
@@ -365,12 +345,9 @@ namespace SDBees.Core.Admin
         /// <returns></returns>
         public static int ChildReferencesForView(Database database, Guid viewId, Guid childId, ref ArrayList objectIds, ref Error error)
         {
-            var viewColumn = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals("view"));
-            var attView = new Attribute(viewColumn, viewId.ToString());
+            var attView = new Attribute(gTable.Columns["view"], viewId.ToString());
             var criteria1 = database.FormatCriteria(attView, DbBinaryOperator.eIsEqual, ref error);
-
-            var childColumn = gTable.Columns.FirstOrDefault(clmn => clmn.Name.Equals(m_ChildIdColumnName));
-            var attChild = new Attribute(childColumn, childId.ToString());
+            var attChild = new Attribute(gTable.Columns[m_ChildIdColumnName], childId.ToString());
             var criteria2 = database.FormatCriteria(attChild, DbBinaryOperator.eIsEqual, ref error);
 
             var criteria = database.FormatCriteria(criteria1, criteria2, DbBooleanOperator.eAnd, ref error);

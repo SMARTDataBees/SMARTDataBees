@@ -1,14 +1,15 @@
 ﻿using Carbon.Plugins.Attributes;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // Allgemeine Informationen über eine Assembly werden über die folgenden
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die einer Assembly zugeordnet sind.
 [assembly: AssemblyTitle("SDBees.Plugins")]
-[assembly: AssemblyDescription("SMARTDataBees plugin library")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("SMARTDataBees")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SDBees.Plugins")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
@@ -32,8 +33,8 @@ using System.Runtime.InteropServices;
 // Sie können alle Werte angeben oder Standardwerte für die Build- und Revisionsnummern verwenden,
 // indem Sie "*" wie unten gezeigt eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.0.0.0")]
-[assembly: AssemblyFileVersion("2.0.0.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
 
 //Plugins AEC
 [assembly: PluginDefinition(typeof(SDBees.Core.Plugins.AEC.Building.AECBuilding))]
@@ -54,7 +55,7 @@ using System.Runtime.InteropServices;
 [assembly: PluginDefinition(typeof(SDBees.Core.Plugins.MEP.System.MEPSystem))]
 [assembly: PluginDefinition(typeof(SDBees.Core.Plugins.MEP.CutOut.MEPCutOut))]
 
-//[assembly: PluginDefinition(typeof(SDBees.Plugins.TreeviewHelper.ListViewHelper))]
+[assembly: PluginDefinition(typeof(SDBees.Plugins.TreeviewHelper.ListViewHelper))]
 
 
 

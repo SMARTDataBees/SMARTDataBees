@@ -33,70 +33,105 @@ namespace SDBees.Core.Model
 	{
         public SDBeesPropertyDefinition()
         {
-            Id = new SDBeesPropertyDefinitionId();
-            Name = new SDBeesLabel();
-            PropertyType = SDBeesPropertyValueType.Text;
+            m_Id = new SDBeesPropertyDefinitionId();
+            m_name = new SDBeesLabel();
+            m_propertyType = SDBeesPropertyValueType.Text;
         }
 
         public SDBeesPropertyDefinition(SDBeesPropertyDefinitionId id, SDBeesLabel name, SDBeesPropertyType propType)
         {
-            Id = id;
-            Name = name;
-            PropertyType = propType;
+            m_Id = id;
+            m_name = name;
+            m_propertyType = propType;
         }
 
         public SDBeesPropertyDefinition(string id, string name, string propertyTypeConverter, string propertyUiTypeEditor, bool browsable, bool editable)
         {
-            Id = id;
-            Name = name;
-            PropertyType = SDBeesPropertyValueType.Text;
-            PropertyTypeConverter = propertyTypeConverter;
-            PropertyUiTypeEditor = propertyUiTypeEditor;
-            Browsable = browsable;
-            Editable = editable;
+            m_Id = id;
+            m_name = name;
+            m_propertyType = SDBeesPropertyValueType.Text;
+            m_propertyTypeConverter = propertyTypeConverter;
+            m_propertyUiTypeEditor = propertyUiTypeEditor;
+            m_Browsable = browsable;
+            m_Editable = editable;
         }
 
-	    /// <summary>
+		private SDBeesPropertyDefinitionId m_Id;
+        /// <summary>
         /// Die Id der zu prüfenden Eigenschaft
         /// </summary>
         [DataMember]
-		public SDBeesPropertyDefinitionId Id { get; set; }
+		public SDBeesPropertyDefinitionId Id
+		{
+            get { return m_Id; }
+            set { m_Id = value; }
+		}
 
-	    /// <summary>
+		private SDBeesLabel m_name;
+        /// <summary>
         /// Name des Filters
         /// </summary>
         [DataMember]
-		public SDBeesLabel Name { get; set; }
+		public SDBeesLabel Name
+		{
+            get { return m_name; }
+            set { m_name = value; }
+		}
 
-	    /// <summary>
+        SDBeesPropertyType m_propertyType;
+        /// <summary>
         /// Datentyp der Eigenschaft
         /// </summary>
         [DataMember]
-        public SDBeesPropertyType PropertyType { get; set; }
+        public SDBeesPropertyType PropertyType
+		{
+            get { return m_propertyType; }
+            set { m_propertyType = value; }
+		}
 
-	    /// <summary>
+        string m_propertyUiTypeEditor;
+        /// <summary>
         /// UiTypeEditor for this Property
         /// </summary>
         [DataMember]
-        public string PropertyUiTypeEditor { get; set; }
+        public string PropertyUiTypeEditor
+        {
+            get { return m_propertyUiTypeEditor; }
+            set { m_propertyUiTypeEditor = value; }
+        }
 
-	    /// <summary>
+        string m_propertyTypeConverter;
+        /// <summary>
         /// TypeConverter for this Property
         /// </summary>
         [DataMember]
-        public string PropertyTypeConverter { get; set; }
+        public string PropertyTypeConverter
+        {
+            get { return m_propertyTypeConverter; }
+            set { m_propertyTypeConverter = value; }
+        }
 
-	    /// <summary>
+        bool m_Editable;
+        /// <summary>
         /// Is Property Editable?
         /// </summary>
         [DataMember]
-        public bool Editable { get; set; }
+        public bool Editable
+        {
+            get { return m_Editable; }
+            set { m_Editable = value; }
+        }
 
-	    /// <summary>
+        bool m_Browsable;
+        /// <summary>
         /// Is Property Browsable?
         /// </summary>
         [DataMember]
-        public bool Browsable { get; set; }
-	}
+        public bool Browsable
+        {
+            get { return m_Browsable; }
+            set { m_Browsable = value; } 
+        }
+    }
 }
 
