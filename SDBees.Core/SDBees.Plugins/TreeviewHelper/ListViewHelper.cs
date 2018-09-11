@@ -82,7 +82,7 @@ namespace SDBees.Plugins.TreeviewHelper
 
         public override string TabPageName()
         {
-            return "Objectlist";
+            return "Bulk editor";
         }
 
         protected override void OnDatabaseChanged(object sender, EventArgs e)

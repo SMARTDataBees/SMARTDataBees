@@ -19,12 +19,17 @@ namespace SDBees.Plugins.TreeviewHelper
         Plugs.TemplateTreeNode.TemplateTreenodeTag m_ChildTemplateTreenodeTag;
         Plugs.TemplateTreeNode.TemplateTreenodeTag m_ParentTemplateTreenodeTag;
         Guid m_ViewId;
+        private BindingSource bindingSource1 = null;
 
         public ListViewHelperUserControl(ListViewHelper parent)
         {
             m_parent = parent;
 
             InitializeComponent();
+
+            bindingSource1 = new BindingSource();
+            bindingSource1.AllowNew = false;
+            m_dataGridViewChildElements.DataSource = bindingSource1;
 
             FormatElements();
         }
@@ -59,13 +64,31 @@ namespace SDBees.Plugins.TreeviewHelper
             this.m_dataGridViewChildElements.AutoGenerateColumns = true;
             this.m_dataGridViewChildElements.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
             this.m_dataGridViewChildElements.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-            this.m_dataGridViewChildElements.EditMode = DataGridViewEditMode.EditOnEnter;
+            this.m_dataGridViewChildElements.ColumnHeaderMouseClick += M_dataGridViewChildElements_ColumnHeaderMouseClick;
+            //this.m_dataGridViewChildElements.EditMode = DataGridViewEditMode.EditOnEnter;
+        }
 
+        private void M_dataGridViewChildElements_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (sender is DataGridView)
+            {
+                try
+                {
+                    DataGridViewColumn col = m_dataGridViewChildElements.Columns[e.ColumnIndex];
+                    bindingSource1.Sort = col.Name;
+                    ListSortDirection dir = (m_dataGridViewChildElements.SortOrder == SortOrder.Ascending) ? ListSortDirection.Descending : ListSortDirection.Descending;
+                    this.m_dataGridViewChildElements.Sort(col, dir);
+                }
+                catch (Exception ex)
+                {
+                }
+            }
         }
 
         internal void UpdateView()
         {
-            m_dataGridViewChildElements.DataSource = null;
+            bindingSource1.Clear();
+            //m_dataGridViewChildElements.DataSource = null;
 
             // Zunächst die PlugIn-Typen bestimmen, die unter dem aktuellen Knoten eingefügt werden können...
             Error error = null;
@@ -125,6 +148,7 @@ namespace SDBees.Plugins.TreeviewHelper
                             m_dataList.Add(propTable);
                         }
                     }
+
                     //List<TemplateTreenode> _lstTrnNodes = TemplateTreenode.GetAllPlugins();
 
                     //foreach (TemplateTreenode item in _lstTrnNodes)
@@ -145,8 +169,24 @@ namespace SDBees.Plugins.TreeviewHelper
                 }
                 break;
             }
+            bindingSource1.DataSource = m_dataList;
+        }
 
-            m_dataGridViewChildElements.DataSource = m_dataList;
+        private void AddColumns(TreenodePropertyRow propTable)
+        {
+            foreach (Plugs.Properties.PropertySpec prop in propTable.MyInnerPropertyList)
+            {
+                if (!m_dataGridViewChildElements.Columns.Contains(prop.Name))
+                    m_dataGridViewChildElements.Columns.Add(prop.Name, prop.Name);
+            }
+        }
+
+        private void ApplySortMode()
+        {
+            foreach (DataGridViewColumn col in this.m_dataGridViewChildElements.Columns)
+            {
+                col.SortMode = DataGridViewColumnSortMode.Automatic;
+            }
         }
     }
 }
