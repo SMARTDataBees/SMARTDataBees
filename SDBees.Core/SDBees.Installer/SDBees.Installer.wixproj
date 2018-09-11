@@ -6,34 +6,64 @@
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>9b0feb15-1f16-4c07-b28e-ec70ffd2351f</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>SDBeen.Installer</OutputName>
+    <OutputName>SDBees.Installer</OutputName>
     <OutputType>Package</OutputType>
     <Name>SDBees.Installer</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug;MySource=$(SolutionDir)\run;</DefineConstants>
+    <DefineConstants>Debug;</DefineConstants>
     <SuppressIces>ICE38;ICE64;</SuppressIces>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>MySource=$(SolutionDir)\run;</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BundleFilesFragment.wxs" />
     <Compile Include="Product.wxs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SDBees.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <WixExtension Include="WixUIExtension">
       <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
       <Name>WixUIExtension</Name>
     </WixExtension>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Carbon.Framework\Carbon.Framework.csproj">
+      <Name>Carbon.Framework</Name>
+      <Project>{77d0eaf9-eeae-4457-879e-896fdf33c053}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\SDBees.Core\SDBees.Core.csproj">
+      <Name>SDBees.Core</Name>
+      <Project>{b0b1d84f-b27c-4284-ae47-6e8fff402c35}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\SDBees.Main\SDBees.Main.csproj">
+      <Name>SDBees.Main</Name>
+      <Project>{fb8a4009-eb90-462c-bd8a-776ba57d14ce}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\SDBees.Plugins\SDBees.Plugins.csproj">
+      <Name>SDBees.Plugins</Name>
+      <Project>{7f6dc800-2d96-49a0-a8c8-8502314c49af}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />

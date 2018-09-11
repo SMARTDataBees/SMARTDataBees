@@ -44,8 +44,8 @@ using SDBees.ViewAdmin;
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyFileVersion("1.0.900.*")]
-[assembly: AssemblyVersion("1.0.900.*")]
+[assembly: AssemblyFileVersion("2.0.0.1")]
+[assembly: AssemblyVersion("2.0.0.1")]
 
 //SDBees Core plugins
 [assembly: PluginDefinition(typeof(GlobalManager))]

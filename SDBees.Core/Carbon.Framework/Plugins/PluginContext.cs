@@ -435,11 +435,11 @@ namespace Carbon.Plugins
 				using (var splashWindowProvider = GetSplashWindowProvider())
 				{
 					SplashWindow = splashWindowProvider.CreateWindow(null);
-				}				
+				}
 
 #if DEBUG
 #else
-				_splashWindow.Show();
+                SplashWindow.Show();
 #endif
 				SplashWindow.Refresh();				
 				SplashProgressViewer = SplashWindow as IProgressViewer;

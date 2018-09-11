@@ -1,56 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <Product Id="*" Name="SMARTDataBeen" Language="1033" Version="2.0.0.0" Manufacturer="CAD-Development Tim Hoffeller" UpgradeCode="a69da3a0-bd08-4a0e-aa97-55c42d90147d">
-        <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
-        <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-        <MediaTemplate />
-       
-      <!--
-      <WixVariable Id="WixUILicenseRtf" Value="eula.rtf" />
-      
-      -->
-      
-      
-        <Icon Id="Bee.ico" SourceFile="SDBees.ico" />
-        <Feature Id="ProductFeature" Title="[ProductName]" Level="1">
-            <ComponentGroupRef Id="BundleFiles" />
-            <ComponentRef Id="ShortcutDesktopComponent1"/>
-        </Feature>
-        <UI />
-        <UIRef Id="WixUI_Minimal" />
-    </Product>
+  <Product 
+    Id="*" 
+    Name="SMARTDataBees" 
+    Language="1033" 
+    Version="2.0.0.1" 
+    Manufacturer="CAD-Development Tim Hoffeller" 
+    UpgradeCode="a69da3a0-bd08-4a0e-aa97-55c42d90147d">
+    
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
 
-  
-    <Fragment>
-      
+    <!-- UI things -->
+    <WixVariable Id="WixUILicenseRtf" Value="$(var.SolutionDir)SDBees.Core\GNU LESSER GENERAL PUBLIC LICENSE.rtf" />
+    <UIRef Id="WixUI_Minimal" />
+    <UIRef Id="WixUI_ErrorProgressText" />
+    <!-- end ui things -->
 
+    <Icon Id="Bee.ico" SourceFile="$(var.SolutionDir)Icons\SDBees.ico" />
+    
+    <Feature Id="ProductFeature" Title="[ProductName]" Level="1">
+      <ComponentGroupRef Id="BundleFiles" />
+      <ComponentRef Id="ShortcutDesktopComponent1"/>
+    </Feature>
+  </Product>
 
-      <Directory Id="TARGETDIR" Name="SourceDir">
-            <Directory Id="ProgramFilesFolder">
-                <!-- see "https://msdn.microsoft.com/en-us/library/aa370905(VS.85).aspx#system_folder_properties" -->
-                <Directory Id="BUNDLEFOLDER" Name="SMARTDataBees">
-  
-                </Directory>
-            </Directory>
-
-          <Directory Id="DesktopFolder">
-            <Component Id="ShortcutDesktopComponent1" Guid="a69da3a0-bd08-4a0e-aa97-55c42d90147e">
-              <Shortcut Id="DesktopShortcut1" Name="SMARTDataBees" Description="SMARTDataBees"
-                        Target="[BUNDLEFOLDER]SDBees.exe" WorkingDirectory="BUNDLEFOLDER" Icon="Bee.ico">
-                
-              </Shortcut>
-              <RegistryValue Root="HKCU" Key='SOFTWARE\SMARTDataBees\[ProductName]' Name="DesktopShortcut1" Type="integer" Value="1" KeyPath="yes" />
-            </Component>
-          </Directory>
-            
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <!-- see "https://msdn.microsoft.com/en-us/library/aa370905(VS.85).aspx#system_folder_properties" -->
+        <Directory 
+          Id="BUNDLEFOLDER" 
+          Name="SMARTDataBees">
         </Directory>
+      </Directory>
 
+      <Directory Id="DesktopFolder">
+        <Component Id="ShortcutDesktopComponent1" Guid="a69da3a0-bd08-4a0e-aa97-55c42d90147e">
+          <Shortcut Id="DesktopShortcut1" Name="SMARTDataBees" Description="SMARTDataBees"
+                    Target="[BUNDLEFOLDER]SDBees.exe" WorkingDirectory="BUNDLEFOLDER" Icon="Bee.ico">
 
-
-      
-      
-      
-    </Fragment>
-
-  
+          </Shortcut>
+          <RegistryValue Root="HKCU" Key='SOFTWARE\SMARTDataBees\[ProductName]' Name="DesktopShortcut1" Type="integer" Value="1" KeyPath="yes" />
+        </Component>
+      </Directory>
+    </Directory>
+  </Fragment>
 </Wix>
