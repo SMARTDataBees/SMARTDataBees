@@ -841,31 +841,25 @@ namespace SDBees.DB
                 }
                 quotedValue = "'" + dtValue + "'";
             }
-            else if (type == DbType.Date)
+            else if (type == DbType.Date || type == DbType.DateTime)
             {
                 DateTime dtValue;
                 if (value.GetType() == typeof(string))
                 {
-                    dtValue = DateTime.Parse((string)value);
+                    if (String.IsNullOrEmpty((string)value))
+                        dtValue = DateTime.Now;
+                    else
+                        dtValue = DateTime.Parse((string)value);
                 }
                 else
                 {
                     dtValue = (DateTime)value;
                 }
-                quotedValue = "'" + dtValue.ToString("yyyy-MM-dd") + "'";
-            }
-            else if (type == DbType.DateTime)
-            {
-                DateTime dtValue;
-                if (value.GetType() == typeof(string))
-                {
-                    dtValue = DateTime.Parse((string)value);
-                }
-                else
-                {
-                    dtValue = (DateTime)value;
-                }
-                quotedValue = "'" + dtValue.ToString("yyyy-MM-dd HH:mm:ss") + "'";
+
+                if (type == DbType.DateTime)
+                    quotedValue = "'" + dtValue.ToString("yyyy-MM-dd HH:mm:ss") + "'";
+                else if (type == DbType.Date)
+                    quotedValue = "'" + dtValue.ToString("yyyy-MM-dd") + "'";
             }
             else if (type == DbType.Boolean)
             {
