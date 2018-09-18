@@ -52,7 +52,7 @@ namespace SDBees.Core.Plugins.MEP.System
 
     [PluginName("MEP system Plugin")]
     [PluginAuthors("Tim Hoffeller")]
-    [PluginDescription("Plugin for the hvac groups")]
+    [PluginDescription("Plugin for the MEP groups")]
     [PluginId("4AB23465-FA6B-4C39-98B8-A15CCF6C883B")]
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
@@ -82,9 +82,9 @@ namespace SDBees.Core.Plugins.MEP.System
             : base()
         {
             _theInstance = this;
-            CreateMenuItem = "Create HVAC Group";
-            DeleteMenuItem = "Delete HVAC Group";
-            EditSchemaMenuItem = "Edit HVAC Group Schema";
+            CreateMenuItem = "Create MEP System";
+            DeleteMenuItem = "Delete MEP System";
+            EditSchemaMenuItem = "Edit MEP System Schema";
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace SDBees.Core.Plugins.MEP.System
         {
             try
             {
-                Console.WriteLine("HVAC Group Plugin starts\n");
+                Console.WriteLine("MEP System Plugin starts\n");
 
                 this.StartMe(context, e);
 
@@ -116,7 +116,7 @@ namespace SDBees.Core.Plugins.MEP.System
         /// <param name="e"></param>
         protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
         {
-            Console.WriteLine("HVAC Group Plugin stops\n");
+            Console.WriteLine("MEP System Plugin stops\n");
         }
 
         public override Icon GetIcon(Size size)

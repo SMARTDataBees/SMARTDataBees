@@ -50,9 +50,9 @@ namespace SDBees.Core.Plugins.MEP.Element
     /// </summary>
     /// 
 
-    [PluginName("HVAC Element Plugin")]
+    [PluginName("MEP Element Plugin")]
     [PluginAuthors("Tim Hoffeller")]
-    [PluginDescription("Plugin for the hvac Elements")]
+    [PluginDescription("Plugin for the mep Elements")]
     [PluginId("BE47808F-B49D-487E-90E5-C3DA48A75F2C")]
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
@@ -82,9 +82,9 @@ namespace SDBees.Core.Plugins.MEP.Element
             : base()
         {
             _theInstance = this;
-            CreateMenuItem = "Create HVAC Element";
-            DeleteMenuItem = "Delete HVAC Element";
-            EditSchemaMenuItem = "Edit HVAC Element Schema";
+            CreateMenuItem = "Create MEP Element";
+            DeleteMenuItem = "Delete MEP Element";
+            EditSchemaMenuItem = "Edit MEP Element Schema";
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace SDBees.Core.Plugins.MEP.Element
         {
             try
             {
-                Console.WriteLine("HVAC Element Plugin starts\n");
+                Console.WriteLine("MEP Element Plugin starts\n");
 
                 this.StartMe(context, e);
 
@@ -116,7 +116,7 @@ namespace SDBees.Core.Plugins.MEP.Element
         /// <param name="e"></param>
         protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
         {
-            Console.WriteLine("HVAC Element Plugin stops\n");
+            Console.WriteLine("MEP Element Plugin stops\n");
         }
 
         public override Icon GetIcon(Size size)
@@ -200,7 +200,7 @@ namespace SDBees.Core.Plugins.MEP.Element
         /*
         protected override string TableName()
         {
-            return "usrHVACElement";
+            return "usrMEPElement";
         }
          * */
 

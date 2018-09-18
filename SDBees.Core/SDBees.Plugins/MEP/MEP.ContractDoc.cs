@@ -200,7 +200,7 @@ namespace SDBees.Core.Plugins.MEP.ContractData
         /*
         protected override string TableName()
         {
-            return "usrHVACContractdata";
+            return "usrMEPContractdata";
         }
          * */
 

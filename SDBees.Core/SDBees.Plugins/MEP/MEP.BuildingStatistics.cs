@@ -50,9 +50,9 @@ namespace SDBees.Core.Plugins.MEP.BuildingStatistics
     /// </summary>
     /// 
 
-    [PluginName("HVAC Buildingstatistics Plugin")]
+    [PluginName("MEP Buildingstatistics Plugin")]
     [PluginAuthors("Tim Hoffeller")]
-    [PluginDescription("Plugin for the hvac buildings statistics")]
+    [PluginDescription("Plugin for the MEP buildings statistics")]
     [PluginId("2C6604DF-36FC-4CC8-8FA2-0B0D198FB31A")]
     [PluginManufacturer("CAD-Development")]
     [PluginVersion("1.0.0")]
@@ -84,9 +84,9 @@ namespace SDBees.Core.Plugins.MEP.BuildingStatistics
             : base()
         {
             _theInstance = this;
-            CreateMenuItem = "Create HVAC Buildingsstats";
-            DeleteMenuItem = "Delete HVAC Buildingsstats";
-            EditSchemaMenuItem = "Edit HVAC Buildingsstats Schema";
+            CreateMenuItem = "Create MEP Buildingsstats";
+            DeleteMenuItem = "Delete MEP Buildingsstats";
+            EditSchemaMenuItem = "Edit MEP Buildingsstats Schema";
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace SDBees.Core.Plugins.MEP.BuildingStatistics
         {
             try
             {
-                Console.WriteLine("HVAC Buildingsstats Plugin starts\n");
+                Console.WriteLine("MEP Buildingsstats Plugin starts\n");
 
                 this.StartMe(context, e);
 
@@ -118,7 +118,7 @@ namespace SDBees.Core.Plugins.MEP.BuildingStatistics
         /// <param name="e"></param>
         protected override void Stop(PluginContext context, PluginDescriptorEventArgs e)
         {
-            Console.WriteLine("HVAC Buildingsstats Plugin stops\n");
+            Console.WriteLine("MEP Buildingsstats Plugin stops\n");
         }
 
         public override Icon GetIcon(Size size)
@@ -203,7 +203,7 @@ namespace SDBees.Core.Plugins.MEP.BuildingStatistics
         /*
         protected override string TableName()
         {
-            return "usrHVACBuildingstatistics";
+            return "usrMEPBuildingstatistics";
         }
          * */
 
